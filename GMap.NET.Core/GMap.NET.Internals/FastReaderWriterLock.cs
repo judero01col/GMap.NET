@@ -68,7 +68,7 @@ namespace GMap.NET.Internals
         FastResourceLock pLock;
 #endif
 
-        static readonly bool UseNativeSRWLock = Stuff.IsRunningOnVistaOrLater() && IntPtr.Size == 4; // works only in 32-bit mode, any ideas on native 64-bit support? 
+      static readonly bool UseNativeSRWLock = Stuff.IsRunningOnVistaOrLater() && IntPtr.Size == 4; // works only in 32-bit mode, any ideas on native 64-bit support? 
 
 #endif
 
@@ -88,7 +88,7 @@ namespace GMap.NET.Internals
 #endif
             {
 #if UseFastResourceLock
-                pLock.AcquireShared();
+            pLock.AcquireShared();
 #else
             Thread.BeginCriticalRegion();
 
@@ -134,57 +134,49 @@ namespace GMap.NET.Internals
 
         public void AcquireWriterLock()
         {
-            try
-            {
 #if !MONO && !PocketPC
-                if (UseNativeSRWLock)
-                {
-                    NativeMethods.AcquireSRWLockExclusive(ref LockSRW);
-                }
-                else
-#endif
-                {
-#if UseFastResourceLock
-                    pLock.AcquireExclusive();
-#else
-                    Thread.BeginCriticalRegion();
-
-                    while(Interlocked.CompareExchange(ref busy, 1, 0) != 0)
-                    {
-                       Thread.Sleep(1);
-                    }
-
-                    while(Interlocked.CompareExchange(ref readCount, 0, 0) != 0)
-                    {
-                       Thread.Sleep(1);
-                    }
-#endif
-                }
+            if (UseNativeSRWLock)
+            {
+                NativeMethods.AcquireSRWLockExclusive(ref LockSRW);
             }
-            catch (Exception ex) { }
+            else
+#endif
+            {
+#if UseFastResourceLock
+                pLock.AcquireExclusive();
+#else
+            Thread.BeginCriticalRegion();
+
+            while(Interlocked.CompareExchange(ref busy, 1, 0) != 0)
+            {
+               Thread.Sleep(1);
+            }
+
+            while(Interlocked.CompareExchange(ref readCount, 0, 0) != 0)
+            {
+               Thread.Sleep(1);
+            }
+#endif
+            }
         }
 
         public void ReleaseWriterLock()
         {
-            try
-            {
 #if !MONO && !PocketPC
-                if (UseNativeSRWLock)
-                {
-                    NativeMethods.ReleaseSRWLockExclusive(ref LockSRW);
-                }
-                else
-#endif
-                {
-#if UseFastResourceLock
-                    pLock.ReleaseExclusive();
-#else
-                    Interlocked.Exchange(ref busy, 0);
-                    Thread.EndCriticalRegion();
-#endif
-                }
+            if (UseNativeSRWLock)
+            {
+                NativeMethods.ReleaseSRWLockExclusive(ref LockSRW);
             }
-            catch (Exception ex) { }
+            else
+#endif
+            {
+#if UseFastResourceLock
+                pLock.ReleaseExclusive();
+#else
+            Interlocked.Exchange(ref busy, 0);
+            Thread.EndCriticalRegion();
+#endif
+            }
         }
 
         #region IDisposable Members

@@ -14,8 +14,6 @@ namespace GMap.NET.MapProviders
     using System.Globalization;
     using System.Xml;
     using System.Text;
-    using Newtonsoft.Json;
-
 #if PocketPC
     using OpenNETCF.Security.Cryptography;
 #endif
@@ -25,7 +23,7 @@ namespace GMap.NET.MapProviders
         public GoogleMapProviderBase()
         {
             MaxZoom = null;
-            RefererUrl = string.Format("https://maps.{0}/", Server);
+            RefererUrl = string.Format("http://maps.{0}/", Server);
             Copyright = string.Format("©{0} Google - Map data ©{0} Tele Atlas, Imagery ©{0} TerraMetrics", DateTime.Today.Year);
         }
 
@@ -69,14 +67,14 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
-        public override GMapProvider[] Overlays
+        GMapProvider [] overlays;
+        public override GMapProvider [] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider [] { this };
                 }
                 return overlays;
             }
@@ -94,7 +92,7 @@ namespace GMap.NET.MapProviders
         public override void OnInitialized()
         {
             if (!init && TryCorrectVersion)
-            {
+            {               
                 string url = string.Format("https://maps.{0}/maps/api/js?client=google-maps-lite&amp;libraries=search&amp;language=en&amp;region=", ServerAPIs);
                 try
                 {
@@ -123,13 +121,13 @@ namespace GMap.NET.MapProviders
                             int count = gc.Count;
                             if (count > 0)
                             {
-                                string ver = string.Format("m@{0}", gc[1].Value);
+                                string ver = string.Format("m@{0}", gc [1].Value);
                                 string old = GMapProviders.GoogleMap.Version;
 
                                 GMapProviders.GoogleMap.Version = ver;
                                 GMapProviders.GoogleChinaMap.Version = ver;
-
-                                string verh = string.Format("h@{0}", gc[1].Value);
+                                
+                                string verh = string.Format("h@{0}", gc [1].Value);
                                 string oldh = GMapProviders.GoogleHybridMap.Version;
 
                                 GMapProviders.GoogleHybridMap.Version = verh;
@@ -154,7 +152,7 @@ namespace GMap.NET.MapProviders
                             int count = gc.Count;
                             if (count > 0)
                             {
-                                string ver = gc[1].Value;
+                                string ver = gc [1].Value;
                                 string old = GMapProviders.GoogleSatelliteMap.Version;
 
                                 GMapProviders.GoogleSatelliteMap.Version = ver;
@@ -178,7 +176,7 @@ namespace GMap.NET.MapProviders
                             int count = gc.Count;
                             if (count > 1)
                             {
-                                string ver = string.Format("t@{0},r@{1}", gc[1].Value, gc[2].Value);
+                                string ver = string.Format("t@{0},r@{1}", gc [1].Value, gc [2].Value);
                                 string old = GMapProviders.GoogleTerrainMap.Version;
 
                                 GMapProviders.GoogleTerrainMap.Version = ver;
@@ -225,10 +223,8 @@ namespace GMap.NET.MapProviders
             string tooltip;
             int numLevels;
             int zoomFactor;
-
             MapRoute ret = null;
             List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), Zoom, out tooltip, out numLevels, out zoomFactor);
-
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
@@ -255,7 +251,7 @@ namespace GMap.NET.MapProviders
         string MakeRouteUrl(PointLatLng start, PointLatLng end, string language, bool avoidHighways, bool walkingMode)
         {
             string opt = walkingMode ? WalkingStr : (avoidHighways ? RouteWithoutHighwaysStr : RouteStr);
-            return string.Format(CultureInfo.InvariantCulture, RouteUrlFormatPointLatLng, language, opt, start.Lat, start.Lng, end.Lat, end.Lng, ServerAPIs);
+            return string.Format(CultureInfo.InvariantCulture, RouteUrlFormatPointLatLng, language, opt, start.Lat, start.Lng, end.Lat, end.Lng, Server);
         }
 
         string MakeRouteUrl(string start, string end, string language, bool avoidHighways, bool walkingMode)
@@ -264,105 +260,6 @@ namespace GMap.NET.MapProviders
             return string.Format(RouteUrlFormatStr, language, opt, start.Replace(' ', '+'), end.Replace(' ', '+'), Server);
         }
 
-        public MapRoute GetRoutePointsAndDistance(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom, string text)
-        {
-            MapRoute ret = null;
-            string tooltip = text;
-
-            string url = MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode);
-
-            try
-            {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
-
-                if (string.IsNullOrEmpty(route))
-                {
-                    // Must provide either API key or Maps for Work credentials.
-                    if (!string.IsNullOrEmpty(ClientId))
-                    {
-                        url = GetSignedUri(url);
-                    }
-                    else if (!string.IsNullOrEmpty(ApiKey))
-                    {
-                        url += "&key=" + ApiKey;
-                    }
-
-                    route = GetContentUsingHttp(url);
-
-                    if (!string.IsNullOrEmpty(route))
-                    {
-                        if (GMaps.Instance.UseRouteCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
-                        }
-                    }
-                }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
-                {
-                    GRute Event = JsonConvert.DeserializeObject<GRute>(route);
-
-                    if (Event != null)
-                    {
-                        List<PointLatLng> points = new List<PointLatLng>();
-
-                        if (Event.routes.Count > 0)
-                        {
-                            if (Event.routes[0].legs.Count > 0)
-                            {
-                                if (Event.routes[0].legs[0].steps.Count > 0)
-                                {
-                                    points.Insert(0, start);
-                                    points.Add(new PointLatLng(Event.routes[0].legs[0].start_location.lat, Event.routes[0].legs[0].start_location.lng));
-
-                                    for (int i = 0; i < Event.routes[0].legs[0].steps.Count; i++)
-                                    {
-                                        PointLatLng Point1 = new PointLatLng(Event.routes[0].legs[0].steps[i].start_location.lat, Event.routes[0].legs[0].steps[i].start_location.lng);
-                                        PointLatLng Point2 = new PointLatLng(Event.routes[0].legs[0].steps[i].end_location.lat, Event.routes[0].legs[0].steps[i].end_location.lng);
-
-                                        if (!points.Contains(Point1))
-                                        {
-                                            points.Add(Point1);
-                                        }
-
-                                        if (!points.Contains(Point2))
-                                        {
-                                            points.Add(Point2);
-                                        }
-                                    }
-                                    points.Add(new PointLatLng(Event.routes[0].legs[0].end_location.lat, Event.routes[0].legs[0].end_location.lng));
-                                    points.Add(end);
-                                }
-
-                                if (points != null)
-                                {
-                                    ret = new MapRoute(tooltip);
-
-                                    ret.Points.Add(start);
-                                    ret.Points.Add(end);
-
-                                    ret.DistanceLineal = ret.Distance;
-
-                                    ret.Points.Clear();
-                                    ret.Points.AddRange(points);
-
-                                    ret.duration = Event.routes[0].legs[0].duration.text;
-                                    ret.DistanceGoogle = Math.Round((Event.routes[0].legs[0].distance.value / 1000.0), 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ret = null;
-                Debug.WriteLine("GetRoutePoints: " + ex);
-            }
-
-            return ret;
-        }
         List<PointLatLng> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel, out int zoomFactor)
         {
             List<PointLatLng> points = null;
@@ -389,44 +286,6 @@ namespace GMap.NET.MapProviders
                 // parse values
                 if (!string.IsNullOrEmpty(route))
                 {
-                    GRute Evento = JsonConvert.DeserializeObject<GRute>(route);
-
-                    if (Evento != null)
-                    {
-                        points = new List<PointLatLng>();
-
-                        if (Evento.routes.Count > 0)
-                        {
-                            if (Evento.routes[0].legs.Count > 0)
-                            {
-                                if (Evento.routes[0].legs[0].steps.Count > 0)
-                                {
-                                    points.Add(new PointLatLng(Evento.routes[0].legs[0].start_location.lat, Evento.routes[0].legs[0].start_location.lng));
-
-                                    for (int i = 0; i < Evento.routes[0].legs[0].steps.Count; i++)
-                                    {
-                                        PointLatLng Punto1 = new PointLatLng(Evento.routes[0].legs[0].steps[i].start_location.lat, Evento.routes[0].legs[0].steps[i].start_location.lng);
-                                        PointLatLng Punto2 = new PointLatLng(Evento.routes[0].legs[0].steps[i].end_location.lat, Evento.routes[0].legs[0].steps[i].end_location.lng);
-
-                                        if (!points.Contains(Punto1))
-                                        {
-                                            points.Add(Punto1);
-                                        }
-
-                                        if (!points.Contains(Punto2))
-                                        {
-                                            points.Add(Punto2);
-                                        }
-                                    }
-
-                                    points.Add(new PointLatLng(Evento.routes[0].legs[0].end_location.lat, Evento.routes[0].legs[0].end_location.lng));
-                                }
-                            }
-                        }
-
-                        return points;
-                    }
-
                     //{
                     //tooltipHtml:" (300\x26#160;km / 2 valandos 59 min.)",
                     //polylines:
@@ -567,12 +426,12 @@ namespace GMap.NET.MapProviders
 
                             for (int i = 0; i < levels.Length; i++)
                             {
-                                int zi = pLevels.IndexOf(levels[i]);
+                                int zi = pLevels.IndexOf(levels [i]);
                                 if (zi > 0)
                                 {
                                     if (zi * numLevel > zoom)
                                     {
-                                        removedPoints.Add(points[i]);
+                                        removedPoints.Add(points [i]);
                                     }
                                 }
                             }
@@ -596,7 +455,7 @@ namespace GMap.NET.MapProviders
             return points;
         }
 
-        static readonly string RouteUrlFormatPointLatLng = "https://maps.{6}/maps/api/directions/json?origin={2},{3}&destination={4},{5}&mode=driving";
+        static readonly string RouteUrlFormatPointLatLng = "http://maps.{6}/maps?f=q&output=dragdir&doflg=p&hl={0}{1}&q=&saddr=@{2},{3}&daddr=@{4},{5}";
         static readonly string RouteUrlFormatStr = "http://maps.{4}/maps?f=q&output=dragdir&doflg=p&hl={0}{1}&q=&saddr=@{2}&daddr=@{3}";
 
         static readonly string WalkingStr = "&mra=ls&dirflg=w";
@@ -618,7 +477,7 @@ namespace GMap.NET.MapProviders
         {
             List<PointLatLng> pointList;
             status = GetPoints(keywords, out pointList);
-            return pointList != null && pointList.Count > 0 ? pointList[0] : (PointLatLng?)null;
+            return pointList != null && pointList.Count > 0 ? pointList [0] : (PointLatLng?)null;
         }
 
         /// <summary>
@@ -652,7 +511,7 @@ namespace GMap.NET.MapProviders
         {
             List<Placemark> pointList;
             status = GetPlacemarks(location, out pointList);
-            return pointList != null && pointList.Count > 0 ? pointList[0] : (Placemark?)null;
+            return pointList != null && pointList.Count > 0 ? pointList [0] : (Placemark?)null;
         }
 
         #region -- internals --
@@ -1423,62 +1282,62 @@ namespace GMap.NET.MapProviders
                                                         switch (type)
                                                         {
                                                             case "street_address":
-                                                                {
-                                                                    ret.StreetNumber = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.StreetNumber = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "route":
-                                                                {
-                                                                    ret.ThoroughfareName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.ThoroughfareName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "postal_code":
-                                                                {
-                                                                    ret.PostalCodeNumber = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.PostalCodeNumber = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "country":
-                                                                {
-                                                                    ret.CountryName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.CountryName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "locality":
-                                                                {
-                                                                    ret.LocalityName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.LocalityName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "administrative_area_level_2":
-                                                                {
-                                                                    ret.DistrictName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                              ret.DistrictName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "administrative_area_level_1":
-                                                                {
-                                                                    ret.AdministrativeAreaName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.AdministrativeAreaName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "administrative_area_level_3":
-                                                                {
-                                                                    ret.SubAdministrativeAreaName = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.SubAdministrativeAreaName = nn.InnerText;
+                                                            }
+                                                            break;
 
                                                             case "neighborhood":
-                                                                {
-                                                                    ret.Neighborhood = nn.InnerText;
-                                                                }
-                                                                break;
+                                                            {
+                                                                ret.Neighborhood = nn.InnerText;
+                                                            }
+                                                            break;
                                                         }
                                                     }
                                                 }
-                                            }
+                                            }                                            
 
                                             placemarkList.Add(ret);
                                         }
@@ -1487,7 +1346,7 @@ namespace GMap.NET.MapProviders
                                 #endregion
                             }
                         }
-                        #endregion
+        #endregion
                     }
                 }
             }
@@ -1501,8 +1360,8 @@ namespace GMap.NET.MapProviders
             return status;
         }
 
-        static readonly string ReverseGeocoderUrlFormat = "https://maps.{0}/maps/api/geocode/xml?latlng={1},{2}&language={3}&sensor=false";
-        static readonly string GeocoderUrlFormat = "https://maps.{0}/maps/api/geocode/xml?address={1}&language={2}&sensor=false";
+        static readonly string ReverseGeocoderUrlFormat = "http://maps.{0}/maps/api/geocode/xml?latlng={1},{2}&language={3}&sensor=false";
+        static readonly string GeocoderUrlFormat = "http://maps.{0}/maps/api/geocode/xml?address={1}&language={2}&sensor=false";
 
         #endregion
 
@@ -2265,7 +2124,7 @@ namespace GMap.NET.MapProviders
             var hashAlgorithm = new HMACSHA1(_privateKeyBytes);
             byte[] hashed = hashAlgorithm.ComputeHash(encodedPathQuery);
             return Convert.ToBase64String(hashed).Replace("+", "-").Replace("/", "_");
-        }
+        } 
         #endregion
     }
 
