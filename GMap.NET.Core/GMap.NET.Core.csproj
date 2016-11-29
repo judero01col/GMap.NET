@@ -186,6 +186,10 @@
     <Reference Include="Mono.Security">
       <HintPath>..\GMap.NET\packages\Mono.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\GMap.NET\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Npgsql">
       <HintPath>..\GMap.NET\packages\Npgsql.dll</HintPath>
     </Reference>
@@ -312,6 +316,7 @@
     <Compile Include="GMap.NET\GDirections.cs" />
     <Compile Include="GMap.NET\DirectionsProvider.cs" />
     <Compile Include="GMap.NET\GeocodingProvider.cs" />
+    <Compile Include="GMap.NET\GRute.cs" />
     <Compile Include="GMap.NET\RoutingProvider.cs" />
     <Compile Include="GMap.NET\ZipStorer.cs" />
     <Compile Include="GMap.NET.CacheProviders\MsSQLCePureImageCache.cs" />
