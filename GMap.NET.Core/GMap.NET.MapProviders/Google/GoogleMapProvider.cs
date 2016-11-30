@@ -274,7 +274,7 @@ namespace GMap.NET.MapProviders
         /// <param name="Zoom"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public MapRoute GetRoutePointsAndDistance(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom, string text)
+        public MapRoute GetRoutePoints(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom, string text)
         {
             MapRoute ret = null;            
             string tooltip = text;         
