@@ -207,9 +207,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GMap.NET.Core\Properties\VersionInfo.cs">
-      <Link>Properties\VersionInfo.cs</Link>
-    </Compile>
     <Compile Include="BSE.Windows.Forms\ProgressBar\ProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -34,6 +34,10 @@ using System.Windows;
    //(used if a resource is not found in the page, 
    // app, or any theme specific resource dictionaries)
 )]
+[assembly: AssemblyCompany("Tecno-Net")]
+[assembly: AssemblyVersion("1.7.4.0")]
+[assembly: AssemblyFileVersion("1.7.4.0")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 
 
 // Version information for an assembly consists of the following four values:
