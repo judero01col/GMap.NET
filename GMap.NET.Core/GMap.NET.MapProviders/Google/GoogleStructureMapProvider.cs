@@ -80,9 +80,9 @@ namespace GMap.NET.MapProviders
 
     #endregion
 
-    #region Rute
+    #region Direction
 
-    public class StrucRute
+    public class StrucDirection
     {
         public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
         public List<Route> routes { get; set; }
@@ -95,24 +95,6 @@ namespace GMap.NET.MapProviders
         public string place_id { get; set; }
         public List<string> types { get; set; }
     }
-
-    //public class Northeast
-    //{
-    //    public double lat { get; set; }
-    //    public double lng { get; set; }
-    //}
-
-    //public class Southwest
-    //{
-    //    public double lat { get; set; }
-    //    public double lng { get; set; }
-    //}
-
-    //public class Bounds
-    //{
-    //    public Northeast northeast { get; set; }
-    //    public Southwest southwest { get; set; }
-    //}
 
     public class Distance
     {
@@ -209,5 +191,17 @@ namespace GMap.NET.MapProviders
     }
 
     #endregion
+
+    #region Rute
+
+    public class StrucRute
+    {
+        public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
+        public List<Route> routes { get; set; }
+        public string status { get; set; }
+    }
+
+    #endregion
+
 }
 

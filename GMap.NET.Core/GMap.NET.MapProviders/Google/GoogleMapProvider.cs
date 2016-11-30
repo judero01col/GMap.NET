@@ -319,31 +319,10 @@ namespace GMap.NET.MapProviders
 
                         if (RouteResult.routes.Count > 0)
                         {
-                            if (RouteResult.routes[0].legs.Count > 0)
+                            if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
                             {
-                                if (RouteResult.routes[0].legs[0].steps.Count > 0)
-                                {
-                                    points.Insert(0, start);
-                                    points.Add(new PointLatLng(RouteResult.routes[0].legs[0].start_location.lat, RouteResult.routes[0].legs[0].start_location.lng));
-
-                                    for (int i = 0; i < RouteResult.routes[0].legs[0].steps.Count; i++)
-                                    {
-                                        PointLatLng Point1 = new PointLatLng(RouteResult.routes[0].legs[0].steps[i].start_location.lat, RouteResult.routes[0].legs[0].steps[i].start_location.lng);
-                                        PointLatLng Point2 = new PointLatLng(RouteResult.routes[0].legs[0].steps[i].end_location.lat, RouteResult.routes[0].legs[0].steps[i].end_location.lng);
-
-                                        if (!points.Contains(Point1))
-                                        {
-                                            points.Add(Point1);
-                                        }
-
-                                        if (!points.Contains(Point2))
-                                        {
-                                            points.Add(Point2);
-                                        }
-                                    }
-                                    points.Add(new PointLatLng(RouteResult.routes[0].legs[0].end_location.lat, RouteResult.routes[0].legs[0].end_location.lng));
-                                    points.Add(end);
-                                }
+                                points = new List<PointLatLng>();
+                                DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
 
                                 if (points != null)
                                 {
@@ -418,30 +397,10 @@ namespace GMap.NET.MapProviders
 
                         if (RouteResult.routes.Count > 0)
                         {
-                            if (RouteResult.routes[0].legs.Count > 0)
+                            if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
                             {
-                                if (RouteResult.routes[0].legs[0].steps.Count > 0)
-                                {
-                                    points.Add(new PointLatLng(RouteResult.routes[0].legs[0].start_location.lat, RouteResult.routes[0].legs[0].start_location.lng));
-
-                                    for (int i = 0; i < RouteResult.routes[0].legs[0].steps.Count; i++)
-                                    {
-                                        PointLatLng Punto1 = new PointLatLng(RouteResult.routes[0].legs[0].steps[i].start_location.lat, RouteResult.routes[0].legs[0].steps[i].start_location.lng);
-                                        PointLatLng Punto2 = new PointLatLng(RouteResult.routes[0].legs[0].steps[i].end_location.lat, RouteResult.routes[0].legs[0].steps[i].end_location.lng);
-
-                                        if (!points.Contains(Punto1))
-                                        {
-                                            points.Add(Punto1);
-                                        }
-
-                                        if (!points.Contains(Punto2))
-                                        {
-                                            points.Add(Punto2);
-                                        }
-                                    }
-
-                                    points.Add(new PointLatLng(RouteResult.routes[0].legs[0].end_location.lat, RouteResult.routes[0].legs[0].end_location.lng));
-                                }
+                                points = new List<PointLatLng>();
+                                DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
                             }
                         }
 
@@ -1489,287 +1448,12 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(kml))
                 {
-                    #region -- kml response --
-                    //<?xml version="1.0" encoding="UTF-8"?>
-                    //<DirectionsResponse>
-                    // <status>OK</status>
-                    // <route>
-                    //  <summary>A1/E85</summary>
-                    //  <leg>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.6893800</lat>
-                    //     <lng>25.2800500</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.6907800</lat>
-                    //     <lng>25.2798000</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>soxlIiohyCYLkCJ}@Vs@?</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>32</value>
-                    //     <text>1 min</text>
-                    //    </duration>
-                    //    <html_instructions>Head &lt;b&gt;north&lt;/b&gt; on &lt;b&gt;Vilniaus gatvė&lt;/b&gt; toward &lt;b&gt;Tilto gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>157</value>
-                    //     <text>0.2 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.6907800</lat>
-                    //     <lng>25.2798000</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.6942500</lat>
-                    //     <lng>25.2621300</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>kxxlIwmhyCmApUF`@GvAYpD{@dGcCjIoIvOuAhDwAtEa@vBUnDAhB?~AThDRxAh@hBtAdC</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>133</value>
-                    //     <text>2 mins</text>
-                    //    </duration>
-                    //    <html_instructions>Turn &lt;b&gt;left&lt;/b&gt; onto &lt;b&gt;A. Goštauto gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>1326</value>
-                    //     <text>1.3 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.6942500</lat>
-                    //     <lng>25.2621300</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.6681200</lat>
-                    //     <lng>25.2377500</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>anylIi_eyC`AwD~@oBLKr@K`U|FdF|@`J^~E[j@Lh@\hB~Bn@tBZhBLrC?zIJ~DzA~OVrELlG^lDdAtDh@hAfApA`EzCvAp@jUpIpAl@bBpAdBpBxA|BdLpV`BxClAbBhBlBbChBpBhAdAXjBHlE_@t@?|@Lt@X</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>277</value>
-                    //     <text>5 mins</text>
-                    //    </duration>
-                    //    <html_instructions>Turn &lt;b&gt;left&lt;/b&gt; to merge onto &lt;b&gt;Geležinio Vilko gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>3806</value>
-                    //     <text>3.8 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.6681200</lat>
-                    //     <lng>25.2377500</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.6584100</lat>
-                    //     <lng>25.1411300</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>wjtlI}f`yC~FhBlFr@jD|A~EbC~VjNxBbBdA`BnvA|zCba@l`Bt@tDTbBJpBBfBMvDaAzF}bBjiF{HnXiHxZ</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>539</value>
-                    //     <text>9 mins</text>
-                    //    </duration>
-                    //    <html_instructions>Continue onto &lt;b&gt;Savanorių prospektas&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>8465</value>
-                    //     <text>8.5 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.6584100</lat>
-                    //     <lng>25.1411300</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.9358200</lat>
-                    //     <lng>23.9260000</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>anrlIakmxCiq@|qCuBbLcK~n@wUrkAcPnw@gCnPoQt}AoB`MuAdHmAdFoCtJqClImBxE{DrIkQ|ZcEvIkDzIcDhKyBxJ{EdXuCtS_G`g@mF|\eF`WyDhOiE~NiErMaGpOoj@ppAoE|K_EzKeDtKkEnOsLnd@mDzLgI~U{FrNsEvJoEtI_FpI{J`O_EjFooBf_C{GdJ_FjIsH`OoFhMwH`UcDtL{CzMeDlQmAzHuU~bBiArIwApNaBfWaLfiCoBpYsDf\qChR_FlVqEpQ_ZbfA}CfN{A~HwCtRiAfKmBlVwBx[gBfRcBxMaLdp@sXrzAaE~UqCzRyC`[_q@z|LgC|e@m@vNqp@b}WuLraFo@jPaS~bDmJryAeo@v|G}CnWsm@~`EoKvo@kv@lkEkqBrlKwBvLkNj|@cu@`~EgCnNuiBpcJakAx|GyB`KqdC~fKoIfYicAxtCiDrLu@hDyBjQm@xKoGdxBmQhoGuUn|Dc@nJ[`OW|VaEn|Ee@`X</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>3506</value>
-                    //     <text>58 mins</text>
-                    //    </duration>
-                    //    <html_instructions>Continue onto &lt;b&gt;A1/E85&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>85824</value>
-                    //     <text>85.8 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.9358200</lat>
-                    //     <lng>23.9260000</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.9376500</lat>
-                    //     <lng>23.9195600</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>{shnIo``qCQ^MnD[lBgA`DqBdEu@xB}@zJCjB</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>39</value>
-                    //     <text>1 min</text>
-                    //    </duration>
-                    //    <html_instructions>Take the exit toward &lt;b&gt;Senamiestis/Aleksotas&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>476</value>
-                    //     <text>0.5 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.9376500</lat>
-                    //     <lng>23.9195600</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.9361300</lat>
-                    //     <lng>23.9189700</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>i_inIgx~pCnHtB</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>28</value>
-                    //     <text>1 min</text>
-                    //    </duration>
-                    //    <html_instructions>Turn &lt;b&gt;left&lt;/b&gt; onto &lt;b&gt;Kleboniškio gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>173</value>
-                    //     <text>0.2 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.9361300</lat>
-                    //     <lng>23.9189700</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.9018900</lat>
-                    //     <lng>23.8937000</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>yuhnIqt~pCvAb@JLrOvExSdHvDdAv`@pIpHnAdl@hLdB`@nDvAtEjDdCvCjLzOvAzBhC`GpHfRbQd^`JpMPt@ClA</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>412</value>
-                    //     <text>7 mins</text>
-                    //    </duration>
-                    //    <html_instructions>Continue onto &lt;b&gt;Jonavos gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>4302</value>
-                    //     <text>4.3 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.9018900</lat>
-                    //     <lng>23.8937000</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.8985600</lat>
-                    //     <lng>23.8933400</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>y_bnIsvypCMf@FnARlAf@zAl@^v@EZ_@pAe@x@k@xBPpA@pAQNSf@oB</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>69</value>
-                    //     <text>1 min</text>
-                    //    </duration>
-                    //    <html_instructions>At the roundabout, take the &lt;b&gt;3rd&lt;/b&gt; exit and stay on &lt;b&gt;Jonavos gatvė&lt;/b&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>478</value>
-                    //     <text>0.5 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <step>   
-                    //    <travel_mode>DRIVING</travel_mode>
-                    //    <start_location>
-                    //     <lat>54.8985600</lat>
-                    //     <lng>23.8933400</lng>
-                    //    </start_location>
-                    //    <end_location>
-                    //     <lat>54.8968500</lat>
-                    //     <lng>23.8930000</lng>
-                    //    </end_location>
-                    //    <polyline>
-                    //     <points>_kanIktypCbEx@pCH</points>
-                    //    </polyline>
-                    //    <duration>
-                    //     <value>38</value>
-                    //     <text>1 min</text>
-                    //    </duration>
-                    //    <html_instructions>Turn &lt;b&gt;right&lt;/b&gt; onto &lt;b&gt;A. Mapu gatvė&lt;/b&gt;&lt;div style=&quot;font-size:0.9em&quot;&gt;Destination will be on the right&lt;/div&gt;</html_instructions>
-                    //    <distance>
-                    //     <value>192</value>
-                    //     <text>0.2 km</text>
-                    //    </distance>
-                    //   </step>
-                    //   <duration>
-                    //    <value>5073</value>
-                    //    <text>1 hour 25 mins</text>
-                    //   </duration>
-                    //   <distance>
-                    //    <value>105199</value>
-                    //    <text>105 km</text>
-                    //   </distance>
-                    //   <start_location>
-                    //    <lat>54.6893800</lat>
-                    //    <lng>25.2800500</lng>
-                    //   </start_location>
-                    //   <end_location>
-                    //    <lat>54.8968500</lat>
-                    //    <lng>23.8930000</lng>
-                    //   </end_location>
-                    //   <start_address>Vilnius, Lithuania</start_address>
-                    //   <end_address>Kaunas, Lithuania</end_address>
-                    //  </leg>
-                    //  <copyrights>Map data ©2011 Tele Atlas</copyrights>
-                    //  <overview_polyline>
-                    //   <points>soxlIiohyCYL}Fb@mApUF`@GvAYpD{@dGcCjIoIvOwBpFy@xC]jBSxCC~E^~Er@lCtAdC`AwD~@oB`AW`U|FdF|@`J^~E[tAj@hB~BjA~ELrCJzOzA~Od@`N^lDdAtDt@xAjAnApDlCbXbKpAl@bBpAdBpBxA|BdLpV`BxCvDpEbChBpBhAdAXjBHbG_@|@LtHbClFr@jK`F~VjNxBbB`@h@rwAt|Cba@l`BjAxGNxEMvDaAzF}bBjiFcFbQ_y@|gD{CxMeBnJcK~n@wh@dkCkAlIoQt}AeEfV}EzQqClImBxE{DrIkQ|ZcEvIkDzIcDhKyBxJ{EdXuCtS_G`g@mF|\eF`WyDhOiE~NiErMaGpOoj@ppAoE|K_EzKeDtKmXzbAgI~U{FrNsEvJoLfT{J`O_EjFooBf_C{GdJkLtSwI`SyClI}CrJcDtL{CzMeDlQcXzlBiArIwApNaBfWaLfiCoBpYsDf\qChR_FlVqEpQ_ZbfAyFfXwCtRiAfKeFfs@gBfRcBxMaLdp@sXrzAaE~UqCzRyC`[_q@z|LuDtu@qp@b}WuLraFo@jPo^r}Faq@pfHaBtMsm@~`EoKvo@kv@lkEcuBjzKkNj|@cu@`~EgCnNuiBpcJakAx|GyB`KqdC~fKoIfYidAbwCoD|MeAbHcA|Im@xK}YnhKyV~gEs@~f@aEn|Ee@`XQ^MnD[lBoF`N}@zJCjBfKxCJLdj@bQv`@pIpHnAdl@hLdB`@nDvAtEjDdCvCbOvSzLhZbQd^`JpMPt@QtBFnAz@hDl@^j@?f@e@pAe@x@k@xBPfCEf@Uj@wBbEx@pCH</points>
-                    //  </overview_polyline>
-                    //  <bounds>
-                    //   <southwest>
-                    //    <lat>54.6389500</lat>
-                    //    <lng>23.8920900</lng>
-                    //   </southwest>
-                    //   <northeast>
-                    //    <lat>54.9376500</lat>
-                    //    <lng>25.2800500</lng>
-                    //   </northeast>
-                    //  </bounds>
-                    // </route>
-                    //</DirectionsResponse> 
-                    #endregion
+                    StrucDirection DirectionResult = JsonConvert.DeserializeObject<StrucDirection>(kml);
 
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(kml);
-
-                    XmlNode nn = doc.SelectSingleNode("/DirectionsResponse/status");
-                    if (nn != null)
+                    if (DirectionResult != null)
                     {
-                        ret = (DirectionsStatusCode)Enum.Parse(typeof(DirectionsStatusCode), nn.InnerText, false);
+                        ret = (DirectionsStatusCode)Enum.Parse(typeof(DirectionsStatusCode), DirectionResult.status, false);
+
                         if (ret == DirectionsStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseDirectionsCache)
@@ -1779,208 +1463,103 @@ namespace GMap.NET.MapProviders
 
                             direction = new GDirections();
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/summary");
-                            if (nn != null)
+                            if (DirectionResult.routes != null && DirectionResult.routes.Count > 0)
                             {
-                                direction.Summary = nn.InnerText;
+                                direction.Summary = DirectionResult.routes[0].summary;
                                 Debug.WriteLine("summary: " + direction.Summary);
-                            }
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/duration");
-                            if (nn != null)
-                            {
-                                var t = nn.SelectSingleNode("text");
-                                if (t != null)
+                                if (DirectionResult.routes[0].copyrights != null)
                                 {
-                                    direction.Duration = t.InnerText;
+                                    direction.Copyrights = DirectionResult.routes[0].copyrights;
+                                    Debug.WriteLine("copyrights: " + direction.Copyrights);
+                                }
+
+                                if (DirectionResult.routes[0].overview_polyline != null && DirectionResult.routes[0].overview_polyline.points != null)
+                                {
+                                    direction.Route = new List<PointLatLng>();
+                                    DecodePointsInto(direction.Route, DirectionResult.routes[0].overview_polyline.points);
+                                }
+
+                                if (DirectionResult.routes[0].legs != null && DirectionResult.routes[0].legs.Count > 0)
+                                {
+                                    direction.Duration = DirectionResult.routes[0].legs[0].duration.text;
                                     Debug.WriteLine("duration: " + direction.Duration);
-                                }
 
-                                t = nn.SelectSingleNode("value");
-                                if (t != null)
-                                {
-                                    if (!string.IsNullOrEmpty(t.InnerText))
+                                    direction.DurationValue = (uint)DirectionResult.routes[0].legs[0].duration.value;
+                                    Debug.WriteLine("value: " + direction.DurationValue);
+
+                                    if (DirectionResult.routes[0].legs[0].distance != null)
                                     {
-                                        direction.DurationValue = uint.Parse(t.InnerText);
-                                        Debug.WriteLine("value: " + direction.DurationValue);
-                                    }
-                                }
-                            }
+                                        direction.Distance = DirectionResult.routes[0].legs[0].distance.text;
+                                        Debug.WriteLine("distance: " + direction.Distance);
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/distance");
-                            if (nn != null)
-                            {
-                                var t = nn.SelectSingleNode("text");
-                                if (t != null)
-                                {
-                                    direction.Distance = t.InnerText;
-                                    Debug.WriteLine("distance: " + direction.Distance);
-                                }
-
-                                t = nn.SelectSingleNode("value");
-                                if (t != null)
-                                {
-                                    if (!string.IsNullOrEmpty(t.InnerText))
-                                    {
-                                        direction.DistanceValue = uint.Parse(t.InnerText);
+                                        direction.DistanceValue = (uint)DirectionResult.routes[0].legs[0].distance.value;
                                         Debug.WriteLine("value: " + direction.DistanceValue);
                                     }
-                                }
-                            }
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/start_location");
-                            if (nn != null)
-                            {
-                                var pt = nn.SelectSingleNode("lat");
-                                if (pt != null)
-                                {
-                                    direction.StartLocation.Lat = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                }
+                                    if (DirectionResult.routes[0].legs[0].start_location != null)
+                                    {
+                                        direction.StartLocation.Lat = DirectionResult.routes[0].legs[0].start_location.lat;
+                                        direction.StartLocation.Lng = DirectionResult.routes[0].legs[0].start_location.lng;
+                                    }
 
-                                pt = nn.SelectSingleNode("lng");
-                                if (pt != null)
-                                {
-                                    direction.StartLocation.Lng = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                }
-                            }
+                                    if (DirectionResult.routes[0].legs[0].end_location != null)
+                                    {
+                                        direction.EndLocation.Lat = DirectionResult.routes[0].legs[0].end_location.lat;
+                                        direction.EndLocation.Lng = DirectionResult.routes[0].legs[0].end_location.lng;
+                                    }
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/end_location");
-                            if (nn != null)
-                            {
-                                var pt = nn.SelectSingleNode("lat");
-                                if (pt != null)
-                                {
-                                    direction.EndLocation.Lat = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                }
+                                    if (DirectionResult.routes[0].legs[0].start_address != null)
+                                    {
+                                        direction.StartAddress = DirectionResult.routes[0].legs[0].start_address;
+                                        Debug.WriteLine("start_address: " + direction.StartAddress);
+                                    }
 
-                                pt = nn.SelectSingleNode("lng");
-                                if (pt != null)
-                                {
-                                    direction.EndLocation.Lng = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                }
-                            }
+                                    if (DirectionResult.routes[0].legs[0].end_address != null)
+                                    {
+                                        direction.EndAddress = DirectionResult.routes[0].legs[0].end_address;
+                                        Debug.WriteLine("end_address: " + direction.EndAddress);
+                                    }
 
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/start_address");
-                            if (nn != null)
-                            {
-                                direction.StartAddress = nn.InnerText;
-                                Debug.WriteLine("start_address: " + direction.StartAddress);
-                            }
-
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/leg/end_address");
-                            if (nn != null)
-                            {
-                                direction.EndAddress = nn.InnerText;
-                                Debug.WriteLine("end_address: " + direction.EndAddress);
-                            }
-
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/copyrights");
-                            if (nn != null)
-                            {
-                                direction.Copyrights = nn.InnerText;
-                                Debug.WriteLine("copyrights: " + direction.Copyrights);
-                            }
-
-                            nn = doc.SelectSingleNode("/DirectionsResponse/route/overview_polyline/points");
-                            if (nn != null)
-                            {
-                                direction.Route = new List<PointLatLng>();
-                                DecodePointsInto(direction.Route, nn.InnerText);
-                            }
-
-                            XmlNodeList steps = doc.SelectNodes("/DirectionsResponse/route/leg/step");
-                            if (steps != null)
-                            {
-                                if (steps.Count > 0)
-                                {
                                     direction.Steps = new List<GDirectionStep>();
-                                }
 
-                                foreach (XmlNode s in steps)
-                                {
-                                    GDirectionStep step = new GDirectionStep();
-
-                                    Debug.WriteLine("----------------------");
-                                    nn = s.SelectSingleNode("travel_mode");
-                                    if (nn != null)
+                                    for (int i = 0; i < DirectionResult.routes[0].legs[0].steps.Count; i++)
                                     {
-                                        step.TravelMode = nn.InnerText;
+                                        GDirectionStep step = new GDirectionStep();
+                                        Debug.WriteLine("----------------------");
+
+                                        step.TravelMode = DirectionResult.routes[0].legs[0].steps[i].travel_mode;
                                         Debug.WriteLine("travel_mode: " + step.TravelMode);
-                                    }
 
-                                    nn = s.SelectSingleNode("start_location");
-                                    if (nn != null)
-                                    {
-                                        var pt = nn.SelectSingleNode("lat");
-                                        if (pt != null)
-                                        {
-                                            step.StartLocation.Lat = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                        }
+                                        step.Duration = DirectionResult.routes[0].legs[0].steps[i].duration.text;
+                                        Debug.WriteLine("duration: " + step.Duration);
 
-                                        pt = nn.SelectSingleNode("lng");
-                                        if (pt != null)
-                                        {
-                                            step.StartLocation.Lng = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                        }
-                                    }
+                                        step.Distance = DirectionResult.routes[0].legs[0].steps[i].distance.text;
+                                        Debug.WriteLine("distance: " + step.Distance);
 
-                                    nn = s.SelectSingleNode("end_location");
-                                    if (nn != null)
-                                    {
-                                        var pt = nn.SelectSingleNode("lat");
-                                        if (pt != null)
-                                        {
-                                            step.EndLocation.Lat = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                        }
-
-                                        pt = nn.SelectSingleNode("lng");
-                                        if (pt != null)
-                                        {
-                                            step.EndLocation.Lng = double.Parse(pt.InnerText, CultureInfo.InvariantCulture);
-                                        }
-                                    }
-
-                                    nn = s.SelectSingleNode("duration");
-                                    if (nn != null)
-                                    {
-                                        nn = nn.SelectSingleNode("text");
-                                        if (nn != null)
-                                        {
-                                            step.Duration = nn.InnerText;
-                                            Debug.WriteLine("duration: " + step.Duration);
-                                        }
-                                    }
-
-                                    nn = s.SelectSingleNode("distance");
-                                    if (nn != null)
-                                    {
-                                        nn = nn.SelectSingleNode("text");
-                                        if (nn != null)
-                                        {
-                                            step.Distance = nn.InnerText;
-                                            Debug.WriteLine("distance: " + step.Distance);
-                                        }
-                                    }
-
-                                    nn = s.SelectSingleNode("html_instructions");
-                                    if (nn != null)
-                                    {
-                                        step.HtmlInstructions = nn.InnerText;
+                                        step.HtmlInstructions = DirectionResult.routes[0].legs[0].steps[i].html_instructions;
                                         Debug.WriteLine("html_instructions: " + step.HtmlInstructions);
-                                    }
 
-                                    nn = s.SelectSingleNode("polyline");
-                                    if (nn != null)
-                                    {
-                                        nn = nn.SelectSingleNode("points");
-                                        if (nn != null)
+                                        if (DirectionResult.routes[0].legs[0].steps[i].start_location != null)
+                                        {
+                                            step.StartLocation.Lat = DirectionResult.routes[0].legs[0].steps[i].start_location.lat;
+                                            step.StartLocation.Lng = DirectionResult.routes[0].legs[0].steps[i].start_location.lng;
+                                        }
+
+                                        if (DirectionResult.routes[0].legs[0].steps[i].end_location != null)
+                                        {
+                                            step.EndLocation.Lat = DirectionResult.routes[0].legs[0].steps[i].end_location.lat;
+                                            step.EndLocation.Lng = DirectionResult.routes[0].legs[0].steps[i].end_location.lng;
+                                        }
+
+                                        if (DirectionResult.routes[0].legs[0].steps[i].polyline != null && DirectionResult.routes[0].legs[0].steps[i].polyline.points != null)
                                         {
                                             step.Points = new List<PointLatLng>();
-                                            DecodePointsInto(step.Points, nn.InnerText);
+                                            DecodePointsInto(step.Points, DirectionResult.routes[0].legs[0].steps[i].polyline.points);
                                         }
-                                    }
 
-                                    direction.Steps.Add(step);
+                                        direction.Steps.Add(step);
+                                    }
                                 }
                             }
                         }
@@ -2035,7 +1614,7 @@ namespace GMap.NET.MapProviders
         }
 
         static readonly string DirectionUrlFormatStr = "http://maps.{7}/maps/api/directions/xml?origin={0}&destination={1}&sensor={2}&language={3}{4}{5}{6}";
-        static readonly string DirectionUrlFormatPoint = "http://maps.{9}/maps/api/directions/xml?origin={0},{1}&destination={2},{3}&sensor={4}&language={5}{6}{7}{8}";
+        static readonly string DirectionUrlFormatPoint = "http://maps.{9}/maps/api/directions/json?origin={0},{1}&destination={2},{3}&sensor={4}&language={5}{6}{7}{8}";
         static readonly string DirectionUrlFormatWaypoint = "http://maps.{8}/maps/api/directions/xml?origin={0},{1}&waypoints={2}&destination={9},{10}&sensor={3}&language={4}{5}{6}{7}";
         static readonly string DirectionUrlFormatWaypointStr = "http://maps.{7}/maps/api/directions/xml?origin={0}&waypoints={1}&destination={8}&sensor={2}&language={3}{4}{5}{6}";
 
