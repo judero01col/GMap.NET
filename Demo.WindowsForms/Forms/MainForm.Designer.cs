@@ -144,7 +144,7 @@
             this.panel2.Controls.Add(this.MainMap);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(661, 665);
             this.panel2.TabIndex = 41;
@@ -183,7 +183,7 @@
             this.panel4.Controls.Add(this.panelMenu);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(891, 665);
             this.panel4.TabIndex = 44;
@@ -194,7 +194,7 @@
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
             this.splitter1.Enabled = false;
             this.splitter1.Location = new System.Drawing.Point(661, 0);
-            this.splitter1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitter1.Margin = new System.Windows.Forms.Padding(2);
             this.splitter1.MinExtra = 390;
             this.splitter1.MinSize = 390;
             this.splitter1.Name = "splitter1";
@@ -226,8 +226,8 @@
             this.panelMenu.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panelMenu.Image = null;
             this.panelMenu.Location = new System.Drawing.Point(663, 0);
-            this.panelMenu.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panelMenu.MinimumSize = new System.Drawing.Size(20, 22);
+            this.panelMenu.Margin = new System.Windows.Forms.Padding(2);
+            this.panelMenu.MinimumSize = new System.Drawing.Size(27, 27);
             this.panelMenu.Name = "panelMenu";
             this.panelMenu.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
             this.panelMenu.ShowExpandIcon = true;
@@ -248,7 +248,7 @@
             this.xPanderPanelList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xPanderPanelList1.GradientBackground = System.Drawing.Color.Empty;
             this.xPanderPanelList1.Location = new System.Drawing.Point(0, 28);
-            this.xPanderPanelList1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xPanderPanelList1.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelList1.Name = "xPanderPanelList1";
             this.xPanderPanelList1.PanelColors = null;
             this.xPanderPanelList1.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
@@ -286,7 +286,7 @@
             this.xPanderPanelMain.ForeColor = System.Drawing.SystemColors.ControlText;
             this.xPanderPanelMain.Image = null;
             this.xPanderPanelMain.IsClosable = false;
-            this.xPanderPanelMain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xPanderPanelMain.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelMain.Name = "xPanderPanelMain";
             this.xPanderPanelMain.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
             this.xPanderPanelMain.Size = new System.Drawing.Size(228, 561);
@@ -306,7 +306,7 @@
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel6, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(1, 25);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -414,7 +414,7 @@
             // buttonExportToGpx
             // 
             this.buttonExportToGpx.Location = new System.Drawing.Point(124, 78);
-            this.buttonExportToGpx.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonExportToGpx.Margin = new System.Windows.Forms.Padding(2);
             this.buttonExportToGpx.Name = "buttonExportToGpx";
             this.buttonExportToGpx.Size = new System.Drawing.Size(37, 37);
             this.buttonExportToGpx.TabIndex = 48;
@@ -427,7 +427,7 @@
             this.MobileLogTo.CustomFormat = "yyyy\'.\'MM\'.\'dd HH\':\'mm";
             this.MobileLogTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.MobileLogTo.Location = new System.Drawing.Point(9, 99);
-            this.MobileLogTo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MobileLogTo.Margin = new System.Windows.Forms.Padding(2);
             this.MobileLogTo.Name = "MobileLogTo";
             this.MobileLogTo.ShowCheckBox = true;
             this.MobileLogTo.Size = new System.Drawing.Size(110, 20);
@@ -457,7 +457,7 @@
             this.MobileLogFrom.CustomFormat = "yyyy\'.\'MM\'.\'dd HH\':\'mm";
             this.MobileLogFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.MobileLogFrom.Location = new System.Drawing.Point(9, 78);
-            this.MobileLogFrom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MobileLogFrom.Margin = new System.Windows.Forms.Padding(2);
             this.MobileLogFrom.Name = "MobileLogFrom";
             this.MobileLogFrom.ShowCheckBox = true;
             this.MobileLogFrom.Size = new System.Drawing.Size(110, 20);
@@ -547,7 +547,7 @@
             // button13
             // 
             this.button13.Location = new System.Drawing.Point(9, 117);
-            this.button13.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button13.Margin = new System.Windows.Forms.Padding(2);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(73, 24);
             this.button13.TabIndex = 41;
@@ -559,7 +559,7 @@
             // 
             this.checkBoxDebug.AutoSize = true;
             this.checkBoxDebug.Location = new System.Drawing.Point(104, 74);
-            this.checkBoxDebug.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxDebug.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxDebug.Name = "checkBoxDebug";
             this.checkBoxDebug.Size = new System.Drawing.Size(45, 17);
             this.checkBoxDebug.TabIndex = 40;
@@ -570,7 +570,7 @@
             // button12
             // 
             this.button12.Location = new System.Drawing.Point(92, 117);
-            this.button12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button12.Margin = new System.Windows.Forms.Padding(2);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(69, 24);
             this.button12.TabIndex = 39;
@@ -743,7 +743,7 @@
             this.tableLayoutPanel6.Controls.Add(this.buttonZoomDown, 0, 2);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 2);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 3;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -824,7 +824,7 @@
             this.xPanderPanelCache.ForeColor = System.Drawing.SystemColors.ControlText;
             this.xPanderPanelCache.Image = null;
             this.xPanderPanelCache.IsClosable = false;
-            this.xPanderPanelCache.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xPanderPanelCache.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelCache.Name = "xPanderPanelCache";
             this.xPanderPanelCache.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
             this.xPanderPanelCache.Size = new System.Drawing.Size(228, 25);
@@ -856,7 +856,7 @@
             this.tableLayoutPanel1.Controls.Add(this.checkBoxTileHost, 1, 19);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(1, 25);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 21;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
@@ -1004,7 +1004,7 @@
             // 
             this.button17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button17.Location = new System.Drawing.Point(17, 122);
-            this.button17.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button17.Margin = new System.Windows.Forms.Padding(2);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(192, 19);
             this.button17.TabIndex = 50;
@@ -1050,7 +1050,7 @@
             this.xPanderPanelInfo.CustomColors.InnerBorderColor = System.Drawing.SystemColors.Window;
             this.xPanderPanelInfo.ForeColor = System.Drawing.SystemColors.ControlText;
             this.xPanderPanelInfo.Image = null;
-            this.xPanderPanelInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xPanderPanelInfo.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelInfo.Name = "xPanderPanelInfo";
             this.xPanderPanelInfo.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
             this.xPanderPanelInfo.Size = new System.Drawing.Size(228, 25);
@@ -1079,7 +1079,7 @@
             this.tableLayoutPanel2.Controls.Add(this.label5, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(1, 25);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 13;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
@@ -1226,7 +1226,7 @@
             this.xPanderPanelLive.ForeColor = System.Drawing.SystemColors.ControlText;
             this.xPanderPanelLive.Image = null;
             this.xPanderPanelLive.IsClosable = false;
-            this.xPanderPanelLive.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.xPanderPanelLive.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelLive.Name = "xPanderPanelLive";
             this.xPanderPanelLive.Padding = new System.Windows.Forms.Padding(0, 0, 0, 24);
             this.xPanderPanelLive.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
@@ -1254,7 +1254,7 @@
             this.tableLayoutPanel3.Controls.Add(this.radioButtonVehicle, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(1, 25);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 9;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
@@ -1288,7 +1288,7 @@
             this.checkBoxTcpIpSnap.Checked = true;
             this.checkBoxTcpIpSnap.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTcpIpSnap.Location = new System.Drawing.Point(17, -39);
-            this.checkBoxTcpIpSnap.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxTcpIpSnap.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxTcpIpSnap.Name = "checkBoxTcpIpSnap";
             this.checkBoxTcpIpSnap.Size = new System.Drawing.Size(184, 17);
             this.checkBoxTcpIpSnap.TabIndex = 4;
@@ -1316,7 +1316,7 @@
             this.GridConnections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GridConnections.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.GridConnections.Location = new System.Drawing.Point(17, 133);
-            this.GridConnections.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GridConnections.Margin = new System.Windows.Forms.Padding(2);
             this.GridConnections.Name = "GridConnections";
             this.GridConnections.ReadOnly = true;
             this.GridConnections.RowHeadersVisible = false;
@@ -1383,7 +1383,7 @@
             // 
             this.checkBoxTraceRoute.AutoSize = true;
             this.checkBoxTraceRoute.Location = new System.Drawing.Point(17, -18);
-            this.checkBoxTraceRoute.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxTraceRoute.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxTraceRoute.Name = "checkBoxTraceRoute";
             this.checkBoxTraceRoute.Size = new System.Drawing.Size(179, 17);
             this.checkBoxTraceRoute.TabIndex = 6;
