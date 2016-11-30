@@ -18,8 +18,8 @@ using System.Runtime.InteropServices;
 [assembly: Guid("82e283ec-0096-4b55-baaf-89f671fa56d5")]
 [assembly: AssemblyCompany("Tecno-Net")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
-[assembly: AssemblyVersion("1.7.3.0")]
-[assembly: AssemblyFileVersion("1.7.3.0")]
+[assembly: AssemblyVersion("1.7.4.0")]
+[assembly: AssemblyFileVersion("1.7.4.0")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -48,7 +48,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MONO_disabled; MySQL_disabled; PostgreSQL_disabled; SQLite</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;MONO_disabled; MySQL_disabled; PostgreSQL_disabled; SQLite</DefineConstants>
     <DebugType>Full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\x86\Debug\GMap.NET.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -77,6 +77,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
@@ -107,11 +108,12 @@
     <DefineConstants>NET40;TRACE;SQLite;MONO_disabled;MySQL_disabled;PostgreSQL_disabled</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>bin\v4.0-Release\GMap.NET.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFrameworkVersion)' == 'v2.0' ">
     <TargetFrameworkVersionNumber>2.0</TargetFrameworkVersionNumber>
