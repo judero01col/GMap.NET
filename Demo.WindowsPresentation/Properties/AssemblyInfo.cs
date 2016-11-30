@@ -35,8 +35,8 @@ using System.Windows;
    // app, or any theme specific resource dictionaries)
 )]
 [assembly: AssemblyCompany("Tecno-Net")]
-[assembly: AssemblyVersion("1.7.4.0")]
-[assembly: AssemblyFileVersion("1.7.4.0")]
+[assembly: AssemblyVersion("1.7.5.0")]
+[assembly: AssemblyFileVersion("1.7.5.0")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
 
 
