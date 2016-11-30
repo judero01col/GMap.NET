@@ -265,7 +265,7 @@ namespace GMap.NET.MapProviders
         }
 
         /// <summary>
-        /// 
+        /// Get path and distance between two points
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
@@ -375,7 +375,7 @@ namespace GMap.NET.MapProviders
         }
 
         /// <summary>
-        /// 
+        /// Gets route between two points
         /// </summary>
         /// <param name="url"></param>
         /// <param name="zoom"></param>
@@ -389,6 +389,7 @@ namespace GMap.NET.MapProviders
             tooltipHtml = string.Empty;
             numLevel = -1;
             zoomFactor = -1;
+
             try
             {
                 string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
@@ -409,24 +410,24 @@ namespace GMap.NET.MapProviders
                 // parse values
                 if (!string.IsNullOrEmpty(route))
                 {
-                    GRute Evento = JsonConvert.DeserializeObject<GRute>(route);
+                    GRute Event = JsonConvert.DeserializeObject<GRute>(route);
 
-                    if (Evento != null)
+                    if (Event != null)
                     {
                         points = new List<PointLatLng>();
 
-                        if (Evento.routes.Count > 0)
+                        if (Event.routes.Count > 0)
                         {
-                            if (Evento.routes[0].legs.Count > 0)
+                            if (Event.routes[0].legs.Count > 0)
                             {
-                                if (Evento.routes[0].legs[0].steps.Count > 0)
+                                if (Event.routes[0].legs[0].steps.Count > 0)
                                 {
-                                    points.Add(new PointLatLng(Evento.routes[0].legs[0].start_location.lat, Evento.routes[0].legs[0].start_location.lng));
+                                    points.Add(new PointLatLng(Event.routes[0].legs[0].start_location.lat, Event.routes[0].legs[0].start_location.lng));
 
-                                    for (int i = 0; i < Evento.routes[0].legs[0].steps.Count; i++)
+                                    for (int i = 0; i < Event.routes[0].legs[0].steps.Count; i++)
                                     {
-                                        PointLatLng Punto1 = new PointLatLng(Evento.routes[0].legs[0].steps[i].start_location.lat, Evento.routes[0].legs[0].steps[i].start_location.lng);
-                                        PointLatLng Punto2 = new PointLatLng(Evento.routes[0].legs[0].steps[i].end_location.lat, Evento.routes[0].legs[0].steps[i].end_location.lng);
+                                        PointLatLng Punto1 = new PointLatLng(Event.routes[0].legs[0].steps[i].start_location.lat, Event.routes[0].legs[0].steps[i].start_location.lng);
+                                        PointLatLng Punto2 = new PointLatLng(Event.routes[0].legs[0].steps[i].end_location.lat, Event.routes[0].legs[0].steps[i].end_location.lng);
 
                                         if (!points.Contains(Punto1))
                                         {
@@ -439,173 +440,13 @@ namespace GMap.NET.MapProviders
                                         }
                                     }
 
-                                    points.Add(new PointLatLng(Evento.routes[0].legs[0].end_location.lat, Evento.routes[0].legs[0].end_location.lng));
+                                    points.Add(new PointLatLng(Event.routes[0].legs[0].end_location.lat, Event.routes[0].legs[0].end_location.lng));
                                 }
                             }
                         }
 
                         return points;
                     }
-
-                    //{
-                    //tooltipHtml:" (300\x26#160;km / 2 valandos 59 min.)",
-                    //polylines:
-                    //[{
-                    //   id:"route0",
-                    //   points:"cy~rIcvp`ClJ~v@jHpu@N|BB~A?tA_@`J@nAJrB|AhEf@h@~@^pANh@Mr@a@`@_@x@cBPk@ZiBHeDQ{C]wAc@mAqCeEoA_C{@_Cy@iDoEaW}AsJcJ}t@iWowB{C_Vyw@gvGyTyjBu@gHwDoZ{W_zBsX}~BiA_MmAyOcAwOs@yNy@eTk@mVUmTE}PJ_W`@cVd@cQ`@}KjA_V`AeOn@oItAkOdAaKfBaOhDiVbD}RpBuKtEkTtP}q@fr@ypCfCmK|CmNvEqVvCuQ`BgLnAmJ`CgTpA_N~@sLlBwYh@yLp@cSj@e]zFkzKHaVViSf@wZjFwqBt@{Wr@qS`AaUjAgStBkYrEwe@xIuw@`Gmj@rFok@~BkYtCy_@|KccBvBgZjC}[tD__@pDaYjB_MpBuLhGi[fC}KfFcSnEkObFgOrFkOzEoLt[ys@tJeUlIsSbKqXtFiPfKi]rG_W|CiNhDkPfDuQlDoShEuXrEy[nOgiAxF{`@|DoVzFk[fDwPlXupA~CoPfDuQxGcd@l@yEdH{r@xDam@`AiWz@mYtAq~@p@uqAfAqx@|@kZxA}^lBq\\|Be\\lAaO~Dm`@|Gsj@tS_~AhCyUrCeZrByWv@uLlUiyDpA}NdHkn@pGmb@LkAtAoIjDqR`I{`@`BcH|I_b@zJcd@lKig@\\_CbBaIlJ}g@lIoj@pAuJtFoh@~Eqs@hDmv@h@qOfF{jBn@gSxCio@dAuQn@gIVoBjAiOlCqWbCiT`PekAzKiu@~EgYfIya@fA{ExGwWnDkMdHiU|G}R`HgQhRsa@hW}g@jVsg@|a@cbAbJkUxKoYxLa_@`IiZzHu[`DoOXsBhBuJbCwNdBaL`EkYvAwM`CeVtEwj@nDqj@BkAnB{YpGgeAn@eJ`CmYvEid@tBkQpGkd@rE}UxB}JdJo_@nDcNfSan@nS}j@lCeIvDsMbC{J|CyNbAwFfCgPz@uGvBiSdD}`@rFon@nKaqAxDmc@xBuT|Fqc@nC_PrEcUtC_MpFcT`GqQxJmXfXwq@jQgh@hBeGhG_U|BaK|G}[nRikAzIam@tDsYfE}^v@_MbAwKn@oIr@yLrBub@jAoa@b@sRdDmjBx@aZdA}XnAqVpAgTlAqPn@oGvFye@dCeRzGwb@xT_}A`BcPrAoOvCad@jAmXv@eV`BieA~@a[fBg_@`CiZ~A_OhHqk@hHcn@tEwe@rDub@nBoW~@sN|BeZnAgMvDm\\hFs^hSigArFaY`Gc\\`C}OhD}YfByQdAaNbAkOtOu~Cn@wKz@uLfCeY|CkW~B}OhCmO|AcI~A_IvDoPpEyPdImWrDuKnL_YjI{Ptl@qfAle@u|@xI}PbImQvFwMbGgOxFkOpdAosCdD_KxGsU|E}RxFcXhCwNjDwTvBiPfBqOrAyMfBcTxAaVhAwVrCy_Al@iPt@_OtA}Q`AuJ`AgIzAkK`EoUtBsJhCaKxCaKdDaKhQeg@jGiRfGaSrFyR`HsWvL}f@xp@grC`Sq|@pEsVdAoGjF{XlkAgwHxHgj@|Jex@fg@qlEjQs{AdHwh@zDkVhEkVzI_e@v}AgzHpK_l@tE}YtEy[rC}TpFme@jg@cpEbF{d@~BoXfBqUbAyOx@yN|Ao]bAo[tIazC`@iLb@aJ~AkWbBgRdBgPjA{IdCePlAmHfBmJdCiL~CuM|DoNxhDezKdDkLvBoInFqVbCuMxBqNnAeJ~CwXdBoSb^crElFsl@`Dy[zDu^xBiRzc@aaE|Fsd@vCkShDmTpG}^lD}QzDoR|zAcdHvIob@dKoj@jDmSlKiq@xVacBhEqXnBqL|Ga^zJke@`y@ktD~Mop@tP}_AdOg`AtCiQxCyOlDkPfDoN`GiTfGkRjEwLvEsL|HkQtEkJdE{HrwAkaCrT{a@rpDiuHtE_KvLuV|{AwaDzAqCb@mAf{Ac`D~FqL~y@_fBlNmZbGaNtF}Mpn@s~AlYss@dFgK|DoGhBoCrDuE~AcBtGaGnByAnDwBnCwAfDwAnFaBjGkA~[{E`iEkn@pQaDvIwBnIiCl\\qLn}J{pDhMcGrFcDhGeEvoDehC|AsArCwChBaC`C_EzC_HbBcFd@uB`@qAn@gDdB}Kz@}Hn@iPjByx@jDcvAj@}RDsEn@yTv@a]VcPtEamFBcHT_LNkEdAiShDsi@`GudAbFgx@`@iKdP}yFhBgs@p@yRjCo_AJwCXeEb@uEz@_H|@yEnBqHrCiIpAmE`o@qhBxC_IjIuVdIcXh{AgmG`i@_{BfCuLrhAssGfFeXxbBklInCsN|_AoiGpGs_@pl@w}Czy@_kEvG{]h}@ieFbQehAdHye@lPagA|Eu\\tAmI|CwWjn@mwGj@eH|]azFl@kPjAqd@jJe|DlD}vAxAeh@@eBvVk}JzIkqDfE_aBfA{YbBk[zp@e}LhAaObCeUlAuIzAeJrb@q`CjCcOnAaIpBwOtBkTjDsg@~AiPvBwOlAcH|AkIlCkLlYudApDoN`BgHhBaJvAeIvAqJbAuHrBqQbAsLx@oL`MwrCXkFr@uJh@{FhBsOvXwoB|EqVdBmHxC}KtCcJtDgKjDoIxE}JdHcMdCuDdIoKlmB}|BjJuMfFgIlE{HlEyIdEeJ~FaOvCgInCuI`EmN`J}]rEsP`EuMzCoIxGwPpi@cnAhGgPzCiJvFmRrEwQbDyOtCoPbDwTxDq\\rAsK`BgLhB{KxBoLfCgLjDqKdBqEfEkJtSy^`EcJnDuJjAwDrCeK\\}AjCaNr@qEjAaJtNaqAdCqQ`BsItS}bAbQs{@|Kor@xBmKz}@}uDze@{zAjk@}fBjTsq@r@uCd@aDFyCIwCWcCY}Aq_@w|A{AwF_DyHgHwOgu@m_BSb@nFhL",
-                    //   levels:"B?@?????@?@???A???@?@????@??@????????@????@???A????@????@??@???@??@???A???@??@???A??@???@????A??@???@??@????@??@???@????@???@??A@?@???@????A????@??@?@???@???????@??@?@????@????@?A??@???@????@??@?A??????@???????@??A???@??@???@??@????@??@?@?????@?@?A?@????@???@??@??@????@?@??@?@??@??????@???@?@????@???B???@??@??????@??@???A?????@????@???A??@??????@??@??A?@???@???@??A????@???@???@????A????@@??A???@???@??@??A????@??????@??@???@???B????@?@????????@????@????A?????@????@??A???@???@???B???@?????@???@????@????@???A???????@??A@??@?@??@@?????A?@@????????@??@?A????@?????@???@???@???@???@?@?A???@??@?@??@???@?????@???A??@???????@????@???@????@????@@???A????@?@??@?B",
-                    //   numLevels:4,
-                    //   zoomFactor:16
-                    //}]
-                    //}
-
-                    #region -- title --
-                    int tooltipEnd = 0;
-                    {
-                        int x = route.IndexOf("tooltipHtml:") + 13;
-                        if (x >= 13)
-                        {
-                            tooltipEnd = route.IndexOf("\"", x + 1);
-                            if (tooltipEnd > 0)
-                            {
-                                int l = tooltipEnd - x;
-                                if (l > 0)
-                                {
-                                    tooltipHtml = route.Substring(x, l).Replace(@"\x26#160;", " ");
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region -- points --
-                    int pointsEnd = 0;
-                    {
-                        int x = route.IndexOf("points:", tooltipEnd >= 0 ? tooltipEnd : 0) + 8;
-                        if (x >= 8)
-                        {
-                            pointsEnd = route.IndexOf("\"", x + 1);
-                            if (pointsEnd > 0)
-                            {
-                                int l = pointsEnd - x;
-                                if (l > 0)
-                                {
-                                    /*
-                                    while(l % 5 != 0)
-                                    {
-                                       l--;
-                                    }
-                                    */
-
-                                    points = new List<PointLatLng>();
-                                    DecodePointsInto(points, route.Substring(x, l));
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region -- levels --
-                    string levels = string.Empty;
-                    int levelsEnd = 0;
-                    {
-                        int x = route.IndexOf("levels:", pointsEnd >= 0 ? pointsEnd : 0) + 8;
-                        if (x >= 8)
-                        {
-                            levelsEnd = route.IndexOf("\"", x + 1);
-                            if (levelsEnd > 0)
-                            {
-                                int l = levelsEnd - x;
-                                if (l > 0)
-                                {
-                                    levels = route.Substring(x, l);
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region -- numLevel --
-                    int numLevelsEnd = 0;
-                    {
-                        int x = route.IndexOf("numLevels:", levelsEnd >= 0 ? levelsEnd : 0) + 10;
-                        if (x >= 10)
-                        {
-                            numLevelsEnd = route.IndexOf(",", x);
-                            if (numLevelsEnd > 0)
-                            {
-                                int l = numLevelsEnd - x;
-                                if (l > 0)
-                                {
-                                    numLevel = int.Parse(route.Substring(x, l));
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region -- zoomFactor --
-                    {
-                        int x = route.IndexOf("zoomFactor:", numLevelsEnd >= 0 ? numLevelsEnd : 0) + 11;
-                        if (x >= 11)
-                        {
-                            int end = route.IndexOf("}", x);
-                            if (end > 0)
-                            {
-                                int l = end - x;
-                                if (l > 0)
-                                {
-                                    zoomFactor = int.Parse(route.Substring(x, l));
-                                }
-                            }
-                        }
-                    }
-                    #endregion
-
-                    #region -- trim point overload --
-                    if (points != null && numLevel > 0 && !string.IsNullOrEmpty(levels))
-                    {
-                        if (points.Count - levels.Length > 0)
-                        {
-                            points.RemoveRange(levels.Length, points.Count - levels.Length);
-                        }
-
-                        //http://facstaff.unca.edu/mcmcclur/GoogleMaps/EncodePolyline/description.html
-                        //
-                        string allZlevels = "TSRPONMLKJIHGFEDCBA@?";
-                        if (numLevel > allZlevels.Length)
-                        {
-                            numLevel = allZlevels.Length;
-                        }
-
-                        // used letters in levels string
-                        string pLevels = allZlevels.Substring(allZlevels.Length - numLevel);
-
-                        // remove useless points at zoom
-                        {
-                            List<PointLatLng> removedPoints = new List<PointLatLng>();
-
-                            for (int i = 0; i < levels.Length; i++)
-                            {
-                                int zi = pLevels.IndexOf(levels [i]);
-                                if (zi > 0)
-                                {
-                                    if (zi * numLevel > zoom)
-                                    {
-                                        removedPoints.Add(points [i]);
-                                    }
-                                }
-                            }
-
-                            foreach (var v in removedPoints)
-                            {
-                                points.Remove(v);
-                            }
-                            removedPoints.Clear();
-                            removedPoints = null;
-                        }
-                    }
-                    #endregion
                 }
             }
             catch (Exception ex)
