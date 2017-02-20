@@ -20,8 +20,8 @@ using System.Windows;
 [assembly: Guid("BB3E880B-18D8-4843-A2C1-47DC7CCC054C")]
 [assembly: AssemblyCompany("Tecno-Net")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
-[assembly: AssemblyVersion("1.7.5.0")]
-[assembly: AssemblyFileVersion("1.7.5.0")]
+[assembly: AssemblyVersion("1.7.6.0")]
+[assembly: AssemblyFileVersion("1.7.6.0")]
 
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
