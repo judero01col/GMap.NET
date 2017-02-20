@@ -47,6 +47,11 @@ namespace GMap.NET
         public double DistanceLineal;
 
         /// <summary>
+        /// Status of Route
+        /// </summary>
+        public string Status { get; set; }
+
+        /// <summary>
         /// route start point
         /// </summary>
         public PointLatLng? From

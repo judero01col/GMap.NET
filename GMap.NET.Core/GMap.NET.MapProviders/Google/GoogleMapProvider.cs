@@ -315,6 +315,10 @@ namespace GMap.NET.MapProviders
 
                     if (RouteResult != null)
                     {
+                        ret = new MapRoute(tooltip);
+
+                        ret.Status = RouteResult.status;
+
                         List<PointLatLng> points = new List<PointLatLng>();
 
                         if (RouteResult.routes.Count > 0)
@@ -326,8 +330,6 @@ namespace GMap.NET.MapProviders
 
                                 if (points != null)
                                 {
-                                    ret = new MapRoute(tooltip);
-
                                     ret.Points.Add(start);
                                     ret.Points.Add(end);
 
