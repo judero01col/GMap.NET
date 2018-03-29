@@ -71,11 +71,19 @@ namespace Demo.WindowsForms
                 }
 
                 // config map         
-                MainMap.MapProvider = GMapProviders.OpenStreetMap;
+                MainMap.MapProvider = GMapProviders.HereMap;
                 MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
                 MainMap.MinZoom = 0;
                 MainMap.MaxZoom = 24;
                 MainMap.Zoom = 9;
+
+                HereMapProvider.Instance.AppId = "7zifAuqOid6csXxmu24I";
+                HereMapProvider.Instance.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
+
+                //HereTerrainMapProvider.Instance.AppId = "7zifAuqOid6csXxmu24I";
+                //HereTerrainMapProvider.Instance.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
+
+                GoogleMapProvider.Instance.ApiKey = "AIzaSyB9vaw2W6gMf8LwAD-BUsNLToT4teYXZ1o";
 
                 //MainMap.ScaleMode = ScaleModes.Fractional;
 
@@ -1851,8 +1859,6 @@ namespace Demo.WindowsForms
         // go to
         private void button8_Click(object sender, EventArgs e)
         {
-            GoogleMapProvider.Instance.ApiKey = "AIzaSyB9vaw2W6gMf8LwAD-BUsNLToT4teYXZ1o";
-
             //try
             //{
             //    double lat = double.Parse(textBoxLat.Text, CultureInfo.InvariantCulture);

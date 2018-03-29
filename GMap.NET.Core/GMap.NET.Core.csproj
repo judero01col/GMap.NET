@@ -137,15 +137,7 @@
     <TargetFrameworkVersionNumber>5.0</TargetFrameworkVersionNumber>
   </PropertyGroup>
   <Choose>
-    <When Condition=" '$(TargetFrameworkVersionNumber)' &gt;= '4.0' ">
-      <ItemGroup>
-        <Reference Include="MySql.Data">
-          <HintPath>..\References\Windows\NET4\MySql.Data.dll</HintPath>
-          <SpecificVersion>False</SpecificVersion>
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition=" '$(TargetFrameworkVersionNumber)' &gt;= '4.0' " />
     <Otherwise>
       <ItemGroup>
         <Reference Include="Mono.Data.Sqlite">
@@ -267,6 +259,10 @@
     <Compile Include="GMap.NET.MapProviders\Etc\MapBenderWMSProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Etc\SpainMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Etc\LatviaMapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\Here\HereMapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\Here\HereSatelliteMapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\Here\HereTerrainMapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\Here\HereHybridMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Lithuania\LithuaniaReliefMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Lithuania\LithuaniaHybridOldMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Lithuania\LithuaniaHybridMapProvider.cs" />

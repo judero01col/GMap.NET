@@ -21,6 +21,7 @@ namespace GMap.NET.MapProviders
             list = new List<GMapProvider>();
 
             Type type = typeof(GMapProviders);
+
             foreach (var p in type.GetFields())
             {
                 var v = p.GetValue(null) as GMapProvider; // static classes cannot be instanced, so use null...
@@ -31,12 +32,14 @@ namespace GMap.NET.MapProviders
             }
 
             Hash = new Dictionary<Guid, GMapProvider>();
+
             foreach (var p in list)
             {
                 Hash.Add(p.Id, p);
             }
 
             DbHash = new Dictionary<int, GMapProvider>();
+
             foreach (var p in list)
             {
                 DbHash.Add(p.DbId, p);
@@ -45,6 +48,7 @@ namespace GMap.NET.MapProviders
 
         GMapProviders()
         {
+
         }
 
         public static readonly EmptyProvider EmptyProvider = EmptyProvider.Instance;
@@ -103,6 +107,11 @@ namespace GMap.NET.MapProviders
         public static readonly OviSatelliteMapProvider OviSatelliteMap = OviSatelliteMapProvider.Instance;
         public static readonly OviHybridMapProvider OviHybridMap = OviHybridMapProvider.Instance;
         public static readonly OviTerrainMapProvider OviTerrainMap = OviTerrainMapProvider.Instance;
+
+        public static readonly HereMapProvider HereMap = HereMapProvider.Instance;
+        public static readonly HereSatelliteMapProvider HereSatelliteMap = HereSatelliteMapProvider.Instance;
+        public static readonly HereHybridMapProvider HereHybridMap = HereHybridMapProvider.Instance;
+        public static readonly HereTerrainMapProvider HereTerrainMap = HereTerrainMapProvider.Instance;
 
         public static readonly YandexMapProvider YandexMap = YandexMapProvider.Instance;
         public static readonly YandexSatelliteMapProvider YandexSatelliteMap = YandexSatelliteMapProvider.Instance;
@@ -174,10 +183,12 @@ namespace GMap.NET.MapProviders
         public static GMapProvider TryGetProvider(Guid id)
         {
             GMapProvider ret;
+
             if (Hash.TryGetValue(id, out ret))
             {
                 return ret;
             }
+
             return null;
         }
 
@@ -186,10 +197,12 @@ namespace GMap.NET.MapProviders
         public static GMapProvider TryGetProvider(int DbId)
         {
             GMapProvider ret;
+
             if (DbHash.TryGetValue(DbId, out ret))
             {
                 return ret;
             }
+
             return null;
         }
     }
@@ -252,6 +265,7 @@ namespace GMap.NET.MapProviders
             {
                 throw new Exception("such provider id already exsists, try regenerate your provider guid...");
             }
+
             MapProviders.Add(this);
         }
 

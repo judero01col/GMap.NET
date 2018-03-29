@@ -45,6 +45,7 @@ namespace GMap.NET.MapProviders
         public string ApiKey = string.Empty;
 
         #region GMapProvider Members
+
         public override Guid Id
         {
             get
@@ -86,6 +87,7 @@ namespace GMap.NET.MapProviders
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
         public bool TryCorrectVersion = true;
@@ -210,6 +212,7 @@ namespace GMap.NET.MapProviders
             sec2 = string.Empty; // after &zoom=...
             int seclen = (int)((pos.X * 3) + pos.Y) % 8;
             sec2 = SecureWord.Substring(0, seclen);
+
             if (pos.Y >= 10000 && pos.Y < 100000)
             {
                 sec1 = Sec1;
@@ -233,6 +236,7 @@ namespace GMap.NET.MapProviders
             {
                 ret = new MapRoute(points, tooltip);
             }
+
             return ret;
         }
 
@@ -242,11 +246,14 @@ namespace GMap.NET.MapProviders
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
+
             List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), Zoom, out tooltip, out numLevels, out zoomFactor);
+
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
             }
+
             return ret;
         }
 
@@ -709,579 +716,13 @@ namespace GMap.NET.MapProviders
                                                 }
                                             }
                                         }
+
                                         placemarkList.Add(ret);
                                     }
                                 }
                             }
                         }
                     }
-
-                    #region Borrar
-                    //            if (reverse.StartsWith("<?xml"))
-                    //            {
-                    //                #region -- xml response --
-                    //                //<?xml version="1.0" encoding="UTF-8"?>
-                    //                //<GeocodeResponse>
-                    //                // <status>OK</status>
-                    //                // <result>
-                    //                //  <type>street_address</type>
-                    //                //  <formatted_address>Tuskul??n?? gatv?? 2, Vilnius 09213, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>2</long_name>
-                    //                //   <short_name>2</short_name>
-                    //                //   <type>street_number</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Tuskul??n?? gatv??</long_name>
-                    //                //   <short_name>Tuskul??n?? g.</short_name>
-                    //                //   <type>route</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius</long_name>
-                    //                //   <short_name>Vilnius</short_name>
-                    //                //   <type>locality</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>09213</long_name>
-                    //                //   <short_name>09213</short_name>
-                    //                //   <type>postal_code</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.6963339</lat>
-                    //                //    <lng>25.2968939</lng>
-                    //                //   </location>
-                    //                //   <location_type>ROOFTOP</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.6949849</lat>
-                    //                //     <lng>25.2955449</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.6976829</lat>
-                    //                //     <lng>25.2982429</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>postal_code</type>
-                    //                //  <formatted_address>Vilnius 09213, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>09213</long_name>
-                    //                //   <short_name>09213</short_name>
-                    //                //   <type>postal_code</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius</long_name>
-                    //                //   <short_name>Vilnius</short_name>
-                    //                //   <type>locality</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.6963032</lat>
-                    //                //    <lng>25.2967390</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.6950889</lat>
-                    //                //     <lng>25.2958851</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.6977869</lat>
-                    //                //     <lng>25.2985830</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.6956179</lat>
-                    //                //     <lng>25.2958871</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.6972579</lat>
-                    //                //     <lng>25.2985810</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>neighborhood</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>??irm??nai, Vilnius, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>??irm??nai</long_name>
-                    //                //   <short_name>??irm??nai</short_name>
-                    //                //   <type>neighborhood</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius</long_name>
-                    //                //   <short_name>Vilnius</short_name>
-                    //                //   <type>locality</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.7117424</lat>
-                    //                //    <lng>25.2974345</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.6888939</lat>
-                    //                //     <lng>25.2838700</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.7304441</lat>
-                    //                //     <lng>25.3133630</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.6888939</lat>
-                    //                //     <lng>25.2838700</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.7304441</lat>
-                    //                //     <lng>25.3133630</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>administrative_area_level_3</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>??irm??n?? seni??nija, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>??irm??n?? seni??nija</long_name>
-                    //                //   <short_name>??irm??n?? sen.</short_name>
-                    //                //   <type>administrative_area_level_3</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.7117424</lat>
-                    //                //    <lng>25.2974345</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.6892135</lat>
-                    //                //     <lng>25.2837150</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.7305878</lat>
-                    //                //     <lng>25.3135630</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.6892135</lat>
-                    //                //     <lng>25.2837150</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.7305878</lat>
-                    //                //     <lng>25.3135630</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>locality</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>Vilnius, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius</long_name>
-                    //                //   <short_name>Vilnius</short_name>
-                    //                //   <type>locality</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.6871555</lat>
-                    //                //    <lng>25.2796514</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.5677980</lat>
-                    //                //     <lng>25.0243760</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.8325440</lat>
-                    //                //     <lng>25.4814883</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.5677980</lat>
-                    //                //     <lng>25.0243760</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.8325440</lat>
-                    //                //     <lng>25.4814883</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>administrative_area_level_2</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>Vilniaus miesto savivaldyb??, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilniaus miesto savivaldyb??</long_name>
-                    //                //   <short_name>Vilniaus m. sav.</short_name>
-                    //                //   <type>administrative_area_level_2</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.6759715</lat>
-                    //                //    <lng>25.2867413</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.5677980</lat>
-                    //                //     <lng>25.0243760</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.8325440</lat>
-                    //                //     <lng>25.4814883</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.5677980</lat>
-                    //                //     <lng>25.0243760</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>54.8325440</lat>
-                    //                //     <lng>25.4814883</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>administrative_area_level_1</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>Vilnius County, Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>Vilnius County</long_name>
-                    //                //   <short_name>Vilnius County</short_name>
-                    //                //   <type>administrative_area_level_1</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>54.8086502</lat>
-                    //                //    <lng>25.2182138</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>54.1276599</lat>
-                    //                //     <lng>24.3863751</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>55.5174369</lat>
-                    //                //     <lng>26.7602130</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>54.1276599</lat>
-                    //                //     <lng>24.3863751</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>55.5174369</lat>
-                    //                //     <lng>26.7602130</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                // <result>
-                    //                //  <type>country</type>
-                    //                //  <type>political</type>
-                    //                //  <formatted_address>Lithuania</formatted_address>
-                    //                //  <address_component>
-                    //                //   <long_name>Lithuania</long_name>
-                    //                //   <short_name>LT</short_name>
-                    //                //   <type>country</type>
-                    //                //   <type>political</type>
-                    //                //  </address_component>
-                    //                //  <geometry>
-                    //                //   <location>
-                    //                //    <lat>55.1694380</lat>
-                    //                //    <lng>23.8812750</lng>
-                    //                //   </location>
-                    //                //   <location_type>APPROXIMATE</location_type>
-                    //                //   <viewport>
-                    //                //    <southwest>
-                    //                //     <lat>53.8968787</lat>
-                    //                //     <lng>20.9543679</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>56.4503209</lat>
-                    //                //     <lng>26.8355913</lng>
-                    //                //    </northeast>
-                    //                //   </viewport>
-                    //                //   <bounds>
-                    //                //    <southwest>
-                    //                //     <lat>53.8968787</lat>
-                    //                //     <lng>20.9543679</lng>
-                    //                //    </southwest>
-                    //                //    <northeast>
-                    //                //     <lat>56.4503209</lat>
-                    //                //     <lng>26.8355913</lng>
-                    //                //    </northeast>
-                    //                //   </bounds>
-                    //                //  </geometry>
-                    //                // </result>
-                    //                //</GeocodeResponse>
-
-                    //                #endregion
-
-                    //                XmlDocument doc = new XmlDocument();
-                    //                doc.LoadXml(reverse);
-
-                    //                XmlNode nn = doc.SelectSingleNode("//status");
-                    //                if (nn != null)
-                    //                {
-                    //                    if (nn.InnerText != "OK")
-                    //                    {
-                    //                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + nn.InnerText);
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        status = GeoCoderStatusCode.G_GEO_SUCCESS;
-
-                    //                        if (cache && GMaps.Instance.UsePlacemarkCache)
-                    //                        {
-                    //                            Cache.Instance.SaveContent(url, CacheType.PlacemarkCache, reverse);
-                    //                        }
-
-                    //                        placemarkList = new List<Placemark>();
-
-                    //                        #region -- placemarks --
-                    //                        XmlNodeList l = doc.SelectNodes("//result");
-                    //                        if (l != null)
-                    //                        {
-                    //                            foreach (XmlNode n in l)
-                    //                            {
-                    //                                Debug.WriteLine("---------------------");
-
-                    //                                nn = n.SelectSingleNode("formatted_address");
-                    //                                if (nn != null)
-                    //                                {
-                    //                                    var ret = new Placemark(nn.InnerText);
-
-                    //                                    Debug.WriteLine("formatted_address: [" + nn.InnerText + "]");
-
-                    //                                    nn = n.SelectSingleNode("type");
-                    //                                    if (nn != null)
-                    //                                    {
-                    //                                        Debug.WriteLine("type: " + nn.InnerText);
-                    //                                    }
-
-                    //                                    // TODO: fill Placemark details
-
-                    //                                    XmlNodeList acl = n.SelectNodes("address_component");
-                    //                                    foreach (XmlNode ac in acl)
-                    //                                    {
-                    //                                        nn = ac.SelectSingleNode("type");
-                    //                                        if (nn != null)
-                    //                                        {
-                    //                                            var type = nn.InnerText;
-                    //                                            Debug.Write(" - [" + type + "], ");
-
-                    //                                            nn = ac.SelectSingleNode("long_name");
-                    //                                            if (nn != null)
-                    //                                            {
-                    //                                                Debug.WriteLine("long_name: [" + nn.InnerText + "]");
-
-                    //                                                switch (type)
-                    //                                                {
-                    //                                                    case "street_address":
-                    //                                                    {
-                    //                                                        ret.StreetNumber = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "route":
-                    //                                                    {
-                    //                                                        ret.ThoroughfareName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "postal_code":
-                    //                                                    {
-                    //                                                        ret.PostalCodeNumber = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "country":
-                    //                                                    {
-                    //                                                        ret.CountryName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "locality":
-                    //                                                    {
-                    //                                                        ret.LocalityName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "administrative_area_level_2":
-                    //                                                    {
-                    //                                                      ret.DistrictName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "administrative_area_level_1":
-                    //                                                    {
-                    //                                                        ret.AdministrativeAreaName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "administrative_area_level_3":
-                    //                                                    {
-                    //                                                        ret.SubAdministrativeAreaName = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-
-                    //                                                    case "neighborhood":
-                    //                                                    {
-                    //                                                        ret.Neighborhood = nn.InnerText;
-                    //                                                    }
-                    //                                                    break;
-                    //                                                }
-                    //                                            }
-                    //                                        }
-                    //                                    }                                            
-
-                    //                                    placemarkList.Add(ret);
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        #endregion
-                    //                    }
-                    //                }
-                    //#endregion
-                    //            }
-
-                    #endregion
                 }
             }
             catch (Exception ex)
@@ -1391,6 +832,7 @@ namespace GMap.NET.MapProviders
 
             string wpLatLng = string.Empty;
             int i = 0;
+
             foreach (var wp in wayPoints)
             {
                 wpLatLng += string.Format(CultureInfo.InvariantCulture, i++ == 0 ? "{0},{1}" : "|{0},{1}", wp.Lat, wp.Lng);
@@ -1407,6 +849,7 @@ namespace GMap.NET.MapProviders
 
             string wpLatLng = string.Empty;
             int i = 0;
+
             foreach (var wp in wayPoints)
             {
                 wpLatLng += string.Format(CultureInfo.InvariantCulture, i++ == 0 ? "{0}" : "|{0}", wp.Replace(' ', '+'));
@@ -1584,17 +1027,20 @@ namespace GMap.NET.MapProviders
             int index = 0;
             int lat = 0;
             int lng = 0;
+
             while (index < len)
             {
                 int result = 1;
                 int shift = 0;
                 int b;
+
                 do
                 {
                     b = encodedPath[index++] - 63 - 1;
                     result += b << shift;
                     shift += 5;
                 } while (b >= 0x1f && index < len);
+
                 lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
 
                 result = 1;
@@ -1608,6 +1054,7 @@ namespace GMap.NET.MapProviders
                         result += b << shift;
                         shift += 5;
                     } while (b >= 0x1f && index < len);
+
                     lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
                 }
 
