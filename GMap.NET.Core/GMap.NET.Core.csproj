@@ -280,10 +280,6 @@
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexHybridMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexSatelliteMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexMapProvider.cs" />
-    <Compile Include="GMap.NET.MapProviders\Ovi\OviHybridMapProvider.cs" />
-    <Compile Include="GMap.NET.MapProviders\Ovi\OviTerrainMapProvider.cs" />
-    <Compile Include="GMap.NET.MapProviders\Ovi\OviSatelliteMapProvider.cs" />
-    <Compile Include="GMap.NET.MapProviders\Ovi\OviMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\NearMap\NearHybridMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\NearMap\NearSatelliteMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\NearMap\NearMapProvider.cs" />

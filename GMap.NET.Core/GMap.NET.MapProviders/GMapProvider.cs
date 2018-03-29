@@ -103,11 +103,6 @@ namespace GMap.NET.MapProviders
         public static readonly NearSatelliteMapProvider NearSatelliteMap = NearSatelliteMapProvider.Instance;
         public static readonly NearHybridMapProvider NearHybridMap = NearHybridMapProvider.Instance;
 
-        public static readonly OviMapProvider OviMap = OviMapProvider.Instance;
-        public static readonly OviSatelliteMapProvider OviSatelliteMap = OviSatelliteMapProvider.Instance;
-        public static readonly OviHybridMapProvider OviHybridMap = OviHybridMapProvider.Instance;
-        public static readonly OviTerrainMapProvider OviTerrainMap = OviTerrainMapProvider.Instance;
-
         public static readonly HereMapProvider HereMap = HereMapProvider.Instance;
         public static readonly HereSatelliteMapProvider HereSatelliteMap = HereSatelliteMapProvider.Instance;
         public static readonly HereHybridMapProvider HereHybridMap = HereHybridMapProvider.Instance;
