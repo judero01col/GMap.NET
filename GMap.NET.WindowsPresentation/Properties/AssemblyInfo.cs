@@ -18,10 +18,10 @@ using System.Windows;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("BB3E880B-18D8-4843-A2C1-47DC7CCC054C")]
-[assembly: AssemblyCompany("Tecno-Net")]
+[assembly: AssemblyCompany("MainSoft Technology")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
-[assembly: AssemblyVersion("1.7.7.0")]
-[assembly: AssemblyFileVersion("1.7.7.0")]
+[assembly: AssemblyVersion("1.8.1.0")]
+[assembly: AssemblyFileVersion("1.8.1.0")]
 
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
