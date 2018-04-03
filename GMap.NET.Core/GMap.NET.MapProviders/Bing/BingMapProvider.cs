@@ -254,8 +254,9 @@ namespace GMap.NET.MapProviders
                               GMapProviders.BingMap.Version = ver;
                               GMapProviders.BingSatelliteMap.Version = ver;
                               GMapProviders.BingHybridMap.Version = ver;
+                                        GMapProviders.BingOSMap.Version = ver;
 #if DEBUG
-                              Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", old: " + old + ", consider updating source");
+                                        Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", old: " + old + ", consider updating source");
                               if(Debugger.IsAttached)
                               {
                                  Thread.Sleep(5555);
