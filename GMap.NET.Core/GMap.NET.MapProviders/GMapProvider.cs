@@ -345,8 +345,13 @@ namespace GMap.NET.MapProviders
 #if !PocketPC
         public static int TimeoutMs = 5 * 1000;
 #else
-      public static int TimeoutMs = 44 * 1000; 
+      public static int TimeoutMs = 44 * 1000;
 #endif
+        /// <summary>
+        /// Time to live of cache, in hours. Default: 240 (10 days).
+        /// </summary>
+        public static int TTLCache = 240;
+
         /// <summary>
         /// Gets or sets the value of the Referer HTTP header.
         /// </summary>
