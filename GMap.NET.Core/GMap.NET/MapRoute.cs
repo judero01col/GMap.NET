@@ -34,12 +34,12 @@ namespace GMap.NET
         /// <summary>
         /// time of route
         /// </summary>
-        public string duration;
+        public string Duration;
 
         /// <summary>
         /// Distance from google route
         /// </summary>
-        public double DistanceGoogle;
+        public double DistanceRuta;
 
         /// <summary>
         /// Distance between points

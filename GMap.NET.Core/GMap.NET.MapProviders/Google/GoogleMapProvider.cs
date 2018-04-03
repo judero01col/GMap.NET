@@ -345,8 +345,8 @@ namespace GMap.NET.MapProviders
                                     ret.Points.Clear();
                                     ret.Points.AddRange(points);
 
-                                    ret.duration = RouteResult.routes[0].legs[0].duration.text;
-                                    ret.DistanceGoogle = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
+                                    ret.Duration = RouteResult.routes[0].legs[0].duration.text;
+                                    ret.DistanceRuta = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
                                 }
                             }
                         }

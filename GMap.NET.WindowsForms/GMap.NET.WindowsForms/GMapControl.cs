@@ -2620,7 +2620,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                System.Drawing.Point[] tt = new System.Drawing.Point[] { new System.Drawing.Point((int)ret.X, (int)ret.Y) };
+                System.Drawing.Point[] tt = new Point[] { new Point((int)ret.X, (int)ret.Y) };
                 rotationMatrix.TransformPoints(tt);
                 var f = tt[0];
 
