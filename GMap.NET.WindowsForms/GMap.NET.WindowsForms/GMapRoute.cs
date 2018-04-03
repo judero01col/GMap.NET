@@ -7,14 +7,14 @@ namespace GMap.NET.WindowsForms
     using System.Drawing.Drawing2D;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
-    using GMap.NET;    
+    using GMap.NET;
 
     /// <summary>
     /// GMap.NET route
     /// </summary>
     [Serializable]
 #if !PocketPC
-   public class GMapRoute : MapRoute, ISerializable, IDeserializationCallback, IDisposable
+    public class GMapRoute : MapRoute, ISerializable, IDeserializationCallback, IDisposable
 #else
     public class GMapRoute : MapRoute, IDisposable
 #endif
@@ -116,47 +116,47 @@ namespace GMap.NET.WindowsForms
             return false;
         }
 
-      GraphicsPath graphicsPath;
-      internal void UpdateGraphicsPath()
-      {
-         if(graphicsPath == null)
-         {
-            graphicsPath = new GraphicsPath();
-         }
-         else
-         {
-            graphicsPath.Reset();
-         }
-
-         {
-            for(int i = 0; i < LocalPoints.Count; i++)
+        GraphicsPath graphicsPath;
+        internal void UpdateGraphicsPath()
+        {
+            if (graphicsPath == null)
             {
-               GPoint p2 = LocalPoints[i];
-
-               if(i == 0)
-               {
-                  graphicsPath.AddLine(p2.X, p2.Y, p2.X, p2.Y);
-               }
-               else
-               {
-                  System.Drawing.PointF p = graphicsPath.GetLastPoint();
-                  graphicsPath.AddLine(p.X, p.Y, p2.X, p2.Y);
-               }
+                graphicsPath = new GraphicsPath();
             }
-         }
-      }
+            else
+            {
+                graphicsPath.Reset();
+            }
+
+            {
+                for (int i = 0; i < LocalPoints.Count; i++)
+                {
+                    GPoint p2 = LocalPoints[i];
+
+                    if (i == 0)
+                    {
+                        graphicsPath.AddLine(p2.X, p2.Y, p2.X, p2.Y);
+                    }
+                    else
+                    {
+                        System.Drawing.PointF p = graphicsPath.GetLastPoint();
+                        graphicsPath.AddLine(p.X, p.Y, p2.X, p2.Y);
+                    }
+                }
+            }
+        }
 #endif
 
         public virtual void OnRender(Graphics g)
         {
 #if !PocketPC
-         if(IsVisible)
-         {
-            if(graphicsPath != null)
+            if (IsVisible)
             {
-               g.DrawPath(Stroke, graphicsPath);
+                if (graphicsPath != null)
+                {
+                    g.DrawPath(Stroke, graphicsPath);
+                }
             }
-         }
 #else
             if (IsVisible)
             {
@@ -212,54 +212,54 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
         #region ISerializable Members
 
-      // Temp store for de-serialization.
-      private GPoint[] deserializedLocalPoints;
+        // Temp store for de-serialization.
+        private GPoint[] deserializedLocalPoints;
 
-      /// <summary>
-      /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
-      /// </summary>
-      /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
-      /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
-      /// <exception cref="T:System.Security.SecurityException">
-      /// The caller does not have the required permission.
-      /// </exception>
-      public override void GetObjectData(SerializationInfo info, StreamingContext context)
-      {
-         base.GetObjectData(info, context);
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <exception cref="T:System.Security.SecurityException">
+        /// The caller does not have the required permission.
+        /// </exception>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
 
-         info.AddValue("Visible", this.IsVisible);
-         info.AddValue("LocalPoints", this.LocalPoints.ToArray());
-      }
+            info.AddValue("Visible", this.IsVisible);
+            info.AddValue("LocalPoints", this.LocalPoints.ToArray());
+        }
 
-      /// <summary>
-      /// Initializes a new instance of the <see cref="GMapRoute"/> class.
-      /// </summary>
-      /// <param name="info">The info.</param>
-      /// <param name="context">The context.</param>
-      protected GMapRoute(SerializationInfo info, StreamingContext context)
-         : base(info, context)
-      {
-         //this.Stroke = Extensions.GetValue<Pen>(info, "Stroke", new Pen(Color.FromArgb(144, Color.MidnightBlue)));
-         this.IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
-         this.deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
-      }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GMapRoute"/> class.
+        /// </summary>
+        /// <param name="info">The info.</param>
+        /// <param name="context">The context.</param>
+        protected GMapRoute(SerializationInfo info, StreamingContext context)
+           : base(info, context)
+        {
+            //this.Stroke = Extensions.GetValue<Pen>(info, "Stroke", new Pen(Color.FromArgb(144, Color.MidnightBlue)));
+            this.IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
+            this.deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
+        }
 
         #endregion
 
         #region IDeserializationCallback Members
 
-      /// <summary>
-      /// Runs when the entire object graph has been de-serialized.
-      /// </summary>
-      /// <param name="sender">The object that initiated the callback. The functionality for this parameter is not currently implemented.</param>
-      public override void OnDeserialization(object sender)
-      {
-         base.OnDeserialization(sender);
+        /// <summary>
+        /// Runs when the entire object graph has been de-serialized.
+        /// </summary>
+        /// <param name="sender">The object that initiated the callback. The functionality for this parameter is not currently implemented.</param>
+        public override void OnDeserialization(object sender)
+        {
+            base.OnDeserialization(sender);
 
-         // Accounts for the de-serialization being breadth first rather than depth first.
-         LocalPoints.AddRange(deserializedLocalPoints);
-         LocalPoints.Capacity = Points.Count;
-      }
+            // Accounts for the de-serialization being breadth first rather than depth first.
+            LocalPoints.AddRange(deserializedLocalPoints);
+            LocalPoints.Capacity = Points.Count;
+        }
 
         #endregion
 #endif
@@ -291,6 +291,7 @@ namespace GMap.NET.WindowsForms
     }
 
     public delegate void RouteClick(GMapRoute item, MouseEventArgs e);
+    public delegate void RouteDoubleClick(GMapRoute item, MouseEventArgs e);
     public delegate void RouteEnter(GMapRoute item);
     public delegate void RouteLeave(GMapRoute item);
 }
