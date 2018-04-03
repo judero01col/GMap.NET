@@ -1085,6 +1085,24 @@ namespace GMap.NET.WindowsForms
             return Math.Round((degrees(Math.Atan2(dLong, dPhi)) + 360.0) % 360.0, 2);
         }
 
+        /// <summary>
+        /// check if a given point is within the given point based map boundary
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <returns></returns>
+        public bool isPointInBoundary(List<PointLatLng> points, string lat, string lng)
+        {
+            GMapOverlay polyOverlay = new GMapOverlay();
+            GMapPolygon polygon = new GMapPolygon(points, "routePloygon");
+            polygon.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+            polygon.Stroke = new Pen(Color.Red, 1);
+            polyOverlay.Polygons.Add(polygon);
+            PointLatLng pnt = new PointLatLng(double.Parse(lat), double.Parse(lng));
+            return polygon.IsInside(pnt);
+        }
+
         double radians(double n)
         {
             return n * (Math.PI / 180);
