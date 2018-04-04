@@ -18,8 +18,8 @@ using System.Runtime.InteropServices;
 [assembly: Guid("843e1f67-489b-4454-b451-021e5c526e30")]
 [assembly: AssemblyCompany("MainSoft Technology")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
-[assembly: AssemblyVersion("1.8.1.0")]
-[assembly: AssemblyFileVersion("1.8.1.0")]
+[assembly: AssemblyVersion("1.8.5.0")]
+[assembly: AssemblyFileVersion("1.8.5.0")]
 
 // internal visibility
 [assembly:
