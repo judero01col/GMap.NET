@@ -7,19 +7,18 @@ namespace GMap.NET.WindowsForms
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.IO;
-    using System.Threading;
     using System.Windows.Forms;
-    using GMap.NET;
-    using GMap.NET.Internals;
-    using GMap.NET.ObjectModel;
+    using NET;
+    using Internals;
+    using ObjectModel;
     using System.Diagnostics;
     using System.Drawing.Text;
-    using GMap.NET.MapProviders;
+    using MapProviders;
 
 #if !PocketPC
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Collections.Generic;
-    using GMap.NET.Projections;
+    using Projections;
 #else
    using OpenNETCF.ComponentModel;
 #endif
@@ -585,7 +584,7 @@ namespace GMap.NET.WindowsForms
                 if (GMaps.Instance.IsRunningOnMono)
                 {
                     // no imports to move pointer
-                    MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
+                    MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
                 }
 
                 Overlays.CollectionChanged += new NotifyCollectionChangedEventHandler(Overlays_CollectionChanged);
