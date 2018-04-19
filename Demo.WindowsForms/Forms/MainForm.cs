@@ -71,7 +71,7 @@ namespace Demo.WindowsForms
                 }
 
                 // config map         
-                MainMap.MapProvider = GMapProviders.HereMap;
+                MainMap.MapProvider = GMapProviders.GoogleMap;
                 MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
                 MainMap.MinZoom = 0;
                 MainMap.MaxZoom = 24;
@@ -98,6 +98,7 @@ namespace Demo.WindowsForms
                     MainMap.OnMapTypeChanged += new MapTypeChanged(MainMap_OnMapTypeChanged);
 
                     MainMap.OnMarkerClick += new MarkerClick(MainMap_OnMarkerClick);
+                    MainMap.OnMarkerDoubleClick += MainMap_OnMarkerDoubleClick;
                     MainMap.OnMarkerEnter += new MarkerEnter(MainMap_OnMarkerEnter);
                     MainMap.OnMarkerLeave += new MarkerLeave(MainMap_OnMarkerLeave);
 
@@ -110,6 +111,8 @@ namespace Demo.WindowsForms
                     MainMap.Manager.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
                     MainMap.Manager.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
                     MainMap.Manager.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
+
+                    MainMap.DoubleClick += MainMap_DoubleClick;
                 }
 
                 MainMap.MouseMove += new MouseEventHandler(MainMap_MouseMove);
@@ -258,6 +261,16 @@ namespace Demo.WindowsForms
                     }
                 }
             }
+        }
+
+        private void MainMap_OnMarkerDoubleClick(GMapMarker item, MouseEventArgs e)
+        {
+            
+        }
+
+        private void MainMap_DoubleClick(object sender, EventArgs e)
+        {
+            
         }
 
         public T DeepClone<T>(T obj)
