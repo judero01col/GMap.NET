@@ -117,6 +117,7 @@
             this.radioButtonTcpIp = new System.Windows.Forms.RadioButton();
             this.checkBoxTraceRoute = new System.Windows.Forms.CheckBox();
             this.radioButtonVehicle = new System.Windows.Forms.RadioButton();
+            this.btnTest = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelMenu.SuspendLayout();
@@ -644,6 +645,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnTest);
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.textBoxGeo);
             this.groupBox3.Controls.Add(this.button1);
@@ -681,9 +683,9 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(85, 98);
+            this.button1.Location = new System.Drawing.Point(58, 98);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(74, 24);
+            this.button1.Size = new System.Drawing.Size(53, 24);
             this.button1.TabIndex = 9;
             this.button1.Text = "Reload";
             this.button1.UseVisualStyleBackColor = true;
@@ -692,9 +694,9 @@
             // button8
             // 
             this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button8.Location = new System.Drawing.Point(9, 98);
+            this.button8.Location = new System.Drawing.Point(5, 98);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(72, 24);
+            this.button8.Size = new System.Drawing.Size(51, 24);
             this.button8.TabIndex = 8;
             this.button8.Text = "GoTo !";
             this.button8.UseVisualStyleBackColor = true;
@@ -1403,6 +1405,17 @@
             this.radioButtonVehicle.UseVisualStyleBackColor = true;
             this.radioButtonVehicle.CheckedChanged += new System.EventHandler(this.RealTimeChanged);
             // 
+            // btnTest
+            // 
+            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnTest.Location = new System.Drawing.Point(113, 98);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(37, 24);
+            this.btnTest.TabIndex = 12;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1541,6 +1554,7 @@
       private System.Windows.Forms.TextBox textBoxCacheSize;
       private System.Windows.Forms.Button button17;
       private System.Windows.Forms.CheckBox checkBoxTileHost;
-   }
+        private System.Windows.Forms.Button btnTest;
+    }
 }
 

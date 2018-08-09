@@ -83,7 +83,7 @@ namespace Demo.WindowsForms
                 //HereTerrainMapProvider.Instance.AppId = "7zifAuqOid6csXxmu24I";
                 //HereTerrainMapProvider.Instance.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
 
-                GoogleMapProvider.Instance.ApiKey = "AIzaSyB9vaw2W6gMf8LwAD-BUsNLToT4teYXZ1o";
+                GoogleMapProvider.Instance.ApiKey = "AIzaSyDSDWEGxqXsPOcVbeR8sSts1FJL0j7Fk8w";
 
                 //MainMap.ScaleMode = ScaleModes.Fractional;
 
@@ -2532,5 +2532,20 @@ namespace Demo.WindowsForms
         }
 
         #endregion
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            // config map         
+            try
+            {
+                //MainMap.MapProvider = GMapProviders.GoogleMap;
+                GDirections gd = null;
+                DirectionsStatusCode Res = GMapProviders.GoogleMap.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
     }
 }

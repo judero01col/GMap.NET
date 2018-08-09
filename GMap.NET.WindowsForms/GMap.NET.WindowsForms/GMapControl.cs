@@ -1062,7 +1062,7 @@ namespace GMap.NET.WindowsForms
         /// <param name="StartPoint"></param>
         /// <param name="EndPoint"></param>
         /// <returns></returns>
-        public double getBearing(PointLatLng StartPoint, PointLatLng EndPoint)
+        public double GetBearing(PointLatLng StartPoint, PointLatLng EndPoint)
         {
             //double startLat, double startLong, double endLat, double endLong
             double startLat = radians(StartPoint.Lat);
