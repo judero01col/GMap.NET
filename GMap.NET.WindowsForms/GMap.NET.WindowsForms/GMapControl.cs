@@ -1992,13 +1992,14 @@ namespace GMap.NET.WindowsForms
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            base.OnMouseClick(e);
+            base.OnMouseDoubleClick(e);
 
             if (!Core.IsDragging)
             {
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
                     GMapOverlay o = Overlays[i];
+
                     if (o != null && o.IsVisibile)
                     {
                         foreach (GMapMarker m in o.Markers)
@@ -2016,10 +2017,7 @@ namespace GMap.NET.WindowsForms
 #endif
                                 if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
                                 {
-                                    if (OnMarkerDoubleClick != null)
-                                    {
-                                        OnMarkerDoubleClick(m, e);
-                                    }
+                                    OnMarkerDoubleClick?.Invoke(m, e);
                                     break;
                                 }
 
@@ -2042,10 +2040,7 @@ namespace GMap.NET.WindowsForms
 #endif
                                 if (m.IsInside((int)rp.X, (int)rp.Y))
                                 {
-                                    if (OnRouteDoubleClick != null)
-                                    {
-                                        OnRouteDoubleClick(m, e);
-                                    }
+                                    OnRouteDoubleClick?.Invoke(m, e);
                                     break;
                                 }
                                 #endregion
@@ -2057,12 +2052,10 @@ namespace GMap.NET.WindowsForms
                             if (m.IsVisible && m.IsHitTestVisible)
                             {
                                 #region -- check --
+
                                 if (m.IsInside(FromLocalToLatLng(e.X, e.Y)))
                                 {
-                                    if (OnPolygonDoubleClick != null)
-                                    {
-                                        OnPolygonDoubleClick(m, e);
-                                    }
+                                    OnPolygonDoubleClick?.Invoke(m, e);
                                     break;
                                 }
                                 #endregion
@@ -3010,6 +3003,7 @@ namespace GMap.NET.WindowsForms
                     Debug.WriteLine("MapType: " + Core.Provider.Name + " -> " + value.Name);
 
                     RectLatLng viewarea = SelectedArea;
+
                     if (viewarea != RectLatLng.Empty)
                     {
                         Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2, viewarea.Lng + viewarea.WidthLng / 2);
@@ -3041,6 +3035,57 @@ namespace GMap.NET.WindowsForms
                         }
                     }
                 }
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public RoutingProvider RoutingProvider
+        {
+            get
+            {
+                RoutingProvider dp = MapProvider as RoutingProvider;
+
+                if (dp == null)
+                {
+                    dp = GMapProviders.OpenStreetMap as RoutingProvider; // use OpenStreetMap if provider does not implement routing
+                }
+
+                return dp;
+            }            
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public DirectionsProvider DirectionsProvider
+        {
+            get
+            {
+                DirectionsProvider dp = MapProvider as DirectionsProvider;
+
+                if (dp == null)
+                {
+                    dp = GMapProviders.OpenStreetMap as DirectionsProvider; // use OpenStreetMap if provider does not implement routing
+                }
+
+                return dp;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public GeocodingProvider GeocodingProvider
+        {
+            get
+            {
+                GeocodingProvider dp = MapProvider as GeocodingProvider;
+
+                if (dp == null)
+                {
+                    dp = GMapProviders.OpenStreetMap as GeocodingProvider; // use OpenStreetMap if provider does not implement routing
+                }
+
+                return dp;
             }
         }
 
