@@ -68,7 +68,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MONO_disabled; SQLite</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;MONO_disabled; SQLite</DefineConstants>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <DebugType>Full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
