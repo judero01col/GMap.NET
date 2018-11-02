@@ -122,4 +122,18 @@ namespace GMap.NET
       /// </summary>
       ExceptionInCode,
    }
+
+    /// <summary>
+    /// Direction StatusCode
+    /// </summary>
+    public enum RouteStatusCode
+    {
+        ERROR,
+        INVALID_REQUEST,
+        OK,
+        OVER_QUERY_LIMIT,
+        REQUEST_DENIED,
+        UNKNOWN_ERROR,
+        ZERO_RESULTS
+    }
 }

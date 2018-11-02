@@ -71,6 +71,7 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider [] overlays;
+
         public override GMapProvider [] Overlays
         {
             get
@@ -223,38 +224,14 @@ namespace GMap.NET.MapProviders
 
         #region RoutingProvider Members
 
-        public MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int zoom)
+        public virtual MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom)
         {
-            string tooltip;
-            int numLevels;
-            int zoomFactor;
-
-            MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), zoom, out tooltip, out numLevels, out zoomFactor);
-
-            if (points != null)
-            {
-                ret = new MapRoute(points, tooltip);
-            }
-
-            return ret;
+            return GetRoute(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode));
         }
 
-        public MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int Zoom)
+        public virtual MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int Zoom)
         {
-            string tooltip;
-            int numLevels;
-            int zoomFactor;
-            MapRoute ret = null;
-
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), Zoom, out tooltip, out numLevels, out zoomFactor);
-
-            if (points != null)
-            {
-                ret = new MapRoute(points, tooltip);
-            }
-
-            return ret;
+            return GetRoute(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode));
         }
 
         #region -- internals --
@@ -271,22 +248,10 @@ namespace GMap.NET.MapProviders
             return string.Format(RouteUrlFormatStr, language, opt, start.Replace(' ', '+'), end.Replace(' ', '+'), Server);
         }
 
-        /// <summary>
-        /// Get path and distance between two points
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="avoidHighways"></param>
-        /// <param name="walkingMode"></param>
-        /// <param name="Zoom"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public MapRoute GetRoutePoints(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom, string text)
+        MapRoute GetRoute(string url)
         {
-            MapRoute ret = null;            
-            string tooltip = text;         
-            
-            string url = MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode);
+            MapRoute ret = null;
+            StrucRute RouteResult = null;
 
             try
             {
@@ -294,42 +259,42 @@ namespace GMap.NET.MapProviders
 
                 if (string.IsNullOrEmpty(route))
                 {
-                    // Must provide either API key or Maps for Work credentials.
-                    if (!string.IsNullOrEmpty(ClientId))
-                    {
-                        url = GetSignedUri(url);
-                    }
-                    else if (!string.IsNullOrEmpty(ApiKey))
-                    {
-                        url += "&key=" + ApiKey;
-                    }
-
-                    route = GetContentUsingHttp(url);
+                    route = GetContentUsingHttp(!string.IsNullOrEmpty(ClientId) ? GetSignedUri(url) : (!string.IsNullOrEmpty(ApiKey) ? url + "&key=" + ApiKey : url));
 
                     if (!string.IsNullOrEmpty(route))
                     {
-                        if (GMaps.Instance.UseRouteCache)
+                        RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
+
+                        if (GMaps.Instance.UseRouteCache && RouteResult != null && RouteResult.status == RouteStatusCode.OK)
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
                         }
                     }
                 }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
+                else
                 {
-                    StrucRute RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
+                    RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
+                }
 
-                    if (RouteResult != null)
+                if (RouteResult != null)
+                {
+                    if (RouteResult.routes != null && RouteResult.routes.Count > 0)
                     {
-                        ret = new MapRoute(tooltip);
+                        ret = new MapRoute(RouteResult.routes[0].summary);
+                    }
+                    else
+                    {
+                        ret = new MapRoute("Route");
+                    }
 
-                        ret.Status = RouteResult.status;
+                    ret.Status = RouteResult.status;
 
-                        List<PointLatLng> points = new List<PointLatLng>();
-
+                    if (RouteResult.routes != null && RouteResult.routes.Count > 0)
+                    {
                         if (RouteResult.routes.Count > 0)
                         {
+                            List<PointLatLng> points = new List<PointLatLng>();
+
                             if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
                             {
                                 points = new List<PointLatLng>();
@@ -337,16 +302,11 @@ namespace GMap.NET.MapProviders
 
                                 if (points != null)
                                 {
-                                    ret.Points.Add(start);
-                                    ret.Points.Add(end);
-
-                                    ret.DistanceLineal = ret.Distance;
-
                                     ret.Points.Clear();
                                     ret.Points.AddRange(points);
 
                                     ret.Duration = RouteResult.routes[0].legs[0].duration.text;
-                                    ret.DistanceRuta = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
+                                    //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
                                 }
                             }
                         }
@@ -360,69 +320,6 @@ namespace GMap.NET.MapProviders
             }
 
             return ret;
-        }
-
-        /// <summary>
-        /// Gets route between two points
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="zoom"></param>
-        /// <param name="tooltipHtml"></param>
-        /// <param name="numLevel"></param>
-        /// <param name="zoomFactor"></param>
-        /// <returns></returns>
-        List<PointLatLng> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel, out int zoomFactor)
-        {
-            List<PointLatLng> points = null;
-            tooltipHtml = string.Empty;
-            numLevel = -1;
-            zoomFactor = -1;
-
-            try
-            {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
-
-                if (string.IsNullOrEmpty(route))
-                {
-                    route = GetContentUsingHttp(url);
-
-                    if (!string.IsNullOrEmpty(route))
-                    {
-                        if (GMaps.Instance.UseRouteCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
-                        }
-                    }
-                }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
-                {
-                    StrucRute RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
-
-                    if (RouteResult != null)
-                    {
-                        points = new List<PointLatLng>();
-
-                        if (RouteResult.routes.Count > 0)
-                        {
-                            if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
-                            {
-                                points = new List<PointLatLng>();
-                                DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
-                            }
-                        }
-
-                        return points;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                points = null;
-                Debug.WriteLine("GetRoutePoints: " + ex);
-            }
-            return points;
         }
 
         static readonly string RouteUrlFormatPointLatLng = "https://maps.{6}/maps/api/directions/json?origin={2},{3}&destination={4},{5}&mode=driving";
@@ -864,26 +761,13 @@ namespace GMap.NET.MapProviders
             direction = null;
 
             try
-            {
+            {                
                 string kml = GMaps.Instance.UseDirectionsCache ? Cache.Instance.GetContent(url, CacheType.DirectionsCache) : string.Empty;
-
                 bool cache = false;
 
                 if (string.IsNullOrEmpty(kml))
                 {
-                    string urls = url;
-
-                    // Must provide either API key or Maps for Work credentials.
-                    if (!string.IsNullOrEmpty(ClientId))
-                    {
-                        urls = GetSignedUri(url);
-                    }
-                    else if (!string.IsNullOrEmpty(ApiKey))
-                    {
-                        urls += "&key=" + ApiKey;
-                    }
-
-                    kml = GetContentUsingHttp(urls);
+                    kml = GetContentUsingHttp(!string.IsNullOrEmpty(ClientId) ? GetSignedUri(url) : (!string.IsNullOrEmpty(ApiKey) ? url + "&key=" + ApiKey : url));
 
                     if (!string.IsNullOrEmpty(kml))
                     {
@@ -897,15 +781,15 @@ namespace GMap.NET.MapProviders
 
                     if (DirectionResult != null)
                     {
-                        ret = (DirectionsStatusCode)Enum.Parse(typeof(DirectionsStatusCode), DirectionResult.status, false);
+                        if (GMaps.Instance.UseDirectionsCache && cache)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.DirectionsCache, kml);
+                        }
+
+                        ret = DirectionResult.status; // (DirectionsStatusCode)Enum.Parse(typeof(DirectionsStatusCode), DirectionResult.status, false);
 
                         if (ret == DirectionsStatusCode.OK)
                         {
-                            if (cache && GMaps.Instance.UseDirectionsCache)
-                            {
-                                Cache.Instance.SaveContent(url, CacheType.DirectionsCache, kml);
-                            }
-
                             direction = new GDirections();
 
                             if (DirectionResult.routes != null && DirectionResult.routes.Count > 0)
@@ -1072,6 +956,7 @@ namespace GMap.NET.MapProviders
         #endregion
 
         #region -- Maps API for Work --
+
         /// <summary>
         /// https://developers.google.com/maps/documentation/business/webservices/auth#how_do_i_get_my_signing_key
         /// To access the special features of the Google Maps API for Work you must provide a client ID
@@ -1088,6 +973,7 @@ namespace GMap.NET.MapProviders
             _privateKeyBytes = Convert.FromBase64String(privateKey);
             _clientId = clientId;
         }
+
         private byte[] _privateKeyBytes;
 
         private string _clientId = string.Empty;

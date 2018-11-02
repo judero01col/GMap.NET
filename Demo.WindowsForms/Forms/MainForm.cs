@@ -18,6 +18,7 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET.WindowsForms.ToolTips;
 using System.Reflection;
+using GMap.NET.CacheProviders;
 
 namespace Demo.WindowsForms
 {
@@ -51,9 +52,9 @@ namespace Demo.WindowsForms
             if (!GMapControl.IsDesignerHosted)
             {
                 // add your custom map db provider
-                //GMap.NET.CacheProviders.MySQLPureImageCache ch = new GMap.NET.CacheProviders.MySQLPureImageCache();
-                //ch.ConnectionString = @"server=sql2008;User Id=trolis;Persist Security Info=True;database=gmapnetcache;password=trolis;";
-                //MainMap.Manager.SecondaryCache = ch;
+                MsSQLPureImageCache ch = new MsSQLPureImageCache();
+                ch.ConnectionString = @"data source = sql5040.site4now.net;User Id=DB_A3B2C9_GMapNET_admin; initial catalog = DB_A3B2C9_GMapNET; password = Usuario@2018;";                
+                MainMap.Manager.SecondaryCache = ch;
 
                 // set your proxy here if need
                 //GMapProvider.IsSocksProxy = true;
@@ -70,20 +71,22 @@ namespace Demo.WindowsForms
                     MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsForms", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
+                GMapProviders.GoogleMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
+                GMapProviders.GoogleSatelliteMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
+                GMapProviders.GoogleTerrainMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
+
+                GMapProviders.HereMap.AppId = "7zifAuqOid6csXxmu24I";
+                GMapProviders.HereMap.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
+
+                GMapProviders.HereTerrainMap.AppId = "7zifAuqOid6csXxmu24I";
+                GMapProviders.HereTerrainMap.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
+
                 // config map         
                 MainMap.MapProvider = GMapProviders.GoogleMap;
                 MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
                 MainMap.MinZoom = 0;
                 MainMap.MaxZoom = 24;
                 MainMap.Zoom = 9;
-
-                HereMapProvider.Instance.AppId = "7zifAuqOid6csXxmu24I";
-                HereMapProvider.Instance.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
-
-                //HereTerrainMapProvider.Instance.AppId = "7zifAuqOid6csXxmu24I";
-                //HereTerrainMapProvider.Instance.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
-
-                GoogleMapProvider.Instance.ApiKey = "AIzaSyDSDWEGxqXsPOcVbeR8sSts1FJL0j7Fk8w";
 
                 //MainMap.ScaleMode = ScaleModes.Fractional;
 
@@ -99,20 +102,27 @@ namespace Demo.WindowsForms
 
                     MainMap.OnMarkerClick += new MarkerClick(MainMap_OnMarkerClick);
                     MainMap.OnMarkerDoubleClick += MainMap_OnMarkerDoubleClick;
+
                     MainMap.OnMarkerEnter += new MarkerEnter(MainMap_OnMarkerEnter);
                     MainMap.OnMarkerLeave += new MarkerLeave(MainMap_OnMarkerLeave);
 
                     MainMap.OnPolygonEnter += new PolygonEnter(MainMap_OnPolygonEnter);
                     MainMap.OnPolygonLeave += new PolygonLeave(MainMap_OnPolygonLeave);
 
+                    MainMap.OnPolygonClick += MainMap_OnPolygonClick;
+                    MainMap.OnPolygonDoubleClick += MainMap_OnPolygonDoubleClick;
+
                     MainMap.OnRouteEnter += new RouteEnter(MainMap_OnRouteEnter);
                     MainMap.OnRouteLeave += new RouteLeave(MainMap_OnRouteLeave);
+
+                    MainMap.OnRouteClick += MainMap_OnRouteClick;
+                    MainMap.OnRouteDoubleClick += MainMap_OnRouteDoubleClick;
 
                     MainMap.Manager.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
                     MainMap.Manager.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
                     MainMap.Manager.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
 
-                    MainMap.DoubleClick += MainMap_DoubleClick;
+                    
                 }
 
                 MainMap.MouseMove += new MouseEventHandler(MainMap_MouseMove);
@@ -121,11 +131,11 @@ namespace Demo.WindowsForms
                 MainMap.MouseDoubleClick += new MouseEventHandler(MainMap_MouseDoubleClick);
 
                 // get map types
-#if !MONO   // mono doesn't handle it, so we 'lost' provider list ;]
+            #if !MONO   // mono doesn't handle it, so we 'lost' provider list ;]
                 comboBoxMapType.ValueMember = "Name";
                 comboBoxMapType.DataSource = GMapProviders.List;
                 comboBoxMapType.SelectedItem = MainMap.MapProvider;
-#endif
+            #endif
                 // acccess mode
                 comboBoxMode.DataSource = Enum.GetValues(typeof(AccessMode));
                 comboBoxMode.SelectedItem = MainMap.Manager.Mode;
@@ -145,9 +155,9 @@ namespace Demo.WindowsForms
                 trackBar1.Maximum = MainMap.MaxZoom * 100;
                 trackBar1.TickFrequency = 100;
 
-#if DEBUG
-                checkBoxDebug.Checked = true;
-#endif
+            #if DEBUG
+                    checkBoxDebug.Checked = true;
+            #endif
 
                 ToolStripManager.Renderer = new BSE.Windows.Forms.Office2007Renderer();
 
@@ -213,6 +223,7 @@ namespace Demo.WindowsForms
                     GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
                     {
                         PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
+
                         if (pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
                         {
                             currentMarker.Position = pos.Value;
@@ -263,12 +274,27 @@ namespace Demo.WindowsForms
             }
         }
 
-        private void MainMap_OnMarkerDoubleClick(GMapMarker item, MouseEventArgs e)
+        private void MainMap_OnRouteDoubleClick(GMapRoute item, MouseEventArgs e)
         {
             
         }
 
-        private void MainMap_DoubleClick(object sender, EventArgs e)
+        private void MainMap_OnRouteClick(GMapRoute item, MouseEventArgs e)
+        {
+           
+        }
+
+        private void MainMap_OnPolygonDoubleClick(GMapPolygon item, MouseEventArgs e)
+        {
+            
+        }
+
+        private void MainMap_OnPolygonClick(GMapPolygon item, MouseEventArgs e)
+        {
+            
+        }
+
+        private void MainMap_OnMarkerDoubleClick(GMapMarker item, MouseEventArgs e)
         {
             
         }
@@ -1862,6 +1888,7 @@ namespace Demo.WindowsForms
             if ((Keys)e.KeyChar == Keys.Enter)
             {
                 GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
+
                 if (status != GeoCoderStatusCode.G_GEO_SUCCESS)
                 {
                     MessageBox.Show("Geocoder can't find: '" + textBoxGeo.Text + "', reason: " + status.ToString(), "GMap.NET", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1872,40 +1899,18 @@ namespace Demo.WindowsForms
         // go to
         private void button8_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    double lat = double.Parse(textBoxLat.Text, CultureInfo.InvariantCulture);
-            //    double lng = double.Parse(textBoxLng.Text, CultureInfo.InvariantCulture);
+            GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
 
-            //    MainMap.Position = new PointLatLng(lat, lng);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("incorrect coordinate format: " + ex.Message);
-            //}
+            if (status != GeoCoderStatusCode.G_GEO_SUCCESS)
+            {
+                MessageBox.Show("Geocoder can't find: '" + textBoxGeo.Text + "', reason: " + status.ToString(), "GMap.NET", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         // reload map
         private void button1_Click(object sender, EventArgs e)
         {
-            //MainMap.ReloadMap();
-
-            try
-            {
-                MapRoute Rute = GMapProviders.GoogleMap.GetRoutePoints(start, end, false, false, 12, "");
-
-                if (Rute != null)
-                {
-                    if (Rute.Status != "OVER_QUERY_LIMIT")
-                    {
-                        GMapRoute ruta = new GMapRoute(Rute.Points, "");
-                        routes.Routes.Add(ruta);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
+            MainMap.ReloadMap();
         }
 
         // cache config
@@ -2535,16 +2540,28 @@ namespace Demo.WindowsForms
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            // config map         
             try
             {
-                //MainMap.MapProvider = GMapProviders.GoogleMap;
-                GDirections gd = null;
-                DirectionsStatusCode Res = GMapProviders.GoogleMap.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
-            }
-            catch (Exception)
-            {
+                MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
 
+                if (Route != null && Route.Status == RouteStatusCode.OK)
+                {
+                    GMapRoute oRoute = new GMapRoute(Route.Points, "");
+                    routes.Routes.Add(oRoute);
+                }
+
+
+                GDirections gd = null;
+                DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
+
+
+                GeoCoderStatusCode gc;
+                PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
     }
