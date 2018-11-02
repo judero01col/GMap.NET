@@ -93,6 +93,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GMap.NET\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="GMap.NET.WindowsPresentation\GMapMarker.cs" />
     <Compile Include="GMap.NET.WindowsPresentation\GMapPolygon.cs" />
     <Compile Include="GMap.NET.WindowsPresentation\GMapRoute.cs" />

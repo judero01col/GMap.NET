@@ -160,6 +160,9 @@
     <Compile Include="..\Demo.WindowsForms\Source\DemoStuff.cs">
       <Link>Source\DemoStuff.cs</Link>
     </Compile>
+    <Compile Include="..\GMap.NET\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Windows\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
