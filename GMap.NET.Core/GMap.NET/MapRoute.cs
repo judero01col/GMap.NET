@@ -39,17 +39,17 @@ namespace GMap.NET
         /// <summary>
         /// Distance from google route
         /// </summary>
-        public double DistanceRuta;
+        //public double DistanceRoute;
 
         /// <summary>
         /// Distance between points
         /// </summary>
-        public double DistanceLineal;
+        //public double DistanceLineal;
 
         /// <summary>
         /// Status of Route
         /// </summary>
-        public string Status { get; set; }
+        public RouteStatusCode Status { get; set; }
 
         /// <summary>
         /// route start point

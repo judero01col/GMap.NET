@@ -627,7 +627,7 @@ namespace GMap.NET.MapProviders
         public override string ToString()
         {
             return Name;
-        }        
+        }
     }
 
     /// <summary>

@@ -230,13 +230,10 @@ namespace BSE.Windows.Forms
          base.OnPaintBackground(pevent);
          base.BackColor = Color.Transparent;
          Color backColor = this.PanelColors.XPanderPanelBackColor;
+
          if((backColor != Color.Empty) && backColor != Color.Transparent)
          {
-            Rectangle rectangle = new Rectangle(
-                0,
-                this.CaptionHeight,
-                this.ClientRectangle.Width,
-                this.ClientRectangle.Height - this.CaptionHeight);
+            Rectangle rectangle = new Rectangle(0,this.CaptionHeight,this.ClientRectangle.Width,this.ClientRectangle.Height - this.CaptionHeight);
 
             using(SolidBrush backgroundBrush = new SolidBrush(backColor))
             {
@@ -258,6 +255,7 @@ namespace BSE.Windows.Forms
          using(UseAntiAlias antiAlias = new UseAntiAlias(e.Graphics))
          {
             Graphics graphics = e.Graphics;
+
             using(UseClearTypeGridFit clearTypeGridFit = new UseClearTypeGridFit(graphics))
             {
                bool bExpand = this.Expand;
@@ -285,11 +283,13 @@ namespace BSE.Windows.Forms
       protected override void OnPanelExpanding(object sender, XPanderStateChangeEventArgs e)
       {
          bool bExpand = e.Expand;
+
          if(bExpand == true)
          {
             this.Expand = bExpand;
             this.Invalidate(false);
          }
+
          base.OnPanelExpanding(sender, e);
       }
       /// <summary>

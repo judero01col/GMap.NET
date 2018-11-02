@@ -86,7 +86,7 @@ namespace GMap.NET.MapProviders
     {
         public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
         public List<Route> routes { get; set; }
-        public string status { get; set; }
+        public DirectionsStatusCode status { get; set; }
     }
 
     public class GeocodedWaypoint
@@ -198,7 +198,7 @@ namespace GMap.NET.MapProviders
     {
         public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
         public List<Route> routes { get; set; }
-        public string status { get; set; }
+        public RouteStatusCode status { get; set; }
     }
 
     #endregion
