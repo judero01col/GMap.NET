@@ -20,7 +20,7 @@ namespace GMap.NET.MapProviders
     using OpenNETCF.Security.Cryptography;
 #endif
 
-    public abstract class GoogleMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider, DirectionsProvider
+    public abstract class GoogleMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider, DirectionsProvider, RoadsProvider
     {
         public GoogleMapProviderBase()
         {
@@ -950,6 +950,159 @@ namespace GMap.NET.MapProviders
         static readonly string DirectionUrlFormatPoint = "https://maps.{9}/maps/api/directions/json?origin={0},{1}&destination={2},{3}&sensor={4}&language={5}{6}{7}{8}";
         static readonly string DirectionUrlFormatWaypoint = "https://maps.{8}/maps/api/directions/xml?origin={0},{1}&waypoints={2}&destination={9},{10}&sensor={3}&language={4}{5}{6}{7}";
         static readonly string DirectionUrlFormatWaypointStr = "https://maps.{7}/maps/api/directions/xml?origin={0}&waypoints={1}&destination={8}&sensor={2}&language={3}{4}{5}{6}";
+
+        #endregion
+
+        #endregion
+
+        #region RoadsProvider Members
+
+        public virtual MapRoute GetRoadsRoute(List<PointLatLng> points, bool interpolate)
+        {
+            MapRoute ret = null;
+
+            string url = MakeRoadsUrl(points, interpolate.ToString());
+
+            try
+            {
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+
+                if (string.IsNullOrEmpty(route))
+                {
+                    //// Must provide either API key or Maps for Work credentials.
+                    //if (!string.IsNullOrEmpty(ClientId))
+                    //{
+                    //    url = GetSignedUri(url);
+                    //}
+                    //else if (!string.IsNullOrEmpty(ApiKey))
+                    //{
+                    //    url += "&key=" + ApiKey;
+                    //}
+
+                    route = GetContentUsingHttp(!string.IsNullOrEmpty(ClientId) ? GetSignedUri(url) : (!string.IsNullOrEmpty(ApiKey) ? url + "&key=" + ApiKey : url));
+
+                    if (!string.IsNullOrEmpty(route))
+                    {
+                        if (GMaps.Instance.UseRouteCache)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
+                        }
+                    }
+                }
+
+                // parse values
+                if (!string.IsNullOrEmpty(route))
+                {
+                    StrucRoads RouteResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+
+                    if (RouteResult != null)
+                    {
+                        ret = new MapRoute("Route");
+
+                        if (RouteResult.snappedPoints != null && RouteResult.snappedPoints.Count > 0)
+                        {
+                            ret.Points.Clear();
+
+                            foreach (var item in RouteResult.snappedPoints)
+                            {
+                                ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = null;
+                Debug.WriteLine("GetRoutePoints: " + ex);
+            }
+
+            return ret;
+        }
+
+        public virtual MapRoute GetRoadsRoute(string points, bool interpolate)
+        {
+            MapRoute ret = null;            
+
+            string url = MakeRoadsUrl(points, interpolate.ToString());
+
+            try
+            {
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+
+                if (string.IsNullOrEmpty(route))
+                {
+                    // Must provide either API key or Maps for Work credentials.
+                    if (!string.IsNullOrEmpty(ClientId))
+                    {
+                        url = GetSignedUri(url);
+                    }
+                    else if (!string.IsNullOrEmpty(ApiKey))
+                    {
+                        url += "&key=" + ApiKey;
+                    }
+
+                    route = GetContentUsingHttp(url);
+
+                    if (!string.IsNullOrEmpty(route))
+                    {
+                        if (GMaps.Instance.UseRouteCache)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
+                        }
+                    }
+                }
+
+                // parse values
+                if (!string.IsNullOrEmpty(route))
+                {
+                    StrucRoads RouteResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+
+                    if (RouteResult != null)
+                    {
+                        ret = new MapRoute("Route");
+
+                        if (RouteResult.snappedPoints != null && RouteResult.snappedPoints.Count > 0)
+                        {
+                            ret.Points.Clear();
+
+                            foreach (var item in RouteResult.snappedPoints)
+                            {
+                                ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = null;
+                Debug.WriteLine("GetRoutePoints: " + ex);
+            }
+
+            return ret;
+        }
+
+        #region -- internals --
+
+        string MakeRoadsUrl(List<PointLatLng> points, string interpolate)
+        {
+            string pointstr = "";
+
+            foreach (var item in points)
+            {
+                pointstr += string.Format("{2}{0},{1}", item.Lat, item.Lng, (pointstr == "" ? "" : "|"));
+            }
+
+            return string.Format(RoadsUrlFormatStr, interpolate, pointstr, ServerAPIs);
+        }
+
+        string MakeRoadsUrl(string points, string interpolate)
+        {
+            return string.Format(RoadsUrlFormatStr, interpolate, points, Server);
+        }
+
+        static readonly string RoadsUrlFormatStr = "https://roads.{2}/v1/snapToRoads?interpolate={0}&path={1}";
 
         #endregion
 

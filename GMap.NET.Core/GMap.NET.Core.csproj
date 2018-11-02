@@ -320,6 +320,7 @@
     <Compile Include="GMap.NET\DirectionsProvider.cs" />
     <Compile Include="GMap.NET\GeocodingProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Google\GoogleStructureMapProvider.cs" />
+    <Compile Include="GMap.NET\RoadsProvider.cs" />
     <Compile Include="GMap.NET\RoutingProvider.cs" />
     <Compile Include="GMap.NET\ZipStorer.cs" />
     <Compile Include="GMap.NET.CacheProviders\MsSQLCePureImageCache.cs" />

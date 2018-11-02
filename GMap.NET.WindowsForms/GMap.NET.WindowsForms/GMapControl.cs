@@ -3089,6 +3089,23 @@ namespace GMap.NET.WindowsForms
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public RoadsProvider RoadsProvider
+        {
+            get
+            {
+                RoadsProvider dp = MapProvider as RoadsProvider;
+
+                if (dp == null)
+                {
+                    dp = GMapProviders.GoogleMap as RoadsProvider; // use GoogleMap if provider does not implement routing
+                }
+
+                return dp;
+            }
+        }
+
         /// <summary>
         /// is routes enabled
         /// </summary>
