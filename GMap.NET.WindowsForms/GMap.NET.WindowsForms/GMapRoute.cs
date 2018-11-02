@@ -209,6 +209,13 @@ namespace GMap.NET.WindowsForms
 
         }
 
+        public GMapRoute(MapRoute oRoute)
+            : base(oRoute)
+        {
+           
+        }
+
+
 #if !PocketPC
         #region ISerializable Members
 

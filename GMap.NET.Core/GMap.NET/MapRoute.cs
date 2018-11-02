@@ -5,6 +5,7 @@ namespace GMap.NET
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using GMap.NET.MapProviders;
+    using System.Reflection;
 
     /// <summary>
     /// represents route of map
@@ -35,16 +36,6 @@ namespace GMap.NET
         /// time of route
         /// </summary>
         public string Duration;
-
-        /// <summary>
-        /// Distance from google route
-        /// </summary>
-        //public double DistanceRoute;
-
-        /// <summary>
-        /// Distance between points
-        /// </summary>
-        //public double DistanceLineal;
 
         /// <summary>
         /// Status of Route
@@ -99,6 +90,19 @@ namespace GMap.NET
             Points.AddRange(points);
             Name = name;
         }
+
+        public MapRoute(MapRoute Route)
+        {
+            if (Route != null)
+            {
+                FieldInfo[] myObjectFields = Route.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+                foreach (FieldInfo fi in myObjectFields)
+                {
+                    fi.SetValue(this, fi.GetValue(Route));
+                }
+            }
+        }    
 
         /// <summary>
         /// route distance (in km)

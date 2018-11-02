@@ -2532,20 +2532,20 @@ namespace Demo.WindowsForms
         {
             try
             {
-                //MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
+                MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
 
-                //if (Route != null && Route.Status == RouteStatusCode.OK)
-                //{
-                //    GMapRoute oRoute = new GMapRoute(Route.Points, "");
-                //    routes.Routes.Add(oRoute);
+                if (Route != null && Route.Status == RouteStatusCode.OK)
+                {
+                    GMapRoute oRoute = new GMapRoute(Route);
+                    routes.Routes.Add(oRoute);
 
-                //    MapRoute Res = MainMap.RoadsProvider.GetRoadsRoute(Route.Points.GetRange(0, 50).ToList(), false);
+                    MapRoute Res = MainMap.RoadsProvider.GetRoadsRoute(Route.Points.GetRange(0, 50).ToList(), false);
 
-                //    if (Res.Status == RouteStatusCode.OK)
-                //    {
-                //        // Here
-                //    }
-                //}
+                    if (Res.Status == RouteStatusCode.OK)
+                    {
+                        // Here
+                    }
+                }
 
                 //GDirections gd = null;
                 //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
@@ -2555,9 +2555,6 @@ namespace Demo.WindowsForms
 
                 //GDirections gd = null;
                 //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, "Barranquilla", "Santa Marta", false, false, false, false, true);
-
-               
-               
             }
             catch (Exception ex)
             {
