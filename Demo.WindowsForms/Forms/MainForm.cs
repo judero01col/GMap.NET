@@ -52,9 +52,9 @@ namespace Demo.WindowsForms
             if (!GMapControl.IsDesignerHosted)
             {
                 // add your custom map db provider
-                MsSQLPureImageCache ch = new MsSQLPureImageCache();
-                ch.ConnectionString = @"data source = sql5040.site4now.net;User Id=DB_A3B2C9_GMapNET_admin; initial catalog = DB_A3B2C9_GMapNET; password = Usuario@2018;";                
-                MainMap.Manager.SecondaryCache = ch;
+                //MsSQLPureImageCache ch = new MsSQLPureImageCache();
+                //ch.ConnectionString = @"data source = sql5040.site4now.net;User Id=DB_A3B2C9_GMapNET_admin; initial catalog = DB_A3B2C9_GMapNET; password = Usuario@2018;";                
+                //MainMap.Manager.SecondaryCache = ch;
 
                 // set your proxy here if need
                 //GMapProvider.IsSocksProxy = true;
@@ -71,15 +71,7 @@ namespace Demo.WindowsForms
                     MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsForms", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                GMapProviders.GoogleMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
-                GMapProviders.GoogleSatelliteMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
-                GMapProviders.GoogleTerrainMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";
-
-                GMapProviders.HereMap.AppId = "7zifAuqOid6csXxmu24I";
-                GMapProviders.HereMap.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
-
-                GMapProviders.HereTerrainMap.AppId = "7zifAuqOid6csXxmu24I";
-                GMapProviders.HereTerrainMap.AppCode = "f2ezLQ6bX8lK2EahPXsY6w";
+                GMapProviders.GoogleMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";               
 
                 // config map         
                 MainMap.MapProvider = GMapProviders.GoogleMap;
@@ -93,7 +85,6 @@ namespace Demo.WindowsForms
                 // map events
                 {
                     MainMap.OnPositionChanged += new PositionChanged(MainMap_OnPositionChanged);
-
                     MainMap.OnTileLoadStart += new TileLoadStart(MainMap_OnTileLoadStart);
                     MainMap.OnTileLoadComplete += new TileLoadComplete(MainMap_OnTileLoadComplete);
 
@@ -121,8 +112,6 @@ namespace Demo.WindowsForms
                     MainMap.Manager.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
                     MainMap.Manager.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
                     MainMap.Manager.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
-
-                    
                 }
 
                 MainMap.MouseMove += new MouseEventHandler(MainMap_MouseMove);
@@ -2542,21 +2531,32 @@ namespace Demo.WindowsForms
         {
             try
             {
-                MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
+                //MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
 
-                if (Route != null && Route.Status == RouteStatusCode.OK)
-                {
-                    GMapRoute oRoute = new GMapRoute(Route.Points, "");
-                    routes.Routes.Add(oRoute);
-                }
+                //if (Route != null && Route.Status == RouteStatusCode.OK)
+                //{
+                //    GMapRoute oRoute = new GMapRoute(Route.Points, "");
+                //    routes.Routes.Add(oRoute);
+                //}
+
+
+                //GDirections gd = null;
+                //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
+
+
+                //GeoCoderStatusCode gc;
+                //PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
+
+
 
 
                 GDirections gd = null;
-                DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
+                DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, "Barranquilla", "Santa Marta", false, false, false, false, true);
 
+                if (Res == DirectionsStatusCode.OK)
+                {
 
-                GeoCoderStatusCode gc;
-                PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
+                }
 
             }
             catch (Exception ex)

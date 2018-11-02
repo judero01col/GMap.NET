@@ -66,6 +66,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxMapType = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnTest = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxGeo = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -117,7 +118,6 @@
             this.radioButtonTcpIp = new System.Windows.Forms.RadioButton();
             this.checkBoxTraceRoute = new System.Windows.Forms.CheckBox();
             this.radioButtonVehicle = new System.Windows.Forms.RadioButton();
-            this.btnTest = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panelMenu.SuspendLayout();
@@ -661,6 +661,17 @@
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "coordinates";
+            // 
+            // btnTest
+            // 
+            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnTest.Location = new System.Drawing.Point(113, 98);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(37, 24);
+            this.btnTest.TabIndex = 12;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // label6
             // 
@@ -1405,17 +1416,6 @@
             this.radioButtonVehicle.UseVisualStyleBackColor = true;
             this.radioButtonVehicle.CheckedChanged += new System.EventHandler(this.RealTimeChanged);
             // 
-            // btnTest
-            // 
-            this.btnTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnTest.Location = new System.Drawing.Point(113, 98);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(37, 24);
-            this.btnTest.TabIndex = 12;
-            this.btnTest.Text = "Test";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1428,7 +1428,6 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GMap.NET - Great Maps for Windows Forms";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MainForm_KeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);

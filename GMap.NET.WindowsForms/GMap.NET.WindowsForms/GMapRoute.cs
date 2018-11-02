@@ -236,8 +236,7 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
-        protected GMapRoute(SerializationInfo info, StreamingContext context)
-           : base(info, context)
+        protected GMapRoute(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             //this.Stroke = Extensions.GetValue<Pen>(info, "Stroke", new Pen(Color.FromArgb(144, Color.MidnightBlue)));
             this.IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
