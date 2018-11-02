@@ -51,6 +51,12 @@ namespace GMap.NET
         /// </summary>
         public RouteStatusCode Status { get; set; }
 
+        public string ErrorMessage { get; set; }
+
+        public int ErrorCode { get; set; }
+
+        public string WarningMessage { get; set; }        
+
         /// <summary>
         /// route start point
         /// </summary>

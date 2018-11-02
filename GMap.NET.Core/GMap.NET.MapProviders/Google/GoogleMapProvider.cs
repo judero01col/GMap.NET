@@ -278,7 +278,7 @@ namespace GMap.NET.MapProviders
 
                 if (RouteResult != null)
                 {
-                    if (RouteResult.routes != null && RouteResult.routes.Count > 0)
+                    if (RouteResult.error == null && RouteResult.routes != null && RouteResult.routes.Count > 0)
                     {
                         ret = new MapRoute(RouteResult.routes[0].summary);
                     }
@@ -287,29 +287,42 @@ namespace GMap.NET.MapProviders
                         ret = new MapRoute("Route");
                     }
 
-                    ret.Status = RouteResult.status;
-
-                    if (RouteResult.routes != null && RouteResult.routes.Count > 0)
+                    if (RouteResult.error == null)
                     {
-                        if (RouteResult.routes.Count > 0)
+                        ret.Status = RouteResult.status;
+
+                        if (RouteResult.routes != null && RouteResult.routes.Count > 0)
                         {
-                            List<PointLatLng> points = new List<PointLatLng>();
-
-                            if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
+                            if (RouteResult.routes.Count > 0)
                             {
-                                points = new List<PointLatLng>();
-                                DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
+                                List<PointLatLng> points = new List<PointLatLng>();
 
-                                if (points != null)
+                                if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
                                 {
-                                    ret.Points.Clear();
-                                    ret.Points.AddRange(points);
+                                    points = new List<PointLatLng>();
+                                    DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
 
-                                    ret.Duration = RouteResult.routes[0].legs[0].duration.text;
-                                    //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
+                                    if (points != null)
+                                    {
+                                        ret.Points.Clear();
+                                        ret.Points.AddRange(points);
+
+                                        ret.Duration = RouteResult.routes[0].legs[0].duration.text;
+                                        //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
+                                    }
                                 }
                             }
                         }
+                    }
+                    else
+                    {
+                        ret.ErrorCode = RouteResult.error.code;
+                        ret.ErrorMessage = RouteResult.error.message;
+
+                        RouteStatusCode code;
+
+                        if (Enum.TryParse(RouteResult.error.status, false, out code))
+                            ret.Status = code;
                     }
                 }
             }
@@ -959,128 +972,12 @@ namespace GMap.NET.MapProviders
 
         public virtual MapRoute GetRoadsRoute(List<PointLatLng> points, bool interpolate)
         {
-            MapRoute ret = null;
-
-            string url = MakeRoadsUrl(points, interpolate.ToString());
-
-            try
-            {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
-
-                if (string.IsNullOrEmpty(route))
-                {
-                    //// Must provide either API key or Maps for Work credentials.
-                    //if (!string.IsNullOrEmpty(ClientId))
-                    //{
-                    //    url = GetSignedUri(url);
-                    //}
-                    //else if (!string.IsNullOrEmpty(ApiKey))
-                    //{
-                    //    url += "&key=" + ApiKey;
-                    //}
-
-                    route = GetContentUsingHttp(!string.IsNullOrEmpty(ClientId) ? GetSignedUri(url) : (!string.IsNullOrEmpty(ApiKey) ? url + "&key=" + ApiKey : url));
-
-                    if (!string.IsNullOrEmpty(route))
-                    {
-                        if (GMaps.Instance.UseRouteCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
-                        }
-                    }
-                }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
-                {
-                    StrucRoads RouteResult = JsonConvert.DeserializeObject<StrucRoads>(route);
-
-                    if (RouteResult != null)
-                    {
-                        ret = new MapRoute("Route");
-
-                        if (RouteResult.snappedPoints != null && RouteResult.snappedPoints.Count > 0)
-                        {
-                            ret.Points.Clear();
-
-                            foreach (var item in RouteResult.snappedPoints)
-                            {
-                                ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ret = null;
-                Debug.WriteLine("GetRoutePoints: " + ex);
-            }
-
-            return ret;
+            return GetRoadsRoute(MakeRoadsUrl(points, interpolate.ToString()));
         }
 
         public virtual MapRoute GetRoadsRoute(string points, bool interpolate)
         {
-            MapRoute ret = null;            
-
-            string url = MakeRoadsUrl(points, interpolate.ToString());
-
-            try
-            {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
-
-                if (string.IsNullOrEmpty(route))
-                {
-                    // Must provide either API key or Maps for Work credentials.
-                    if (!string.IsNullOrEmpty(ClientId))
-                    {
-                        url = GetSignedUri(url);
-                    }
-                    else if (!string.IsNullOrEmpty(ApiKey))
-                    {
-                        url += "&key=" + ApiKey;
-                    }
-
-                    route = GetContentUsingHttp(url);
-
-                    if (!string.IsNullOrEmpty(route))
-                    {
-                        if (GMaps.Instance.UseRouteCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
-                        }
-                    }
-                }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
-                {
-                    StrucRoads RouteResult = JsonConvert.DeserializeObject<StrucRoads>(route);
-
-                    if (RouteResult != null)
-                    {
-                        ret = new MapRoute("Route");
-
-                        if (RouteResult.snappedPoints != null && RouteResult.snappedPoints.Count > 0)
-                        {
-                            ret.Points.Clear();
-
-                            foreach (var item in RouteResult.snappedPoints)
-                            {
-                                ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ret = null;
-                Debug.WriteLine("GetRoutePoints: " + ex);
-            }
-
-            return ret;
+            return GetRoadsRoute(MakeRoadsUrl(points, interpolate.ToString()));
         }
 
         #region -- internals --
@@ -1100,6 +997,77 @@ namespace GMap.NET.MapProviders
         string MakeRoadsUrl(string points, string interpolate)
         {
             return string.Format(RoadsUrlFormatStr, interpolate, points, Server);
+        }
+
+        MapRoute GetRoadsRoute(string url)
+        {
+            MapRoute ret = null;
+            StrucRoads RoadsResult = null;
+
+            try
+            {
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+
+                if (string.IsNullOrEmpty(route))
+                {
+                    route = GetContentUsingHttp(!string.IsNullOrEmpty(ClientId) ? GetSignedUri(url) : (!string.IsNullOrEmpty(ApiKey) ? url + "&key=" + ApiKey : url));
+
+                    if (!string.IsNullOrEmpty(route))
+                    {
+                        RoadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+
+                        if (GMaps.Instance.UseRouteCache && RoadsResult != null && RoadsResult.error == null && RoadsResult.snappedPoints != null && RoadsResult.snappedPoints.Count > 0)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
+                        }
+                    }
+                }
+                else
+                {
+                    RoadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+                }
+
+                // parse values
+                if (RoadsResult != null)
+                {
+                    ret = new MapRoute("Route");
+
+                    ret.WarningMessage = RoadsResult.warningMessage;
+
+                    if (RoadsResult.error == null)
+                    {
+                        if (RoadsResult.snappedPoints != null && RoadsResult.snappedPoints.Count > 0)
+                        {
+                            ret.Points.Clear();
+
+                            foreach (var item in RoadsResult.snappedPoints)
+                            {
+                                ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
+                            }
+
+                            ret.Status = RouteStatusCode.OK;
+                        }
+                    }
+                    else
+                    {
+                        ret.ErrorCode = RoadsResult.error.code;
+                        ret.ErrorMessage = RoadsResult.error.message;
+
+                        RouteStatusCode code;
+
+                        if (Enum.TryParse(RoadsResult.error.status, false, out code))
+                            ret.Status = code;
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                ret = null;
+                Debug.WriteLine("GetRoutePoints: " + ex);
+            }
+
+            return ret;
         }
 
         static readonly string RoadsUrlFormatStr = "https://roads.{2}/v1/snapToRoads?interpolate={0}&path={1}";

@@ -199,6 +199,7 @@ namespace GMap.NET.MapProviders
         public List<GeocodedWaypoint> geocoded_waypoints { get; set; }
         public List<Route> routes { get; set; }
         public RouteStatusCode status { get; set; }
+        public Error error { get; set; }
     }
 
     #endregion
@@ -207,6 +208,10 @@ namespace GMap.NET.MapProviders
 
     public class StrucRoads
     {
+        public Error error { get; set; }
+
+        public string warningMessage { get; set; }
+
         public List<SnappedPoint> snappedPoints { get; set; }
 
         public class SnappedPoint
@@ -221,6 +226,30 @@ namespace GMap.NET.MapProviders
                 public double longitude { get; set; }
             }
         }
+    }
+
+    #endregion
+
+    #region Error
+
+    public class Error
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public string status { get; set; }
+        public List<Detail> details { get; set; }
+    }
+
+    public class Detail
+    {
+        public string @type { get; set; }
+        public List<Link> links { get; set; }
+    }
+
+    public class Link
+    {
+        public string description { get; set; }
+        public string url { get; set; }
     }
 
     #endregion

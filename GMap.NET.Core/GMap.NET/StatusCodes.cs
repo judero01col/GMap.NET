@@ -134,6 +134,8 @@ namespace GMap.NET
         OVER_QUERY_LIMIT,
         REQUEST_DENIED,
         UNKNOWN_ERROR,
-        ZERO_RESULTS
+        ZERO_RESULTS,
+        INVALID_ARGUMENT,
+        PERMISSION_DENIED
     }
 }

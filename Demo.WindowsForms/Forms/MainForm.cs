@@ -19,6 +19,7 @@ using GMap.NET.WindowsForms.Markers;
 using GMap.NET.WindowsForms.ToolTips;
 using System.Reflection;
 using GMap.NET.CacheProviders;
+using System.Linq;
 
 namespace Demo.WindowsForms
 {
@@ -71,7 +72,7 @@ namespace Demo.WindowsForms
                     MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsForms", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                GMapProviders.GoogleMap.ApiKey = "AIzaSyB0S6W1NNbyxqWHQSWz8JbfCUi7m4qbuis";               
+                
 
                 // config map         
                 MainMap.MapProvider = GMapProviders.GoogleMap;
@@ -2537,27 +2538,26 @@ namespace Demo.WindowsForms
                 //{
                 //    GMapRoute oRoute = new GMapRoute(Route.Points, "");
                 //    routes.Routes.Add(oRoute);
-                //}
 
+                //    MapRoute Res = MainMap.RoadsProvider.GetRoadsRoute(Route.Points.GetRange(0, 50).ToList(), false);
+
+                //    if (Res.Status == RouteStatusCode.OK)
+                //    {
+                //        // Here
+                //    }
+                //}
 
                 //GDirections gd = null;
                 //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
 
+                GeoCoderStatusCode gc;
+                PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
 
-                //GeoCoderStatusCode gc;
-                //PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
+                //GDirections gd = null;
+                //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, "Barranquilla", "Santa Marta", false, false, false, false, true);
 
-
-
-
-                GDirections gd = null;
-                DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, "Barranquilla", "Santa Marta", false, false, false, false, true);
-
-                if (Res == DirectionsStatusCode.OK)
-                {
-
-                }
-
+               
+               
             }
             catch (Exception ex)
             {

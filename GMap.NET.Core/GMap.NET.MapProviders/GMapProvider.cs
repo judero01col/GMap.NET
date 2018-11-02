@@ -536,7 +536,8 @@ namespace GMap.NET.MapProviders
                 request.Credentials = Credential;
             }
             
-            if(!string.IsNullOrEmpty(Authorization))
+
+            if (!string.IsNullOrEmpty(Authorization))
             {
                 request.Headers.Set("Authorization", Authorization);
             }
@@ -548,7 +549,7 @@ namespace GMap.NET.MapProviders
                 r.ReadWriteTimeout = TimeoutMs * 6;
                 r.Accept = requestAccept;
                 r.Referer = RefererUrl;
-                r.Timeout = TimeoutMs;
+                r.Timeout = TimeoutMs;               
             }
 #if !PocketPC
             else if (request is SocksHttpWebRequest)
@@ -571,7 +572,22 @@ namespace GMap.NET.MapProviders
                 }
             }
 #endif
-            using (var response = request.GetResponse())
+            WebResponse response = null;
+
+            try
+            {
+                response = request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                response = (HttpWebResponse)ex.Response;
+            }
+            catch (Exception)
+            {
+                response = null;
+            }
+
+            if (response != null)
             {
                 using (Stream responseStream = response.GetResponseStream())
                 {
