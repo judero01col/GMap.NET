@@ -287,6 +287,7 @@
     <Compile Include="GMap.NET.MapProviders\OpenStreetMap\OpenStreetMapQuestProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\OpenStreetMap\OpenCycleTransportMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\OpenStreetMap\OpenCycleLandscapeMapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\UMP\UMPMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexHybridMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexSatelliteMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Yandex\YandexMapProvider.cs" />
