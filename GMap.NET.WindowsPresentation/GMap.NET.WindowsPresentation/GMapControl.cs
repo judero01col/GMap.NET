@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using GMap.NET.Internals;
-using System.Diagnostics;
-using GMap.NET.MapProviders;
-using GMap.NET.Projections;
-
+﻿
 namespace GMap.NET.WindowsPresentation
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.Linq;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Effects;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+    using System.Windows.Threading;
+    using GMap.NET.Internals;
+    using System.Diagnostics;
+    using GMap.NET.MapProviders;
+    using GMap.NET.Projections;
+
     /// <summary>
     /// GMap.NET control for Windows Presentation
     /// </summary>
