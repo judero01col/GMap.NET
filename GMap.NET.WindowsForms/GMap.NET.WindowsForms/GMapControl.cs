@@ -2510,54 +2510,45 @@ namespace GMap.NET.WindowsForms
         /// <returns>true if successfull</returns>
         public GeoCoderStatusCode SetPositionByKeywords(string keys)
         {
-            keys = keys.Replace("#", "%23");
-
             GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
-
             GeocodingProvider gp = MapProvider as GeocodingProvider;
-            if (gp == null)
-            {
+
+            if (gp == null)            
                 gp = GMapProviders.OpenStreetMap as GeocodingProvider;
-            }
 
             if (gp != null)
             {
-                var pt = gp.GetPoint(keys, out status);
+                var pt = gp.GetPoint(keys.Replace("#", "%23"), out status);
 
                 if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pt.HasValue)
-                {
                     Position = pt.Value;
-                }
             }
 
             return status;
         }
 
-        public GeoCoderStatusCode GetPositionByKeywords(string keys, out PointLatLng Punto)
+        /// <summary>
+        /// get current position using keywords
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public GeoCoderStatusCode GetPositionByKeywords(string keys, out PointLatLng point)
         {
-            //keys = keys.Replace("#", "%23");
+            point = new PointLatLng();
 
             GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
-            Punto = new PointLatLng();
-
             GeocodingProvider gp = MapProvider as GeocodingProvider;
 
-            if (gp == null)
-            {
-                gp = GMapProviders.OpenStreetMap as GeocodingProvider;
-            }
+            if (gp == null)            
+                gp = GMapProviders.OpenStreetMap as GeocodingProvider;            
 
             if (gp != null)
             {
-                var pt = gp.GetPoint(keys, out status);
+                var pt = gp.GetPoint(keys.Replace("#", "%23"), out status);
 
                 if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pt.HasValue)
-                {
-                    Punto = pt.Value;
-
-                    //Position = pt.Value;
-                    //return pt.Value;
-                }
+                    point = pt.Value;
             }
 
             return status;
@@ -2571,7 +2562,7 @@ namespace GMap.NET.WindowsForms
         /// <returns></returns>
         public PointLatLng FromLocalToLatLng(int x, int y)
         {
-#if !PocketPC
+        #if !PocketPC
             if (MapRenderTransform.HasValue)
             {
                 //var xx = (int)(Core.renderOffset.X + ((x - Core.renderOffset.X) / MapRenderTransform.Value));
@@ -2608,7 +2599,7 @@ namespace GMap.NET.WindowsForms
                 x = f.X;
                 y = f.Y;
             }
-#endif
+        #endif
             return Core.FromLocalToLatLng(x, y);
         }
 
@@ -2996,6 +2987,7 @@ namespace GMap.NET.WindowsForms
             {
                 return Core.Provider;
             }
+
             set
             {
                 if (Core.Provider == null || !Core.Provider.Equals(value))
@@ -3046,11 +3038,9 @@ namespace GMap.NET.WindowsForms
             {
                 RoutingProvider dp = MapProvider as RoutingProvider;
 
-                if (dp == null)
-                {
+                if (dp == null)                
                     dp = GMapProviders.OpenStreetMap as RoutingProvider; // use OpenStreetMap if provider does not implement routing
-                }
-
+                
                 return dp;
             }            
         }
@@ -3064,9 +3054,7 @@ namespace GMap.NET.WindowsForms
                 DirectionsProvider dp = MapProvider as DirectionsProvider;
 
                 if (dp == null)
-                {
                     dp = GMapProviders.OpenStreetMap as DirectionsProvider; // use OpenStreetMap if provider does not implement routing
-                }
 
                 return dp;
             }
@@ -3081,9 +3069,7 @@ namespace GMap.NET.WindowsForms
                 GeocodingProvider dp = MapProvider as GeocodingProvider;
 
                 if (dp == null)
-                {
                     dp = GMapProviders.OpenStreetMap as GeocodingProvider; // use OpenStreetMap if provider does not implement routing
-                }
 
                 return dp;
             }
@@ -3098,9 +3084,7 @@ namespace GMap.NET.WindowsForms
                 RoadsProvider dp = MapProvider as RoadsProvider;
 
                 if (dp == null)
-                {
                     dp = GMapProviders.GoogleMap as RoadsProvider; // use GoogleMap if provider does not implement routing
-                }
 
                 return dp;
             }
