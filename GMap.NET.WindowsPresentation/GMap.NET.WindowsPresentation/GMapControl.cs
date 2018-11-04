@@ -112,14 +112,8 @@ namespace GMap.NET.WindowsPresentation
         [Category("GMap.NET")]
         public double ZoomX
         {
-            get
-            {
-                return (double)(GetValue(ZoomXProperty));
-            }
-            set
-            {
-                SetValue(ZoomXProperty, value);
-            }
+            get { return (double)(GetValue(ZoomXProperty)); }
+            set { SetValue(ZoomXProperty, value); }
         }
 
         /// <summary>
@@ -128,27 +122,15 @@ namespace GMap.NET.WindowsPresentation
         [Category("GMap.NET")]
         public double ZoomY
         {
-            get
-            {
-                return (double)(GetValue(ZoomYProperty));
-            }
-            set
-            {
-                SetValue(ZoomYProperty, value);
-            }
+            get { return (double)(GetValue(ZoomYProperty)); }
+            set { SetValue(ZoomYProperty, value); }
         }
 
         [Category("GMap.NET")]
         public PointLatLng CenterPosition
         {
-            get
-            {
-                return (PointLatLng)GetValue(CenterPositionProperty);
-            }
-            set
-            {
-                SetValue(CenterPositionProperty, value);
-            }
+            get { return (PointLatLng)GetValue(CenterPositionProperty); }
+            set { SetValue(CenterPositionProperty, value); }
         }
 
         /// <summary>
@@ -167,11 +149,7 @@ namespace GMap.NET.WindowsPresentation
         public ScaleModes ScaleMode
         {
             get { return scaleMode; }
-            set
-            {
-                scaleMode = value;
-                InvalidateVisual();
-            }
+            set { scaleMode = value; InvalidateVisual(); }
         }
 
         /// <summary>
@@ -182,30 +160,23 @@ namespace GMap.NET.WindowsPresentation
         [Description("Enable pinch map zoom")]
         public bool MultiTouchEnabled
         {
-            get
-            {
-                return (bool)(GetValue(MultiTouchEnabledProperty));
-            }
-            set
-            {
-                SetValue(MultiTouchEnabledProperty, value);
-            }
+            get { return (bool)(GetValue(MultiTouchEnabledProperty)); }
+            set { SetValue(MultiTouchEnabledProperty, value); }
         }
 
         private static object OnCoerceZoom(DependencyObject o, object value)
         {
             GMapControl map = o as GMapControl;
+
             if (map != null)
             {
                 double result = (double)value;
+
                 if (result > map.MaxZoom)
-                {
                     result = map.MaxZoom;
-                }
+
                 if (result < map.MinZoom)
-                {
                     result = map.MinZoom;
-                }
 
                 return result;
             }
@@ -239,10 +210,10 @@ namespace GMap.NET.WindowsPresentation
                 Debug.WriteLine("MapType: " + e.OldValue + " -> " + e.NewValue);
 
                 RectLatLng viewarea = map.SelectedArea;
+
                 if (viewarea != RectLatLng.Empty)
                 {
-                    map.Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2,
-                       viewarea.Lng + viewarea.WidthLng / 2);
+                    map.Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2, viewarea.Lng + viewarea.WidthLng / 2);
                 }
                 else
                 {
@@ -265,10 +236,9 @@ namespace GMap.NET.WindowsPresentation
                     if (viewarea != RectLatLng.Empty && viewarea != map.ViewArea)
                     {
                         int bestZoom = map.Core.GetMaxZoomToFitRect(viewarea);
-                        if (bestZoom > 0 && map.Zoom != bestZoom)
-                        {
-                            map.Zoom = bestZoom;
-                        }
+
+                        if (bestZoom > 0 && map.Zoom != bestZoom)                        
+                            map.Zoom = bestZoom;                        
                     }
                 }
             }
@@ -281,6 +251,7 @@ namespace GMap.NET.WindowsPresentation
                 Debug.WriteLine("Zoom: " + oldValue + " -> " + value);
 
                 double remainder = value % 1;
+
                 if (mapControl.ScaleMode != ScaleModes.Integer && remainder != 0 && mapControl.ActualWidth > 0)
                 {
                     bool scaleDown;
@@ -397,14 +368,8 @@ namespace GMap.NET.WindowsPresentation
         [Obsolete("Touch Enabled is deprecated, please use MultiTouchEnabled")]
         public bool TouchEnabled
         {
-            get
-            {
-                return (bool)(GetValue(TouchEnabledProperty));
-            }
-            set
-            {
-                SetValue(TouchEnabledProperty, value);
-            }
+            get { return (bool)(GetValue(TouchEnabledProperty)); }
+            set { SetValue(TouchEnabledProperty, value); }
         }
 
         readonly ScaleTransform lastScaleTransform = new ScaleTransform();
@@ -469,8 +434,7 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         /// background of selected area
         /// </summary>
-        public Brush SelectedAreaFill =
-           new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
+        public Brush SelectedAreaFill = new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
 
         /// <summary>
         /// /// <summary>
@@ -526,11 +490,7 @@ namespace GMap.NET.WindowsPresentation
         public bool ShowTileGridLines
         {
             get { return showTileGridLines; }
-            set
-            {
-                showTileGridLines = value;
-                InvalidateVisual();
-            }
+            set { showTileGridLines = value; InvalidateVisual(); }
         }
 
         /// <summary>
@@ -550,7 +510,6 @@ namespace GMap.NET.WindowsPresentation
         public int LevelsKeepInMemmory
         {
             get { return Core.LevelsKeepInMemmory; }
-
             set { Core.LevelsKeepInMemmory = value; }
         }
 
@@ -563,11 +522,7 @@ namespace GMap.NET.WindowsPresentation
         public RectLatLng SelectedArea
         {
             get { return selectedArea; }
-            set
-            {
-                selectedArea = value;
-                InvalidateVisual();
-            }
+            set { selectedArea = value; InvalidateVisual(); }
         }
 
         /// <summary>
@@ -587,8 +542,7 @@ namespace GMap.NET.WindowsPresentation
                  FrameworkPropertyMetadataOptions.None,
                  OnMarkersPropChanged));
 
-        public static readonly DependencyProperty MarkersProperty
-           = MarkersKey.DependencyProperty;
+        public static readonly DependencyProperty MarkersProperty = MarkersKey.DependencyProperty;
 
         /// <summary>
         /// List of markers
@@ -742,11 +696,9 @@ namespace GMap.NET.WindowsPresentation
                 SizeChanged += new SizeChangedEventHandler(GMapControl_SizeChanged);
 
                 // by default its internal property, feel free to use your own
-                if (ItemsSource == null)
-                {
+                if (ItemsSource == null)                
                     ItemsSource = Markers;
-                }
-
+                
                 Core.Zoom = (int)((double)ZoomProperty.DefaultMetadata.DefaultValue);
             }
         }
@@ -774,10 +726,8 @@ namespace GMap.NET.WindowsPresentation
         /// </summary>
         public new void InvalidateVisual()
         {
-            if (Core.Refresh != null)
-            {
-                Core.Refresh.Set();
-            }
+            if (Core.Refresh != null)            
+                Core.Refresh.Set();            
         }
 
         /// <summary>
@@ -794,6 +744,7 @@ namespace GMap.NET.WindowsPresentation
                 {
                     Core.lastInvalidation = DateTime.Now;
                 }
+
                 base.InvalidateVisual();
             }
             else
@@ -835,6 +786,7 @@ namespace GMap.NET.WindowsPresentation
                         lazySetZoomToFitRect = null;
                     }
                 }
+
                 Core.OnMapOpen().ProgressChanged += new ProgressChangedEventHandler(invalidatorEngage);
                 ForceUpdateOverlays();
 
@@ -843,11 +795,11 @@ namespace GMap.NET.WindowsPresentation
                     loadedApp = Application.Current;
 
                     loadedApp.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                       new Action(delegate ()
-                       {
-                           loadedApp.SessionEnding += new SessionEndingCancelEventHandler(Current_SessionEnding);
-                       }
-                          ));
+                        new Action(delegate () 
+                        {
+                            loadedApp.SessionEnding += new SessionEndingCancelEventHandler(Current_SessionEnding);
+                        }
+                        ));
                 }
             }
         }
@@ -906,10 +858,8 @@ namespace GMap.NET.WindowsPresentation
                     {
                         i.ForceUpdateLocalPosition(this);
 
-                        if (i is IShapable)
-                        {
-                            (i as IShapable).RegenerateShape(this);
-                        }
+                        if (i is IShapable)                        
+                            (i as IShapable).RegenerateShape(this);                        
                     }
                 }
             }
@@ -925,8 +875,7 @@ namespace GMap.NET.WindowsPresentation
             {
                 if (MapScaleTransform != null)
                 {
-                    var tp =
-                       MapScaleTransform.Transform(new System.Windows.Point(Core.renderOffset.X, Core.renderOffset.Y));
+                    var tp = MapScaleTransform.Transform(new System.Windows.Point(Core.renderOffset.X, Core.renderOffset.Y));
                     MapOverlayTranslateTransform.X = tp.X;
                     MapOverlayTranslateTransform.Y = tp.Y;
 
@@ -960,6 +909,7 @@ namespace GMap.NET.WindowsPresentation
 
             Core.tileDrawingListLock.AcquireReaderLock();
             Core.Matrix.EnterReadLock();
+
             try
             {
                 foreach (var tilePoint in Core.tileDrawingList)
@@ -972,6 +922,7 @@ namespace GMap.NET.WindowsPresentation
                         bool found = false;
 
                         Tile t = Core.Matrix.GetTileWithNoLock(Core.Zoom, tilePoint.PosXY);
+
                         if (t.NotEmpty)
                         {
                             foreach (GMapImage img in t.Overlays)
@@ -983,6 +934,7 @@ namespace GMap.NET.WindowsPresentation
 
                                     var imgRect = new Rect(Core.tileRect.X + 0.6, Core.tileRect.Y + 0.6,
                                        Core.tileRect.Width + 0.6, Core.tileRect.Height + 0.6);
+
                                     if (!img.IsParent)
                                     {
                                         g.DrawImage(img.Img, imgRect);
@@ -1064,20 +1016,19 @@ namespace GMap.NET.WindowsPresentation
                                 if (Core.FailedLoads.ContainsKey(lt))
                                 {
                                     g.DrawRectangle(EmptytileBrush, EmptyTileBorders,
-                                       new Rect(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width,
-                                          Core.tileRect.Height));
+                                       new Rect(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height));
 
                                     var ex = Core.FailedLoads[lt];
+
                                     FormattedText TileText = new FormattedText("Exception: " + ex.Message,
-                                       System.Globalization.CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
-                                       tileTypeface, 14, Brushes.Red);
+                                       CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, tileTypeface, 14, Brushes.Red);
+
                                     TileText.MaxTextWidth = Core.tileRect.Width - 11;
 
-                                    g.DrawText(TileText,
-                                       new System.Windows.Point(Core.tileRect.X + 11, Core.tileRect.Y + 11));
+                                    g.DrawText(TileText, new Point(Core.tileRect.X + 11, Core.tileRect.Y + 11));
 
                                     g.DrawText(EmptyTileText,
-                                       new System.Windows.Point(
+                                       new Point(
                                           Core.tileRect.X + Core.tileRect.Width / 2 - EmptyTileText.Width / 2,
                                           Core.tileRect.Y + Core.tileRect.Height / 2 - EmptyTileText.Height / 2));
                                 }
