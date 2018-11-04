@@ -37,6 +37,8 @@ namespace GMap.NET
         /// </summary>
         public string Duration;
 
+        public List<string> Instructions = new List<string>();
+
         /// <summary>
         /// Status of Route
         /// </summary>

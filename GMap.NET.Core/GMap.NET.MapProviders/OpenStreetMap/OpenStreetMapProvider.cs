@@ -94,7 +94,7 @@ namespace GMap.NET.MapProviders
 
         MapRoute GetRoute(string url)
         {
-            MapRoute ret = null;              
+            MapRoute ret = null;
 
             try
             {
@@ -124,7 +124,7 @@ namespace GMap.NET.MapProviders
 
                     string[] coordinates = coordNode.InnerText.Split('\n');
 
-                    if (coordinates.Length > 0)
+                    if (coordinates != null && coordinates.Length > 0)
                     {
                         ret = new MapRoute("Route");
                         ret.Status = RouteStatusCode.OK;
@@ -133,8 +133,6 @@ namespace GMap.NET.MapProviders
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
                         }
-
-                        List<PointLatLng> points = new List<PointLatLng>();
 
                         foreach (string coordinate in coordinates)
                         {
@@ -145,15 +143,32 @@ namespace GMap.NET.MapProviders
                                 {
                                     double lat = double.Parse(XY[1], CultureInfo.InvariantCulture);
                                     double lng = double.Parse(XY[0], CultureInfo.InvariantCulture);
-                                    points.Add(new PointLatLng(lat, lng));
+                                    ret.Points.Add(new PointLatLng(lat, lng));
                                 }
                             }
                         }
 
-                        ret.Points.AddRange(points);
+                        var travelTimeNode = xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:traveltime", xmlnsManager);
 
-                        ret.Duration = Math.Round((Convert.ToDecimal(xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:traveltime", xmlnsManager).InnerText) / 60)) + " mins";
-                        //ret.DistanceRoute = Math.Round((Convert.ToDouble(xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:distance", xmlnsManager).InnerText)), 1);                        
+                        if (travelTimeNode != null && travelTimeNode.InnerText.Length > 0)
+                        {
+                            ret.Duration = Math.Round((Convert.ToDecimal(travelTimeNode.InnerText) / 60)) + " mins";
+                        }
+
+                        var instructionsNode = xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:description", xmlnsManager);
+
+                        if (instructionsNode != null && instructionsNode.InnerText.Length > 0)
+                        {
+                            var instructions = instructionsNode.InnerText.Split(new string[1] { "<br>" }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (instructions != null && instructions.Length > 0)
+                            {
+                                foreach (var item in instructions)
+                                {
+                                    ret.Instructions.Add(item.Trim());
+                                }
+                            }
+                        }
                     }
                 }
             }
