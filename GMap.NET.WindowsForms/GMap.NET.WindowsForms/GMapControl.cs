@@ -810,7 +810,7 @@ namespace GMap.NET.WindowsForms
         /// <summary>
         /// gets rectangle with all objects inside
         /// </summary>
-        /// <param name="overlayId">overlay id or null to check all</param>
+        /// <param name="overlayId">overlay id or null to check all except zoomInsignificant</param>
         /// <returns></returns>
         public RectLatLng? GetRectOfAllMarkers(string overlayId)
         {
@@ -823,7 +823,7 @@ namespace GMap.NET.WindowsForms
 
             foreach (GMapOverlay o in Overlays)
             {
-                if (overlayId == null || o.Id == overlayId)
+                if ((overlayId == null && o.IsZoomSignificant) || o.Id == overlayId)
                 {
                     if (o.IsVisibile && o.Markers.Count > 0)
                     {
@@ -871,7 +871,7 @@ namespace GMap.NET.WindowsForms
         /// <summary>
         /// gets rectangle with all objects inside
         /// </summary>
-        /// <param name="overlayId">overlay id or null to check all</param>
+        /// <param name="overlayId">overlay id or null to check all except zoomInsignificant</param>
         /// <returns></returns>
         public RectLatLng? GetRectOfAllRoutes(string overlayId)
         {
@@ -884,7 +884,7 @@ namespace GMap.NET.WindowsForms
 
             foreach (GMapOverlay o in Overlays)
             {
-                if (overlayId == null || o.Id == overlayId)
+                if ((overlayId == null && o.IsZoomSignificant) || o.Id == overlayId)
                 {
                     if (o.IsVisibile && o.Routes.Count > 0)
                     {

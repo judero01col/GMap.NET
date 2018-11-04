@@ -74,10 +74,29 @@ namespace GMap.NET.WindowsForms
          }
       }
 
-      /// <summary>
-      /// overlay Id
-      /// </summary>
-      public string Id;
+        bool isHitTestVisible = true;
+        /// overlay Id	        /// <summary>
+        /// </summary>	        /// HitTest visibility for entire overlay
+        /// </summary>
+        public bool IsHitTestVisible
+        {
+            get { return isHitTestVisible; }
+            set { isHitTestVisible = value; }
+        }
+        bool isZoomSignificant = true;
+        /// <summary>
+        /// if false don't consider contained objects when box zooming
+        /// </summary>
+        public bool IsZoomSignificant
+        {
+            get { return isZoomSignificant; }
+            set { isZoomSignificant = value; }
+        }
+
+        /// <summary>
+        /// overlay Id
+        /// </summary>
+        public string Id;
 
       /// <summary>
       /// list of markers, should be thread safe
