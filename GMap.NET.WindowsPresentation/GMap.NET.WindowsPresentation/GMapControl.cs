@@ -1889,10 +1889,7 @@ namespace GMap.NET.WindowsPresentation
                         zoomtofit = SetZoomToFitRect(SelectedArea);
                     }
 
-                    if (OnSelectionChange != null)
-                    {
-                        OnSelectionChange(SelectedArea, zoomtofit);
-                    }
+                    OnSelectionChange?.Invoke(SelectedArea, zoomtofit);
                 }
                 else
                 {

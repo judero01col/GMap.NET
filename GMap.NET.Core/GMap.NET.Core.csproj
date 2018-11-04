@@ -40,6 +40,10 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
+	<SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>    
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -94,7 +98,7 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'v4.0-Debug|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Build\v4.0-Debug\</OutputPath>
     <DefineConstants>NET40;TRACE;DEBUG;SQLite;MONO_disabled;MySQL_disabled;PostgreSQL_disabled</DefineConstants>
@@ -152,7 +156,7 @@
         <Reference Include="System.Data.SQLite">
           <HintPath>..\References\Windows\System.Data.SQLite.DLL</HintPath>
           <SpecificVersion>False</SpecificVersion>
-          <Private>False</Private>
+          <Private>True</Private>
         </Reference>
         <Reference Include="Npgsql">
           <HintPath>..\References\Windows\Npgsql.dll</HintPath>
