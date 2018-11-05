@@ -184,7 +184,7 @@ namespace GMap.NET.MapProviders
                #region -- try get sesion key --
                if(!string.IsNullOrEmpty(key))
                {
-                  string keyResponse = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("BingLoggingServiceV1" + key, CacheType.UrlCache, TimeSpan.FromHours(GMapProvider.TTLCache)) : string.Empty;
+                  string keyResponse = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("BingLoggingServiceV1" + key, CacheType.UrlCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                   if(string.IsNullOrEmpty(keyResponse))
                   {
@@ -217,15 +217,17 @@ namespace GMap.NET.MapProviders
                #endregion
 
                // supporting old road
+
                if(TryCorrectVersion && DisableDynamicTileUrlFormat)
                {
                   #region -- get the version --
                   string url = @"http://www.bing.com/maps";
-                  string html = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromDays(7)) : string.Empty;
+                  string html = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromDays(TTLCache)) : string.Empty;
 
                   if(string.IsNullOrEmpty(html))
                   {
                      html = GetContentUsingHttp(url);
+
                      if(!string.IsNullOrEmpty(html))
                      {
                         if(GMaps.Instance.UseUrlCache)
@@ -310,7 +312,7 @@ namespace GMap.NET.MapProviders
             {
                string url = "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + imageryType + "?output=xml&key=" + SessionId;
 
-               string r = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("GetTileUrl" + imageryType, CacheType.UrlCache, TimeSpan.FromDays(7)) : string.Empty;
+               string r = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("GetTileUrl" + imageryType, CacheType.UrlCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
                bool cache = false;
 
                if(string.IsNullOrEmpty(r))
@@ -326,10 +328,12 @@ namespace GMap.NET.MapProviders
 
                   XmlNode xn = doc["Response"];
                   string statuscode = xn["StatusCode"].InnerText;
+
                   if(string.Compare(statuscode, "200", true) == 0)
                   {
                      xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
                      XmlNodeList xnl = xn.ChildNodes;
+
                      foreach(XmlNode xno in xnl)
                      {
                         XmlNode imageUrl = xno["ImageUrl"];
@@ -424,7 +428,7 @@ namespace GMap.NET.MapProviders
          zoomFactor = -1;
          try
          {
-            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
             if(string.IsNullOrEmpty(route))
             {
@@ -606,7 +610,7 @@ namespace GMap.NET.MapProviders
 
          try
          {
-            string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache) : string.Empty;
+            string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
             bool cache = false;
 

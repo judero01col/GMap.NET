@@ -101,11 +101,12 @@ namespace GMap.NET.MapProviders
                 string url = string.Format("https://maps.{0}/maps/api/js?client=google-maps-lite&amp;libraries=search&amp;language=en&amp;region=", ServerAPIs);
                 try
                 {
-                    string html = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromHours(GMapProvider.TTLCache)) : string.Empty;
+                    string html = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                     if (string.IsNullOrEmpty(html))
                     {
                         html = GetContentUsingHttp(url);
+
                         if (!string.IsNullOrEmpty(html))
                         {
                             if (GMaps.Instance.UseUrlCache)
@@ -120,10 +121,12 @@ namespace GMap.NET.MapProviders
                         #region -- match versions --
                         Regex reg = new Regex(string.Format(@"https?://mts?\d.{0}/maps/vt\?lyrs=m@(\d*)", Server), RegexOptions.IgnoreCase);
                         Match mat = reg.Match(html);
+
                         if (mat.Success)
                         {
                             GroupCollection gc = mat.Groups;
                             int count = gc.Count;
+
                             if (count > 0)
                             {
                                 string ver = string.Format("m@{0}", gc [1].Value);
@@ -151,10 +154,12 @@ namespace GMap.NET.MapProviders
 
                         reg = new Regex(string.Format(@"https?://khms?\d.{0}/kh\?v=(\d*)", Server), RegexOptions.IgnoreCase);
                         mat = reg.Match(html);
+
                         if (mat.Success)
                         {
                             GroupCollection gc = mat.Groups;
                             int count = gc.Count;
+
                             if (count > 0)
                             {
                                 string ver = gc [1].Value;
@@ -175,10 +180,12 @@ namespace GMap.NET.MapProviders
 
                         reg = new Regex(string.Format(@"https?://mts?\d.{0}/maps/vt\?lyrs=t@(\d*),r@(\d*)", Server), RegexOptions.IgnoreCase);
                         mat = reg.Match(html);
+
                         if (mat.Success)
                         {
                             GroupCollection gc = mat.Groups;
                             int count = gc.Count;
+
                             if (count > 1)
                             {
                                 string ver = string.Format("t@{0},r@{1}", gc [1].Value, gc [2].Value);
@@ -188,6 +195,7 @@ namespace GMap.NET.MapProviders
                                 GMapProviders.GoogleChinaTerrainMap.Version = ver;
 #if DEBUG
                                 Debug.WriteLine("GMapProviders.GoogleTerrainMap.Version: " + ver + ", " + (ver == old ? "OK" : "old: " + old + ", consider updating source"));
+
                                 if (Debugger.IsAttached && ver != old)
                                 {
                                     Thread.Sleep(1111);
@@ -255,7 +263,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 if (string.IsNullOrEmpty(route))
                 {
@@ -411,11 +419,12 @@ namespace GMap.NET.MapProviders
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<PointLatLng> pointList)
         {
             var status = GeoCoderStatusCode.Unknow;
+
             pointList = null;
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache) : string.Empty;
+                string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 bool cache = false;
 
@@ -489,7 +498,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string reverse = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache) : string.Empty;
+                string reverse = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 bool cache = false;
 
@@ -775,7 +784,7 @@ namespace GMap.NET.MapProviders
 
             try
             {                
-                string kml = GMaps.Instance.UseDirectionsCache ? Cache.Instance.GetContent(url, CacheType.DirectionsCache) : string.Empty;
+                string kml = GMaps.Instance.UseDirectionsCache ? Cache.Instance.GetContent(url, CacheType.DirectionsCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
                 bool cache = false;
 
                 if (string.IsNullOrEmpty(kml))
@@ -1006,7 +1015,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 if (string.IsNullOrEmpty(route))
                 {

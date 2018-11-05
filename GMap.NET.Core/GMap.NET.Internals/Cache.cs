@@ -288,7 +288,7 @@ namespace GMap.NET.Internals
 
       public string GetContent(string url, CacheType type)
       {
-         return GetContent(url, type, TimeSpan.FromDays(88));
+         return GetContent(url, type, TimeSpan.FromDays(100));
       }
 
       #endregion

@@ -160,7 +160,7 @@ namespace GMap.NET.MapProviders
 
           try
           {
-              string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache) : string.Empty;
+              string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
               bool cache = false;
 
@@ -236,7 +236,7 @@ namespace GMap.NET.MapProviders
 
           try
           {
-              string geo = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache) : string.Empty;
+              string geo = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
               bool cache = false;
 

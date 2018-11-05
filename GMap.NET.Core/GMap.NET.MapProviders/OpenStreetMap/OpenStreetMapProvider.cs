@@ -98,7 +98,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
                 bool cache = false;
 
                 if (string.IsNullOrEmpty(route))
@@ -139,6 +139,7 @@ namespace GMap.NET.MapProviders
                             if (coordinate != string.Empty)
                             {
                                 string[] XY = coordinate.Split(',');
+
                                 if (XY.Length == 2)
                                 {
                                     double lat = double.Parse(XY[1], CultureInfo.InvariantCulture);
@@ -301,6 +302,7 @@ namespace GMap.NET.MapProviders
         string MakeDetailedGeocoderUrl(Placemark placemark)
         {
             var street = String.Join(" ", new[] { placemark.HouseNo, placemark.ThoroughfareName }).Trim();
+
             return string.Format(GeocoderDetailedUrlFormat,
                                  street.Replace(' ', '+'),
                                  placemark.LocalityName.Replace(' ', '+'),
@@ -322,7 +324,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache) : string.Empty;
+                string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 bool cache = false;
 
@@ -406,7 +408,7 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string geo = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache) : string.Empty;
+                string geo = GMaps.Instance.UsePlacemarkCache ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
 
                 bool cache = false;
 
@@ -433,54 +435,49 @@ namespace GMap.NET.MapProviders
                         doc.LoadXml(geo);
                         {
                             XmlNode r = doc.SelectSingleNode("/reversegeocode/result");
+
                             if (r != null)
                             {
                                 var p = new Placemark(r.InnerText);
 
                                 XmlNode ad = doc.SelectSingleNode("/reversegeocode/addressparts");
+
                                 if (ad != null)
                                 {
                                     var vl = ad.SelectSingleNode("country");
+
                                     if (vl != null)
-                                    {
                                         p.CountryName = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("country_code");
+
                                     if (vl != null)
-                                    {
                                         p.CountryNameCode = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("postcode");
+
                                     if (vl != null)
-                                    {
                                         p.PostalCodeNumber = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("state");
+
                                     if (vl != null)
-                                    {
                                         p.AdministrativeAreaName = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("region");
+
                                     if (vl != null)
-                                    {
                                         p.SubAdministrativeAreaName = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("suburb");
+
                                     if (vl != null)
-                                    {
                                         p.LocalityName = vl.InnerText;
-                                    }
 
                                     vl = ad.SelectSingleNode("road");
+
                                     if (vl != null)
-                                    {
                                         p.ThoroughfareName = vl.InnerText;
-                                    }
                                 }
 
                                 ret = p;

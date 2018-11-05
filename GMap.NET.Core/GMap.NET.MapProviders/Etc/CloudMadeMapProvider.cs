@@ -106,7 +106,7 @@ namespace GMap.NET.MapProviders
          List<PointLatLng> points = null;
          try
          {
-            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache) : string.Empty;
+            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
             if(string.IsNullOrEmpty(route))
             {
                route = GetContentUsingHttp(url);
@@ -319,7 +319,7 @@ namespace GMap.NET.MapProviders
 
          try
          {
-            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.DirectionsCache) : string.Empty;
+            string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.DirectionsCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
             if(string.IsNullOrEmpty(route))
             {
                route = GetContentUsingHttp(url);
