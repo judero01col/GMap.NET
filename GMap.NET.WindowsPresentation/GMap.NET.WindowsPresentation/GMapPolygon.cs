@@ -9,12 +9,11 @@ namespace GMap.NET.WindowsPresentation
 
     public class GMapPolygon : GMapMarker, IShapable
     {
-        public readonly List<PointLatLng> Points = new List<PointLatLng>();
+        public List<PointLatLng> Points { get; set; }
 
         public GMapPolygon(IEnumerable<PointLatLng> points)
         {
-            Points.AddRange(points);
-            RegenerateShape();
+            Points = new List<PointLatLng>(points);
         }
         
         public override void Clear()
@@ -22,47 +21,13 @@ namespace GMap.NET.WindowsPresentation
             base.Clear();
             Points.Clear();
         }
-
-        /// <summary>
-        /// regenerates shape of polygon
-        /// </summary>
         
-        public virtual void RegenerateShape()
-        {
-            if (Points.Count > 1)
-            {
-                Position = Points[0];
-                var localPath = new List<Point>(Points.Count);
-                var offset = Map.FromLatLngToLocal(Points[0]);
-
-                foreach (var i in Points)
-                {
-                    var p = Map.FromLatLngToLocal(i);
-                    localPath.Add(new Point(p.X - offset.X, p.Y - offset.Y));
-                }
-
-                var shape = CreatePolygonPath(localPath, true);
-
-                if (this.Shape is Path)
-                {
-                    (this.Shape as Path).Data = shape.Data;
-                }
-                else
-                {
-                    this.Shape = shape;
-                }
-            }
-            else
-            {
-                this.Shape = null;
-            }
-        }
         /// <summary>
         /// creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
         /// <param name="pl"></param>
         /// <returns></returns>
-        public virtual Path CreatePolygonPath(List<Point> localPath, bool addBlurEffect)
+        public virtual Path CreatePath(List<Point> localPath, bool addBlurEffect)
         {
             // Create a StreamGeometry to use to specify myPath.
             StreamGeometry geometry = new StreamGeometry();
