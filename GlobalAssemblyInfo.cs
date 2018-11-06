@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 
 // Las siguientes 3 declaraciones dependerán de la política de versionamiento que adopte para cada uno de los assemblies generados.
-[assembly: AssemblyVersion("1.8.8.0")]
-[assembly: AssemblyFileVersion("1.8.8.0")]
-[assembly: AssemblyInformationalVersion("1.8.8.0")]
+[assembly: AssemblyVersion("1.9.0.0")]
+[assembly: AssemblyFileVersion("1.9.0.0")]
+[assembly: AssemblyInformationalVersion("1.9.0.0")]
 
 // Si establece ComVisible en false, los tipos de este ensamblado no estarán visibles 
 // para los componentes COM.  Si necesita obtener acceso a un tipo de este ensamblado desde 
