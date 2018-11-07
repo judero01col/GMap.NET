@@ -162,6 +162,8 @@ namespace GMap.NET.MapProviders
         public static readonly SwedenMapProvider SwedenMap = SwedenMapProvider.Instance;
         public static readonly UMPMapProvider UMPMap = UMPMapProvider.Instance;
 
+        public static readonly CustomMapProvider CustomMap = CustomMapProvider.Instance;
+
         static List<GMapProvider> list;
 
         /// <summary>
