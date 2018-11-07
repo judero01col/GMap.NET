@@ -17,6 +17,10 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
+## Version 1.9.1
+### GMap.NET.Windows Core
+Custom MapProvider Add
+
 ## Version 1.9.0
 ### GMap.NET.Windows Core
 - Compatibility with Framework 4.0
