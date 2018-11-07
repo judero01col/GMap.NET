@@ -21,11 +21,11 @@ https://github.com/judero01col/GMap.NET/wiki
 ### GMap.NET.Windows Core
 - Compatibility with Framework 4.0
 - New Constructor GMapRoute(MapRoute oRoute)
-- New UMP-pcPL Map Provided Added
+- New UMP-pcPL Map Provided Added (Contributed by lukaszkn)
 - BingOSMapProvider Fix
 - Routing instructions for OpenStreetMap
 - Added TTL cache in GMapProvider, GeocodingProvider, RoutingProvider, DirectionsProvider, RoadsProvider
-- Reimplement multi-touch method Contributed by bymindzz
+- Reimplement multi-touch method (Contributed by bymindzz)
 ### GMap.NET.Windows Forms
 - Added IsZoomSignificant and IsHitTestVisible to overlay
 ### GMap.NET.WindowsPresentation
