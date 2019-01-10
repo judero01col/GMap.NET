@@ -72,8 +72,14 @@ namespace Demo.WindowsForms
                     MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsForms", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                // config map                      
+                //Config Map
                 MainMap.MapProvider = GMapProviders.GoogleMap;
+
+                // Custom Map Provider
+                //MainMap.MapProvider = GMapProviders.CustomMap;
+                //GMapProviders.CustomMap.CustomServerUrl = "https://{l}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+                //GMapProviders.CustomMap.CustomServerLetters = "abc";
+
                 MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
                 MainMap.MinZoom = 0;
                 MainMap.MaxZoom = 24;

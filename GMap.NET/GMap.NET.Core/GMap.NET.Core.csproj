@@ -68,7 +68,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OutputPath>..\Build\Release\</OutputPath>
     <DefineConstants>TRACE;MONO_disabled; MySQL_disabled; PostgreSQL_disabled; SQLite</DefineConstants>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -98,7 +98,7 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'v4.0-Debug|AnyCPU'">
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Build\v4.0-Debug\</OutputPath>
     <DefineConstants>NET40;TRACE;DEBUG;SQLite;MONO_disabled;MySQL_disabled;PostgreSQL_disabled</DefineConstants>
@@ -110,7 +110,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'v4.0-Release|AnyCPU'">
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OutputPath>..\Build\v4.0-Release\</OutputPath>
     <DefineConstants>NET40;TRACE;SQLite;MONO_disabled;MySQL_disabled;PostgreSQL_disabled</DefineConstants>
     <Optimize>true</Optimize>
@@ -248,6 +248,7 @@
     <Compile Include="GMap.NET.MapProviders\ArcGIS\ArcGIS_World_Street_MapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\ArcGIS\ArcGIS_World_Terrain_Base_MapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\ArcGIS\ArcGIS_World_Topo_MapProvider.cs" />
+    <Compile Include="GMap.NET.MapProviders\Custom\CustomMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Czech\CzechGeographicMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Czech\CzechHistoryMapProvider.cs" />
     <Compile Include="GMap.NET.MapProviders\Czech\CzechHybridMapProvider.cs" />
