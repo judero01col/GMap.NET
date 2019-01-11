@@ -23,7 +23,6 @@ namespace ConsoleApplication
         public IEnumerable<PointLatLng> GpsLogView()
         {
             int i = 0;
-            int skip = 0;
 
             PointLatLng last = PointLatLng.Empty;
 
@@ -221,7 +220,7 @@ namespace ConsoleApplication
                 //var st = GMapProviders.GoogleMap.GetPlacemarks(new PointLatLng(54.6961334816182, 25.2985095977782), out plc);
                 var st = GMapProviders.GoogleMap.GetPlacemarks(pp1.Value, out plc);
 
-                if (st == GeoCoderStatusCode.G_GEO_SUCCESS && plc != null)
+                if (st == GeoCoderStatusCode.OK && plc != null)
                 {
                     foreach (var pl in plc)
                     {

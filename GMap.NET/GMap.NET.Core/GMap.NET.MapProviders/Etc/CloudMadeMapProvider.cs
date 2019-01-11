@@ -491,7 +491,7 @@ namespace GMap.NET.MapProviders
          }
          catch(Exception ex)
          {
-            ret = DirectionsStatusCode.ExceptionInCode;
+            ret = DirectionsStatusCode.EXCEPTION_IN_CODE;
             direction = null;
             Debug.WriteLine("GetDirectionsUrl: " + ex);
          }

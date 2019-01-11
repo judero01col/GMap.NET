@@ -2510,7 +2510,7 @@ namespace GMap.NET.WindowsForms
         /// <returns>true if successfull</returns>
         public GeoCoderStatusCode SetPositionByKeywords(string keys)
         {
-            GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
             GeocodingProvider gp = MapProvider as GeocodingProvider;
 
             if (gp == null)            
@@ -2520,7 +2520,7 @@ namespace GMap.NET.WindowsForms
             {
                 var pt = gp.GetPoint(keys.Replace("#", "%23"), out status);
 
-                if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pt.HasValue)
+                if (status == GeoCoderStatusCode.OK && pt.HasValue)
                     Position = pt.Value;
             }
 
@@ -2537,7 +2537,7 @@ namespace GMap.NET.WindowsForms
         {
             point = new PointLatLng();
 
-            GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
             GeocodingProvider gp = MapProvider as GeocodingProvider;
 
             if (gp == null)            
@@ -2547,7 +2547,7 @@ namespace GMap.NET.WindowsForms
             {
                 var pt = gp.GetPoint(keys.Replace("#", "%23"), out status);
 
-                if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pt.HasValue)
+                if (status == GeoCoderStatusCode.OK && pt.HasValue)
                     point = pt.Value;
             }
 

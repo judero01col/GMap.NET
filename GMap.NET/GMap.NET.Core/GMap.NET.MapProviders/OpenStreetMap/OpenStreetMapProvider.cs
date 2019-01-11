@@ -319,7 +319,7 @@ namespace GMap.NET.MapProviders
 
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<PointLatLng> pointList)
         {
-            var status = GeoCoderStatusCode.Unknow;
+            var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             pointList = null;
 
             try
@@ -386,7 +386,7 @@ namespace GMap.NET.MapProviders
                                     }
                                 }
 
-                                status = GeoCoderStatusCode.G_GEO_SUCCESS;
+                                status = GeoCoderStatusCode.OK;
                             }
                         }
                     }
@@ -394,7 +394,7 @@ namespace GMap.NET.MapProviders
             }
             catch (Exception ex)
             {
-                status = GeoCoderStatusCode.ExceptionInCode;
+                status = GeoCoderStatusCode.EXCEPTION_IN_CODE;
                 Debug.WriteLine("GetLatLngFromGeocoderUrl: " + ex);
             }
 
@@ -403,7 +403,7 @@ namespace GMap.NET.MapProviders
 
         Placemark? GetPlacemarkFromReverseGeocoderUrl(string url, out GeoCoderStatusCode status)
         {
-            status = GeoCoderStatusCode.Unknow;
+            status = GeoCoderStatusCode.UNKNOWN_ERROR;
             Placemark? ret = null;
 
             try
@@ -482,7 +482,7 @@ namespace GMap.NET.MapProviders
 
                                 ret = p;
 
-                                status = GeoCoderStatusCode.G_GEO_SUCCESS;
+                                status = GeoCoderStatusCode.OK;
                             }
                         }
                     }
@@ -491,7 +491,7 @@ namespace GMap.NET.MapProviders
             catch (Exception ex)
             {
                 ret = null;
-                status = GeoCoderStatusCode.ExceptionInCode;
+                status = GeoCoderStatusCode.EXCEPTION_IN_CODE;
                 Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + ex);
             }
 

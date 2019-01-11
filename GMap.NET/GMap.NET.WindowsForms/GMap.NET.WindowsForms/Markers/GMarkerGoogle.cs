@@ -217,7 +217,6 @@ namespace GMap.NET.WindowsForms.Markers
          return ret;
       }
 
-        bool paso = false;
       public override void OnRender(Graphics g)
       {
 #if !PocketPC            
