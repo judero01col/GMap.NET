@@ -2393,7 +2393,7 @@ namespace GMap.NET.WindowsPresentation
         /// <returns></returns>
         public GeoCoderStatusCode SetPositionByKeywords(string keys)
         {
-            GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
             GeocodingProvider gp = MapProvider as GeocodingProvider;
             if (gp == null)
@@ -2404,7 +2404,7 @@ namespace GMap.NET.WindowsPresentation
             if (gp != null)
             {
                 var pt = gp.GetPoint(keys, out status);
-                if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pt.HasValue)
+                if (status == GeoCoderStatusCode.OK && pt.HasValue)
                 {
                     Position = pt.Value;
                 }

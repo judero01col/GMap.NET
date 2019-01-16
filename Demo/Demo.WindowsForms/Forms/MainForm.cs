@@ -216,11 +216,11 @@ namespace Demo.WindowsForms
                 //if(false)
                 {
                     // add my city location for demo
-                    GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+                    GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
                     {
                         PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
 
-                        if (pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+                        if (pos != null && status == GeoCoderStatusCode.OK)
                         {
                             currentMarker.Position = pos.Value;
 
@@ -1405,9 +1405,9 @@ namespace Demo.WindowsForms
         /// <param name="place"></param>
         void AddLocationLithuania(string place)
         {
-            GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
             PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, " + place, out status);
-            if (pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+            if (pos != null && status == GeoCoderStatusCode.OK)
             {
                 GMarkerGoogle m = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green);
                 m.ToolTip = new GMapRoundedToolTip(m);
@@ -1712,7 +1712,7 @@ namespace Demo.WindowsForms
                 {
                     GeoCoderStatusCode status;
                     var pos = GMapProviders.GoogleMap.GetPlacemark(item.Position, out status);
-                    if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pos != null)
+                    if (status == GeoCoderStatusCode.OK && pos != null)
                     {
                         GMapMarkerRect v = item as GMapMarkerRect;
                         {
@@ -1885,7 +1885,7 @@ namespace Demo.WindowsForms
             {
                 GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
 
-                if (status != GeoCoderStatusCode.G_GEO_SUCCESS)
+                if (status != GeoCoderStatusCode.OK)
                 {
                     MessageBox.Show("Geocoder can't find: '" + textBoxGeo.Text + "', reason: " + status.ToString(), "GMap.NET", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
@@ -1897,7 +1897,7 @@ namespace Demo.WindowsForms
         {
             GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
 
-            if (status != GeoCoderStatusCode.G_GEO_SUCCESS)
+            if (status != GeoCoderStatusCode.OK)
             {
                 MessageBox.Show("Geocoder can't find: '" + textBoxGeo.Text + "', reason: " + status.ToString(), "GMap.NET", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -1987,7 +1987,7 @@ namespace Demo.WindowsForms
             {
                 GeoCoderStatusCode status;
                 var ret = GMapProviders.GoogleMap.GetPlacemark(currentMarker.Position, out status);
-                if (status == GeoCoderStatusCode.G_GEO_SUCCESS && ret != null)
+                if (status == GeoCoderStatusCode.OK && ret != null)
                 {
                     p = ret;
                 }

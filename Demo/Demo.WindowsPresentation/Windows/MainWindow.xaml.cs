@@ -117,10 +117,10 @@ namespace Demo.WindowsPresentation
          //if(false)
          {
             // add my city location for demo
-            GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
             PointLatLng? city = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
-            if(city != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+            if(city != null && status == GeoCoderStatusCode.OK)
             {
                GMapMarker it = new GMapMarker(city.Value);
                {
@@ -136,7 +136,7 @@ namespace Demo.WindowsPresentation
                   {
                      string area = "Antakalnis";
                      PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius, " + area, out status);
-                     if(pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+                     if(pos != null && status == GeoCoderStatusCode.OK)
                      {
                         objects.Add(new PointAndInfo(pos.Value, area));
                      }
@@ -144,7 +144,7 @@ namespace Demo.WindowsPresentation
                   {
                      string area = "Senamiestis";
                      PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius, " + area, out status);
-                     if(pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+                     if(pos != null && status == GeoCoderStatusCode.OK)
                      {
                         objects.Add(new PointAndInfo(pos.Value, area));
                      }
@@ -152,7 +152,7 @@ namespace Demo.WindowsPresentation
                   {
                      string area = "Pilaite";
                      PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius, " + area, out status);
-                     if(pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
+                     if(pos != null && status == GeoCoderStatusCode.OK)
                      {
                         objects.Add(new PointAndInfo(pos.Value, area));
                      }
@@ -599,10 +599,10 @@ namespace Demo.WindowsPresentation
       // goto by geocoder
       private void textBoxGeo_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
       {
-         if(e.Key == System.Windows.Input.Key.Enter)
+         if(e.Key == Key.Enter)
          {
             GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
-            if(status != GeoCoderStatusCode.G_GEO_SUCCESS)
+            if(status != GeoCoderStatusCode.OK)
             {
                MessageBox.Show("Geocoder can't find: '" + textBoxGeo.Text + "', reason: " + status.ToString(), "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
@@ -787,7 +787,7 @@ namespace Demo.WindowsPresentation
             {
                GeoCoderStatusCode status;
                var plret = GMapProviders.GoogleMap.GetPlacemark(currentMarker.Position, out status);
-               if(status == GeoCoderStatusCode.G_GEO_SUCCESS && plret != null)
+               if(status == GeoCoderStatusCode.OK && plret != null)
                {
                   p = plret;
                }
