@@ -53,7 +53,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapCruncher", "Tools\MapCru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{005E2FE0-18AD-4FD5-B630-FC5255128860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Geocoding", "Demo.Geocoding\Demo.Geocoding.csproj", "{8FA98332-3B32-4A5D-9850-888AD8EFC0BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Geocoding", "Testing\Demo.Geocoding\Demo.Geocoding.csproj", "{8FA98332-3B32-4A5D-9850-888AD8EFC0BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
