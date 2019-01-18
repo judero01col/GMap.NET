@@ -123,7 +123,7 @@ namespace GMap.NET
                     }
                 }
 
-                return Math.Round(distance, 1);
+                return Math.Round(distance, 4);
             }
         }
         
