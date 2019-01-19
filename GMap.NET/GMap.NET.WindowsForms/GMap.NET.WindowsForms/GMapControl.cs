@@ -152,6 +152,45 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
+        /// Import From Kmz
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [Category("GMap.NET")]
+        [Description("Import From Kmz")]
+        public bool ImportFromKmz(string file)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Export From Kmz
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [Category("GMap.NET")]
+        [Description("Export From Kmz")]
+        public bool ExportFromKmz(string file)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+        /// <summary>
         /// enable map zoom on mouse wheel
         /// </summary>
         [Category("GMap.NET")]
@@ -260,7 +299,7 @@ namespace GMap.NET.WindowsForms
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            
+
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
                 renderHelperLine = (e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt);
@@ -268,13 +307,13 @@ namespace GMap.NET.WindowsForms
                 {
                     Invalidate();
                 }
-            }            
+            }
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
             base.OnKeyUp(e);
-            
+
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
                 renderHelperLine = (e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt);
@@ -282,7 +321,7 @@ namespace GMap.NET.WindowsForms
                 {
                     Invalidate();
                 }
-            }            
+            }
         }
 #endif
 
@@ -677,10 +716,10 @@ namespace GMap.NET.WindowsForms
         /// <param name="route"></param>
         public void UpdateRouteLocalPosition(GMapRoute route)
         {
-          route.LocalPoints.Clear();
-          
-          for (int i = 0; i < route.Points.Count; i++)
-          {
+            route.LocalPoints.Clear();
+
+            for (int i = 0; i < route.Points.Count; i++)
+            {
                 GPoint p = FromLatLngToLocal(route.Points[i]);
 
 #if !PocketPC
@@ -702,10 +741,10 @@ namespace GMap.NET.WindowsForms
         /// <param name="polygon"></param>
         public void UpdatePolygonLocalPosition(GMapPolygon polygon)
         {
-          polygon.LocalPoints.Clear();
+            polygon.LocalPoints.Clear();
 
-          for (int i = 0; i < polygon.Points.Count; i++)
-          {
+            for (int i = 0; i < polygon.Points.Count; i++)
+            {
                 GPoint p = FromLatLngToLocal(polygon.Points[i]);
 #if !PocketPC
                 if (!MobileMode)
@@ -999,7 +1038,7 @@ namespace GMap.NET.WindowsForms
 #endif
                 }
 
-                Refresh();                
+                Refresh();
                 Application.DoEvents();
 
                 using (MemoryStream ms = new MemoryStream())
@@ -1814,7 +1853,7 @@ namespace GMap.NET.WindowsForms
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            
+
             if (!IsMouseOverMarker)
             {
 #if !PocketPC
@@ -1904,7 +1943,7 @@ namespace GMap.NET.WindowsForms
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
-            
+
             if (!Core.IsDragging)
             {
                 for (int i = Overlays.Count - 1; i >= 0; i--)
@@ -2124,7 +2163,7 @@ namespace GMap.NET.WindowsForms
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            
+
             if (!Core.IsDragging && !Core.mouseDown.IsEmpty)
             {
 #if PocketPC
@@ -2195,172 +2234,172 @@ namespace GMap.NET.WindowsForms
                 else
 #endif
                     if (Core.mouseDown.IsEmpty)
+                {
+                    for (int i = Overlays.Count - 1; i >= 0; i--)
                     {
-                        for (int i = Overlays.Count - 1; i >= 0; i--)
+                        GMapOverlay o = Overlays[i];
+                        if (o != null && o.IsVisibile)
                         {
-                            GMapOverlay o = Overlays[i];
-                            if (o != null && o.IsVisibile)
+                            foreach (GMapMarker m in o.Markers)
                             {
-                                foreach (GMapMarker m in o.Markers)
+                                if (m.IsVisible && m.IsHitTestVisible)
                                 {
-                                    if (m.IsVisible && m.IsHitTestVisible)
+                                    #region -- check --
+
+                                    GPoint rp = new GPoint(e.X, e.Y);
+#if !PocketPC
+                                    if (!MobileMode)
                                     {
-                                        #region -- check --
-
-                                        GPoint rp = new GPoint(e.X, e.Y);
-#if !PocketPC
-                                        if (!MobileMode)
-                                        {
-                                            rp.OffsetNegative(Core.renderOffset);
-                                        }
+                                        rp.OffsetNegative(Core.renderOffset);
+                                    }
 #endif
-                                        if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
+                                    if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
+                                    {
+                                        if (!m.IsMouseOver)
                                         {
-                                            if (!m.IsMouseOver)
+#if !PocketPC
+                                            SetCursorHandOnEnter();
+#endif
+                                            m.IsMouseOver = true;
+                                            IsMouseOverMarker = true;
+
+                                            if (OnMarkerEnter != null)
                                             {
-#if !PocketPC
-                                                SetCursorHandOnEnter();
-#endif
-                                                m.IsMouseOver = true;
-                                                IsMouseOverMarker = true;
-
-                                                if (OnMarkerEnter != null)
-                                                {
-                                                    OnMarkerEnter(m);
-                                                }
-
-                                                Invalidate();
-                                            }
-                                        }
-                                        else if (m.IsMouseOver)
-                                        {
-                                            m.IsMouseOver = false;
-                                            IsMouseOverMarker = false;
-#if !PocketPC
-                                            RestoreCursorOnLeave();
-#endif
-                                            if (OnMarkerLeave != null)
-                                            {
-                                                OnMarkerLeave(m);
+                                                OnMarkerEnter(m);
                                             }
 
                                             Invalidate();
                                         }
-                                        #endregion
                                     }
-                                }
-
-#if !PocketPC
-                                foreach (GMapRoute m in o.Routes)
-                                {
-                                    if (m.IsVisible && m.IsHitTestVisible)
+                                    else if (m.IsMouseOver)
                                     {
-                                        #region -- check --
-
-                                        GPoint rp = new GPoint(e.X, e.Y);
+                                        m.IsMouseOver = false;
+                                        IsMouseOverMarker = false;
 #if !PocketPC
-                                        if (!MobileMode)
-                                        {
-                                            rp.OffsetNegative(Core.renderOffset);
-                                        }
+                                        RestoreCursorOnLeave();
 #endif
-                                        if (m.IsInside((int)rp.X, (int)rp.Y))
+                                        if (OnMarkerLeave != null)
                                         {
-                                            if (!m.IsMouseOver)
-                                            {
-#if !PocketPC
-                                                SetCursorHandOnEnter();
-#endif
-                                                m.IsMouseOver = true;
-                                                IsMouseOverRoute = true;
-
-                                                if (OnRouteEnter != null)
-                                                {
-                                                    OnRouteEnter(m);
-                                                }
-
-                                                Invalidate();
-                                            }
+                                            OnMarkerLeave(m);
                                         }
-                                        else
-                                        {
-                                            if (m.IsMouseOver)
-                                            {
-                                                m.IsMouseOver = false;
-                                                IsMouseOverRoute = false;
-#if !PocketPC
-                                                RestoreCursorOnLeave();
-#endif
-                                                if (OnRouteLeave != null)
-                                                {
-                                                    OnRouteLeave(m);
-                                                }
 
-                                                Invalidate();
-                                            }
-                                        }
-                                        #endregion
+                                        Invalidate();
                                     }
+                                    #endregion
                                 }
+                            }
+
+#if !PocketPC
+                            foreach (GMapRoute m in o.Routes)
+                            {
+                                if (m.IsVisible && m.IsHitTestVisible)
+                                {
+                                    #region -- check --
+
+                                    GPoint rp = new GPoint(e.X, e.Y);
+#if !PocketPC
+                                    if (!MobileMode)
+                                    {
+                                        rp.OffsetNegative(Core.renderOffset);
+                                    }
+#endif
+                                    if (m.IsInside((int)rp.X, (int)rp.Y))
+                                    {
+                                        if (!m.IsMouseOver)
+                                        {
+#if !PocketPC
+                                            SetCursorHandOnEnter();
+#endif
+                                            m.IsMouseOver = true;
+                                            IsMouseOverRoute = true;
+
+                                            if (OnRouteEnter != null)
+                                            {
+                                                OnRouteEnter(m);
+                                            }
+
+                                            Invalidate();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (m.IsMouseOver)
+                                        {
+                                            m.IsMouseOver = false;
+                                            IsMouseOverRoute = false;
+#if !PocketPC
+                                            RestoreCursorOnLeave();
+#endif
+                                            if (OnRouteLeave != null)
+                                            {
+                                                OnRouteLeave(m);
+                                            }
+
+                                            Invalidate();
+                                        }
+                                    }
+                                    #endregion
+                                }
+                            }
 #endif
 
-                                foreach (GMapPolygon m in o.Polygons)
+                            foreach (GMapPolygon m in o.Polygons)
+                            {
+                                if (m.IsVisible && m.IsHitTestVisible)
                                 {
-                                    if (m.IsVisible && m.IsHitTestVisible)
-                                    {
-                                        #region -- check --
+                                    #region -- check --
 #if !PocketPC
-                                        GPoint rp = new GPoint(e.X, e.Y);
+                                    GPoint rp = new GPoint(e.X, e.Y);
 
-                                        if (!MobileMode)
-                                        {
-                                            rp.OffsetNegative(Core.renderOffset);
-                                        }
+                                    if (!MobileMode)
+                                    {
+                                        rp.OffsetNegative(Core.renderOffset);
+                                    }
 
-                                        if (m.IsInsideLocal((int)rp.X, (int)rp.Y))
+                                    if (m.IsInsideLocal((int)rp.X, (int)rp.Y))
 #else
                               if (m.IsInside(FromLocalToLatLng(e.X, e.Y)))
 #endif
+                                    {
+                                        if (!m.IsMouseOver)
                                         {
-                                            if (!m.IsMouseOver)
-                                            {
 #if !PocketPC
-                                                SetCursorHandOnEnter();
+                                            SetCursorHandOnEnter();
 #endif
-                                                m.IsMouseOver = true;
-                                                IsMouseOverPolygon = true;
+                                            m.IsMouseOver = true;
+                                            IsMouseOverPolygon = true;
 
-                                                if (OnPolygonEnter != null)
-                                                {
-                                                    OnPolygonEnter(m);
-                                                }
-
-                                                Invalidate();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (m.IsMouseOver)
+                                            if (OnPolygonEnter != null)
                                             {
-                                                m.IsMouseOver = false;
-                                                IsMouseOverPolygon = false;
-#if !PocketPC
-                                                RestoreCursorOnLeave();
-#endif
-                                                if (OnPolygonLeave != null)
-                                                {
-                                                    OnPolygonLeave(m);
-                                                }
-
-                                                Invalidate();
+                                                OnPolygonEnter(m);
                                             }
+
+                                            Invalidate();
                                         }
-                                        #endregion
                                     }
+                                    else
+                                    {
+                                        if (m.IsMouseOver)
+                                        {
+                                            m.IsMouseOver = false;
+                                            IsMouseOverPolygon = false;
+#if !PocketPC
+                                            RestoreCursorOnLeave();
+#endif
+                                            if (OnPolygonLeave != null)
+                                            {
+                                                OnPolygonLeave(m);
+                                            }
+
+                                            Invalidate();
+                                        }
+                                    }
+                                    #endregion
                                 }
                             }
                         }
                     }
+                }
 
 #if !PocketPC
                 if (renderHelperLine)
@@ -2488,7 +2527,7 @@ namespace GMap.NET.WindowsForms
                 }
 
                 Core.MouseWheelZooming = false;
-             }
+            }
         }
 #endif
         #endregion
@@ -2513,7 +2552,7 @@ namespace GMap.NET.WindowsForms
             GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
             GeocodingProvider gp = MapProvider as GeocodingProvider;
 
-            if (gp == null)            
+            if (gp == null)
                 gp = GMapProviders.OpenStreetMap as GeocodingProvider;
 
             if (gp != null)
@@ -2540,8 +2579,8 @@ namespace GMap.NET.WindowsForms
             GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
             GeocodingProvider gp = MapProvider as GeocodingProvider;
 
-            if (gp == null)            
-                gp = GMapProviders.OpenStreetMap as GeocodingProvider;            
+            if (gp == null)
+                gp = GMapProviders.OpenStreetMap as GeocodingProvider;
 
             if (gp != null)
             {
@@ -2562,7 +2601,7 @@ namespace GMap.NET.WindowsForms
         /// <returns></returns>
         public PointLatLng FromLocalToLatLng(int x, int y)
         {
-        #if !PocketPC
+#if !PocketPC
             if (MapRenderTransform.HasValue)
             {
                 //var xx = (int)(Core.renderOffset.X + ((x - Core.renderOffset.X) / MapRenderTransform.Value));
@@ -2599,7 +2638,7 @@ namespace GMap.NET.WindowsForms
                 x = f.X;
                 y = f.Y;
             }
-        #endif
+#endif
             return Core.FromLocalToLatLng(x, y);
         }
 
@@ -2961,7 +3000,7 @@ namespace GMap.NET.WindowsForms
             get
             {
 #if !PocketPC
-                if (!IsRotated) 
+                if (!IsRotated)
                 {
                     return Core.ViewArea;
                 }
@@ -3038,11 +3077,11 @@ namespace GMap.NET.WindowsForms
             {
                 RoutingProvider dp = MapProvider as RoutingProvider;
 
-                if (dp == null)                
+                if (dp == null)
                     dp = GMapProviders.OpenStreetMap as RoutingProvider; // use OpenStreetMap if provider does not implement routing
-                
+
                 return dp;
-            }            
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -37,7 +37,7 @@ namespace Demo.Geocoding
             MainMap.Overlays.Add(objects);
             MainMap.MapProvider = GMapProviders.GoogleMap;
 
-            GoogleMapProvider.Instance.ApiKey = "AIzaSyAmO6pIPTz0Lt8lmYZEIAaixitKjq-4WlA";
+            GoogleMapProvider.Instance.ApiKey = "AIzaSyAmO6pIPTz0Lt8lmYZEIAaixitKjq-4WlB";
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -127,7 +127,11 @@ namespace Demo.Geocoding
         
         private void button1_Click(object sender, EventArgs e)
         {
-            MainMap.Overlays.Add(objects);
+            //MainMap.Overlays.Add(objects);
+
+            MainMap.ImportFromKmz("D:\\BARRANQUILLA.kmz");
+
+           
         }
 
         public Task ProcesarDatos(string Country, string Department, string City, string Address)
