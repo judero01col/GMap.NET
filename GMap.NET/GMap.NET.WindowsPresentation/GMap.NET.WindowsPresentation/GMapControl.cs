@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace GMap.NET.WindowsPresentation
 {
     using System;
@@ -765,6 +767,43 @@ namespace GMap.NET.WindowsPresentation
             {
                 InvalidateVisual();
             }
+        }
+
+        public void InitializeForBackgroundRendering(int width, int height)
+        {
+            Width = width;
+            Height = height;
+
+            if (!Core.IsStarted)
+            {
+                if (lazyEvents)
+                {
+                    lazyEvents = false;
+
+                    if (lazySetZoomToFitRect.HasValue)
+                    {
+                        SetZoomToFitRect(lazySetZoomToFitRect.Value);
+                        lazySetZoomToFitRect = null;
+                    }
+                }
+
+                Core.OnMapOpen();
+                ForceUpdateOverlays();
+            }
+
+            Core.OnMapSizeChanged(width, height);
+
+            if (Core.IsStarted)
+            {
+                if (IsRotated)
+                {
+                    UpdateRotationMatrix();
+                }
+
+                ForceUpdateOverlays();
+            }
+
+            UpdateLayout();
         }
 
         /// <summary>
@@ -2384,6 +2423,11 @@ namespace GMap.NET.WindowsPresentation
         public void ReloadMap()
         {
             Core.ReloadMap();
+        }
+
+        public Task ReloadMapAsync()
+        {
+            return Core.ReloadMapAsync();
         }
 
         /// <summary>
