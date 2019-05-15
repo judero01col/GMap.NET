@@ -1565,6 +1565,15 @@ namespace GMap.NET.WindowsForms
                 }
             }
 
+            // separate tooltip drawing
+            foreach (GMapOverlay o in Overlays)
+            {
+                if (o.IsVisibile)
+                {
+                    o.OnRenderToolTips(g);
+                }
+            }
+
             // center in virtual space...
 #if DEBUG
 #if !PocketPC

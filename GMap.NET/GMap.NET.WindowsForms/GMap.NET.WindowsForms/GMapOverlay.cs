@@ -343,35 +343,46 @@ namespace GMap.NET.WindowsForms
                      m.OnRender(g);
                   }
                }
-
-               // tooltips above
-               foreach(GMapMarker m in Markers)
-               {
-                  //if(m.ToolTip != null && m.IsVisible && Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y))
-                  if(m.ToolTip != null && m.IsVisible)
-                  {
-                     if(!string.IsNullOrEmpty(m.ToolTipText) && (m.ToolTipMode == MarkerTooltipMode.Always || (m.ToolTipMode == MarkerTooltipMode.OnMouseOver && m.IsMouseOver)))
-                     {
-                        m.ToolTip.OnRender(g);
-                     }
-                  }
-               }
+               
+               // ToolTips are drawn in separate method to ensure they are top most
             }
          }
-      }
+       }
+
+       public virtual void OnRenderToolTips(Graphics g)
+       {
+           if (Control != null)
+           {
+               if (Control.MarkersEnabled)
+               {
+                   // tooltips above
+                   foreach (GMapMarker m in Markers)
+                   {
+                       //if(m.ToolTip != null && m.IsVisible && Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y))
+                       if (m.ToolTip != null && m.IsVisible)
+                       {
+                           if (!string.IsNullOrEmpty(m.ToolTipText) && (m.ToolTipMode == MarkerTooltipMode.Always || (m.ToolTipMode == MarkerTooltipMode.OnMouseOver && m.IsMouseOver)))
+                           {
+                               m.ToolTip.OnRender(g);
+                           }
+                       }
+                   }
+               }
+           }
+       }
 
 #if !PocketPC
-      #region ISerializable Members
+        #region ISerializable Members
 
-      /// <summary>
-      /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
-      /// </summary>
-      /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
-      /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
-      /// <exception cref="T:System.Security.SecurityException">
-      /// The caller does not have the required permission.
-      /// </exception>
-      public void GetObjectData(SerializationInfo info, StreamingContext context)
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <exception cref="T:System.Security.SecurityException">
+        /// The caller does not have the required permission.
+        /// </exception>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
       {
          info.AddValue("Id", this.Id);
          info.AddValue("IsVisible", this.IsVisibile);
