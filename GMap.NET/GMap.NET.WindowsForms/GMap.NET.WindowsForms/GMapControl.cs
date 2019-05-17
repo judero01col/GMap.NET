@@ -96,10 +96,15 @@ namespace GMap.NET.WindowsForms
         public event PolygonLeave OnPolygonLeave;
 
         /// <summary>
+        /// occurs when an exception is thrown inside the map control
+        /// </summary>
+        public event ExceptionThrown OnExceptionThrown;
+
+        /// <summary>
         /// list of overlays, should be thread safe
         /// </summary>
         public readonly ObservableCollectionThreadSafe<GMapOverlay> Overlays = new ObservableCollectionThreadSafe<GMapOverlay>();
-
+        
         /// <summary>
         /// max zoom
         /// </summary>         
@@ -1157,30 +1162,41 @@ namespace GMap.NET.WindowsForms
 
         protected override void OnLoad(EventArgs e)
         {
-            base.OnLoad(e);
-
-            if (!IsDesignerHosted)
+            try
             {
-                //MethodInvoker m = delegate
-                //{
-                //   Thread.Sleep(444);
+                base.OnLoad(e);
 
-                //OnSizeChanged(null);
-
-                if (lazyEvents)
+                if (!IsDesignerHosted)
                 {
-                    lazyEvents = false;
+                    //MethodInvoker m = delegate
+                    //{
+                    //   Thread.Sleep(444);
 
-                    if (lazySetZoomToFitRect.HasValue)
+                    //OnSizeChanged(null);
+
+                    if (lazyEvents)
                     {
-                        SetZoomToFitRect(lazySetZoomToFitRect.Value);
-                        lazySetZoomToFitRect = null;
+                        lazyEvents = false;
+
+                        if (lazySetZoomToFitRect.HasValue)
+                        {
+                            SetZoomToFitRect(lazySetZoomToFitRect.Value);
+                            lazySetZoomToFitRect = null;
+                        }
                     }
+
+                    Core.OnMapOpen().ProgressChanged += new ProgressChangedEventHandler(invalidatorEngage);
+                    ForceUpdateOverlays();
+                    //};
+                    //this.BeginInvoke(m);
                 }
-                Core.OnMapOpen().ProgressChanged += new ProgressChangedEventHandler(invalidatorEngage);
-                ForceUpdateOverlays();
-                //};
-                //this.BeginInvoke(m);
+            }
+            catch (Exception ex)
+            {
+                if (OnExceptionThrown != null)
+                    OnExceptionThrown.Invoke(ex);
+                else
+                    throw;
             }
         }
 #else
@@ -1213,23 +1229,33 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
         protected override void OnCreateControl()
         {
-            base.OnCreateControl();
-
-            if (!IsDesignerHosted)
+            try
             {
-                var f = ParentForm;
-                if (f != null)
-                {
-                    while (f.ParentForm != null)
-                    {
-                        f = f.ParentForm;
-                    }
+                base.OnCreateControl();
 
+                if (!IsDesignerHosted)
+                {
+                    var f = ParentForm;
                     if (f != null)
                     {
-                        f.FormClosing += new FormClosingEventHandler(ParentForm_FormClosing);
+                        while (f.ParentForm != null)
+                        {
+                            f = f.ParentForm;
+                        }
+
+                        if (f != null)
+                        {
+                            f.FormClosing += new FormClosingEventHandler(ParentForm_FormClosing);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                if (OnExceptionThrown != null)
+                    OnExceptionThrown.Invoke(ex);
+                else
+                    throw;
             }
         }
 
@@ -1286,20 +1312,30 @@ namespace GMap.NET.WindowsForms
 #if !DESIGN
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (ForceDoubleBuffer)
+            try
             {
-                if (gxOff != null)
+                if (ForceDoubleBuffer)
                 {
-                    DrawGraphics(gxOff);
-                    e.Graphics.DrawImage(backBuffer, 0, 0);
+                    if (gxOff != null)
+                    {
+                        DrawGraphics(gxOff);
+                        e.Graphics.DrawImage(backBuffer, 0, 0);
+                    }
                 }
-            }
-            else
-            {
-                DrawGraphics(e.Graphics);
-            }
+                else
+                {
+                    DrawGraphics(e.Graphics);
+                }
 
-            base.OnPaint(e);
+                base.OnPaint(e);
+            }
+            catch (Exception ex)
+            {
+                if (OnExceptionThrown != null)
+                    OnExceptionThrown.Invoke(ex);
+                else
+                    throw;
+            }
         }
 
         void DrawGraphics(Graphics g)
@@ -1554,127 +1590,139 @@ namespace GMap.NET.WindowsForms
         /// <param name="g"></param>
         protected virtual void OnPaintOverlays(Graphics g)
         {
+            try
+            {
 #if !PocketPC
-            g.SmoothingMode = SmoothingMode.HighQuality;
+                g.SmoothingMode = SmoothingMode.HighQuality;
 #endif
-            foreach (GMapOverlay o in Overlays)
-            {
-                if (o.IsVisibile)
+                foreach (GMapOverlay o in Overlays)
                 {
-                    o.OnRender(g);
+                    if (o.IsVisibile)
+                    {
+                        o.OnRender(g);
+                    }
                 }
-            }
 
-            // separate tooltip drawing
-            foreach (GMapOverlay o in Overlays)
-            {
-                if (o.IsVisibile)
+                // separate tooltip drawing
+                foreach (GMapOverlay o in Overlays)
                 {
-                    o.OnRenderToolTips(g);
+                    if (o.IsVisibile)
+                    {
+                        o.OnRenderToolTips(g);
+                    }
                 }
-            }
 
-            // center in virtual space...
+                // center in virtual space...
 #if DEBUG
 #if !PocketPC
-            if (!IsRotated)
+                if (!IsRotated)
 #endif
-            {
-                g.DrawLine(ScalePen, -20, 0, 20, 0);
-                g.DrawLine(ScalePen, 0, -20, 0, 20);
+                {
+                    g.DrawLine(ScalePen, -20, 0, 20, 0);
+                    g.DrawLine(ScalePen, 0, -20, 0, 20);
 #if PocketPC
               g.DrawString("debug build", CopyrightFont, CopyrightBrush, 2, CopyrightFont.Size);
 #else
-                g.DrawString("debug build", CopyrightFont, Brushes.Blue, 2, CopyrightFont.Height);
+                    g.DrawString("debug build", CopyrightFont, Brushes.Blue, 2, CopyrightFont.Height);
 #endif
-            }
+                }
 #endif
 
 #if !PocketPC
 
-            if (!MobileMode)
-            {
-                g.ResetTransform();
-            }
+                if (!MobileMode)
+                {
+                    g.ResetTransform();
+                }
 
-            if (!SelectedArea.IsEmpty)
-            {
-                GPoint p1 = FromLatLngToLocal(SelectedArea.LocationTopLeft);
-                GPoint p2 = FromLatLngToLocal(SelectedArea.LocationRightBottom);
+                if (!SelectedArea.IsEmpty)
+                {
+                    GPoint p1 = FromLatLngToLocal(SelectedArea.LocationTopLeft);
+                    GPoint p2 = FromLatLngToLocal(SelectedArea.LocationRightBottom);
 
-                long x1 = p1.X;
-                long y1 = p1.Y;
-                long x2 = p2.X;
-                long y2 = p2.Y;
+                    long x1 = p1.X;
+                    long y1 = p1.Y;
+                    long x2 = p2.X;
+                    long y2 = p2.Y;
 
-                g.DrawRectangle(SelectionPen, x1, y1, x2 - x1, y2 - y1);
-                g.FillRectangle(SelectedAreaFill, x1, y1, x2 - x1, y2 - y1);
-            }
+                    g.DrawRectangle(SelectionPen, x1, y1, x2 - x1, y2 - y1);
+                    g.FillRectangle(SelectedAreaFill, x1, y1, x2 - x1, y2 - y1);
+                }
 
-            if (renderHelperLine)
-            {
-                var p = PointToClient(Form.MousePosition);
+                if (renderHelperLine)
+                {
+                    var p = PointToClient(Form.MousePosition);
 
-                g.DrawLine(HelperLinePen, p.X, 0, p.X, Height);
-                g.DrawLine(HelperLinePen, 0, p.Y, Width, p.Y);
-            }
+                    g.DrawLine(HelperLinePen, p.X, 0, p.X, Height);
+                    g.DrawLine(HelperLinePen, 0, p.Y, Width, p.Y);
+                }
 #endif
-            if (ShowCenter)
-            {
-                g.DrawLine(CenterPen, Width / 2 - 5, Height / 2, Width / 2 + 5, Height / 2);
-                g.DrawLine(CenterPen, Width / 2, Height / 2 - 5, Width / 2, Height / 2 + 5);
-            }
+                if (ShowCenter)
+                {
+                    g.DrawLine(CenterPen, Width / 2 - 5, Height / 2, Width / 2 + 5, Height / 2);
+                    g.DrawLine(CenterPen, Width / 2, Height / 2 - 5, Width / 2, Height / 2 + 5);
+                }
 
-            #region -- copyright --
+                #region -- copyright --
 
-            if (!string.IsNullOrEmpty(Core.provider.Copyright))
-            {
+                if (!string.IsNullOrEmpty(Core.provider.Copyright))
+                {
 #if !PocketPC
-                g.DrawString(Core.provider.Copyright, CopyrightFont, Brushes.Navy, 3, Height - CopyrightFont.Height - 5);
+                    g.DrawString(Core.provider.Copyright, CopyrightFont, Brushes.Navy, 3, Height - CopyrightFont.Height - 5);
 #else
             g.DrawString(Core.provider.Copyright, CopyrightFont, CopyrightBrush, 3, Height - CopyrightFont.Size - 15);
 #endif
-            }
+                }
 
-            #endregion
+                #endregion
 
-            #region -- draw scale --
+                #region -- draw scale --
+
 #if !PocketPC
-            if (MapScaleInfoEnabled)
-            {
-                if (Width > Core.pxRes5000km)
+                if (MapScaleInfoEnabled)
                 {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes5000km, 10);
-                    g.DrawString("5000Km", ScaleFont, Brushes.Blue, Core.pxRes5000km + 10, 11);
+                    if (Width > Core.pxRes5000km)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes5000km, 10);
+                        g.DrawString("5000Km", ScaleFont, Brushes.Blue, Core.pxRes5000km + 10, 11);
+                    }
+                    if (Width > Core.pxRes1000km)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000km, 10);
+                        g.DrawString("1000Km", ScaleFont, Brushes.Blue, Core.pxRes1000km + 10, 11);
+                    }
+                    if (Width > Core.pxRes100km && Zoom > 2)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100km, 10);
+                        g.DrawString("100Km", ScaleFont, Brushes.Blue, Core.pxRes100km + 10, 11);
+                    }
+                    if (Width > Core.pxRes10km && Zoom > 5)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes10km, 10);
+                        g.DrawString("10Km", ScaleFont, Brushes.Blue, Core.pxRes10km + 10, 11);
+                    }
+                    if (Width > Core.pxRes1000m && Zoom >= 10)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000m, 10);
+                        g.DrawString("1000m", ScaleFont, Brushes.Blue, Core.pxRes1000m + 10, 11);
+                    }
+                    if (Width > Core.pxRes100m && Zoom > 11)
+                    {
+                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100m, 10);
+                        g.DrawString("100m", ScaleFont, Brushes.Blue, Core.pxRes100m + 9, 11);
+                    }
                 }
-                if (Width > Core.pxRes1000km)
-                {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000km, 10);
-                    g.DrawString("1000Km", ScaleFont, Brushes.Blue, Core.pxRes1000km + 10, 11);
-                }
-                if (Width > Core.pxRes100km && Zoom > 2)
-                {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100km, 10);
-                    g.DrawString("100Km", ScaleFont, Brushes.Blue, Core.pxRes100km + 10, 11);
-                }
-                if (Width > Core.pxRes10km && Zoom > 5)
-                {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes10km, 10);
-                    g.DrawString("10Km", ScaleFont, Brushes.Blue, Core.pxRes10km + 10, 11);
-                }
-                if (Width > Core.pxRes1000m && Zoom >= 10)
-                {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000m, 10);
-                    g.DrawString("1000m", ScaleFont, Brushes.Blue, Core.pxRes1000m + 10, 11);
-                }
-                if (Width > Core.pxRes100m && Zoom > 11)
-                {
-                    g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100m, 10);
-                    g.DrawString("100m", ScaleFont, Brushes.Blue, Core.pxRes100m + 9, 11);
-                }
-            }
 #endif
-            #endregion
+
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                if (OnExceptionThrown != null)
+                    OnExceptionThrown.Invoke(ex);
+                else
+                    throw;
+            }
         }
 
 #if !PocketPC
@@ -3339,7 +3387,6 @@ namespace GMap.NET.WindowsForms
                 Core.OnEmptyTileError -= value;
             }
         }
-
         #endregion
 
 #if !PocketPC

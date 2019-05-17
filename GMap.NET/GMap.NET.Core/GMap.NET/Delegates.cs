@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace GMap.NET
 {
    using GMap.NET.MapProviders;
@@ -17,4 +19,6 @@ namespace GMap.NET
    public delegate void MapTypeChanged(GMapProvider type);
 
    public delegate void EmptyTileError(int zoom, GPoint pos);
+
+   public delegate void ExceptionThrown(Exception exception);
 }
