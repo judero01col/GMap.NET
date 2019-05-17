@@ -1,4 +1,7 @@
 ﻿
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace GMap.NET.Internals
 {
     using System;
@@ -627,6 +630,28 @@ namespace GMap.NET.Internals
             {
                 throw new Exception("Please, do not call ReloadMap before form is loaded, it's useless");
             }
+        }
+
+        public Task ReloadMapAsync()
+        {
+            ReloadMap();
+            return Task.Factory.StartNew(() =>
+            {
+                bool wait;
+                do
+                {
+                    Thread.Sleep(100);
+                    Monitor.Enter(tileLoadQueue);
+                    try
+                    {
+                        wait = tileLoadQueue.Any();
+                    }
+                    finally
+                    {
+                        Monitor.Exit(tileLoadQueue);
+                    }
+                } while (wait);
+            });
         }
 
         /// <summary>
