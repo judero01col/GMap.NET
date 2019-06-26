@@ -372,6 +372,11 @@ namespace GMap.NET.WindowsForms
         public bool MapScaleInfoEnabled = false;
 
         /// <summary>
+        /// Position of the map scale info
+        /// </summary>
+        public MapScaleInfoPosition MapScaleInfoPosition;
+
+        /// <summary>
         /// enables filling empty tiles using lower level images
         /// </summary>
         public bool FillEmptyTiles = true;
@@ -1681,35 +1686,36 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                 if (MapScaleInfoEnabled)
                 {
+                    var y = MapScaleInfoPosition == MapScaleInfoPosition.Top ? 10 : Bottom - 30;
                     if (Width > Core.pxRes5000km)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes5000km, 10);
-                        g.DrawString("5000Km", ScaleFont, Brushes.Blue, Core.pxRes5000km + 10, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes5000km, 10);
+                        g.DrawString("5000Km", ScaleFont, Brushes.Blue, Core.pxRes5000km + 10, y + 1);
                     }
                     if (Width > Core.pxRes1000km)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000km, 10);
-                        g.DrawString("1000Km", ScaleFont, Brushes.Blue, Core.pxRes1000km + 10, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes1000km, 10);
+                        g.DrawString("1000Km", ScaleFont, Brushes.Blue, Core.pxRes1000km + 10, y + 1);
                     }
                     if (Width > Core.pxRes100km && Zoom > 2)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100km, 10);
-                        g.DrawString("100Km", ScaleFont, Brushes.Blue, Core.pxRes100km + 10, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes100km, 10);
+                        g.DrawString("100Km", ScaleFont, Brushes.Blue, Core.pxRes100km + 10, y + 1);
                     }
                     if (Width > Core.pxRes10km && Zoom > 5)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes10km, 10);
-                        g.DrawString("10Km", ScaleFont, Brushes.Blue, Core.pxRes10km + 10, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes10km, 10);
+                        g.DrawString("10Km", ScaleFont, Brushes.Blue, Core.pxRes10km + 10, y + 1);
                     }
                     if (Width > Core.pxRes1000m && Zoom >= 10)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes1000m, 10);
-                        g.DrawString("1000m", ScaleFont, Brushes.Blue, Core.pxRes1000m + 10, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes1000m, 10);
+                        g.DrawString("1000m", ScaleFont, Brushes.Blue, Core.pxRes1000m + 10, y + 1);
                     }
                     if (Width > Core.pxRes100m && Zoom > 11)
                     {
-                        g.DrawRectangle(ScalePen, 10, 10, Core.pxRes100m, 10);
-                        g.DrawString("100m", ScaleFont, Brushes.Blue, Core.pxRes100m + 9, 11);
+                        g.DrawRectangle(ScalePen, 10, y, Core.pxRes100m, 10);
+                        g.DrawString("100m", ScaleFont, Brushes.Blue, Core.pxRes100m + 9, y + 1);
                     }
                 }
 #endif
@@ -3463,6 +3469,12 @@ namespace GMap.NET.WindowsForms
         DontShow = 0,
         ShowAlways = 1,
         ShowOnModifierKey = 2
+    }
+
+    public enum MapScaleInfoPosition
+    {
+        Top,
+        Bottom
     }
 
     public delegate void SelectionChange(RectLatLng Selection, bool ZoomToFit);
