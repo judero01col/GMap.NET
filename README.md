@@ -17,6 +17,21 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
+## Version 1.9.3
+
+### GMap.NET.Windows Core
+- Connection error correction with OpenStreetMap provider. (Contributed by @jbavay)
+- Brings distance rounding in line with the Overpass Ways length OSM. (Contributed by @rododevr)
+- Event was added for notification of exceptions and errors. (Contributed by @DrSeuthberg)
+#### GMap.NET.Windows Forms
+- GMapOverlay - ensure tooltip is on top of all objects of all overlays (Contributed by @DrSeuthberg)
+#### GMap.NET.WindowsPresentation
+- Added methods that allow for background rendering of WPF map controls. (Contributed by @chrisg32)
+
+## Version 1.9.2
+### GMap.NET.Windows Core
+- Fix Minor
+
 ## Version 1.9.1
 ### GMap.NET.Windows Core
 Custom MapProvider Add
