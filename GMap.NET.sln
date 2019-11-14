@@ -46,6 +46,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Geocoding", "Testing\Demo.Geocoding\Demo.Geocoding.csproj", "{8FA98332-3B32-4A5D-9850-888AD8EFC0BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{404D7A37-56D9-46B1-BACC-E57F3720A818}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMap.NET.Windows", "Pack\GMap.NET.Windows.csproj", "{B7A1C574-4B5D-412D-8C4A-41E0E0A611BB}"
 EndProject
