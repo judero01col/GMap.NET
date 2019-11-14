@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>GMap.NET.Windows</id>
-    <version>1.9.3</version>
+    <version>$version$</version>
     <title>GMap.NET - Maps For Windows</title>
     <authors>Jurgen De Leon Rodriguez</authors>
     <owners>MainSoft Technology</owners>
