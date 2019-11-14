@@ -1453,7 +1453,7 @@ namespace Demo.WindowsForms
 
                         //Demo.WindowsForms.leafletjs.dist.leaflet.js
 
-                        using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(f))
+                        using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(f))
                         {
                             string fileFullPath = MainMap.CacheLocation + name;
 
@@ -1468,7 +1468,7 @@ namespace Demo.WindowsForms
                                 Directory.CreateDirectory(dir);
                             }
 
-                            using (FileStream fileStream = System.IO.File.Create(fileFullPath, (int)stream.Length))
+                            using (var fileStream = File.Create(fileFullPath, (int)stream.Length))
                             {
                                 // Fill the bytes[] array with the stream data
                                 byte[] bytesInStream = new byte[stream.Length];

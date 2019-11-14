@@ -49,6 +49,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\References\Web\LeafletJS\**" LinkBase="leafletjs\dist" />
+    <None Remove="leafletjs\**" />
+    <EmbeddedResource Include="leafletjs\**" />
+
     <EmbeddedResource Update="BSE.Windows.Forms\Resources\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

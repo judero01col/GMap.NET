@@ -153,16 +153,6 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap go_big_green {
-            get {
-                object obj = ResourceManager.GetObject("go_big_green", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap gray_small {
             get {
                 object obj = ResourceManager.GetObject("gray_small", resourceCulture);
@@ -183,9 +173,29 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap green_big_go {
+            get {
+                object obj = ResourceManager.GetObject("green_big_go", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap green_dot {
             get {
                 object obj = ResourceManager.GetObject("green_dot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap green_pushpin {
+            get {
+                object obj = ResourceManager.GetObject("green_pushpin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,16 +213,6 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap grn_pushpin {
-            get {
-                object obj = ResourceManager.GetObject("grn_pushpin", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap lightblue {
             get {
                 object obj = ResourceManager.GetObject("lightblue", resourceCulture);
@@ -223,9 +223,9 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ltblu_pushpin {
+        internal static System.Drawing.Bitmap lightblue_dot {
             get {
-                object obj = ResourceManager.GetObject("ltblu_pushpin", resourceCulture);
+                object obj = ResourceManager.GetObject("lightblue_dot", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -233,9 +233,9 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ltblue_dot {
+        internal static System.Drawing.Bitmap lightblue_pushpin {
             get {
-                object obj = ResourceManager.GetObject("ltblue_dot", resourceCulture);
+                object obj = ResourceManager.GetObject("lightblue_pushpin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -276,16 +276,6 @@ namespace GMap.NET.WindowsForms.Properties {
         internal static System.Drawing.Bitmap orange_small {
             get {
                 object obj = ResourceManager.GetObject("orange_small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pause_big_red {
-            get {
-                object obj = ResourceManager.GetObject("pause_big_red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -383,6 +373,16 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap red_big_stop {
+            get {
+                object obj = ResourceManager.GetObject("red_big_stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap red_dot {
             get {
                 object obj = ResourceManager.GetObject("red_dot", resourceCulture);
@@ -423,16 +423,6 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap stop_big_red {
-            get {
-                object obj = ResourceManager.GetObject("stop_big_red", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap white_small {
             get {
                 object obj = ResourceManager.GetObject("white_small", resourceCulture);
@@ -453,6 +443,16 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap yellow_big_pause {
+            get {
+                object obj = ResourceManager.GetObject("yellow_big_pause", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap yellow_dot {
             get {
                 object obj = ResourceManager.GetObject("yellow_dot", resourceCulture);
@@ -463,9 +463,9 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap yellow_small {
+        internal static System.Drawing.Bitmap yellow_pushpin {
             get {
-                object obj = ResourceManager.GetObject("yellow_small", resourceCulture);
+                object obj = ResourceManager.GetObject("yellow_pushpin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -473,9 +473,9 @@ namespace GMap.NET.WindowsForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ylw_pushpin {
+        internal static System.Drawing.Bitmap yellow_small {
             get {
-                object obj = ResourceManager.GetObject("ylw_pushpin", resourceCulture);
+                object obj = ResourceManager.GetObject("yellow_small", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

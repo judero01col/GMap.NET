@@ -145,31 +145,31 @@
   <data name="drag_cross_67_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\drag_cross_67_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="go_big_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\go-big-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="gray_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gray_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="green" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="green_big_go" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\go-big-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="green_dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\green-dot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="green_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\grn-pushpin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="green_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\green_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="grn_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\grn-pushpin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\lightblue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ltblue_dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="lightblue_dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ltblue-dot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ltblu_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="lightblue_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ltblu-pushpin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="msmarker_shadow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -183,9 +183,6 @@
   </data>
   <data name="orange_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\orange_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pause_big_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pause-big-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pink" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pink.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -214,6 +211,9 @@
   <data name="red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="red_big_stop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\stop-big-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="red_dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\red-dot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -226,22 +226,22 @@
   <data name="shadow_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\shadow_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="stop_big_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\stop-big-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="white_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\white_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yellow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="yellow_big_pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pause-big-yellow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="yellow_dot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yellow-dot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="yellow_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ylw-pushpin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="yellow_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yellow_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ylw_pushpin" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ylw-pushpin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
