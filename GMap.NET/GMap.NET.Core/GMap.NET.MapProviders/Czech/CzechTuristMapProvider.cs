@@ -55,6 +55,6 @@ namespace GMap.NET.MapProviders
          return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
       }
 
-      static readonly string UrlFormat = "http://m{0}.mapserver.mapy.cz/wturist-m/{1}-{2}-{3}";
+      static readonly string UrlFormat = "https://mapserver.mapy.cz/turist-m/{1}-{2}-{3}";
    }
 }
