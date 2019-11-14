@@ -17,6 +17,16 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
+## Version 1.9.5
+
+#### GMap.NET
+- Project converted to .NET Core 3.0 (Contributed by @zgabi)
+
+## Version 1.9.4
+
+#### GMap.NET.Windows Forms
+- A bit nicer representationof the map scale info. (Contributed by @DrSeuthberg)
+
 ## Version 1.9.3
 
 ### GMap.NET.Windows Core
