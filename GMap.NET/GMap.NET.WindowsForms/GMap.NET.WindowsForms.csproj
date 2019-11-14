@@ -11,6 +11,14 @@
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
+    <PackageReleaseNotes>GMap.NET
+-Project converted to .NET Core 3.0 (Contributed by @zgabi)
+
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
+    <AssemblyVersion>1.9.5.0</AssemblyVersion>
+    <FileVersion>1.9.5.0</FileVersion>
+    <Version>1.9.5</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
