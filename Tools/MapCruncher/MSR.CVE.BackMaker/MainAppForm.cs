@@ -1,7 +1,6 @@
 using BackMaker;
 using MSR.CVE.BackMaker.ImagePipeline;
 using MSR.CVE.BackMaker.MCDebug;
-using MSR.CVE.BackMaker.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -419,7 +418,7 @@ namespace MSR.CVE.BackMaker
         }
         private void aboutMSRBackMakerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutForm aboutForm = new AboutForm(MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
+            AboutForm aboutForm = new AboutForm(MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
             aboutForm.ShowDialog();
         }
         private void viewMapCruncherTutorialToolStripMenuItem_Click(object sender, EventArgs e)

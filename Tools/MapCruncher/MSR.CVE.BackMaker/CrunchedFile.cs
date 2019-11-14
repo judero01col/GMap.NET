@@ -1,4 +1,3 @@
-using MSR.CVE.BackMaker.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -164,8 +163,8 @@ namespace MSR.CVE.BackMaker
 			FodderSupport.WriteAppFodderString(writer, FodderSupport.MapCruncherAppIDString, "");
 			writer.WriteEndElement();
 			writer.WriteStartElement("MapCruncherAppVersion");
-			writer.WriteAttributeString("version", MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
-			FodderSupport.WriteAppFodderString(writer, FodderSupport.MapCruncherAppIDString, "Version" + FodderSupport.DigitsToLetters(FodderSupport.ExtractDigits(MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber)));
+			writer.WriteAttributeString("version", MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
+			FodderSupport.WriteAppFodderString(writer, FodderSupport.MapCruncherAppIDString, "Version" + FodderSupport.DigitsToLetters(FodderSupport.ExtractDigits(MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber)));
 			writer.WriteEndElement();
 			writer.WriteStartElement(LayerList.GetXMLTag());
 			foreach (CrunchedLayer current2 in this.crunchedLayers)

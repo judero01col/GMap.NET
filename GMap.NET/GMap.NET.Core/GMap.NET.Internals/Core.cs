@@ -632,6 +632,7 @@ namespace GMap.NET.Internals
             }
         }
 
+#if !NET40
         public Task ReloadMapAsync()
         {
             ReloadMap();
@@ -653,6 +654,7 @@ namespace GMap.NET.Internals
                 } while (wait);
             });
         }
+#endif
 
         /// <summary>
         /// moves current position into map center
@@ -934,6 +936,12 @@ namespace GMap.NET.Internals
             {
                 #region -- execute --
 
+                var matrix = task.Core.Matrix;
+                if (matrix == null)
+                {
+                    return;
+                }
+
                 var m = task.Core.Matrix.GetTileWithReadLock(task.Zoom, task.Pos);
                 if (!m.NotEmpty)
                 {
@@ -1031,7 +1039,7 @@ namespace GMap.NET.Internals
                             }
                             else
                             {
-                                if (ex != null)
+                                if (ex != null && task.Core.FailedLoads != null)
                                 {
                                     lock (task.Core.FailedLoads)
                                     {

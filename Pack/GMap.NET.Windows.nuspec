@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>GMap.NET.Windows</id>
+    <version>1.9.3</version>
+    <title>GMap.NET - Maps For Windows</title>
+    <authors>Jurgen De Leon Rodriguez</authors>
+    <owners>MainSoft Technology</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/judero01col/GMap.NET/wiki/License</licenseUrl>
+    <projectUrl>https://github.com/judero01col/GMap.NET</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</iconUrl>
+    <description>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest in Windows Forms &amp; Presentation, Supports caching and run on Windows Forms, Presentation &amp; Mobile!</description>
+    <summary>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, direction and maps from Google, ArcGIS, etc. Run on Windows Forms, Presentation &amp; Mobile!</summary>
+    <releaseNotes>GMap.NET.Windows Core
+
+- Connection error correction with OpenStreetMap provider. (@jbavay)
+- Brings distance rounding in line with the Overpass Ways length OSM. (@rododevr)
+- Event was added for notification of exceptions and errors. (@DrSeuthberg)
+
+GMap.NET.Windows Forms
+
+- GMapOverlay - ensure tooltip is on top of all objects of all overlays (@DrSeuthberg)
+
+GMap.NET.WindowsPresentation
+
+- Added methods that allow for background rendering of WPF map controls. (@chrisg32)
+
+
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</releaseNotes>
+    <copyright>Copyright (c) MainSoft Technology 2016-2019</copyright>
+    <tags>GMap, Map, Maps, gmaps, tiling, Control, mapkit, Mapping, GIS, Geo, Places, Elevation, Geocode, Directions, Google, Here, Bing, OpenStreet</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SQLite" version="1.0.112" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.0">
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SQLite" version="1.0.112" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Security.Principal.Windows" version="4.6.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework=".NETCoreApp3.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WindowsForms" />
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WPF" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="..\Build\$configuration$\net40\GMap.NET.Core.dll" target="lib\net40"  />
+    <file src="..\Build\$configuration$\net40\GMap.NET.WindowsForms.dll" target="lib\net40"  />
+    <file src="..\Build\$configuration$\net40\GMap.NET.WindowsPresentation.dll" target="lib\net40"  />
+    <file src="..\Build\$configuration$\netstandard2.0\GMap.NET.Core.dll" target="lib\netcoreapp3.0"  />
+    <file src="..\Build\$configuration$\netcoreapp3.0\GMap.NET.WindowsForms.dll" target="lib\netcoreapp3.0"  />
+    <file src="..\Build\$configuration$\netcoreapp3.0\GMap.NET.WindowsPresentation.dll" target="lib\netcoreapp3.0"  />
+  </files>
+</package>

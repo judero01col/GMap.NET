@@ -504,14 +504,12 @@ namespace Demo.WindowsPresentation
       // tile louading starts
       void MainMap_OnTileLoadStart()
       {
-         System.Windows.Forms.MethodInvoker m = delegate()
-         {
-            progressBar1.Visibility = Visibility.Visible;
-         };
-
          try
          {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, m);
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+                {
+                    progressBar1.Visibility = Visibility.Visible;
+                }));
          }
          catch
          {
@@ -523,15 +521,13 @@ namespace Demo.WindowsPresentation
       {
          MainMap.ElapsedMilliseconds = ElapsedMilliseconds;
 
-         System.Windows.Forms.MethodInvoker m = delegate()
-         {
-            progressBar1.Visibility = Visibility.Hidden;
-            groupBox3.Header = "loading, last in " + MainMap.ElapsedMilliseconds + "ms";
-         };
-
          try
          {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, m);
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+            {
+                progressBar1.Visibility = Visibility.Hidden;
+                groupBox3.Header = "loading, last in " + MainMap.ElapsedMilliseconds + "ms";
+            }));
          }
          catch
          {

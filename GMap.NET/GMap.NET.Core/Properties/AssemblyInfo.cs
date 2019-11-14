@@ -1,16 +1,5 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("GMap.NET.Core")]
-[assembly: AssemblyDescription("GMap.NET - Maps for Windows")]
-[assembly: AssemblyProduct("GMap.NET.Core")]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("843e1f67-489b-4454-b451-021e5c526e30")]
 
 // internal visibility
 [assembly:

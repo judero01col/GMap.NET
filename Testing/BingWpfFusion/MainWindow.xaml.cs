@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using GMap.NET;
 using GMap.NET.MapProviders;
-using GMap.NET.WindowsPresentation;
 using Microsoft.Maps.MapControl.WPF;
 
 namespace BingMapsWpfUsingCache

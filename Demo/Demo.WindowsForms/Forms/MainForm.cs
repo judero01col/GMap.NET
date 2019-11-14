@@ -20,6 +20,7 @@ using GMap.NET.WindowsForms.ToolTips;
 using System.Reflection;
 using GMap.NET.CacheProviders;
 using System.Linq;
+using BSE.Windows.Forms;
 
 namespace Demo.WindowsForms
 {
@@ -155,7 +156,7 @@ namespace Demo.WindowsForms
                     checkBoxDebug.Checked = true;
             #endif
 
-                ToolStripManager.Renderer = new BSE.Windows.Forms.Office2007Renderer();
+                ToolStripManager.Renderer = new Office2007Renderer();
 
                 #region -- demo workers --
                 // flight demo
@@ -189,7 +190,9 @@ namespace Demo.WindowsForms
 
                     GridConnections.AutoGenerateColumns = false;
 
+#if SQLite
                     IpCache.CacheLocation = MainMap.CacheLocation;
+#endif
                 }
 
                 // perf
@@ -598,7 +601,9 @@ namespace Demo.WindowsForms
 
         volatile bool TryTraceConnection = false;
         GMapMarker lastTcpmarker;
+#if SQLite
         readonly SQLiteIpCache IpCache = new SQLiteIpCache();
+#endif
 
         readonly Dictionary<string, GMapMarker> tcpConnections = new Dictionary<string, GMapMarker>();
         readonly Dictionary<string, GMapRoute> tcpRoutes = new Dictionary<string, GMapRoute>();
@@ -1199,7 +1204,11 @@ namespace Demo.WindowsForms
             string[] ips = iplist.Split(',');
             foreach (var ip in ips)
             {
+#if SQLite
                 IpInfo val = IpCache.GetDataFromCache(ip);
+#else
+                IpInfo val = null;
+#endif
                 if (val != null)
                 {
                     ret.Add(val);
@@ -1258,7 +1267,9 @@ namespace Demo.WindowsForms
                                     ret.Add(info);
                                 }
 
+#if SQLite
                                 IpCache.PutDataToCache(Ip, info);
+#endif
                             }
                         }
 
