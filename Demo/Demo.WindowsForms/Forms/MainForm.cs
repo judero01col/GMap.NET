@@ -1843,10 +1843,8 @@ namespace Demo.WindowsForms
             {
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt"))
                 {
-                    string ctn = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt");
-                    int li = ctn.IndexOf("License");
-                    string txt = ctn.Substring(li);
-
+                    string txt = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt");
+                    
                     var d = new Demo.WindowsForms.Forms.Message();
                     d.richTextBox1.Text = txt;
 

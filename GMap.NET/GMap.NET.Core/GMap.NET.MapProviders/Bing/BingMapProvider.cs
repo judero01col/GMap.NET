@@ -390,13 +390,13 @@ namespace GMap.NET.MapProviders
             return ret;
         }
 
-        public MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int Zoom)
+        public MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom)
         {
             string tooltip;
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), Zoom, out tooltip, out numLevels, out zoomFactor);
+            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), zoom, out tooltip, out numLevels, out zoomFactor);
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
@@ -767,7 +767,7 @@ namespace GMap.NET.MapProviders
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             string key = TileXYToQuadKey(pos.X, pos.Y, zoom);
-
+                
             if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(UrlDynamicFormat))
             {
                 return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key, language);

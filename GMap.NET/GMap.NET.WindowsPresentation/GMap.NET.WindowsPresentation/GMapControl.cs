@@ -1825,15 +1825,15 @@ namespace GMap.NET.WindowsPresentation
                 p = ApplyRotationInversion(p.X, p.Y);
 
                 // cursor has moved beyond drag tolerance
-                if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
-                    Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
+                if ((e.LeftButton == MouseButtonState.Pressed && DragButton == MouseButton.Left) ||
+                    (e.RightButton == MouseButtonState.Pressed && DragButton == MouseButton.Right))
                 {
-                    if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
+                    if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
+                        Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
                     {
                         Core.BeginDrag(Core.mouseDown);
                     }
                 }
-
             }
 
             if (Core.IsDragging)
