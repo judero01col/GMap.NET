@@ -10,13 +10,6 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <Prefer32Bit>false</Prefer32Bit>
-    <PackageReleaseNotes>GMap.NET
--Project converted to .NET Core 3.0 (Contributed by @zgabi)
-
-History Release Notes
-https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
-    <Version>1.9.5</Version>
-    <FileVersion>1.9.5.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
