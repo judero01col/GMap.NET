@@ -61,13 +61,13 @@
          // 
          // richTextBox1
          // 
+         resources.ApplyResources(this.richTextBox1, "richTextBox1");
          this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
          this.richTextBox1.Location = new System.Drawing.Point(5, 5);
          this.richTextBox1.Name = "richTextBox1";
          this.richTextBox1.ReadOnly = true;
          this.richTextBox1.Size = new System.Drawing.Size(609, 394);
          this.richTextBox1.TabIndex = 3;
-         this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
          // 
          // Message
          // 

@@ -148,7 +148,7 @@ namespace MSR.CVE.BackMaker
 		}
 		private void InitializeComponent()
 		{
-			ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(RenderedMashupViewer));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RenderedMashupViewer));
 			this.menuStrip1 = new MenuStrip();
 			this.fileToolStripMenuItem = new ToolStripMenuItem();
 			this.pageSetupToolStripMenuItem = new ToolStripMenuItem();

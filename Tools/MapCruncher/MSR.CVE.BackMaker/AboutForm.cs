@@ -45,7 +45,7 @@ namespace MSR.CVE.BackMaker
 		}
 		private void InitializeComponent()
 		{
-			ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(AboutForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
 			this.aboutContentsBrowser = new WebBrowser();
 			this.label2 = new Label();
 			this.label3 = new Label();
@@ -56,12 +56,12 @@ namespace MSR.CVE.BackMaker
 			this.aboutContentsBrowser.Name = "aboutContentsBrowser";
 			this.aboutContentsBrowser.Size = new Size(558, 439);
 			this.aboutContentsBrowser.TabIndex = 3;
-			this.label2.Image = (Image)componentResourceManager.GetObject("label2.Image");
+            resources.ApplyResources(this.label2, "label2");
 			this.label2.Location = new Point(379, 1);
 			this.label2.Name = "label2";
 			this.label2.Size = new Size(148, 139);
 			this.label2.TabIndex = 4;
-			this.label3.Image = (Image)componentResourceManager.GetObject("label3.Image");
+            resources.ApplyResources(this.label3, "label3");
 			this.label3.Location = new Point(33, 22);
 			this.label3.Name = "label3";
 			this.label3.Size = new Size(340, 92);
@@ -73,7 +73,7 @@ namespace MSR.CVE.BackMaker
 			base.Controls.Add(this.label3);
 			base.Controls.Add(this.label2);
 			base.Controls.Add(this.aboutContentsBrowser);
-			base.Icon = (Icon)componentResourceManager.GetObject("$this.Icon");
+			base.Icon = (Icon)resources.GetObject("$this.Icon");
 			base.Name = "AboutForm";
 			base.StartPosition = FormStartPosition.CenterScreen;
 			this.Text = "About MapCruncher";

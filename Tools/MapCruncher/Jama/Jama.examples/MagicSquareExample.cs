@@ -99,8 +99,9 @@ namespace Jama.examples
 			}
 			return text;
 		}
+
 		[STAThread]
-		public static void Main(string[] argv)
+		public static void Main2(string[] argv)
 		{
 			MagicSquareExample.print("\n    Test of Matrix Class, using magic squares.\n");
 			MagicSquareExample.print("    See MagicSquareExample.main() for an explanation.\n");

@@ -2425,10 +2425,12 @@ namespace GMap.NET.WindowsPresentation
             Core.ReloadMap();
         }
 
+#if !NET40
         public Task ReloadMapAsync()
         {
             return Core.ReloadMapAsync();
         }
+#endif
 
         /// <summary>
         /// sets position using geocoder

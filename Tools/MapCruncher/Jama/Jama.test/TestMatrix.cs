@@ -4,7 +4,7 @@ namespace Jama.test
 	public class TestMatrix
 	{
 		[STAThread]
-		public static void Main(string[] argv)
+		public static void Main2(string[] argv)
 		{
 			int num = 0;
 			int value = 0;

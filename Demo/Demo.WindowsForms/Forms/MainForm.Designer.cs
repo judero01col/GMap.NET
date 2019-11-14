@@ -1,4 +1,6 @@
-﻿namespace Demo.WindowsForms
+﻿using BSE.Windows.Forms;
+
+namespace Demo.WindowsForms
 {
    partial class MainForm
    {
@@ -32,10 +34,10 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.MainMap = new Demo.WindowsForms.Map();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.splitter1 = new BSE.Windows.Forms.Splitter();
-            this.panelMenu = new BSE.Windows.Forms.Panel();
-            this.xPanderPanelList1 = new BSE.Windows.Forms.XPanderPanelList();
-            this.xPanderPanelMain = new BSE.Windows.Forms.XPanderPanel();
+            this.splitter1 = new Splitter();
+            this.panelMenu = new Panel();
+            this.xPanderPanelList1 = new XPanderPanelList();
+            this.xPanderPanelMain = new XPanderPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -79,7 +81,7 @@
             this.buttonZoomUp = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.buttonZoomDown = new System.Windows.Forms.Button();
-            this.xPanderPanelCache = new BSE.Windows.Forms.XPanderPanel();
+            this.xPanderPanelCache = new XPanderPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxCacheSize = new System.Windows.Forms.TextBox();
             this.textBoxCacheStatus = new System.Windows.Forms.TextBox();
@@ -94,7 +96,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.button17 = new System.Windows.Forms.Button();
             this.checkBoxTileHost = new System.Windows.Forms.CheckBox();
-            this.xPanderPanelInfo = new BSE.Windows.Forms.XPanderPanel();
+            this.xPanderPanelInfo = new XPanderPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxZoomCurrent = new System.Windows.Forms.TextBox();
             this.textBoxrouteCount = new System.Windows.Forms.TextBox();
@@ -106,7 +108,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxLatCurrent = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.xPanderPanelLive = new BSE.Windows.Forms.XPanderPanel();
+            this.xPanderPanelLive = new XPanderPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.radioButtonNone = new System.Windows.Forms.RadioButton();
             this.checkBoxTcpIpSnap = new System.Windows.Forms.CheckBox();
@@ -230,7 +232,7 @@
             this.panelMenu.Margin = new System.Windows.Forms.Padding(2);
             this.panelMenu.MinimumSize = new System.Drawing.Size(27, 27);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.panelMenu.PanelStyle = PanelStyle.Office2007;
             this.panelMenu.ShowExpandIcon = true;
             this.panelMenu.Size = new System.Drawing.Size(228, 665);
             this.panelMenu.TabIndex = 40;
@@ -241,7 +243,7 @@
             // 
             // xPanderPanelList1
             // 
-            this.xPanderPanelList1.CaptionStyle = BSE.Windows.Forms.CaptionStyle.Flat;
+            this.xPanderPanelList1.CaptionStyle = CaptionStyle.Flat;
             this.xPanderPanelList1.Controls.Add(this.xPanderPanelMain);
             this.xPanderPanelList1.Controls.Add(this.xPanderPanelCache);
             this.xPanderPanelList1.Controls.Add(this.xPanderPanelInfo);
@@ -252,7 +254,7 @@
             this.xPanderPanelList1.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelList1.Name = "xPanderPanelList1";
             this.xPanderPanelList1.PanelColors = null;
-            this.xPanderPanelList1.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.xPanderPanelList1.PanelStyle = PanelStyle.Office2007;
             this.xPanderPanelList1.ShowExpandIcon = true;
             this.xPanderPanelList1.Size = new System.Drawing.Size(228, 636);
             this.xPanderPanelList1.TabIndex = 0;
@@ -289,7 +291,7 @@
             this.xPanderPanelMain.IsClosable = false;
             this.xPanderPanelMain.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelMain.Name = "xPanderPanelMain";
-            this.xPanderPanelMain.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.xPanderPanelMain.PanelStyle = PanelStyle.Office2007;
             this.xPanderPanelMain.Size = new System.Drawing.Size(228, 561);
             this.xPanderPanelMain.TabIndex = 0;
             this.xPanderPanelMain.Text = "map";
@@ -839,7 +841,7 @@
             this.xPanderPanelCache.IsClosable = false;
             this.xPanderPanelCache.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelCache.Name = "xPanderPanelCache";
-            this.xPanderPanelCache.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.xPanderPanelCache.PanelStyle = PanelStyle.Office2007;
             this.xPanderPanelCache.Size = new System.Drawing.Size(228, 25);
             this.xPanderPanelCache.TabIndex = 1;
             this.xPanderPanelCache.Text = "cache";
@@ -1065,7 +1067,7 @@
             this.xPanderPanelInfo.Image = null;
             this.xPanderPanelInfo.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelInfo.Name = "xPanderPanelInfo";
-            this.xPanderPanelInfo.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.xPanderPanelInfo.PanelStyle = PanelStyle.Office2007;
             this.xPanderPanelInfo.Size = new System.Drawing.Size(228, 25);
             this.xPanderPanelInfo.TabIndex = 3;
             this.xPanderPanelInfo.Text = "info";
@@ -1242,7 +1244,7 @@
             this.xPanderPanelLive.Margin = new System.Windows.Forms.Padding(2);
             this.xPanderPanelLive.Name = "xPanderPanelLive";
             this.xPanderPanelLive.Padding = new System.Windows.Forms.Padding(0, 0, 0, 24);
-            this.xPanderPanelLive.PanelStyle = BSE.Windows.Forms.PanelStyle.Office2007;
+            this.xPanderPanelLive.PanelStyle = PanelStyle.Office2007;
             this.xPanderPanelLive.Size = new System.Drawing.Size(228, 25);
             this.xPanderPanelLive.TabIndex = 2;
             this.xPanderPanelLive.Text = "live";
@@ -1471,15 +1473,15 @@
       private System.Windows.Forms.Button button10;
       private System.Windows.Forms.Button button11;
       internal Map MainMap;
-      private BSE.Windows.Forms.Panel panelMenu;
-      private BSE.Windows.Forms.XPanderPanelList xPanderPanelList1;
-      private BSE.Windows.Forms.XPanderPanel xPanderPanelMain;
-      private BSE.Windows.Forms.XPanderPanel xPanderPanelCache;
-      private BSE.Windows.Forms.XPanderPanel xPanderPanelLive;
+      private Panel panelMenu;
+      private XPanderPanelList xPanderPanelList1;
+      private XPanderPanel xPanderPanelMain;
+      private XPanderPanel xPanderPanelCache;
+      private XPanderPanel xPanderPanelLive;
       private System.Windows.Forms.Panel panel2;
       private System.Windows.Forms.Panel panel4;
-      private BSE.Windows.Forms.Splitter splitter1;
-      private BSE.Windows.Forms.XPanderPanel xPanderPanelInfo;
+      private Splitter splitter1;
+      private XPanderPanel xPanderPanelInfo;
       private System.Windows.Forms.Label label4;
       private System.Windows.Forms.Label label5;
       private System.Windows.Forms.TextBox textBoxLngCurrent;

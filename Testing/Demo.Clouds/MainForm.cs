@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Demo.Clouds.Properties;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.MapProviders;
@@ -38,7 +39,7 @@ namespace CloudsDemo
             mapControl.Overlays.Add(mainOverlay);
 
             clouds = new GMapImage(gtl);
-            clouds.Image = Properties.Resources.USOverlay;
+            clouds.Image = Resources.USOverlay;
             mainOverlay.Markers.Add(clouds);
          }
       }
