@@ -51,6 +51,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMap.NET.Windows", "Pack\GMap.NET.Windows.csproj", "{B7A1C574-4B5D-412D-8C4A-41E0E0A611BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E06DEF77-F933-42FB-AFD7-DB2D0D8D6A98} = {E06DEF77-F933-42FB-AFD7-DB2D0D8D6A98}
+		{D0C39D9D-BED0-418B-9A5E-713176CAF40C} = {D0C39D9D-BED0-418B-9A5E-713176CAF40C}
+		{644FE7D4-0184-400F-B2D7-99CB41360658} = {644FE7D4-0184-400F-B2D7-99CB41360658}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
