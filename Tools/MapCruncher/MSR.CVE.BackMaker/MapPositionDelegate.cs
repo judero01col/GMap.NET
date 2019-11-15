@@ -1,5 +1,5 @@
 using System;
 namespace MSR.CVE.BackMaker
 {
-	public delegate MapPosition MapPositionDelegate();
+    public delegate MapPosition MapPositionDelegate();
 }

@@ -1,8 +1,8 @@
 using System;
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
-	public interface IEvictable
-	{
-		bool EvictMeNow();
-	}
+    public interface IEvictable
+    {
+        bool EvictMeNow();
+    }
 }

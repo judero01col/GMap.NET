@@ -1,7 +1,7 @@
 using System;
 namespace BackMaker
 {
-	public class UsageException : Exception
-	{
-	}
+    public class UsageException : Exception
+    {
+    }
 }

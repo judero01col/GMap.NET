@@ -4,22 +4,22 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace MSR.CVE.BackMaker
 {
-	public class RenderWindow : Form
-	{
-		private IContainer components;
-		private RenderOptionsPanel renderOptionsPanel;
-		private RenderProgressPanel2 renderProgressPanel;
-		private GroupBox groupBox1;
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && this.components != null)
-			{
-				this.components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
-		private void InitializeComponent()
-		{
+    public class RenderWindow : Form
+    {
+        private IContainer components;
+        private RenderOptionsPanel renderOptionsPanel;
+        private RenderProgressPanel2 renderProgressPanel;
+        private GroupBox groupBox1;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && this.components != null)
+            {
+                this.components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+        private void InitializeComponent()
+        {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.renderOptionsPanel = new MSR.CVE.BackMaker.RenderOptionsPanel();
             this.renderProgressPanel = new MSR.CVE.BackMaker.RenderProgressPanel2();
@@ -71,30 +71,30 @@ namespace MSR.CVE.BackMaker
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
-		}
-		public RenderWindow()
-		{
-			this.InitializeComponent();
-			base.FormClosed += new FormClosedEventHandler(this.RenderWindow_FormClosed);
-		}
-		private void RenderWindow_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			this.UndoConstruction();
-		}
-		internal void UndoConstruction()
-		{
-			this.renderOptionsPanel.SetRenderOptions(null);
-			this.renderProgressPanel.UndoConstruction();
-			base.Dispose();
-		}
-		internal void Setup(RenderOptions renderOptions, Mashup currentMashup, MapTileSourceFactory mapTileSourceFactory, RenderProgressPanel2.LaunchRenderedBrowserDelegate LaunchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
-		{
-			this.renderOptionsPanel.SetRenderOptions(renderOptions);
-			this.renderProgressPanel.Setup(currentMashup, mapTileSourceFactory, LaunchRenderedBrowser, flushRenderedTileCachePackage);
-		}
-		internal void StartRender(RenderProgressPanel2.RenderCompleteDelegate renderCompleteDelegate)
-		{
-			this.renderProgressPanel.StartRender(renderCompleteDelegate);
-		}
-	}
+        }
+        public RenderWindow()
+        {
+            this.InitializeComponent();
+            base.FormClosed += new FormClosedEventHandler(this.RenderWindow_FormClosed);
+        }
+        private void RenderWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.UndoConstruction();
+        }
+        internal void UndoConstruction()
+        {
+            this.renderOptionsPanel.SetRenderOptions(null);
+            this.renderProgressPanel.UndoConstruction();
+            base.Dispose();
+        }
+        internal void Setup(RenderOptions renderOptions, Mashup currentMashup, MapTileSourceFactory mapTileSourceFactory, RenderProgressPanel2.LaunchRenderedBrowserDelegate LaunchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
+        {
+            this.renderOptionsPanel.SetRenderOptions(renderOptions);
+            this.renderProgressPanel.Setup(currentMashup, mapTileSourceFactory, LaunchRenderedBrowser, flushRenderedTileCachePackage);
+        }
+        internal void StartRender(RenderProgressPanel2.RenderCompleteDelegate renderCompleteDelegate)
+        {
+            this.renderProgressPanel.StartRender(renderCompleteDelegate);
+        }
+    }
 }

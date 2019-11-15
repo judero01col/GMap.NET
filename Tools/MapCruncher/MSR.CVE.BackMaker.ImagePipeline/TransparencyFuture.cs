@@ -4,33 +4,33 @@ using System.Drawing.Imaging;
 using System.Threading;
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
-	public class TransparencyFuture : FutureBase
-	{
-		private TransparencyOptions transparencyOptions;
-		private IFuture antialiasedFuture;
-		private IFuture exactColorFuture;
-		public TransparencyFuture(TransparencyOptions transparencyOptions, IFuture antialiasedFuture, IFuture exactColorFuture)
-		{
-			this.transparencyOptions = transparencyOptions;
-			this.antialiasedFuture = antialiasedFuture;
-			this.exactColorFuture = exactColorFuture;
-		}
-		public override Present Realize(string refCredit)
-		{
-			Present present = this.antialiasedFuture.Realize(refCredit);
-			if (this.transparencyOptions.Effectless())
-			{
-				return present;
-			}
-			Present present2 = this.exactColorFuture.Realize(refCredit);
-			return this.Evaluate(new Present[]
-			{
-				present,
-				present2
-			});
-		}
-		private unsafe Present Evaluate(params Present[] paramList)
-		{
+    public class TransparencyFuture : FutureBase
+    {
+        private TransparencyOptions transparencyOptions;
+        private IFuture antialiasedFuture;
+        private IFuture exactColorFuture;
+        public TransparencyFuture(TransparencyOptions transparencyOptions, IFuture antialiasedFuture, IFuture exactColorFuture)
+        {
+            this.transparencyOptions = transparencyOptions;
+            this.antialiasedFuture = antialiasedFuture;
+            this.exactColorFuture = exactColorFuture;
+        }
+        public override Present Realize(string refCredit)
+        {
+            Present present = this.antialiasedFuture.Realize(refCredit);
+            if (this.transparencyOptions.Effectless())
+            {
+                return present;
+            }
+            Present present2 = this.exactColorFuture.Realize(refCredit);
+            return this.Evaluate(new Present[]
+            {
+                present,
+                present2
+            });
+        }
+        private unsafe Present Evaluate(params Present[] paramList)
+        {
             D.Assert(paramList.Length == 2);
             if (!(paramList[0] is ImageRef))
             {
@@ -109,52 +109,52 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 HaloTransparency(source, num6);
             }
             return source;
-		}
-		public override void AccumulateRobustHash(IRobustHash hash)
-		{
-			hash.Accumulate("TransparencyVerb(");
-			this.transparencyOptions.AccumulateRobustHash(hash);
-			this.antialiasedFuture.AccumulateRobustHash(hash);
-			this.exactColorFuture.AccumulateRobustHash(hash);
-			hash.Accumulate(")");
-		}
-		public static void HaloTransparency(ImageRef source, int haloSize)
-		{
-			D.Assert(haloSize > 0 && haloSize < 100);
-			ImageRef imageRef = source.Copy();
-			GDIBigLockedImage image;
-			Monitor.Enter(image = source.image);
-			try
-			{
-				Image image2 = source.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-				for (int i = -haloSize; i < haloSize + 1; i++)
-				{
-					for (int j = -haloSize; j < haloSize + 1; j++)
-					{
-						if (i != 0 || j != 0)
-						{
-							Bitmap bitmap = new Bitmap(source.image.Width, source.image.Height);
-							Graphics graphics = Graphics.FromImage(bitmap);
-							Rectangle destRect = new Rectangle(0, 0, image2.Width, image2.Height);
-							Rectangle srcRect = new Rectangle(i, j, image2.Width, image2.Height);
-							graphics.DrawImage(image2, destRect, srcRect, GraphicsUnit.Pixel);
-							graphics.Dispose();
-							ImageRef imageRef2 = new ImageRef(new ImageRefCounted(new GDIBigLockedImage(bitmap)));
-							TransparencyFuture.MaxInPlace(imageRef, imageRef2);
-							imageRef2.Dispose();
-						}
-					}
-				}
-				TransparencyFuture.ReplaceAlphaChannel(source, imageRef);
-			}
-			finally
-			{
-				Monitor.Exit(image);
-			}
-			imageRef.Dispose();
-		}
-		public unsafe static void MaxInPlace(ImageRef target, ImageRef operand)
-		{
+        }
+        public override void AccumulateRobustHash(IRobustHash hash)
+        {
+            hash.Accumulate("TransparencyVerb(");
+            this.transparencyOptions.AccumulateRobustHash(hash);
+            this.antialiasedFuture.AccumulateRobustHash(hash);
+            this.exactColorFuture.AccumulateRobustHash(hash);
+            hash.Accumulate(")");
+        }
+        public static void HaloTransparency(ImageRef source, int haloSize)
+        {
+            D.Assert(haloSize > 0 && haloSize < 100);
+            ImageRef imageRef = source.Copy();
+            GDIBigLockedImage image;
+            Monitor.Enter(image = source.image);
+            try
+            {
+                Image image2 = source.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
+                for (int i = -haloSize; i < haloSize + 1; i++)
+                {
+                    for (int j = -haloSize; j < haloSize + 1; j++)
+                    {
+                        if (i != 0 || j != 0)
+                        {
+                            Bitmap bitmap = new Bitmap(source.image.Width, source.image.Height);
+                            Graphics graphics = Graphics.FromImage(bitmap);
+                            Rectangle destRect = new Rectangle(0, 0, image2.Width, image2.Height);
+                            Rectangle srcRect = new Rectangle(i, j, image2.Width, image2.Height);
+                            graphics.DrawImage(image2, destRect, srcRect, GraphicsUnit.Pixel);
+                            graphics.Dispose();
+                            ImageRef imageRef2 = new ImageRef(new ImageRefCounted(new GDIBigLockedImage(bitmap)));
+                            TransparencyFuture.MaxInPlace(imageRef, imageRef2);
+                            imageRef2.Dispose();
+                        }
+                    }
+                }
+                TransparencyFuture.ReplaceAlphaChannel(source, imageRef);
+            }
+            finally
+            {
+                Monitor.Exit(image);
+            }
+            imageRef.Dispose();
+        }
+        public unsafe static void MaxInPlace(ImageRef target, ImageRef operand)
+        {
             lock (target.image)
             {
                 lock (operand.image)
@@ -185,19 +185,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     bitmap2.UnlockBits(data2);
                 }
             }
-		}
-		public static PixelStruct PixelMax(PixelStruct pa, PixelStruct pb)
-		{
-			return new PixelStruct
-			{
-				r = Math.Max(pa.r, pb.r),
-				g = Math.Max(pa.g, pb.g),
-				b = Math.Max(pa.b, pb.b),
-				a = Math.Max(pa.a, pb.a)
-			};
-		}
-		public unsafe static void ReplaceAlphaChannel(ImageRef target, ImageRef alphaOperand)
-		{
+        }
+        public static PixelStruct PixelMax(PixelStruct pa, PixelStruct pb)
+        {
+            return new PixelStruct
+            {
+                r = Math.Max(pa.r, pb.r),
+                g = Math.Max(pa.g, pb.g),
+                b = Math.Max(pa.b, pb.b),
+                a = Math.Max(pa.a, pb.a)
+            };
+        }
+        public unsafe static void ReplaceAlphaChannel(ImageRef target, ImageRef alphaOperand)
+        {
             lock (target.image)
             {
                 lock (alphaOperand.image)
@@ -228,6 +228,6 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     bitmap2.UnlockBits(data2);
                 }
             }
-		}
-	}
+        }
+    }
 }
