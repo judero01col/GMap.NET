@@ -86,7 +86,7 @@ namespace Demo.WindowsForms
                 MainMap.MaxZoom = 24;
                 MainMap.Zoom = 9;
 
-                GoogleMapProvider.Instance.ApiKey = "AIzaSyCoz0fVRmn6L-zZuLXnIXtRcGLKf2PHI5Q";
+                GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
 
                 //MainMap.ScaleMode = ScaleModes.Fractional;
 
