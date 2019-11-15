@@ -5,12 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using GMap.NET.MapProviders;
-using GMap.NET.WindowsPresentation;
 using GMap.NET;
 using System.Diagnostics;
 using System.Net;
 using System.ComponentModel;
 using System.Threading;
+using GMap.NET.WindowsPresentation;
 
 namespace MvcMapFusion
 {
@@ -45,6 +45,9 @@ namespace MvcMapFusion
 
         protected void Application_Start()
         {
+            // sets the TileImageProxy
+            GMapImageProxy.Enable();
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
