@@ -1,5 +1,5 @@
 using System;
 namespace MSR.CVE.BackMaker
 {
-	public delegate void DirtyListener();
+    public delegate void DirtyListener();
 }

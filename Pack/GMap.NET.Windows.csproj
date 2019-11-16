@@ -5,7 +5,7 @@
     <NoBuild>true</NoBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NuspecFile>GMap.NET.Windows.nuspec</NuspecFile>
-    <NuspecProperties>configuration=$(Configuration);version=$(PackageVersion)</NuspecProperties>
+    <NuspecProperties>configuration=$(Configuration);version=$(PackageVersion);releaseNotes=$(PackageReleaseNotes)</NuspecProperties>
     <!--<NuspecBasePath>optional to provide</NuspecBasePath>-->
   </PropertyGroup>
 

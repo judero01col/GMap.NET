@@ -111,7 +111,7 @@ namespace GMap.NET.MapProviders
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
       }
 
-      static readonly string UrlFormat = "http://kso.etjanster.lantmateriet.se/karta/topowebb/v1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX={0}&TILEROW={1}&TILECOL={2}&FORMAT=image%2Fpng";
+      private static readonly string UrlFormat = "https://kso.etjanster.lantmateriet.se/karta/topowebb/v1.1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX={0}&TILEROW={1}&TILECOL={2}&FORMAT=image%2Fpng";
    }
 }
 
@@ -135,6 +135,8 @@ https://kso.etjanster.lantmateriet.se/?lang=en#
 	"flygbildServiceUrl" : "https://services-ver.lantmateriet.se/distribution/produkter/metabild/v1/flygbild"
 }
 
+   well known text string:
+   https://developers.arcgis.com/rest/services-reference/projected-coordinate-systems.htm
 PROJCS["SWEREF99 TM",
     GEOGCS["SWEREF99",
         DATUM["SWEREF99",

@@ -1825,15 +1825,15 @@ namespace GMap.NET.WindowsPresentation
                 p = ApplyRotationInversion(p.X, p.Y);
 
                 // cursor has moved beyond drag tolerance
-                if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
-                    Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
+                if ((e.LeftButton == MouseButtonState.Pressed && DragButton == MouseButton.Left) ||
+                    (e.RightButton == MouseButtonState.Pressed && DragButton == MouseButton.Right))
                 {
-                    if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
+                    if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
+                        Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
                     {
                         Core.BeginDrag(Core.mouseDown);
                     }
                 }
-
             }
 
             if (Core.IsDragging)
@@ -2459,6 +2459,33 @@ namespace GMap.NET.WindowsPresentation
             return status;
         }
 
+        /// <summary>
+        /// gets position using geocoder
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public PointLatLng GetPositionByKeywords(string keys)
+        {
+            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
+
+            GeocodingProvider gp = MapProvider as GeocodingProvider;
+            if (gp == null)
+            {
+                gp = GMapProviders.OpenStreetMap as GeocodingProvider;
+            }
+
+            if (gp != null)
+            {
+                var pt = gp.GetPoint(keys, out status);
+                if (status == GeoCoderStatusCode.OK && pt.HasValue)
+                {
+                    return pt.Value;
+                }
+            }
+
+            return new PointLatLng();
+        }
+        
         public PointLatLng FromLocalToLatLng(int x, int y)
         {
             if (MapScaleTransform != null)

@@ -45,21 +45,21 @@ namespace GMap.NET
 
       internal Placemark(string address)
       {
-         this.address = address;
+          this.address = address;
 
-         Accuracy = 0;
-         HouseNo = string.Empty;
-         ThoroughfareName = string.Empty;
-         DistrictName = string.Empty;
-         LocalityName = string.Empty;
-         PostalCodeNumber = string.Empty;
-         CountryName = string.Empty;
-         CountryNameCode = string.Empty;
-         AdministrativeAreaName = string.Empty;
-         SubAdministrativeAreaName = string.Empty;
-         Neighborhood = string.Empty;
-         StreetNumber = string.Empty;
-            StreetAddress = string.Empty;
-        }
+          Accuracy = 0;
+          HouseNo = string.Empty;
+          ThoroughfareName = string.Empty;
+          DistrictName = string.Empty;
+          LocalityName = string.Empty;
+          PostalCodeNumber = string.Empty;
+          CountryName = string.Empty;
+          CountryNameCode = string.Empty;
+          AdministrativeAreaName = string.Empty;
+          SubAdministrativeAreaName = string.Empty;
+          Neighborhood = string.Empty;
+          StreetNumber = string.Empty;
+          StreetAddress = string.Empty;
+      }
    }
 }

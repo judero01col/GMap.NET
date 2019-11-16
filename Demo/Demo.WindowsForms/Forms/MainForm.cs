@@ -86,7 +86,7 @@ namespace Demo.WindowsForms
                 MainMap.MaxZoom = 24;
                 MainMap.Zoom = 9;
 
-                GoogleMapProvider.Instance.ApiKey = "AIzaSyCoz0fVRmn6L-zZuLXnIXtRcGLKf2PHI5Q";
+                GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
 
                 //MainMap.ScaleMode = ScaleModes.Fractional;
 
@@ -1453,7 +1453,7 @@ namespace Demo.WindowsForms
 
                         //Demo.WindowsForms.leafletjs.dist.leaflet.js
 
-                        using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(f))
+                        using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(f))
                         {
                             string fileFullPath = MainMap.CacheLocation + name;
 
@@ -1468,7 +1468,7 @@ namespace Demo.WindowsForms
                                 Directory.CreateDirectory(dir);
                             }
 
-                            using (FileStream fileStream = System.IO.File.Create(fileFullPath, (int)stream.Length))
+                            using (var fileStream = File.Create(fileFullPath, (int)stream.Length))
                             {
                                 // Fill the bytes[] array with the stream data
                                 byte[] bytesInStream = new byte[stream.Length];
@@ -1843,10 +1843,8 @@ namespace Demo.WindowsForms
             {
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt"))
                 {
-                    string ctn = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt");
-                    int li = ctn.IndexOf("License");
-                    string txt = ctn.Substring(li);
-
+                    string txt = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt");
+                    
                     var d = new Demo.WindowsForms.Forms.Message();
                     d.richTextBox1.Text = txt;
 

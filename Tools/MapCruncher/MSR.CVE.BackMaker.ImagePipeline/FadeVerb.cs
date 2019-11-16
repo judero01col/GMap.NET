@@ -4,41 +4,41 @@ using System.Drawing.Imaging;
 using System.Threading;
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
-	public class FadeVerb : Verb
-	{
-		private FadeOptions fadeOptions;
-		public FadeVerb(FadeOptions fadeOptions)
-		{
-			this.fadeOptions = new FadeOptions(fadeOptions);
-		}
-		public void AccumulateRobustHash(IRobustHash hash)
-		{
-			hash.Accumulate("FadeVerb(");
-			this.fadeOptions.AccumulateRobustHash(hash);
-			hash.Accumulate(")");
-		}
-		public Present Evaluate(Present[] paramList)
-		{
-			D.Assert(paramList.Length == 2);
-			if (!(paramList[0] is ImageRef))
-			{
-				return paramList[0];
-			}
-			if (!(paramList[1] is TileAddress))
-			{
-				return paramList[1];
-			}
-			ImageRef imageRef = (ImageRef)paramList[0];
-			TileAddress tileAddress = (TileAddress)paramList[1];
-			double fadeForZoomLevel = this.fadeOptions.GetFadeForZoomLevel(tileAddress.ZoomLevel);
-			if (fadeForZoomLevel == 1.0)
-			{
-				return imageRef;
-			}
-			return this.FadeTile(imageRef, fadeForZoomLevel);
-		}
-		private unsafe Present FadeTile(ImageRef sourceImage, double fadeFactor)
-		{
+    public class FadeVerb : Verb
+    {
+        private FadeOptions fadeOptions;
+        public FadeVerb(FadeOptions fadeOptions)
+        {
+            this.fadeOptions = new FadeOptions(fadeOptions);
+        }
+        public void AccumulateRobustHash(IRobustHash hash)
+        {
+            hash.Accumulate("FadeVerb(");
+            this.fadeOptions.AccumulateRobustHash(hash);
+            hash.Accumulate(")");
+        }
+        public Present Evaluate(Present[] paramList)
+        {
+            D.Assert(paramList.Length == 2);
+            if (!(paramList[0] is ImageRef))
+            {
+                return paramList[0];
+            }
+            if (!(paramList[1] is TileAddress))
+            {
+                return paramList[1];
+            }
+            ImageRef imageRef = (ImageRef)paramList[0];
+            TileAddress tileAddress = (TileAddress)paramList[1];
+            double fadeForZoomLevel = this.fadeOptions.GetFadeForZoomLevel(tileAddress.ZoomLevel);
+            if (fadeForZoomLevel == 1.0)
+            {
+                return imageRef;
+            }
+            return this.FadeTile(imageRef, fadeForZoomLevel);
+        }
+        private unsafe Present FadeTile(ImageRef sourceImage, double fadeFactor)
+        {
             GDIBigLockedImage image = new GDIBigLockedImage(sourceImage.image.Size, "FadeVerb");
             lock (sourceImage.image)
             {
@@ -72,6 +72,6 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             sourceImage.Dispose();
             return new ImageRef(new ImageRefCounted(image));
-		}
-	}
+        }
+    }
 }

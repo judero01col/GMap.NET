@@ -232,12 +232,12 @@ namespace GMap.NET.MapProviders
 
         #region RoutingProvider Members
 
-        public virtual MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int Zoom)
+        public virtual MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int zoom)
         {
             return GetRoute(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode));
         }
 
-        public virtual MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int Zoom)
+        public virtual MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom)
         {
             return GetRoute(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode));
         }

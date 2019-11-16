@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Company>MainSoft Technology</Company>
 
-    <ApplicationVersion>1.9.3.0</ApplicationVersion>
-    <Version>1.9.3.0</Version>
-    <FileVersion>1.9.3.0</FileVersion>
-    <InformationalVersion>1.9.3.0</InformationalVersion>
+    <PackageVersion>1.9.6</PackageVersion>
+    <ApplicationVersion>$(PackageVersion).0</ApplicationVersion>
+    <Version>$(PackageVersion).0</Version>
+    <FileVersion>$(PackageVersion).0</FileVersion>
+    <InformationalVersion>$(PackageVersion).0</InformationalVersion>
     <Deterministic>true</Deterministic>
 
-    <PackageVersion>1.9.3</PackageVersion>
     <Title>GMap.NET - Maps For Windows</Title>
     <Authors>Jurgen De Leon Rodriguez</Authors>
     <!--<owners>MainSoft Technology</owners>-->
@@ -18,20 +18,8 @@
     <PackageProjectUrl>https://github.com/judero01col/GMap.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</PackageIconUrl>
     <Description>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest in Windows Forms &amp; Presentation, Supports caching and run on Windows Forms, Presentation &amp; Mobile!</Description>
-    <PackageReleaseNotes>GMap.NET.Windows Core
-
-- Connection error correction with OpenStreetMap provider. (@jbavay)
-- Brings distance rounding in line with the Overpass Ways length OSM. (@rododevr)
-- Event was added for notification of exceptions and errors. (@DrSeuthberg)
-
-GMap.NET.Windows Forms
-
-- GMapOverlay - ensure tooltip is on top of all objects of all overlays (@DrSeuthberg)
-
-GMap.NET.WindowsPresentation
-
-- Added methods that allow for background rendering of WPF map controls. (@chrisg32)
-
+    <PackageReleaseNotes>GMap.NET
+-TODO: NEXT RELEASE NOTES
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>

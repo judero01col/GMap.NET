@@ -57,6 +57,8 @@ namespace Demo.WindowsPresentation
             MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsPresentation", MessageBoxButton.OK, MessageBoxImage.Warning);
          }
 
+         GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
+
          // config map
          MainMap.MapProvider = GMapProviders.OpenStreetMap;
          MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);

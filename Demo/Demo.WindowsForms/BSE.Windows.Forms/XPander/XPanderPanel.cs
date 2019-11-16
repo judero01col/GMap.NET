@@ -233,7 +233,11 @@ namespace BSE.Windows.Forms
 
          if((backColor != Color.Empty) && backColor != Color.Transparent)
          {
-            Rectangle rectangle = new Rectangle(0,this.CaptionHeight,this.ClientRectangle.Width,this.ClientRectangle.Height - this.CaptionHeight);
+            Rectangle rectangle = new Rectangle(
+                0,
+                this.CaptionHeight,
+                this.ClientRectangle.Width,
+                this.ClientRectangle.Height - this.CaptionHeight);
 
             using(SolidBrush backgroundBrush = new SolidBrush(backColor))
             {

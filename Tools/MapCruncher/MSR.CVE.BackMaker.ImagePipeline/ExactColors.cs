@@ -1,9 +1,9 @@
 using System;
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
-	public enum ExactColors
-	{
-		exact,
-		antialiased
-	}
+    public enum ExactColors
+    {
+        exact,
+        antialiased
+    }
 }

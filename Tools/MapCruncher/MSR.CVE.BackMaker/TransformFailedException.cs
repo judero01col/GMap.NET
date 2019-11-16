@@ -1,7 +1,7 @@
 using System;
 namespace MSR.CVE.BackMaker
 {
-	internal class TransformFailedException : Exception
-	{
-	}
+    internal class TransformFailedException : Exception
+    {
+    }
 }

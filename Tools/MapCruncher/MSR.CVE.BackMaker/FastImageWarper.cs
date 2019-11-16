@@ -5,10 +5,10 @@ using System.Drawing.Imaging;
 using System.Threading;
 namespace MSR.CVE.BackMaker
 {
-	internal class FastImageWarper
-	{
-		public unsafe static void doWarp(GDIBigLockedImage destImage, GDIBigLockedImage sourceImage, IPointTransformer[] pointTransformers, InterpolationMode mode)
-		{
+    internal class FastImageWarper
+    {
+        public unsafe static void doWarp(GDIBigLockedImage destImage, GDIBigLockedImage sourceImage, IPointTransformer[] pointTransformers, InterpolationMode mode)
+        {
             Bitmap bitmap;
             BitmapData data;
             Bitmap bitmap2;
@@ -103,6 +103,6 @@ namespace MSR.CVE.BackMaker
             {
                 bitmap2.UnlockBits(data2);
             }
-		}
-	}
+        }
+    }
 }

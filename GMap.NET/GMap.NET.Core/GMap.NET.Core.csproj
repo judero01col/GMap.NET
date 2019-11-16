@@ -10,13 +10,6 @@
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
-    <Version>1.9.5</Version>
-    <FileVersion>1.9.5.0</FileVersion>
-    <PackageReleaseNotes>GMap.NET
--Project converted to .NET Core 3.0 (Contributed by @zgabi)
-
-History Release Notes
-https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">

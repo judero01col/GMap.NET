@@ -250,9 +250,9 @@ namespace MSR.CVE.BackMaker
             {
                 MainAppForm.DKCUI method = new MainAppForm.DKCUI(this.debugKnobChanged_UI);
                 base.Invoke(method, new object[]
-				{
-					enabled
-				});
+                {
+                    enabled
+                });
             }
             catch (InvalidOperationException)
             {
@@ -275,9 +275,9 @@ namespace MSR.CVE.BackMaker
                 MainAppForm.ExitDelegate method = new MainAppForm.ExitDelegate(this.LaunchedRenderComplete_ExitApplication);
                 int num = (failure == null) ? 0 : 255;
                 base.Invoke(method, new object[]
-				{
-					num
-				});
+                {
+                    num
+                });
             }
         }
         private void LaunchedRenderComplete_ExitApplication(int rc)
