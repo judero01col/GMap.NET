@@ -5,9 +5,11 @@
 GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest in Windows Forms & Presentation, Supports caching and runs on Windows Forms, Presentation & Mobile!
 
 # Installing
-gmaps-api-net is available as a Nuget package from https://www.nuget.org/packages/GMap.NET.Windows/ and installable using the following command in the Package Manager Console:
+gmaps-api-net is available as a Nuget package from https://www.nuget.org/packages/GMap.NET.WinForms and https://www.nuget.org/packages/GMap.NET.WinPresentation, and installable using the following command in the Package Manager Console:
 ```
-PM> Install-Package GMap.NET.Windows
+PM> Install-Package GMap.NET.WinForms
+or
+PM> Install-Package GMap.NET.WinPresentation
 ```
 
 If you wish to use the cutting-edge version of gmaps-api-net, then you can clone the repository (or download the zip) and build the class library yourself. This should require minimal set-up, and also allows you to develop extra features for your own use (or to push upstream using a pull request for everyone else to use!).
