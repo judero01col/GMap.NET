@@ -204,6 +204,18 @@ namespace GMap.NET.MapProviders
 
             return null;
         }
+
+        public static GMapProvider TryGetProvider(string ProviderName)
+        {
+            if (list.Exists(x => x.Name == ProviderName))
+            {
+                return list.Find(x => x.Name == ProviderName);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>
