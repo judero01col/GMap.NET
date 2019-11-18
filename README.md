@@ -6,6 +6,10 @@ GMap.NET is great and Powerful, Free, cross platform, open source .NET control. 
 
 # Installing
 gmaps-api-net is available as a Nuget package from https://www.nuget.org/packages/GMap.NET.WinForms and https://www.nuget.org/packages/GMap.NET.WinPresentation, and installable using the following command in the Package Manager Console:
+
+```
+PM> Install-Package GMap.NET.Core
+```
 ```
 PM> Install-Package GMap.NET.WinForms
 ```
