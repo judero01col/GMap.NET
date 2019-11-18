@@ -11,6 +11,11 @@
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
+    <PackageId>GMap.NET.WinForms</PackageId>
+    <PackageReleaseNotes>Project converted to .NET Core 3.0 (Contributed by @zgabi)
+
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
