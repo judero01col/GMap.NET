@@ -41,7 +41,7 @@ Library migrated to .Net Core and published new Nuget packages.
 
 #### GMap.NET.WindowsForms
 
-####GMap.NET.WindowsPresentation
+#### GMap.NET.WindowsPresentation
 - Adding an additional check if any Mouse button is being pressed on OnMouseMove event on GMapControl before calling BeginDrag
 code formatting. (Contributed by @zgabi)
 
