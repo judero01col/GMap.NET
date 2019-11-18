@@ -17,6 +17,34 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
+## Version 1.9.7.1
+
+Library migrated to .Net Core and published new Nuget packages.
+- GMap.NET.Core
+- GMap.NET.WinForms
+- GMap.NET.WinPresentation
+
+## Version 1.9.7
+
+#### GMap.NET.WindowsCore
+- Correct spelling 'Sattelite' to 'Satellite' throughout. (Contributed by @zgabi)
+- Updated Sweden Map Url. (Contributed by @zgabi)
+- Google Maps: Change HTTP to HTTPS. (Contributed by @zgabi)
+- Change Czech/CzechTuristMapProvider URL to a working one. (Contributed by @zgabi)
+
+#### GMap.NET.WindowsForms
+
+G#### Map.NET.WindowsPresentation
+- Adding an additional check if any Mouse button is being pressed on OnMouseMove event on GMapControl before calling BeginDrag
+code formatting. (Contributed by @zgabi)
+
+#### GMap.NET.Demo
+- Add googlemaps api key to WPF project, too replace the key to another from the Demos.Geocoding project, which currently works. (Contributed by @zgabi)
+- Fic MapCruncher Resharper errors. (Contributed by @zgabi)
+- MVC sample fix. (Contributed by @zgabi)
+- Corrected map name to match provider in Testing/Demo.Docking. (Contributed by @zgabi)
+- leafletjs fixed in WinForms demo. (Contributed by @zgabi)
+
 ## Version 1.9.5
 
 #### GMap.NET
