@@ -17,7 +17,9 @@
     <PackageLicenseUrl>https://github.com/judero01col/GMap.NET/wiki/License</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/judero01col/GMap.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</PackageIconUrl>
-    <Description>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest. Run on Windows Forms &amp; Presentation!</Description>
+    <Description>
+      GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control.
+      Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
     <PackageReleaseNotes>GMap.NET
 -TODO: NEXT RELEASE NOTES
 
