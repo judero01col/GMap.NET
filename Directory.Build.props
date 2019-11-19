@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Company>MainSoft Technology</Company>
 
-    <PackageVersion>1.9.7</PackageVersion>
+    <PackageVersion>1.9.8</PackageVersion>
     <ApplicationVersion>$(PackageVersion).0</ApplicationVersion>
     <Version>$(PackageVersion).0</Version>
     <FileVersion>$(PackageVersion).0</FileVersion>
@@ -17,7 +17,7 @@
     <PackageLicenseUrl>https://github.com/judero01col/GMap.NET/wiki/License</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/judero01col/GMap.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</PackageIconUrl>
-    <Description>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest in Windows Forms &amp; Presentation, Supports caching and run on Windows Forms, Presentation &amp; Mobile!</Description>
+    <Description>GMap.NET is great and Powerful, Free, cross platform, open source .NET control. Enable use routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest. Run on Windows Forms &amp; Presentation!</Description>
     <PackageReleaseNotes>GMap.NET
 -TODO: NEXT RELEASE NOTES
 

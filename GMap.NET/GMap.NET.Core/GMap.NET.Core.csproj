@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <AssemblyTitle>GMap.NET.Core</AssemblyTitle>
-    <Description>GMap.NET - Maps for Windows</Description>
+    <Description>GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control.
+Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
     <Product>GMap.NET.Core</Product>
     <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
