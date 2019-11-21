@@ -14,17 +14,17 @@ namespace GMap.NET.WindowsForms
    /// </summary>
    public class GMapImage : PureImage
    {
-      public System.Drawing.Image Img;
+      public Image Img;
 
       public override void Dispose()
       {
-         if(Img != null)
+         if (Img != null)
          {
             Img.Dispose();
             Img = null;
          }
 
-         if(Data != null)
+         if (Data != null)
          {
             Data.Dispose();
             Data = null;
@@ -39,12 +39,11 @@ namespace GMap.NET.WindowsForms
    {
       GMapImageProxy()
       {
-
       }
 
       public static void Enable()
       {
-          GMapProvider.TileImageProxy = Instance;
+         GMapProvider.TileImageProxy = Instance;
       }
 
       public static readonly GMapImageProxy Instance = new GMapImageProxy();
@@ -57,32 +56,24 @@ namespace GMap.NET.WindowsForms
 
       public override PureImage FromStream(Stream stream)
       {
-         GMapImage ret = null;
          try
          {
 #if !PocketPC
-            Image m = Image.FromStream(stream, true, Win7OrLater ? false : true);
-#else
-            Image m = new Bitmap(stream);
-#endif
-            if(m != null)
+            var m = Image.FromStream(stream, true, !Win7OrLater);
+            if (m != null)
             {
-               ret = new GMapImage();
-#if !PocketPC
-               ret.Img = ColorMatrix != null ? ApplyColorMatrix(m, ColorMatrix) : m;
-#else
-               ret.Img = m;
-#endif
+               return new GMapImage {Img = ColorMatrix != null ? ApplyColorMatrix(m, ColorMatrix) : m};
             }
-
+#else
+                return new GMapImage {Img = new Bitmap(stream)};
+#endif
          }
-         catch(Exception ex)
+         catch (Exception ex)
          {
-            ret = null;
-            Debug.WriteLine("FromStream: " + ex.ToString());
+            Debug.WriteLine("FromStream: " + ex);
          }
 
-         return ret;
+         return null;
       }
 
       public override bool Save(Stream stream, GMap.NET.PureImage image)
@@ -90,12 +81,12 @@ namespace GMap.NET.WindowsForms
          GMapImage ret = image as GMapImage;
          bool ok = true;
 
-         if(ret.Img != null)
+         if (ret.Img != null)
          {
             // try png
             try
             {
-               ret.Img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+               ret.Img.Save(stream, ImageFormat.Png);
             }
             catch
             {
@@ -103,7 +94,7 @@ namespace GMap.NET.WindowsForms
                try
                {
                   stream.Seek(0, SeekOrigin.Begin);
-                  ret.Img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                  ret.Img.Save(stream, ImageFormat.Jpeg);
                }
                catch
                {
@@ -123,18 +114,25 @@ namespace GMap.NET.WindowsForms
       Bitmap ApplyColorMatrix(Image original, ColorMatrix matrix)
       {
          // create a blank bitmap the same size as original
-         Bitmap newBitmap = new Bitmap(original.Width, original.Height);
+         var newBitmap = new Bitmap(original.Width, original.Height);
 
-         using(original) // destroy original
+         using (original) // destroy original
          {
             // get a graphics object from the new image
-            using(Graphics g = Graphics.FromImage(newBitmap))
+            using (var g = Graphics.FromImage(newBitmap))
             {
                // set the color matrix attribute
-               using(ImageAttributes attributes = new ImageAttributes())
+               using (var attributes = new ImageAttributes())
                {
                   attributes.SetColorMatrix(matrix);
-                  g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height), 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+                  g.DrawImage(original,
+                     new Rectangle(0, 0, original.Width, original.Height),
+                     0,
+                     0,
+                     original.Width,
+                     original.Height,
+                     GraphicsUnit.Pixel,
+                     attributes);
                }
             }
          }
