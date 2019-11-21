@@ -95,6 +95,7 @@ namespace Demo.WindowsForms
                     MainMap.OnPositionChanged += new PositionChanged(MainMap_OnPositionChanged);
                     MainMap.OnTileLoadStart += new TileLoadStart(MainMap_OnTileLoadStart);
                     MainMap.OnTileLoadComplete += new TileLoadComplete(MainMap_OnTileLoadComplete);
+                    MainMap.OnMapClick += MainMap_OnMapClick;
 
                     MainMap.OnMapZoomChanged += new MapZoomChanged(MainMap_OnMapZoomChanged);
                     MainMap.OnMapTypeChanged += new MapTypeChanged(MainMap_OnMapTypeChanged);
@@ -271,6 +272,11 @@ namespace Demo.WindowsForms
                     }
                 }
             }
+        }
+
+        private void MainMap_OnMapClick(PointLatLng PointClick, MouseEventArgs e)
+        {
+            MainMap.FromLocalToLatLng(e.X, e.Y);
         }
 
         private void MainMap_OnRouteDoubleClick(GMapRoute item, MouseEventArgs e)
@@ -2547,6 +2553,24 @@ namespace Demo.WindowsForms
         {
             try
             {
+                string Pol1 = "wjcmIoz|xC[\\WTcI`JiDvDmDxDcAlAKPGHg@t@qDfEq@v@yBhCa@d@{BbCWZkDnEeDzDkEzE}BnCyBfCsKzNoCtD}@jAgCnCSRONCBKJ_C|BiFrEuAnAwCrCGHGHkAnAaAbAg@h@GHQRk@n@mBnByAnA_AhAm@z@_CbCEDONOLEFo@n@oAnA{GrGuBnBq@l@YV{FbFoAjAGH{@~@gEjE_NhMyKfKeB`BcJpIgCdC}C`D_@\\uFpF}G~GWTyN~NyDzD{P`Qy@|@uIvI}A|A_@^]\\gDhD}DzDEFoIbIa@`@{FtFyFrF_@^qPdPkFjFoC~CuAvAo@n@g@d@a@^wAtAc@`@_@\\i@f@KLMJaJzIeHzGaC`Cg@h@_@`@yA`B_@`@m@r@eBvB{@fA]`@sGfIsC~D}A|B_AvAGLSXqBfDcEjHuGhLgAnBiArB{@zAmG|KYh@}KxRsBfDc@t@cAbBYh@mDdGeB|C_@r@kEtH[h@Yf@eAdBw@rAeB|CKNABKNoDtFEHsChEcGvHiEjFC@mHbIYXcC|B}AxAeExDwBlB}CpC_DrC]ZqDdDmAbA_@ZkC|BqBjBkAjAo@n@}@~@qGzGgEbFeB~BsBpC]b@_@f@mBvC{CvEsC|EQZ}@bBsAjCaEdIqBnEiBhE}HvQg@dAmDrH{DpHs@lA}D~G{EdIsC`EeDnE}@lAsFxGaJjK]`@a@d@yDnD_@\\cItHuKnJcA~@uF|EONw@l@}EfEaM|K_CtBEFGFIFUREDaAx@UP?@C@MJKJgAbAaBxAgBzAgBhBCB[XcCtB_BvAgGxFeD|C}C~CsBxBsGdHgAlAkIhJ_CpCMPOPyHnJW\\]b@_JnLY\\uHbKyBbDGHINSVsBvCW^kEnG[f@qAjBgLnQ}CjFYf@_E`HgHjMAB[j@gBjDYh@Q\\iBbEuItRq@fBUl@Wn@Qd@Qf@GNGNIRGNAB[z@Od@Qb@i@vAmCrHM^eG|QiEvO]lAkC|JgD|NcFrTyElSo@jCq@vCkBnHSr@}BjIs@fC{BjHCF}BbHEJOd@CFuA|Dm@~AaCnGGPaCdGoCnGq@|As@tAO^wArCkA`CmA~BqFrKqEpHMRMR_@l@a@n@CFCDOVq@dAw@lASXiL~OuCjDwIvJ{FvFqFnFiCjCyOhPEDEBIJIHA@CBEDGFEDaM|LaSfSuJvJcKfKwNtNwMzMyE|EKJ}B|B[\\ED_A|@WV";
+                List<PointLatLng> points = PureProjection.PolylineDecode(Pol1);
+                string Pol2 = PureProjection.PolylineEncode(points);
+
+                if (Pol1 == Pol2)
+                {
+
+                }
+
+                string Pol3 = "";
+
+                foreach (PointLatLng item in points)
+                {
+                    Pol3 += item.Lat + " " + item.Lng + ", ";
+                }
+
+
+
                 MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
 
                 if (Route != null && Route.Status == RouteStatusCode.OK)

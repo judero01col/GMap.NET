@@ -29,6 +29,9 @@ namespace GMap.NET.WindowsForms
     public partial class GMapControl : UserControl, Interface
     {
 #if !PocketPC
+
+        public event MapClick OnMapClick;
+
         /// <summary>
         /// occurs when clicked on marker
         /// </summary>
@@ -2020,9 +2023,12 @@ namespace GMap.NET.WindowsForms
 
             if (!Core.IsDragging)
             {
+                OnMapClick?.Invoke(new PointLatLng(this.FromLocalToLatLng(e.X, e.Y).Lng, this.FromLocalToLatLng(e.X, e.Y).Lat), e);
+
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
                     GMapOverlay o = Overlays[i];
+
                     if (o != null && o.IsVisibile)
                     {
                         foreach (GMapMarker m in o.Markers)
@@ -2040,10 +2046,7 @@ namespace GMap.NET.WindowsForms
 #endif
                                 if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
                                 {
-                                    if (OnMarkerClick != null)
-                                    {
-                                        OnMarkerClick(m, e);
-                                    }
+                                    OnMarkerClick?.Invoke(m, e);
                                     break;
                                 }
 
@@ -2066,12 +2069,10 @@ namespace GMap.NET.WindowsForms
 #endif
                                 if (m.IsInside((int)rp.X, (int)rp.Y))
                                 {
-                                    if (OnRouteClick != null)
-                                    {
-                                        OnRouteClick(m, e);
-                                    }
+                                    OnRouteClick?.Invoke(m, e);
                                     break;
                                 }
+
                                 #endregion
                             }
                         }
@@ -2081,14 +2082,13 @@ namespace GMap.NET.WindowsForms
                             if (m.IsVisible && m.IsHitTestVisible)
                             {
                                 #region -- check --
+
                                 if (m.IsInside(FromLocalToLatLng(e.X, e.Y)))
                                 {
-                                    if (OnPolygonClick != null)
-                                    {
-                                        OnPolygonClick(m, e);
-                                    }
+                                    OnPolygonClick?.Invoke(m, e);
                                     break;
                                 }
+
                                 #endregion
                             }
                         }
@@ -2294,8 +2294,8 @@ namespace GMap.NET.WindowsForms
                 {
                     selectionEnd = FromLocalToLatLng(e.X, e.Y);
                     {
-                        GMap.NET.PointLatLng p1 = selectionStart;
-                        GMap.NET.PointLatLng p2 = selectionEnd;
+                        PointLatLng p1 = selectionStart;
+                        PointLatLng p2 = selectionEnd;
 
                         double x1 = Math.Min(p1.Lng, p2.Lng);
                         double y1 = Math.Max(p1.Lat, p2.Lat);
@@ -2337,10 +2337,7 @@ namespace GMap.NET.WindowsForms
                                             m.IsMouseOver = true;
                                             IsMouseOverMarker = true;
 
-                                            if (OnMarkerEnter != null)
-                                            {
-                                                OnMarkerEnter(m);
-                                            }
+                                            OnMarkerEnter?.Invoke(m);
 
                                             Invalidate();
                                         }
@@ -2352,10 +2349,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                                         RestoreCursorOnLeave();
 #endif
-                                        if (OnMarkerLeave != null)
-                                        {
-                                            OnMarkerLeave(m);
-                                        }
+                                        OnMarkerLeave?.Invoke(m);
 
                                         Invalidate();
                                     }
@@ -2387,10 +2381,7 @@ namespace GMap.NET.WindowsForms
                                             m.IsMouseOver = true;
                                             IsMouseOverRoute = true;
 
-                                            if (OnRouteEnter != null)
-                                            {
-                                                OnRouteEnter(m);
-                                            }
+                                            OnRouteEnter?.Invoke(m);
 
                                             Invalidate();
                                         }
@@ -2404,10 +2395,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                                             RestoreCursorOnLeave();
 #endif
-                                            if (OnRouteLeave != null)
-                                            {
-                                                OnRouteLeave(m);
-                                            }
+                                            OnRouteLeave?.Invoke(m);
 
                                             Invalidate();
                                         }
@@ -2443,10 +2431,7 @@ namespace GMap.NET.WindowsForms
                                             m.IsMouseOver = true;
                                             IsMouseOverPolygon = true;
 
-                                            if (OnPolygonEnter != null)
-                                            {
-                                                OnPolygonEnter(m);
-                                            }
+                                            OnPolygonEnter?.Invoke(m);
 
                                             Invalidate();
                                         }
@@ -2460,10 +2445,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                                             RestoreCursorOnLeave();
 #endif
-                                            if (OnPolygonLeave != null)
-                                            {
-                                                OnPolygonLeave(m);
-                                            }
+                                            OnPolygonLeave?.Invoke(m);
 
                                             Invalidate();
                                         }
@@ -3489,5 +3471,7 @@ namespace GMap.NET.WindowsForms
     }
 
     public delegate void SelectionChange(RectLatLng Selection, bool ZoomToFit);
+
+    public delegate void MapClick(PointLatLng PointClick, MouseEventArgs e);
 #endif
 }

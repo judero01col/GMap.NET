@@ -308,7 +308,7 @@ namespace GMap.NET.MapProviders
                                 if (RouteResult.routes[0].overview_polyline != null && RouteResult.routes[0].overview_polyline.points != null)
                                 {
                                     points = new List<PointLatLng>();
-                                    DecodePointsInto(points, RouteResult.routes[0].overview_polyline.points);
+                                    PureProjection.PolylineDecode(points, RouteResult.routes[0].overview_polyline.points);
 
                                     if (points != null)
                                     {
@@ -824,7 +824,7 @@ namespace GMap.NET.MapProviders
                                 if (DirectionResult.routes[0].overview_polyline != null && DirectionResult.routes[0].overview_polyline.points != null)
                                 {
                                     direction.Route = new List<PointLatLng>();
-                                    DecodePointsInto(direction.Route, DirectionResult.routes[0].overview_polyline.points);
+                                    PureProjection.PolylineDecode(direction.Route, DirectionResult.routes[0].overview_polyline.points);
                                 }
 
                                 if (DirectionResult.routes[0].legs != null && DirectionResult.routes[0].legs.Count > 0)
@@ -902,7 +902,7 @@ namespace GMap.NET.MapProviders
                                         if (DirectionResult.routes[0].legs[0].steps[i].polyline != null && DirectionResult.routes[0].legs[0].steps[i].polyline.points != null)
                                         {
                                             step.Points = new List<PointLatLng>();
-                                            DecodePointsInto(step.Points, DirectionResult.routes[0].legs[0].steps[i].polyline.points);
+                                            PureProjection.PolylineDecode(step.Points, DirectionResult.routes[0].legs[0].steps[i].polyline.points);
                                         }
 
                                         direction.Steps.Add(step);
@@ -920,48 +920,6 @@ namespace GMap.NET.MapProviders
                 Debug.WriteLine("GetDirectionsUrl: " + ex);
             }
             return ret;
-        }
-
-        static void DecodePointsInto(List<PointLatLng> path, string encodedPath)
-        {
-            // https://github.com/googlemaps/google-maps-services-java/blob/master/src/main/java/com/google/maps/internal/PolylineEncoding.java
-            int len = encodedPath.Length;
-            int index = 0;
-            int lat = 0;
-            int lng = 0;
-
-            while (index < len)
-            {
-                int result = 1;
-                int shift = 0;
-                int b;
-
-                do
-                {
-                    b = encodedPath[index++] - 63 - 1;
-                    result += b << shift;
-                    shift += 5;
-                } while (b >= 0x1f && index < len);
-
-                lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-
-                result = 1;
-                shift = 0;
-
-                if (index < len)
-                {
-                    do
-                    {
-                        b = encodedPath[index++] - 63 - 1;
-                        result += b << shift;
-                        shift += 5;
-                    } while (b >= 0x1f && index < len);
-
-                    lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
-                }
-
-                path.Add(new PointLatLng(lat * 1e-5, lng * 1e-5));
-            }
         }
 
         static readonly string DirectionUrlFormatStr = "https://maps.{7}/maps/api/directions/json?origin={0}&destination={1}&sensor={2}&language={3}{4}{5}{6}";

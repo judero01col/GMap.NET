@@ -13,7 +13,7 @@ Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, B
     <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
     <PackageId>GMap.NET.WinForms</PackageId>
-    <PackageReleaseNotes>Project converted to .NET Core 3.0 (Contributed by @zgabi)
+    <PackageReleaseNotes>- Add event OnMapClick
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>

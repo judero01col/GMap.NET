@@ -11,11 +11,9 @@ Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, B
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
-    <PackageReleaseNotes>- Project converted to .NET Core 3.0 (Contributed by @zgabi)
-- Correct spelling 'Sattelite' to 'Satellite' throughout. (Contributed by @zgabi)
-- Updated Sweden Map Url. (Contributed by @zgabi)
-- Google Maps: Change HTTP to HTTPS. (Contributed by @zgabi)
-- Change Czech/CzechTuristMapProvider URL to a working one. (Contributed by @zgabi)
+    <PackageReleaseNotes>- Add default image proxy class. (Contributed by @zgabi)
+- Added decode and encode polyline methods in the PureProjection class
+- Code organization
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
