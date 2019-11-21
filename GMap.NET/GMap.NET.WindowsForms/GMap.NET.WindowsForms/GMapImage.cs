@@ -10,137 +10,138 @@ namespace GMap.NET.WindowsForms
    using GMap.NET.MapProviders;
 
    /// <summary>
-   /// image abstraction
-   /// </summary>
-   public class GMapImage : PureImage
-   {
-      public System.Drawing.Image Img;
+    /// image abstraction
+    /// </summary>
+    public class GMapImage : PureImage
+    {
+        public Image Img;
 
-      public override void Dispose()
-      {
-         if(Img != null)
-         {
-            Img.Dispose();
-            Img = null;
-         }
-
-         if(Data != null)
-         {
-            Data.Dispose();
-            Data = null;
-         }
-      }
-   }
-
-   /// <summary>
-   /// image abstraction proxy
-   /// </summary>
-   public class GMapImageProxy : PureImageProxy
-   {
-      GMapImageProxy()
-      {
-
-      }
-
-      public static void Enable()
-      {
-          GMapProvider.TileImageProxy = Instance;
-      }
-
-      public static readonly GMapImageProxy Instance = new GMapImageProxy();
-
-#if !PocketPC
-      internal ColorMatrix ColorMatrix;
-#endif
-
-      static readonly bool Win7OrLater = Stuff.IsRunningOnWin7orLater();
-
-      public override PureImage FromStream(Stream stream)
-      {
-         GMapImage ret = null;
-         try
-         {
-#if !PocketPC
-            Image m = Image.FromStream(stream, true, Win7OrLater ? false : true);
-#else
-            Image m = new Bitmap(stream);
-#endif
-            if(m != null)
+        public override void Dispose()
+        {
+            if (Img != null)
             {
-               ret = new GMapImage();
-#if !PocketPC
-               ret.Img = ColorMatrix != null ? ApplyColorMatrix(m, ColorMatrix) : m;
-#else
-               ret.Img = m;
-#endif
+                Img.Dispose();
+                Img = null;
             }
 
-         }
-         catch(Exception ex)
-         {
-            ret = null;
-            Debug.WriteLine("FromStream: " + ex.ToString());
-         }
+            if (Data != null)
+            {
+                Data.Dispose();
+                Data = null;
+            }
+        }
+    }
 
-         return ret;
-      }
+    /// <summary>
+    /// image abstraction proxy
+    /// </summary>
+    public class GMapImageProxy : PureImageProxy
+    {
+        GMapImageProxy()
+        {
+        }
 
-      public override bool Save(Stream stream, GMap.NET.PureImage image)
-      {
-         GMapImage ret = image as GMapImage;
-         bool ok = true;
+        public static void Enable()
+        {
+            GMapProvider.TileImageProxy = Instance;
+        }
 
-         if(ret.Img != null)
-         {
-            // try png
+        public static readonly GMapImageProxy Instance = new GMapImageProxy();
+
+#if !PocketPC
+        internal ColorMatrix ColorMatrix;
+#endif
+
+        static readonly bool Win7OrLater = Stuff.IsRunningOnWin7orLater();
+
+        public override PureImage FromStream(Stream stream)
+        {
             try
             {
-               ret.Img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+#if !PocketPC
+                var m = Image.FromStream(stream, true, !Win7OrLater);
+                if (m != null)
+                {
+                    return new GMapImage
+                    {
+                        Img = ColorMatrix != null ? ApplyColorMatrix(m, ColorMatrix) : m
+                    };
+                }
+#else
+                return new GMapImage {Img = new Bitmap(stream)};
+#endif
             }
-            catch
+            catch (Exception ex)
             {
-               // try jpeg
-               try
-               {
-                  stream.Seek(0, SeekOrigin.Begin);
-                  ret.Img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-               }
-               catch
-               {
-                  ok = false;
-               }
+                Debug.WriteLine("FromStream: " + ex);
             }
-         }
-         else
-         {
-            ok = false;
-         }
 
-         return ok;
-      }
+            return null;
+        }
+
+        public override bool Save(Stream stream, GMap.NET.PureImage image)
+        {
+            GMapImage ret = image as GMapImage;
+            bool ok = true;
+
+            if (ret.Img != null)
+            {
+                // try png
+                try
+                {
+                    ret.Img.Save(stream, ImageFormat.Png);
+                }
+                catch
+                {
+                    // try jpeg
+                    try
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        ret.Img.Save(stream, ImageFormat.Jpeg);
+                    }
+                    catch
+                    {
+                        ok = false;
+                    }
+                }
+            }
+            else
+            {
+                ok = false;
+            }
+
+            return ok;
+        }
 
 #if !PocketPC
-      Bitmap ApplyColorMatrix(Image original, ColorMatrix matrix)
-      {
-         // create a blank bitmap the same size as original
-         Bitmap newBitmap = new Bitmap(original.Width, original.Height);
+        Bitmap ApplyColorMatrix(Image original, ColorMatrix matrix)
+        {
+            // create a blank bitmap the same size as original
+            var newBitmap = new Bitmap(original.Width, original.Height);
 
-         using(original) // destroy original
-         {
-            // get a graphics object from the new image
-            using(Graphics g = Graphics.FromImage(newBitmap))
+            using (original) // destroy original
             {
-               // set the color matrix attribute
-               using(ImageAttributes attributes = new ImageAttributes())
-               {
-                  attributes.SetColorMatrix(matrix);
-                  g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height), 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
-               }
+                // get a graphics object from the new image
+                using (var g = Graphics.FromImage(newBitmap))
+                {
+                    // set the color matrix attribute
+                    using (var attributes = new ImageAttributes())
+                    {
+                        attributes.SetColorMatrix(matrix);
+                        g.DrawImage(original,
+                            new Rectangle(0, 0, original.Width, original.Height),
+                            0,
+                            0,
+                            original.Width,
+                            original.Height,
+                            GraphicsUnit.Pixel,
+                            attributes);
+                    }
+                }
             }
-         }
 
-         return newBitmap;
-      }
+            return newBitmap;
+        }
 #endif
-   }
+    }
 }
