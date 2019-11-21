@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Company>MainSoft Technology</Company>
 
-    <PackageVersion>1.9.8</PackageVersion>
+    <PackageVersion>1.9.9</PackageVersion>
     <ApplicationVersion>$(PackageVersion).0</ApplicationVersion>
     <Version>$(PackageVersion).0</Version>
     <FileVersion>$(PackageVersion).0</FileVersion>
@@ -12,16 +12,26 @@
 
     <Title>GMap.NET - Maps For Windows</Title>
     <Authors>Jurgen De Leon Rodriguez</Authors>
-    <!--<owners>MainSoft Technology</owners>-->
+    <owners>MainSoft Technology</owners>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/judero01col/GMap.NET/wiki/License</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/judero01col/GMap.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</PackageIconUrl>
-    <Description>
-      GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control.
-      Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
+    <Description>GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control. Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
     <PackageReleaseNotes>GMap.NET
--TODO: NEXT RELEASE NOTES
+- Project converted to .NET Core 3.0 (Contributed by @zgabi)
+
+GMap.NET.Core
+- Add default image proxy class. (Contributed by @zgabi)
+- Added decode and encode polyline methods in the PureProjection class
+- Code organization
+
+GMap.NET.WinForms
+- Add event OnMapClick
+
+GMap.NET.WinPresentation
+- Adding an additional check if any Mouse button is being pressed on OnMouseMove event on GMapControl before calling BeginDrag
+code formatting. (Contributed by @zgabi)
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
