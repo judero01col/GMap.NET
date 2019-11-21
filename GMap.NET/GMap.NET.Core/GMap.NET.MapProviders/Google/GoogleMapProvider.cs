@@ -15,6 +15,7 @@ namespace GMap.NET.MapProviders
     using System.Xml;
     using System.Text;
     using Newtonsoft.Json;
+    using System.Linq;
     
 #if PocketPC
     using OpenNETCF.Security.Cryptography;
@@ -829,20 +830,17 @@ namespace GMap.NET.MapProviders
 
                                 if (DirectionResult.routes[0].legs != null && DirectionResult.routes[0].legs.Count > 0)
                                 {
-                                    direction.Duration = DirectionResult.routes[0].legs[0].duration.text;
+                                    direction.Duration = string.Join(", ", DirectionResult.routes[0].legs.Select(x => x.duration.text));
                                     Debug.WriteLine("duration: " + direction.Duration);
 
-                                    direction.DurationValue = (uint)DirectionResult.routes[0].legs[0].duration.value;
+                                    direction.DurationValue = (uint)DirectionResult.routes[0].legs.Sum(x => x.duration.value);
                                     Debug.WriteLine("value: " + direction.DurationValue);
 
-                                    if (DirectionResult.routes[0].legs[0].distance != null)
-                                    {
-                                        direction.Distance = DirectionResult.routes[0].legs[0].distance.text;
-                                        Debug.WriteLine("distance: " + direction.Distance);
+                                    direction.Distance = string.Join(", ", DirectionResult.routes[0].legs.Where(x => x.distance != null).Select(x => x.distance.text));
+                                    Debug.WriteLine("distance: " + direction.Distance);
 
-                                        direction.DistanceValue = (uint)DirectionResult.routes[0].legs[0].distance.value;
-                                        Debug.WriteLine("value: " + direction.DistanceValue);
-                                    }
+                                    direction.DistanceValue = (uint)DirectionResult.routes[0].legs.Sum(x => x.distance?.value ?? 0);
+                                    Debug.WriteLine("value: " + direction.DistanceValue);
 
                                     if (DirectionResult.routes[0].legs[0].start_location != null)
                                     {
@@ -850,10 +848,10 @@ namespace GMap.NET.MapProviders
                                         direction.StartLocation.Lng = DirectionResult.routes[0].legs[0].start_location.lng;
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].end_location != null)
+                                    if (DirectionResult.routes[0].legs[DirectionResult.routes[0].legs.Count - 1].end_location != null)
                                     {
-                                        direction.EndLocation.Lat = DirectionResult.routes[0].legs[0].end_location.lat;
-                                        direction.EndLocation.Lng = DirectionResult.routes[0].legs[0].end_location.lng;
+                                        direction.EndLocation.Lat = DirectionResult.routes[0].legs[DirectionResult.routes[0].legs.Count - 1].end_location.lat;
+                                        direction.EndLocation.Lng = DirectionResult.routes[0].legs[DirectionResult.routes[0].legs.Count - 1].end_location.lng;
                                     }
 
                                     if (DirectionResult.routes[0].legs[0].start_address != null)
@@ -862,50 +860,53 @@ namespace GMap.NET.MapProviders
                                         Debug.WriteLine("start_address: " + direction.StartAddress);
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].end_address != null)
+                                    if (DirectionResult.routes[0].legs[DirectionResult.routes[0].legs.Count - 1].end_address != null)
                                     {
-                                        direction.EndAddress = DirectionResult.routes[0].legs[0].end_address;
+                                        direction.EndAddress = DirectionResult.routes[0].legs[DirectionResult.routes[0].legs.Count - 1].end_address;
                                         Debug.WriteLine("end_address: " + direction.EndAddress);
                                     }
 
                                     direction.Steps = new List<GDirectionStep>();
 
-                                    for (int i = 0; i < DirectionResult.routes[0].legs[0].steps.Count; i++)
+                                    foreach (var leg in DirectionResult.routes[0].legs)
                                     {
-                                        GDirectionStep step = new GDirectionStep();
-                                        Debug.WriteLine("----------------------");
-
-                                        step.TravelMode = DirectionResult.routes[0].legs[0].steps[i].travel_mode;
-                                        Debug.WriteLine("travel_mode: " + step.TravelMode);
-
-                                        step.Duration = DirectionResult.routes[0].legs[0].steps[i].duration.text;
-                                        Debug.WriteLine("duration: " + step.Duration);
-
-                                        step.Distance = DirectionResult.routes[0].legs[0].steps[i].distance.text;
-                                        Debug.WriteLine("distance: " + step.Distance);
-
-                                        step.HtmlInstructions = DirectionResult.routes[0].legs[0].steps[i].html_instructions;
-                                        Debug.WriteLine("html_instructions: " + step.HtmlInstructions);
-
-                                        if (DirectionResult.routes[0].legs[0].steps[i].start_location != null)
+                                        for (int i = 0; i < leg.steps.Count; i++)
                                         {
-                                            step.StartLocation.Lat = DirectionResult.routes[0].legs[0].steps[i].start_location.lat;
-                                            step.StartLocation.Lng = DirectionResult.routes[0].legs[0].steps[i].start_location.lng;
-                                        }
+                                            GDirectionStep step = new GDirectionStep();
+                                            Debug.WriteLine("----------------------");
 
-                                        if (DirectionResult.routes[0].legs[0].steps[i].end_location != null)
-                                        {
-                                            step.EndLocation.Lat = DirectionResult.routes[0].legs[0].steps[i].end_location.lat;
-                                            step.EndLocation.Lng = DirectionResult.routes[0].legs[0].steps[i].end_location.lng;
-                                        }
+                                            step.TravelMode = leg.steps[i].travel_mode;
+                                            Debug.WriteLine("travel_mode: " + step.TravelMode);
 
-                                        if (DirectionResult.routes[0].legs[0].steps[i].polyline != null && DirectionResult.routes[0].legs[0].steps[i].polyline.points != null)
-                                        {
-                                            step.Points = new List<PointLatLng>();
-                                            DecodePointsInto(step.Points, DirectionResult.routes[0].legs[0].steps[i].polyline.points);
-                                        }
+                                            step.Duration = leg.steps[i].duration.text;
+                                            Debug.WriteLine("duration: " + step.Duration);
 
-                                        direction.Steps.Add(step);
+                                            step.Distance = leg.steps[i].distance.text;
+                                            Debug.WriteLine("distance: " + step.Distance);
+
+                                            step.HtmlInstructions = leg.steps[i].html_instructions;
+                                            Debug.WriteLine("html_instructions: " + step.HtmlInstructions);
+
+                                            if (leg.steps[i].start_location != null)
+                                            {
+                                                step.StartLocation.Lat = leg.steps[i].start_location.lat;
+                                                step.StartLocation.Lng = leg.steps[i].start_location.lng;
+                                            }
+
+                                            if (leg.steps[i].end_location != null)
+                                            {
+                                                step.EndLocation.Lat = leg.steps[i].end_location.lat;
+                                                step.EndLocation.Lng = leg.steps[i].end_location.lng;
+                                            }
+
+                                            if (leg.steps[i].polyline != null && leg.steps[i].polyline.points != null)
+                                            {
+                                                step.Points = new List<PointLatLng>();
+                                                DecodePointsInto(step.Points, leg.steps[i].polyline.points);
+                                            }
+
+                                            direction.Steps.Add(step);
+                                        }
                                     }
                                 }
                             }
