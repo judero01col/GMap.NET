@@ -58,7 +58,6 @@ namespace Demo.WindowsPresentation
          }
 
          GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
-         GMapProvider.WebProxy = WebRequest.DefaultWebProxy;
 
          // config map
          MainMap.MapProvider = GMapProviders.OpenStreetMap;
