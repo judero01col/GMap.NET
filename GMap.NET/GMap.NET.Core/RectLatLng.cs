@@ -222,10 +222,10 @@ namespace GMap.NET
         public static RectLatLng Intersect(RectLatLng a, RectLatLng b)
         {
             double lng = Math.Max(a.Lng, b.Lng);
-            double num2 = Math.Min((double)(a.Lng + a.WidthLng), (double)(b.Lng + b.WidthLng));
+            double num2 = Math.Min(a.Lng + a.WidthLng, b.Lng + b.WidthLng);
 
             double lat = Math.Max(a.Lat, b.Lat);
-            double num4 = Math.Min((double)(a.Lat + a.HeightLat), (double)(b.Lat + b.HeightLat));
+            double num4 = Math.Min(a.Lat + a.HeightLat, b.Lat + b.HeightLat);
 
             if (num2 >= lng && num4 >= lat)
             {

@@ -244,7 +244,7 @@ namespace GMap.NET.Internals
 
                 string file = dir + url + ".txt";
 
-                using (StreamWriter writer = new StreamWriter(file, false, Encoding.UTF8))
+                using (var writer = new StreamWriter(file, false, Encoding.UTF8))
                 {
                     writer.Write(content);
                 }
@@ -271,7 +271,7 @@ namespace GMap.NET.Internals
                     var writeTime = File.GetLastWriteTime(file);
                     if (DateTime.Now - writeTime < stayInCache)
                     {
-                        using (StreamReader r = new StreamReader(file, Encoding.UTF8))
+                        using (var r = new StreamReader(file, Encoding.UTF8))
                         {
                             ret = r.ReadToEnd();
                         }

@@ -87,7 +87,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             int num = 0;
             for (int i = 0; i < hashValue.Length; i++)
             {
-                num = num * 131 + (int)hashValue[i];
+                num = num * 131 + hashValue[i];
             }
 
             shortHashValue = num;
@@ -143,7 +143,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 byte b = byteArray[i];
                 int index = (b >> 4) & 15;
-                int index2 = (int)(b & 15);
+                int index2 = b & 15;
                 stringBuilder.Append("0123456789ABCDEF"[index]);
                 stringBuilder.Append("0123456789ABCDEF"[index2]);
             }

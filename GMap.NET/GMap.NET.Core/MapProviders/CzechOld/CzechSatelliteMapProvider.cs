@@ -54,7 +54,7 @@ namespace GMap.NET.MapProviders
             //http://m3.mapserver.mapy.cz/ophoto/9_7a80000_7a80000
 
             long xx = pos.X << (28 - zoom);
-            long yy = ((long)Math.Pow(2.0, (double)zoom) - 1 - pos.Y) << (28 - zoom);
+            long yy = ((long)Math.Pow(2.0, zoom) - 1 - pos.Y) << (28 - zoom);
 
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, xx, yy);
         }

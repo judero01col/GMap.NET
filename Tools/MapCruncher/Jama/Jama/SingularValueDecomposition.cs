@@ -552,7 +552,7 @@ namespace Jama
         public virtual int rank()
         {
             double num = Math.Pow(2.0, -52.0);
-            double num2 = (double)Math.Max(m, n) * s[0] * num;
+            double num2 = Math.Max(m, n) * s[0] * num;
             int num3 = 0;
             for (int i = 0; i < s.Length; i++)
             {

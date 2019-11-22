@@ -137,9 +137,9 @@ namespace MSR.CVE.BackMaker
                 for (int i = -360; i <= 0; i += 360)
                 {
                     MapRectangle clippedMapWindow = new MapRectangle(mapWindow.lat0,
-                        mapWindow.lon0 + (double)i,
+                        mapWindow.lon0 + i,
                         mapWindow.lat1,
-                        mapWindow.lon1 + (double)i);
+                        mapWindow.lon1 + i);
                     Region clipRegionComponent = GetClipRegionComponent(clippedMapWindow, zoom, csi);
                     if (region == null)
                     {

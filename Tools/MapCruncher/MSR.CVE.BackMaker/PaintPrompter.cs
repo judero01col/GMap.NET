@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
         {
             this.paintee = paintee;
             DebugThreadInterrupter.theInstance.AddThread("PaintPrompter",
-                new ThreadStart(Run),
+                Run,
                 ThreadPriority.Normal);
         }
 
@@ -45,7 +45,7 @@ namespace MSR.CVE.BackMaker
                 }
 
                 paintee.Invalidate();
-                UpdateDelegate method = new UpdateDelegate(paintee.Update);
+                UpdateDelegate method = paintee.Update;
                 paintee.Invoke(method);
             }
         }

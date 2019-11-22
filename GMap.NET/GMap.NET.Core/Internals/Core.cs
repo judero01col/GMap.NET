@@ -271,7 +271,7 @@ namespace GMap.NET.Internals
             int mmaxZoom = GetMaxZoomToFitRect(rect);
             if (mmaxZoom > 0)
             {
-                PointLatLng center = new PointLatLng(rect.Lat - rect.HeightLat / 2, rect.Lng + rect.WidthLng / 2);
+                var center = new PointLatLng(rect.Lat - rect.HeightLat / 2, rect.Lng + rect.WidthLng / 2);
                 Position = center;
 
                 if (mmaxZoom > maxZoom)
@@ -281,7 +281,7 @@ namespace GMap.NET.Internals
 
                 if (Zoom != mmaxZoom)
                 {
-                    Zoom = (int)mmaxZoom;
+                    Zoom = mmaxZoom;
                 }
 
                 return true;
@@ -399,7 +399,7 @@ namespace GMap.NET.Internals
                 invalidator = new BackgroundWorker();
                 invalidator.WorkerSupportsCancellation = true;
                 invalidator.WorkerReportsProgress = true;
-                invalidator.DoWork += new DoWorkEventHandler(InvalidatorWatch);
+                invalidator.DoWork += InvalidatorWatch;
                 invalidator.RunWorkerAsync();
 
                 //if(x == 1)
@@ -416,14 +416,14 @@ namespace GMap.NET.Internals
             Dispose();
         }
 
-        internal readonly object invalidationLock = new object();
+        internal readonly object InvalidationLock = new object();
         internal DateTime LastInvalidation = DateTime.Now;
 
         void InvalidatorWatch(object sender, DoWorkEventArgs e)
         {
             var w = sender as BackgroundWorker;
 
-            TimeSpan span = TimeSpan.FromMilliseconds(111);
+            var span = TimeSpan.FromMilliseconds(111);
             int spanMs = (int)span.TotalMilliseconds;
             bool skiped = false;
             TimeSpan delta;
@@ -435,14 +435,14 @@ namespace GMap.NET.Internals
                     break;
 
                 now = DateTime.Now;
-                lock (invalidationLock)
+                lock (InvalidationLock)
                 {
                     delta = now - LastInvalidation;
                 }
 
                 if (delta > span)
                 {
-                    lock (invalidationLock)
+                    lock (InvalidationLock)
                     {
                         LastInvalidation = now;
                     }
@@ -461,8 +461,8 @@ namespace GMap.NET.Internals
 
         public void UpdateCenterTileXYLocation()
         {
-            PointLatLng center = FromLocalToLatLng(Width / 2, Height / 2);
-            GPoint centerPixel = Provider.Projection.FromLatLngToPixel(center, Zoom);
+            var center = FromLocalToLatLng(Width / 2, Height / 2);
+            var centerPixel = Provider.Projection.FromLatLngToPixel(center, Zoom);
             centerTileXYLocation = Provider.Projection.FromPixelToTileXY(centerPixel);
         }
 
@@ -530,7 +530,7 @@ namespace GMap.NET.Internals
         /// <returns></returns>
         public PointLatLng FromLocalToLatLng(long x, long y)
         {
-            GPoint p = new GPoint(x, y);
+            var p = new GPoint(x, y);
             p.OffsetNegative(renderOffset);
             p.Offset(compensationOffset);
 
@@ -544,7 +544,7 @@ namespace GMap.NET.Internals
         /// <returns></returns>
         public GPoint FromLatLngToLocal(PointLatLng latlng)
         {
-            GPoint pLocal = Provider.Projection.FromLatLngToPixel(latlng, Zoom);
+            var pLocal = Provider.Projection.FromLatLngToPixel(latlng, Zoom);
             pLocal.Offset(renderOffset);
             pLocal.OffsetNegative(compensationOffset);
             return pLocal;
@@ -565,10 +565,10 @@ namespace GMap.NET.Internals
             }
             else
             {
-                for (int i = (int)zoom; i <= maxZoom; i++)
+                for (int i = zoom; i <= maxZoom; i++)
                 {
-                    GPoint p1 = Provider.Projection.FromLatLngToPixel(rect.LocationTopLeft, i);
-                    GPoint p2 = Provider.Projection.FromLatLngToPixel(rect.LocationRightBottom, i);
+                    var p1 = Provider.Projection.FromLatLngToPixel(rect.LocationTopLeft, i);
+                    var p2 = Provider.Projection.FromLatLngToPixel(rect.LocationRightBottom, i);
 
                     if (p2.X - p1.X <= Width + 10 && p2.Y - p1.Y <= Height + 10)
                     {
@@ -699,7 +699,7 @@ namespace GMap.NET.Internals
             {
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
-                    GPoint pt = new GPoint(-(positionPixel.X - Width / 2), -(positionPixel.Y - Height / 2));
+                    var pt = new GPoint(-(positionPixel.X - Width / 2), -(positionPixel.Y - Height / 2));
                     pt.Offset(compensationOffset);
                     renderOffset.X = pt.X - dragPoint.X;
                     renderOffset.Y = pt.Y - dragPoint.Y;
@@ -716,7 +716,7 @@ namespace GMap.NET.Internals
             {
                 mouseLastZoom = GPoint.Empty;
 
-                GPoint pt = new GPoint(-(positionPixel.X - Width / 2), -(positionPixel.Y - Height / 2));
+                var pt = new GPoint(-(positionPixel.X - Width / 2), -(positionPixel.Y - Height / 2));
                 pt.Offset(compensationOffset);
                 renderOffset.X = pt.X - dragPoint.X;
                 renderOffset.Y = pt.Y - dragPoint.Y;
@@ -745,7 +745,7 @@ namespace GMap.NET.Internals
                 LastLocationInBounds = Position;
 
                 IsDragging = true;
-                Position = FromLocalToLatLng((int)Width / 2, (int)Height / 2);
+                Position = FromLocalToLatLng(Width / 2, Height / 2);
                 IsDragging = false;
             }
 
@@ -775,7 +775,7 @@ namespace GMap.NET.Internals
             if (IsDragging)
             {
                 LastLocationInBounds = Position;
-                Position = FromLocalToLatLng((int)Width / 2, (int)Height / 2);
+                Position = FromLocalToLatLng(Width / 2, Height / 2);
 
                 if (OnMapDrag != null)
                 {
@@ -878,7 +878,7 @@ namespace GMap.NET.Internals
             bool stop = false;
 
 #if !PocketPC
-            Thread ct = Thread.CurrentThread;
+            var ct = Thread.CurrentThread;
             string ctid = "Thread[" + ct.ManagedThreadId + "]";
 #else
             int ctid = 0;
@@ -958,7 +958,7 @@ namespace GMap.NET.Internals
                 {
                     Debug.WriteLine(ctid + " - try load: " + task);
 
-                    Tile t = new Tile(task.Zoom, task.Pos);
+                    var t = new Tile(task.Zoom, task.Pos);
 
                     foreach (var tl in task.Core.provider.Overlays)
                     {
@@ -1015,7 +1015,7 @@ namespace GMap.NET.Internals
                             {
                                 int zoomOffset = task.Zoom > task.Core.okZoom ? task.Zoom - task.Core.okZoom : 1;
                                 long Ix = 0;
-                                GPoint parentTile = GPoint.Empty;
+                                var parentTile = GPoint.Empty;
 
                                 while (img == null && zoomOffset < task.Zoom)
                                 {
@@ -1184,7 +1184,7 @@ namespace GMap.NET.Internals
                         j <= countJ;
                         j++)
                     {
-                        GPoint p = centerTileXYLocation;
+                        var p = centerTileXYLocation;
                         p.X += i;
                         p.Y += j;
 
@@ -1205,7 +1205,7 @@ namespace GMap.NET.Internals
                         if (p.X >= minOfTiles.Width && p.Y >= minOfTiles.Height && p.X <= maxOfTiles.Width &&
                             p.Y <= maxOfTiles.Height)
                         {
-                            DrawTile dt = new DrawTile()
+                            var dt = new DrawTile()
                             {
                                 PosXY = p,
                                 PosPixel = new GPoint(p.X * tileRect.Width, p.Y * tileRect.Height),
@@ -1247,9 +1247,9 @@ namespace GMap.NET.Internals
             tileDrawingListLock.AcquireReaderLock();
             try
             {
-                foreach (DrawTile p in tileDrawingList)
+                foreach (var p in tileDrawingList)
                 {
-                    LoadTask task = new LoadTask(p.PosXY, Zoom, this);
+                    var task = new LoadTask(p.PosXY, Zoom, this);
 #if NET40
                     AddLoadTask(task);
 #else
@@ -1274,7 +1274,7 @@ namespace GMap.NET.Internals
                 {
                     while (GThreadPool.Count < GThreadPoolSize)
                     {
-                        Thread t = new Thread(new ThreadStart(tileLoadThread));
+                        var t = new Thread(tileLoadThread);
                         {
                             t.Name = "TileLoader: " + GThreadPool.Count;
                             t.IsBackground = true;
@@ -1338,7 +1338,7 @@ namespace GMap.NET.Internals
                 if (invalidator != null)
                 {
                     invalidator.CancelAsync();
-                    invalidator.DoWork -= new DoWorkEventHandler(InvalidatorWatch);
+                    invalidator.DoWork -= InvalidatorWatch;
                     invalidator.Dispose();
                     invalidator = null;
                 }

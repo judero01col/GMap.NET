@@ -40,8 +40,8 @@ namespace MSR.CVE.BackMaker
         public RenderProgressPanel2()
         {
             InitializeComponent();
-            previewRenderedResultsLinkLabel.Click += new EventHandler(previewRenderedResultsLinkLabel_Click);
-            VisibleChanged += new EventHandler(RenderProgressPanel2_VisibleChanged);
+            previewRenderedResultsLinkLabel.Click += previewRenderedResultsLinkLabel_Click;
+            VisibleChanged += RenderProgressPanel2_VisibleChanged;
         }
 
         private void RenderProgressPanel2_VisibleChanged(object sender, EventArgs e)
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker
             ReplacePreviewImage(null);
             if (this.mashup != null)
             {
-                this.mashup.dirtyEvent.Remove(new DirtyListener(MashupChangedHandler));
+                this.mashup.dirtyEvent.Remove(MashupChangedHandler);
             }
 
             this.mashup = mashup;
@@ -65,7 +65,7 @@ namespace MSR.CVE.BackMaker
             this.launchRenderedBrowser = launchRenderedBrowser;
             if (this.mashup != null)
             {
-                this.mashup.dirtyEvent.Add(new DirtyListener(MashupChangedHandler));
+                this.mashup.dirtyEvent.Add(MashupChangedHandler);
             }
 
             MashupChangedHandler();
@@ -210,7 +210,7 @@ namespace MSR.CVE.BackMaker
         {
             if (mashup != null)
             {
-                mashup.dirtyEvent.Remove(new DirtyListener(MashupChangedHandler));
+                mashup.dirtyEvent.Remove(MashupChangedHandler);
                 mashup = null;
             }
 
@@ -235,7 +235,7 @@ namespace MSR.CVE.BackMaker
 
             if (failure == null)
             {
-                NotifyDelegate method = new NotifyDelegate(ModalNotifyRenderComplete);
+                NotifyDelegate method = ModalNotifyRenderComplete;
                 Invoke(method);
             }
         }
@@ -275,7 +275,7 @@ namespace MSR.CVE.BackMaker
             tileDisplayPanel.Name = "tileDisplayPanel";
             tileDisplayPanel.Size = new Size(256, 256);
             tileDisplayPanel.TabIndex = 31;
-            tileDisplayPanel.Paint += new PaintEventHandler(tileDisplayPanel_Paint);
+            tileDisplayPanel.Paint += tileDisplayPanel_Paint;
             currentTileName.BackColor = SystemColors.Control;
             currentTileName.BorderStyle = BorderStyle.None;
             currentTileName.Location = new Point(2, 284);
@@ -329,7 +329,7 @@ namespace MSR.CVE.BackMaker
             viewInBrowserLinkLabel.TabStop = true;
             viewInBrowserLinkLabel.Text = "View results in browser";
             viewInBrowserLinkLabel.LinkClicked +=
-                new LinkLabelLinkClickedEventHandler(viewInBrowserLinkLabel_LinkClicked);
+                viewInBrowserLinkLabel_LinkClicked;
             panel1.Controls.Add(tileDisplayLabel);
             panel1.Controls.Add(renderErrors);
             panel1.Controls.Add(renderProgressBar);
@@ -364,7 +364,7 @@ namespace MSR.CVE.BackMaker
             renderControlButton.TabIndex = 32;
             renderControlButton.Text = "Start";
             renderControlButton.UseVisualStyleBackColor = true;
-            renderControlButton.Click += new EventHandler(renderControlButton_Click);
+            renderControlButton.Click += renderControlButton_Click;
             AutoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;

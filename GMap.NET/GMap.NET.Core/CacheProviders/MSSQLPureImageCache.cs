@@ -83,15 +83,15 @@ namespace GMap.NET.CacheProviders
                         _cnSet.Open();
 
                         bool tableExists;
-                        using (SqlCommand cmd = new SqlCommand("select object_id('GMapNETcache')", _cnGet))
+                        using (var cmd = new SqlCommand("select object_id('GMapNETcache')", _cnGet))
                         {
-                            object objid = cmd.ExecuteScalar();
+                            var objid = cmd.ExecuteScalar();
                             tableExists = objid != null && objid != DBNull.Value;
                         }
 
                         if (!tableExists)
                         {
-                            using (SqlCommand cmd = new SqlCommand(
+                            using (var cmd = new SqlCommand(
                                 "CREATE TABLE [GMapNETcache] ( \n"
                                 + "   [Type] [int]   NOT NULL, \n"
                                 + "   [Zoom] [int]   NOT NULL, \n"
@@ -232,7 +232,7 @@ namespace GMap.NET.CacheProviders
 
                         if (odata != null && odata != DBNull.Value)
                         {
-                            byte[] tile = (byte[])odata;
+                            var tile = (byte[])odata;
                             if (tile != null && tile.Length > 0)
                             {
                                 if (GMapProvider.TileImageProxy != null)

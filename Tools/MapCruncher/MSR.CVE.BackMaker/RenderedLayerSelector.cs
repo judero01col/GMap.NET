@@ -101,7 +101,7 @@ namespace MSR.CVE.BackMaker
                     new VENamingScheme(Path.Combine(basePath, current.namingScheme.GetFilePrefix()),
                         current.namingScheme.GetFileSuffix()));
                 renderedLayerSelector.menuItem.Tag = renderedLayerSelector;
-                renderedLayerSelector.menuItem.Click += new EventHandler(MenuItem_Click);
+                renderedLayerSelector.menuItem.Click += MenuItem_Click;
                 renderedLayerDisplayInfo.tsmiList.Add(renderedLayerSelector.menuItem);
             }
 

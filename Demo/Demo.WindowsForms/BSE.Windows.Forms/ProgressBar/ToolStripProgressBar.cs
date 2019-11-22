@@ -225,14 +225,14 @@ namespace BSE.Windows.Forms
         #region MethodsPrivate
         private static Control CreateControlInstance()
         {
-            ProgressBar progressBar = new ProgressBar();
+            var progressBar = new ProgressBar();
             progressBar.Size = new Size(100, 15);
 
             return progressBar;
         }
         private void OwnerRendererChanged(object sender, EventArgs e)
         {
-            ToolStripRenderer toolsTripRenderer = Owner.Renderer;
+            var toolsTripRenderer = Owner.Renderer;
             if (toolsTripRenderer != null)
             {
                 if (toolsTripRenderer is BseRenderer renderer)

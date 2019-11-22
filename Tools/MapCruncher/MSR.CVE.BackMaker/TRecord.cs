@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker
 
         public TRecord(SerializationInfo info, StreamingContext context)
         {
-            message = (T)(object)info.GetValue("Message", typeof(T));
+            message = (T)info.GetValue("Message", typeof(T));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

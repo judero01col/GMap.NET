@@ -196,14 +196,14 @@ namespace Org.Mentalis.Network.ProxySocket
                 if (ProxyType == ProxyTypes.Socks4)
                 {
                     AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate((IPEndPoint)remoteEP,
-                        new HandShakeComplete(OnHandShakeComplete),
+                        OnHandShakeComplete,
                         ProxyEndPoint);
                     return AsyncResult;
                 }
                 else if (ProxyType == ProxyTypes.Socks5)
                 {
                     AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate((IPEndPoint)remoteEP,
-                        new HandShakeComplete(OnHandShakeComplete),
+                        OnHandShakeComplete,
                         ProxyEndPoint);
                     return AsyncResult;
                 }
@@ -234,7 +234,7 @@ namespace Org.Mentalis.Network.ProxySocket
             if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
             {
                 RemotePort = port;
-                AsyncResult = BeginDns(host, new HandShakeComplete(OnHandShakeComplete));
+                AsyncResult = BeginDns(host, OnHandShakeComplete);
                 return AsyncResult;
             }
             else
@@ -243,7 +243,7 @@ namespace Org.Mentalis.Network.ProxySocket
                 {
                     AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate(host,
                         port,
-                        new HandShakeComplete(OnHandShakeComplete),
+                        OnHandShakeComplete,
                         ProxyEndPoint);
                     return AsyncResult;
                 }
@@ -251,7 +251,7 @@ namespace Org.Mentalis.Network.ProxySocket
                 {
                     AsyncResult = new Socks5Handler(this, ProxyUser, ProxyPass).BeginNegotiate(host,
                         port,
-                        new HandShakeComplete(OnHandShakeComplete),
+                        OnHandShakeComplete,
                         ProxyEndPoint);
                     return AsyncResult;
                 }
@@ -293,7 +293,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             try
             {
-                Dns.BeginGetHostEntry(host, new AsyncCallback(OnResolved), this);
+                Dns.BeginGetHostEntry(host, OnResolved, this);
                 return new IAsyncProxyResult();
             }
             catch
@@ -312,7 +312,7 @@ namespace Org.Mentalis.Network.ProxySocket
             {
                 IPHostEntry dns = Dns.EndGetHostEntry(asyncResult);
                 base.BeginConnect(new IPEndPoint(dns.AddressList[0], RemotePort),
-                    new AsyncCallback(OnConnect),
+                    OnConnect,
                     State);
             }
             catch (Exception e)

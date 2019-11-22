@@ -9,7 +9,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private LinkedList<CacheRecord> lruQueue;
         private List<OpenDocumentStateObserverIfc> observers = new List<OpenDocumentStateObserverIfc>();
         private static bool oneEntryAtATime = false;
-        private static long paramCacheMaxSize = (long)((oneEntryAtATime ? 1 : 400) * 1048576);
+        private static long paramCacheMaxSize = (oneEntryAtATime ? 1 : 400) * 1048576;
         private long memoryUsed;
         private int spillCount;
 

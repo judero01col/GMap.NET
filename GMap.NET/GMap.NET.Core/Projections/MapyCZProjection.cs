@@ -33,8 +33,8 @@ namespace GMap.NET.Projections
 
         static double roundoff(double xx, double yy)
         {
-            var x = xx;
-            var y = yy;
+            double x = xx;
+            double y = yy;
             x = Round(x * Pow(10, y)) / Pow(10, y);
             return x;
         }
@@ -55,59 +55,59 @@ namespace GMap.NET.Projections
 
         static long[] utmEEToPP(double east, double north)
         {
-            var x = (Round(east) - -3700000.0) * Pow(2, 5);
-            var y = (Round(north) - 1300000.0) * Pow(2, 5);
+            double x = (Round(east) - -3700000.0) * Pow(2, 5);
+            double y = (Round(north) - 1300000.0) * Pow(2, 5);
 
             return new[] {(long)x, (long)y};
         }
 
         double[] wgsToUTM(double la, double lo, int zone)
         {
-            var latrad = la;
-            var lonrad = lo;
-            var latddd = RadiansToDegrees(la);
-            var londdd = RadiansToDegrees(lo);
+            double latrad = la;
+            double lonrad = lo;
+            double latddd = RadiansToDegrees(la);
+            double londdd = RadiansToDegrees(lo);
 
-            var k = 0.9996f;
-            var a = Axis;
-            var f = Flattening;
-            var b = a * (1.0 - f);
-            var e2 = (a * a - b * b) / (a * a);
-            var e = Sqrt(e2);
-            var ei2 = (a * a - b * b) / (b * b);
-            var ei = Sqrt(ei2);
-            var n = (a - b) / (a + b);
-            var G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) * (PI / 180.0);
-            var w = londdd - (double)(zone * 6 - 183);
+            float k = 0.9996f;
+            double a = Axis;
+            double f = Flattening;
+            double b = a * (1.0 - f);
+            double e2 = (a * a - b * b) / (a * a);
+            double e = Sqrt(e2);
+            double ei2 = (a * a - b * b) / (b * b);
+            double ei = Sqrt(ei2);
+            double n = (a - b) / (a + b);
+            double G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) * (PI / 180.0);
+            double w = londdd - (zone * 6 - 183);
             w = DegreesToRadians(w);
-            var t = Tan(latrad);
-            var rho = a * (1.0 - e2) / Pow(1.0 - e2 * Sin(latrad) * Sin(latrad), 3 / 2.0);
-            var nu = a / Sqrt(1.0 - e2 * Sin(latrad) * Sin(latrad));
-            var psi = nu / rho;
-            var coslat = Cos(latrad);
-            var sinlat = Sin(latrad);
-            var A0 = 1 - e2 / 4.0 - 3 * e2 * e2 / 64.0 - 5 * Pow(e2, 3) / 256.0;
-            var A2 = 3 / 8.0 * (e2 + e2 * e2 / 4.0 + 15 * Pow(e2, 3) / 128.0);
-            var A4 = 15 / 256.0 * (e2 * e2 + 3 * Pow(e2, 3) / 4.0);
-            var A6 = 35 * Pow(e2, 3) / 3072.0;
-            var m = a * (A0 * latrad - A2 * Sin(2 * latrad) + A4 * Sin(4 * latrad) - A6 * Sin(6 * latrad));
-            var eterm1 = w * w / 6.0 * coslat * coslat * (psi - t * t);
-            var eterm2 = Pow(w, 4) / 120.0 * Pow(coslat, 4) *
+            double t = Tan(latrad);
+            double rho = a * (1.0 - e2) / Pow(1.0 - e2 * Sin(latrad) * Sin(latrad), 3 / 2.0);
+            double nu = a / Sqrt(1.0 - e2 * Sin(latrad) * Sin(latrad));
+            double psi = nu / rho;
+            double coslat = Cos(latrad);
+            double sinlat = Sin(latrad);
+            double A0 = 1 - e2 / 4.0 - 3 * e2 * e2 / 64.0 - 5 * Pow(e2, 3) / 256.0;
+            double A2 = 3 / 8.0 * (e2 + e2 * e2 / 4.0 + 15 * Pow(e2, 3) / 128.0);
+            double A4 = 15 / 256.0 * (e2 * e2 + 3 * Pow(e2, 3) / 4.0);
+            double A6 = 35 * Pow(e2, 3) / 3072.0;
+            double m = a * (A0 * latrad - A2 * Sin(2 * latrad) + A4 * Sin(4 * latrad) - A6 * Sin(6 * latrad));
+            double eterm1 = w * w / 6.0 * coslat * coslat * (psi - t * t);
+            double eterm2 = Pow(w, 4) / 120.0 * Pow(coslat, 4) *
                          (4 * Pow(psi, 3) * (1.0 - 6 * t * t) + psi * psi * (1.0 + 8 * t * t) - psi * 2 * t * t +
                           Pow(t, 4));
-            var eterm3 = Pow(w, 6) / 5040.0 * Pow(coslat, 6) * (61.0 - 479 * t * t + 179 * Pow(t, 4) - Pow(t, 6));
-            var dE = k * nu * w * coslat * (1.0 + eterm1 + eterm2 + eterm3);
-            var east = 500000.0 + dE / UNITS;
+            double eterm3 = Pow(w, 6) / 5040.0 * Pow(coslat, 6) * (61.0 - 479 * t * t + 179 * Pow(t, 4) - Pow(t, 6));
+            double dE = k * nu * w * coslat * (1.0 + eterm1 + eterm2 + eterm3);
+            double east = 500000.0 + dE / UNITS;
             east = roundoff(east, UTMSIZE);
-            var nterm1 = w * w / 2.0 * nu * sinlat * coslat;
-            var nterm2 = Pow(w, 4) / 24.0 * nu * sinlat * Pow(coslat, 3) * (4 * psi * psi + psi - t * t);
-            var nterm3 = Pow(w, 6) / 720.0 * nu * sinlat * Pow(coslat, 5) *
+            double nterm1 = w * w / 2.0 * nu * sinlat * coslat;
+            double nterm2 = Pow(w, 4) / 24.0 * nu * sinlat * Pow(coslat, 3) * (4 * psi * psi + psi - t * t);
+            double nterm3 = Pow(w, 6) / 720.0 * nu * sinlat * Pow(coslat, 5) *
                          (8 * Pow(psi, 4) * (11.0 - 24 * t * t) - 28 * Pow(psi, 3) * (1.0 - 6 * t * t) +
                           psi * psi * (1.0 - 32 * t * t) - psi * 2 * t * t + Pow(t, 4));
-            var nterm4 = Pow(w, 8) / 40320.0 * nu * sinlat * Pow(coslat, 7) *
+            double nterm4 = Pow(w, 8) / 40320.0 * nu * sinlat * Pow(coslat, 7) *
                          (1385.0 - 3111 * t * t + 543 * Pow(t, 4) - Pow(t, 6));
-            var dN = k * (m + nterm1 + nterm2 + nterm3 + nterm4);
-            var north = 0.0 + dN / UNITS;
+            double dN = k * (m + nterm1 + nterm2 + nterm3 + nterm4);
+            double north = 0.0 + dN / UNITS;
             north = roundoff(north, UTMSIZE);
 
             return new[] {east, north, zone};
@@ -126,8 +126,8 @@ namespace GMap.NET.Projections
 
         double[] ppToUTMEE(double x, double y)
         {
-            var north = y * Pow(2, -5) + 1300000.0;
-            var east = x * Pow(2, -5) + -3700000.0;
+            double north = y * Pow(2, -5) + 1300000.0;
+            double east = x * Pow(2, -5) + -3700000.0;
             east = roundoff(east, UTMSIZE);
             north = roundoff(north, UTMSIZE);
 
@@ -136,49 +136,49 @@ namespace GMap.NET.Projections
 
         double[] utmToWGS(double eastIn, double northIn, int zone)
         {
-            var k = 0.9996f;
-            var a = Axis;
-            var f = Flattening;
-            var b = a * (1.0 - f);
-            var e2 = (a * a - b * b) / (a * a);
-            var e = Sqrt(e2);
-            var ei2 = (a * a - b * b) / (b * b);
-            var ei = Sqrt(ei2);
-            var n = (a - b) / (a + b);
-            var G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255 / 64.0 * Pow(n, 4)) * (PI / 180.0);
-            var north = (northIn - 0) * UNITS;
-            var east = (eastIn - 500000.0) * UNITS;
-            var m = north / k;
-            var sigma = m * PI / (180.0 * G);
-            var footlat = sigma + (3 * n / 2.0 - 27 * Pow(n, 3) / 32.0) * Sin(2 * sigma) +
+            float k = 0.9996f;
+            double a = Axis;
+            double f = Flattening;
+            double b = a * (1.0 - f);
+            double e2 = (a * a - b * b) / (a * a);
+            double e = Sqrt(e2);
+            double ei2 = (a * a - b * b) / (b * b);
+            double ei = Sqrt(ei2);
+            double n = (a - b) / (a + b);
+            double G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255 / 64.0 * Pow(n, 4)) * (PI / 180.0);
+            double north = (northIn - 0) * UNITS;
+            double east = (eastIn - 500000.0) * UNITS;
+            double m = north / k;
+            double sigma = m * PI / (180.0 * G);
+            double footlat = sigma + (3 * n / 2.0 - 27 * Pow(n, 3) / 32.0) * Sin(2 * sigma) +
                           (21 * n * n / 16.0 - 55 * Pow(n, 4) / 32.0) * Sin(4 * sigma) +
                           151 * Pow(n, 3) / 96.0 * Sin(6 * sigma) + 1097 * Pow(n, 4) / 512.0 * Sin(8 * sigma);
-            var rho = a * (1.0 - e2) / Pow(1.0 - e2 * Sin(footlat) * Sin(footlat), 3 / 2.0);
-            var nu = a / Sqrt(1.0 - e2 * Sin(footlat) * Sin(footlat));
-            var psi = nu / rho;
-            var t = Tan(footlat);
-            var x = east / (k * nu);
-            var laterm1 = t / (k * rho) * (east * x / 2.0);
-            var laterm2 = t / (k * rho) * (east * Pow(x, 3) / 24.0) *
+            double rho = a * (1.0 - e2) / Pow(1.0 - e2 * Sin(footlat) * Sin(footlat), 3 / 2.0);
+            double nu = a / Sqrt(1.0 - e2 * Sin(footlat) * Sin(footlat));
+            double psi = nu / rho;
+            double t = Tan(footlat);
+            double x = east / (k * nu);
+            double laterm1 = t / (k * rho) * (east * x / 2.0);
+            double laterm2 = t / (k * rho) * (east * Pow(x, 3) / 24.0) *
                           (-4 * psi * psi + 9 * psi * (1 - t * t) + 12 * t * t);
-            var laterm3 = t / (k * rho) * (east * Pow(x, 5) / 720.0) *
+            double laterm3 = t / (k * rho) * (east * Pow(x, 5) / 720.0) *
                           (8 * Pow(psi, 4) * (11 - 24 * t * t) - 12 * Pow(psi, 3) * (21.0 - 71 * t * t) +
                            15 * psi * psi * (15.0 - 98 * t * t + 15 * Pow(t, 4)) +
                            180 * psi * (5 * t * t - 3 * Pow(t, 4)) + 360 * Pow(t, 4));
-            var laterm4 = t / (k * rho) * (east * Pow(x, 7) / 40320.0) *
+            double laterm4 = t / (k * rho) * (east * Pow(x, 7) / 40320.0) *
                           (1385.0 + 3633 * t * t + 4095 * Pow(t, 4) + 1575 * Pow(t, 6));
-            var latrad = footlat - laterm1 + laterm2 - laterm3 + laterm4;
-            var lat = RadiansToDegrees(latrad);
-            var seclat = 1 / Cos(footlat);
-            var loterm1 = x * seclat;
-            var loterm2 = Pow(x, 3) / 6.0 * seclat * (psi + 2 * t * t);
-            var loterm3 = Pow(x, 5) / 120.0 * seclat * (-4 * Pow(psi, 3) * (1 - 6 * t * t) +
+            double latrad = footlat - laterm1 + laterm2 - laterm3 + laterm4;
+            double lat = RadiansToDegrees(latrad);
+            double seclat = 1 / Cos(footlat);
+            double loterm1 = x * seclat;
+            double loterm2 = Pow(x, 3) / 6.0 * seclat * (psi + 2 * t * t);
+            double loterm3 = Pow(x, 5) / 120.0 * seclat * (-4 * Pow(psi, 3) * (1 - 6 * t * t) +
                                                         psi * psi * (9 - 68 * t * t) + 72 * psi * t * t +
                                                         24 * Pow(t, 4));
-            var loterm4 = Pow(x, 7) / 5040.0 * seclat * (61.0 + 662 * t * t + 1320 * Pow(t, 4) + 720 * Pow(t, 6));
-            var w = loterm1 - loterm2 + loterm3 - loterm4;
-            var longrad = DegreesToRadians(getLCM(zone)) + w;
-            var lon = RadiansToDegrees(longrad);
+            double loterm4 = Pow(x, 7) / 5040.0 * seclat * (61.0 + 662 * t * t + 1320 * Pow(t, 4) + 720 * Pow(t, 6));
+            double w = loterm1 - loterm2 + loterm3 - loterm4;
+            double longrad = DegreesToRadians(getLCM(zone)) + w;
+            double lon = RadiansToDegrees(longrad);
 
             return new[] {lat, lon, latrad, longrad};
         }
@@ -219,7 +219,7 @@ namespace GMap.NET.Projections
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
         {
-            GPoint ret = GPoint.Empty;
+            var ret = GPoint.Empty;
 
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
@@ -227,20 +227,20 @@ namespace GMap.NET.Projections
             var size = GetTileMatrixSizePixel(zoom);
             {
                 var l = WGSToPP(lat, lng);
-                ret.X = (long)l[0] >> (20 - zoom);
-                ret.Y = size.Height - ((long)l[1] >> (20 - zoom));
+                ret.X = l[0] >> (20 - zoom);
+                ret.Y = size.Height - (l[1] >> (20 - zoom));
             }
             return ret;
         }
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)
         {
-            PointLatLng ret = PointLatLng.Empty;
+            var ret = PointLatLng.Empty;
 
             var size = GetTileMatrixSizePixel(zoom);
 
-            var oX = x << (20 - zoom);
-            var oY = (size.Height - y) << (20 - zoom);
+            long oX = x << (20 - zoom);
+            long oY = (size.Height - y) << (20 - zoom);
             {
                 var l = PPToWGS(oX, oY);
                 ret.Lat = Clip(l[0], MinLatitude, MaxLatitude);
@@ -256,7 +256,7 @@ namespace GMap.NET.Projections
 
         public override GSize GetTileMatrixSizePixel(int zoom)
         {
-            GSize s = GetTileMatrixSizeXY(zoom);
+            var s = GetTileMatrixSizeXY(zoom);
             return new GSize(s.Width << 8, s.Height << 8);
         }
 

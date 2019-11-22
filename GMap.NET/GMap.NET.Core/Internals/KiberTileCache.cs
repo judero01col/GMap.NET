@@ -63,7 +63,7 @@ namespace GMap.NET.Internals
             {
                 if (Keys.Count > 0 && Queue.Count > 0)
                 {
-                    RawTile first = Queue.Dequeue();
+                    var first = Queue.Dequeue();
                     try
                     {
                         var m = base[first];

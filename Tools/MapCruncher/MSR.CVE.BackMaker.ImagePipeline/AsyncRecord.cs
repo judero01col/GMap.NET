@@ -201,7 +201,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             DebugThreadInterrupter.theInstance.AddThread("AsyncRecord.NotifyThread",
-                new ThreadStart(NotifyThread),
+                NotifyThread,
                 ThreadPriority.Normal);
         }
 

@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker
         public RenderToFileControl()
         {
             InitializeComponent();
-            outputFolderDisplayBox.LostFocus += new EventHandler(outputFolderDisplayBox_LostFocus);
+            outputFolderDisplayBox.LostFocus += outputFolderDisplayBox_LostFocus;
         }
 
         public void Configure(RenderToFileOptions renderToFileOptions)
@@ -86,7 +86,7 @@ namespace MSR.CVE.BackMaker
             selectOutputFolderButton.Text = " ...";
             selectOutputFolderButton.TextAlign = ContentAlignment.TopCenter;
             selectOutputFolderButton.UseVisualStyleBackColor = true;
-            selectOutputFolderButton.Click += new EventHandler(selectOutputFolderButton_Click);
+            selectOutputFolderButton.Click += selectOutputFolderButton_Click;
             outputFolderDisplayBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             outputFolderDisplayBox.Location = new Point(3, 29);
             outputFolderDisplayBox.Name = "outputFolderDisplayBox";

@@ -59,15 +59,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             GDIBigLockedImage destImage, MapRectangle destBounds)
         {
             MapRectangle inr =
-                new MapRectangle(-0.5, -0.5, (double)destImage.Height - 0.5, (double)destImage.Width - 0.5);
+                new MapRectangle(-0.5, -0.5, destImage.Height - 0.5, destImage.Width - 0.5);
             MapRectangle outr = MapRectangle.MapRectangleIgnoreOrder(
                 MercatorCoordinateSystem.LatLonToMercator(destBounds.GetNW()),
                 MercatorCoordinateSystem.LatLonToMercator(destBounds.GetSE()));
             JamaMatrix matrix = FindAffineMatrix(inr, outr);
             MapRectangle outr2 = new MapRectangle(-0.5,
                 -0.5,
-                (double)sourceImage.Height - 0.5,
-                (double)sourceImage.Width - 0.5);
+                sourceImage.Height - 0.5,
+                sourceImage.Width - 0.5);
             JamaMatrix matrix2 = FindAffineMatrix(sourceBounds, outr2);
             FastImageWarper.doWarp(destImage,
                 sourceImage,
@@ -216,8 +216,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 for (int j = 0; j < size; j++)
                 {
-                    jamaMatrix.SetElement(i * size + j, 0, (double)j / (double)(size - 1));
-                    jamaMatrix.SetElement(i * size + j, 1, (double)i / (double)(size - 1));
+                    jamaMatrix.SetElement(i * size + j, 0, j / (double)(size - 1));
+                    jamaMatrix.SetElement(i * size + j, 1, i / (double)(size - 1));
                 }
             }
 

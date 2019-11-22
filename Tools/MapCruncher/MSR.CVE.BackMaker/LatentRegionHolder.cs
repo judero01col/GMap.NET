@@ -33,7 +33,7 @@ namespace MSR.CVE.BackMaker
             {
                 AsyncRef asyncRef =
                     (AsyncRef)asynchronousImageBoundsFuture.Realize("LatentRegionHolder.RequestRenderRegion");
-                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(ImageBoundsAvailable));
+                asyncRef.AddCallback(ImageBoundsAvailable);
                 new PersistentInterest(asyncRef);
             }
         }

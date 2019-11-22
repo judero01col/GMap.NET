@@ -81,7 +81,7 @@ namespace BSE.Windows.Forms
                     "panelColors"));
             }
 
-            PanelStyle panelStyle = panelColors.PanelStyle;
+            var panelStyle = panelColors.PanelStyle;
             SetPanelProperties(controls, panelStyle, panelColors);
         }
         /// <summary>
@@ -100,14 +100,14 @@ namespace BSE.Windows.Forms
                     "panelColors"));
             }
 
-			ArrayList panels = FindPanels(true, controls);
+			var panels = FindPanels(true, controls);
             foreach (BasePanel panel in panels)
             {
                 panel.PanelStyle = panelStyle;
                 panelColors.Panel = panel;
                 panel.SetPanelProperties(panelColors);
             }
-            ArrayList xpanderPanelLists = FindPanelLists(true, controls);
+            var xpanderPanelLists = FindPanelLists(true, controls);
             foreach (XPanderPanelList xpanderPanelList in xpanderPanelLists)
             {
                 xpanderPanelList.PanelStyle = panelStyle;
@@ -121,7 +121,7 @@ namespace BSE.Windows.Forms
         /// <param name="panelStyle">Style of the panel</param>
         public static void SetPanelProperties(Control.ControlCollection controls, PanelStyle panelStyle)
         {
-            ArrayList panels = FindPanels(true, controls);
+            var panels = FindPanels(true, controls);
             if (panels != null)
             {
                 foreach (BasePanel panel in panels)

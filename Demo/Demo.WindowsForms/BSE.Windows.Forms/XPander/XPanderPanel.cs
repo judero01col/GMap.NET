@@ -50,13 +50,13 @@ namespace BSE.Windows.Forms
 
       #region FieldsPrivate
 
-      private Image m_imageChevron;
-      private Image m_imageChevronUp;
-      private Image m_imageChevronDown;
-      private CustomXPanderPanelColors m_customColors;
-      private Image m_imageClosePanel;
-      private bool m_bIsClosable = true;
-      private CaptionStyle m_captionStyle;
+      private Image _imageChevron;
+      private Image _imageChevronUp;
+      private Image _imageChevronDown;
+      private CustomXPanderPanelColors _customColors;
+      private Image _imageClosePanel;
+      private bool _bIsClosable = true;
+      private CaptionStyle _captionStyle;
 
       #endregion
 
@@ -109,7 +109,7 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_customColors;
+            return _customColors;
          }
       }
       /// <summary>
@@ -121,13 +121,13 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_captionStyle;
+            return _captionStyle;
          }
          set
          {
-            if(value.Equals(m_captionStyle) == false)
+            if(value.Equals(_captionStyle) == false)
             {
-               m_captionStyle = value;
+               _captionStyle = value;
                OnCaptionStyleChanged(this, EventArgs.Empty);
             }
          }
@@ -142,13 +142,13 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_bIsClosable;
+            return _bIsClosable;
          }
          set
          {
-            if(value.Equals(m_bIsClosable) == false)
+            if(value.Equals(_bIsClosable) == false)
             {
-               m_bIsClosable = value;
+               _bIsClosable = value;
                Invalidate(false);
             }
          }
@@ -183,8 +183,8 @@ namespace BSE.Windows.Forms
          ForeColor = SystemColors.ControlText;
          Height = CaptionHeight;
          ShowBorder = true;
-         m_customColors = new CustomXPanderPanelColors();
-         m_customColors.CustomColorsChanged += OnCustomColorsChanged;
+         _customColors = new CustomXPanderPanelColors();
+         _customColors.CustomColorsChanged += OnCustomColorsChanged;
       }
 
       /// <summary>
@@ -195,9 +195,9 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            Padding padding = Padding;
+            var padding = Padding;
 
-            Rectangle displayRectangle = new Rectangle(
+            var displayRectangle = new Rectangle(
                 padding.Left + Constants.BorderThickness,
                 padding.Top + CaptionHeight,
                 ClientRectangle.Width - padding.Left - padding.Right - (2 * Constants.BorderThickness),
@@ -205,7 +205,7 @@ namespace BSE.Windows.Forms
 
             if(Controls.Count > 0)
             {
-               XPanderPanelList xpanderPanelList = Controls[0] as XPanderPanelList;
+               var xpanderPanelList = Controls[0] as XPanderPanelList;
                if((xpanderPanelList != null) && (xpanderPanelList.Dock == DockStyle.Fill))
                {
                   displayRectangle = new Rectangle(
@@ -229,17 +229,17 @@ namespace BSE.Windows.Forms
       {
          base.OnPaintBackground(pevent);
          base.BackColor = Color.Transparent;
-         Color backColor = PanelColors.XPanderPanelBackColor;
+         var backColor = PanelColors.XPanderPanelBackColor;
 
          if((backColor != Color.Empty) && backColor != Color.Transparent)
          {
-            Rectangle rectangle = new Rectangle(
+            var rectangle = new Rectangle(
                 0,
                 CaptionHeight,
                 ClientRectangle.Width,
                 ClientRectangle.Height - CaptionHeight);
 
-            using(SolidBrush backgroundBrush = new SolidBrush(backColor))
+            using(var backgroundBrush = new SolidBrush(backColor))
             {
                pevent.Graphics.FillRectangle(backgroundBrush, rectangle);
             }
@@ -256,16 +256,16 @@ namespace BSE.Windows.Forms
             return;
          }
 
-         using(UseAntiAlias antiAlias = new UseAntiAlias(e.Graphics))
+         using(var antiAlias = new UseAntiAlias(e.Graphics))
          {
-            Graphics graphics = e.Graphics;
+            var graphics = e.Graphics;
 
-            using(UseClearTypeGridFit clearTypeGridFit = new UseClearTypeGridFit(graphics))
+            using(var clearTypeGridFit = new UseClearTypeGridFit(graphics))
             {
                bool bExpand = Expand;
                bool bShowBorder = ShowBorder;
-               Color borderColor = PanelColors.BorderColor;
-               Rectangle borderRectangle = ClientRectangle;
+               var borderColor = PanelColors.BorderColor;
+               var borderRectangle = ClientRectangle;
 
                switch(PanelStyle)
                {
@@ -335,7 +335,7 @@ namespace BSE.Windows.Forms
                   OnExpandClick(this, EventArgs.Empty);
                }
             }
-            if(ShowCloseIcon && m_bIsClosable)
+            if(ShowCloseIcon && _bIsClosable)
             {
                if(RectangleCloseIcon.Contains(e.X, e.Y))
                {
@@ -363,7 +363,7 @@ namespace BSE.Windows.Forms
                Expand = false;
                foreach(Control control in Parent.Controls)
                {
-                  XPanderPanel xpanderPanel =
+                  var xpanderPanel =
                             control as XPanderPanel;
 
                   if(xpanderPanel != null)
@@ -389,35 +389,35 @@ namespace BSE.Windows.Forms
 
       private void DrawCaptionbar(Graphics graphics, bool bExpand, bool bShowBorder, PanelStyle panelStyle)
       {
-         Rectangle captionRectangle = CaptionRectangle;
-         Color colorGradientBegin = PanelColors.XPanderPanelCaptionGradientBegin;
-         Color colorGradientEnd = PanelColors.XPanderPanelCaptionGradientEnd;
-         Color colorGradientMiddle = PanelColors.XPanderPanelCaptionGradientMiddle;
-         Color colorText = PanelColors.XPanderPanelCaptionText;
-         Color foreColorCloseIcon = PanelColors.XPanderPanelCaptionCloseIcon;
-         Color foreColorExpandIcon = PanelColors.XPanderPanelCaptionExpandIcon;
+         var captionRectangle = CaptionRectangle;
+         var colorGradientBegin = PanelColors.XPanderPanelCaptionGradientBegin;
+         var colorGradientEnd = PanelColors.XPanderPanelCaptionGradientEnd;
+         var colorGradientMiddle = PanelColors.XPanderPanelCaptionGradientMiddle;
+         var colorText = PanelColors.XPanderPanelCaptionText;
+         var foreColorCloseIcon = PanelColors.XPanderPanelCaptionCloseIcon;
+         var foreColorExpandIcon = PanelColors.XPanderPanelCaptionExpandIcon;
          bool bHover = HoverStateCaptionBar == HoverState.Hover ? true : false;
 
-         if(m_imageClosePanel == null)
+         if(_imageClosePanel == null)
          {
-            m_imageClosePanel = Resources.closePanel;
+            _imageClosePanel = Resources.closePanel;
          }
-         if(m_imageChevronUp == null)
+         if(_imageChevronUp == null)
          {
-            m_imageChevronUp = Resources.ChevronUp;
+            _imageChevronUp = Resources.ChevronUp;
          }
-         if(m_imageChevronDown == null)
+         if(_imageChevronDown == null)
          {
-            m_imageChevronDown = Resources.ChevronDown;
+            _imageChevronDown = Resources.ChevronDown;
          }
 
-         m_imageChevron = m_imageChevronDown;
+         _imageChevron = _imageChevronDown;
          if(bExpand)
          {
-            m_imageChevron = m_imageChevronUp;
+            _imageChevron = _imageChevronUp;
          }
 
-         if(m_captionStyle == CaptionStyle.Normal)
+         if(_captionStyle == CaptionStyle.Normal)
          {
             if(bHover)
             {
@@ -469,9 +469,9 @@ namespace BSE.Windows.Forms
          }
          else
          {
-            Color colorFlatGradientBegin = PanelColors.XPanderPanelFlatCaptionGradientBegin;
-            Color colorFlatGradientEnd = PanelColors.XPanderPanelFlatCaptionGradientEnd;
-            Color colorInnerBorder = PanelColors.InnerBorderColor;
+            var colorFlatGradientBegin = PanelColors.XPanderPanelFlatCaptionGradientBegin;
+            var colorFlatGradientEnd = PanelColors.XPanderPanelFlatCaptionGradientEnd;
+            var colorInnerBorder = PanelColors.InnerBorderColor;
             colorText = PanelColors.XPanderPanelCaptionText;
             foreColorExpandIcon = colorText;
 
@@ -486,13 +486,13 @@ namespace BSE.Windows.Forms
              ImageRectangle,
              Image,
              RightToLeft,
-             m_bIsClosable,
+             _bIsClosable,
              ShowCloseIcon,
-             m_imageClosePanel,
+             _imageClosePanel,
              foreColorCloseIcon,
              ref RectangleCloseIcon,
              ShowExpandIcon,
-             m_imageChevron,
+             _imageChevron,
              foreColorExpandIcon,
              ref RectangleExpandIcon,
              CaptionFont,
@@ -504,12 +504,12 @@ namespace BSE.Windows.Forms
       {
          if(xpanderPanel.ShowBorder)
          {
-            using(GraphicsPath graphicsPath = new GraphicsPath())
+            using(var graphicsPath = new GraphicsPath())
             {
-               using(Pen borderPen = new Pen(xpanderPanel.PanelColors.BorderColor, Constants.BorderThickness))
+               using(var borderPen = new Pen(xpanderPanel.PanelColors.BorderColor, Constants.BorderThickness))
                {
-                  Rectangle captionRectangle = xpanderPanel.CaptionRectangle;
-                  Rectangle borderRectangle = captionRectangle;
+                  var captionRectangle = xpanderPanel.CaptionRectangle;
+                  var borderRectangle = captionRectangle;
 
                   if(xpanderPanel.Expand)
                   {
@@ -523,11 +523,11 @@ namespace BSE.Windows.Forms
                          captionRectangle.Top + captionRectangle.Height - Constants.BorderThickness);
                   }
 
-                  XPanderPanelList xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
+                  var xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
                   if((xpanderPanelList != null) && (xpanderPanelList.Dock == DockStyle.Fill))
                   {
-                     Panel panel = xpanderPanelList.Parent as Panel;
-                     XPanderPanel parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
+                     var panel = xpanderPanelList.Parent as Panel;
+                     var parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
                      if(((panel != null) && (panel.Padding == new Padding(0))) ||
                                 ((parentXPanderPanel != null) && (parentXPanderPanel.Padding == new Padding(0))))
                      {
@@ -622,7 +622,7 @@ namespace BSE.Windows.Forms
                          borderRectangle.Top + borderRectangle.Height);
                   }
                }
-               using(Pen borderPen = new Pen(xpanderPanel.PanelColors.BorderColor, Constants.BorderThickness))
+               using(var borderPen = new Pen(xpanderPanel.PanelColors.BorderColor, Constants.BorderThickness))
                {
                   graphics.DrawPath(borderPen, graphicsPath);
                }
@@ -635,14 +635,14 @@ namespace BSE.Windows.Forms
       {
          if(xpanderPanel.ShowBorder)
          {
-            using(GraphicsPath graphicsPath = new GraphicsPath())
+            using(var graphicsPath = new GraphicsPath())
             {
-               Rectangle captionRectangle = xpanderPanel.CaptionRectangle;
-               XPanderPanelList xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
+               var captionRectangle = xpanderPanel.CaptionRectangle;
+               var xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
                if((xpanderPanelList != null) && (xpanderPanelList.Dock == DockStyle.Fill))
                {
-                  Panel panel = xpanderPanelList.Parent as Panel;
-                  XPanderPanel parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
+                  var panel = xpanderPanelList.Parent as Panel;
+                  var parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
                   if(((panel != null) && (panel.Padding == new Padding(0))) ||
                             ((parentXPanderPanel != null) && (parentXPanderPanel.Padding == new Padding(0))))
                   {
@@ -676,7 +676,7 @@ namespace BSE.Windows.Forms
                   }
                }
 
-               using(Pen borderPen = new Pen(xpanderPanel.PanelColors.InnerBorderColor))
+               using(var borderPen = new Pen(xpanderPanel.PanelColors.InnerBorderColor))
                {
                   graphics.DrawPath(borderPen, graphicsPath);
                }
@@ -695,7 +695,7 @@ namespace BSE.Windows.Forms
 
          foreach(Control control in Parent.Controls)
          {
-            XPanderPanel xpanderPanel =
+            var xpanderPanel =
 					control as XPanderPanel;
 
             if((xpanderPanel != null) && xpanderPanel.Visible)
@@ -708,7 +708,7 @@ namespace BSE.Windows.Forms
 
          foreach(Control control in Parent.Controls)
          {
-            XPanderPanel xpanderPanel =
+            var xpanderPanel =
 					control as XPanderPanel;
 
             if(xpanderPanel != null)
@@ -729,7 +729,7 @@ namespace BSE.Windows.Forms
          int iTop = Parent.Padding.Top;
          foreach(Control control in Parent.Controls)
          {
-            XPanderPanel xpanderPanel =
+            var xpanderPanel =
 					control as XPanderPanel;
 
             if((xpanderPanel != null) && xpanderPanel.Visible)
@@ -753,8 +753,8 @@ namespace BSE.Windows.Forms
    {
       #region FieldsPrivate
 
-      private Pen m_borderPen = new Pen(Color.FromKnownColor(KnownColor.ControlDarkDark));
-      private System.Windows.Forms.Design.Behavior.Adorner m_adorner;
+      private Pen _borderPen = new Pen(Color.FromKnownColor(KnownColor.ControlDarkDark));
+      private System.Windows.Forms.Design.Behavior.Adorner _adorner;
 
       #endregion
 
@@ -764,7 +764,7 @@ namespace BSE.Windows.Forms
       /// </summary>
       public XPanderPanelDesigner()
       {
-         m_borderPen.DashStyle = DashStyle.Dash;
+         _borderPen.DashStyle = DashStyle.Dash;
       }
       /// <summary>
       /// Initializes the designer with the specified component.
@@ -773,12 +773,12 @@ namespace BSE.Windows.Forms
       public override void Initialize(IComponent component)
       {
          base.Initialize(component);
-         XPanderPanel xpanderPanel = Control as XPanderPanel;
+         var xpanderPanel = Control as XPanderPanel;
          if(xpanderPanel != null)
          {
-            m_adorner = new System.Windows.Forms.Design.Behavior.Adorner();
-            BehaviorService.Adorners.Add(m_adorner);
-            m_adorner.Glyphs.Add(new XPanderPanelCaptionGlyph(BehaviorService, xpanderPanel));
+            _adorner = new System.Windows.Forms.Design.Behavior.Adorner();
+            BehaviorService.Adorners.Add(_adorner);
+            _adorner.Glyphs.Add(new XPanderPanelCaptionGlyph(BehaviorService, xpanderPanel));
          }
       }
       #endregion
@@ -796,15 +796,15 @@ namespace BSE.Windows.Forms
          {
             if(disposing)
             {
-               if(m_borderPen != null)
+               if(_borderPen != null)
                {
-                  m_borderPen.Dispose();
+                  _borderPen.Dispose();
                }
-               if(m_adorner != null)
+               if(_adorner != null)
                {
                   if(BehaviorService != null)
                   {
-                     BehaviorService.Adorners.Remove(m_adorner);
+                     BehaviorService.Adorners.Remove(_adorner);
                   }
                }
             }
@@ -823,7 +823,7 @@ namespace BSE.Windows.Forms
       {
          base.OnPaintAdornments(e);
          e.Graphics.DrawRectangle(
-            m_borderPen,
+            _borderPen,
             0,
             0,
             Control.Width - 2,
@@ -885,8 +885,8 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            Point edge = m_behaviorService.ControlToAdornerWindow(m_xpanderPanel);
-            Rectangle bounds = new Rectangle(
+            var edge = m_behaviorService.ControlToAdornerWindow(m_xpanderPanel);
+            var bounds = new Rectangle(
                 edge.X,
                 edge.Y,
                 m_xpanderPanel.Width,
@@ -974,7 +974,7 @@ namespace BSE.Windows.Forms
       {
          if((m_xpanderPanel != null) && (m_xpanderPanel.Expand == false))
          {
-            XPanderPanelList xpanderPanelList = m_xpanderPanel.Parent as XPanderPanelList;
+            var xpanderPanelList = m_xpanderPanel.Parent as XPanderPanelList;
             if(xpanderPanelList != null)
             {
                xpanderPanelList.Expand(m_xpanderPanel);

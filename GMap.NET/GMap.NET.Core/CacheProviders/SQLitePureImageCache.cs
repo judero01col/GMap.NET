@@ -29,7 +29,7 @@ namespace GMap.NET.CacheProviders
 #if !MONO
         static SQLitePureImageCache()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
         static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -197,7 +197,7 @@ namespace GMap.NET.CacheProviders
 #else
             var dbs = Directory.GetFiles(dir, "*.gmdb");
 #endif
-                foreach (var d in dbs)
+                foreach (string d in dbs)
                 {
                     if (d != _db)
                         Attach(d);
@@ -212,8 +212,8 @@ namespace GMap.NET.CacheProviders
         void CheckPreAllocation()
         {
             {
-                byte[] pageSizeBytes = new byte[2];
-                byte[] freePagesBytes = new byte[4];
+                var pageSizeBytes = new byte[2];
+                var freePagesBytes = new byte[4];
 
                 lock (this)
                 {
@@ -250,7 +250,7 @@ namespace GMap.NET.CacheProviders
                 UInt16 pageSize = BitConverter.ToUInt16(pageSizeBytes, 0);
                 UInt32 freePages = BitConverter.ToUInt32(freePagesBytes, 0);
 
-                var freeMB = pageSize * freePages / (1024.0 * 1024.0);
+                double freeMB = pageSize * freePages / (1024.0 * 1024.0);
 
 #if !PocketPC
                 int addSizeMB = 32;
@@ -283,7 +283,7 @@ namespace GMap.NET.CacheProviders
                     Directory.CreateDirectory(dir);
                 }
 
-                using (SQLiteConnection cn = new SQLiteConnection())
+                using (var cn = new SQLiteConnection())
                 {
 #if !MONO
                     cn.ConnectionString =
@@ -347,7 +347,7 @@ namespace GMap.NET.CacheProviders
             {
                 Debug.WriteLine("PreAllocateDB: " + file + ", +" + addSizeInMBytes + "MB");
 
-                using (SQLiteConnection cn = new SQLiteConnection())
+                using (var cn = new SQLiteConnection())
                 {
 #if !MONO
                     cn.ConnectionString =
@@ -410,7 +410,7 @@ namespace GMap.NET.CacheProviders
             {
                 if (File.Exists(file))
                 {
-                    using (SQLiteConnection cn = new SQLiteConnection())
+                    using (var cn = new SQLiteConnection())
                     {
 #if !MONO
                         cn.ConnectionString =
@@ -431,7 +431,7 @@ namespace GMap.NET.CacheProviders
                                     {
                                         cmd.Transaction = tr;
 
-                                        using (DbDataReader rd = cmd.ExecuteReader())
+                                        using (var rd = cmd.ExecuteReader())
                                         {
                                             rd.Close();
                                         }
@@ -506,7 +506,7 @@ namespace GMap.NET.CacheProviders
 
             try
             {
-                using (SQLiteConnection cn = new SQLiteConnection())
+                using (var cn = new SQLiteConnection())
                 {
 #if !MONO
                     cn.ConnectionString = string.Format("Data Source=\"{0}\";FailIfMissing=True;Page Size=32768", file);
@@ -547,7 +547,7 @@ namespace GMap.NET.CacheProviders
 
                 if (ret)
                 {
-                    using (SQLiteConnection cn1 = new SQLiteConnection())
+                    using (var cn1 = new SQLiteConnection())
                     {
 #if !MONO
                         cn1.ConnectionString = string.Format("Data Source=\"{0}\";Page Size=32768", sourceFile);
@@ -559,7 +559,7 @@ namespace GMap.NET.CacheProviders
                         cn1.Open();
                         if (cn1.State == System.Data.ConnectionState.Open)
                         {
-                            using (SQLiteConnection cn2 = new SQLiteConnection())
+                            using (var cn2 = new SQLiteConnection())
                             {
 #if !MONO
                                 cn2.ConnectionString = string.Format("Data Source=\"{0}\";Page Size=32768", destFile);
@@ -570,27 +570,27 @@ namespace GMap.NET.CacheProviders
                                 cn2.Open();
                                 if (cn2.State == System.Data.ConnectionState.Open)
                                 {
-                                    using (SQLiteCommand cmd = new SQLiteCommand(
+                                    using (var cmd = new SQLiteCommand(
                                         string.Format("ATTACH DATABASE \"{0}\" AS Source", sourceFile),
                                         cn2))
                                     {
                                         cmd.ExecuteNonQuery();
                                     }
 
-                                    using (SQLiteTransaction tr = cn2.BeginTransaction())
+                                    using (var tr = cn2.BeginTransaction())
                                     {
                                         try
                                         {
-                                            List<long> add = new List<long>();
-                                            using (SQLiteCommand cmd =
+                                            var add = new List<long>();
+                                            using (var cmd =
                                                 new SQLiteCommand("SELECT id, X, Y, Zoom, Type FROM Tiles;", cn1))
                                             {
-                                                using (SQLiteDataReader rd = cmd.ExecuteReader())
+                                                using (var rd = cmd.ExecuteReader())
                                                 {
                                                     while (rd.Read())
                                                     {
                                                         long id = rd.GetInt64(0);
-                                                        using (SQLiteCommand cmd2 =
+                                                        using (var cmd2 =
                                                             new SQLiteCommand(
                                                                 string.Format(
                                                                     "SELECT id FROM Tiles WHERE X={0} AND Y={1} AND Zoom={2} AND Type={3};",
@@ -600,7 +600,7 @@ namespace GMap.NET.CacheProviders
                                                                     rd.GetInt32(4)),
                                                                 cn2))
                                                         {
-                                                            using (SQLiteDataReader rd2 = cmd2.ExecuteReader())
+                                                            using (var rd2 = cmd2.ExecuteReader())
                                                             {
                                                                 if (!rd2.Read())
                                                                 {
@@ -614,7 +614,7 @@ namespace GMap.NET.CacheProviders
 
                                             foreach (long id in add)
                                             {
-                                                using (SQLiteCommand cmd = new SQLiteCommand(string.Format(
+                                                using (var cmd = new SQLiteCommand(string.Format(
                                                         "INSERT INTO Tiles(X, Y, Zoom, Type, CacheTime) SELECT X, Y, Zoom, Type, CacheTime FROM Source.Tiles WHERE id={0}; INSERT INTO TilesData(id, Tile) Values((SELECT last_insert_rowid()), (SELECT Tile FROM Source.TilesData WHERE id={0}));",
                                                         id),
                                                     cn2))
@@ -636,7 +636,7 @@ namespace GMap.NET.CacheProviders
                                         }
                                     }
 
-                                    using (SQLiteCommand cmd = new SQLiteCommand("DETACH DATABASE Source;", cn2))
+                                    using (var cmd = new SQLiteCommand("DETACH DATABASE Source;", cn2))
                                     {
                                         cmd.ExecuteNonQuery();
                                     }
@@ -686,7 +686,7 @@ namespace GMap.NET.CacheProviders
 
             int i = 1;
 
-            foreach (var c in _attachedCaches)
+            foreach (string c in _attachedCaches)
             {
                 _finnalSqlSelect +=
                     string.Format(
@@ -729,7 +729,7 @@ namespace GMap.NET.CacheProviders
             {
                 try
                 {
-                    using (SQLiteConnection cn = new SQLiteConnection())
+                    using (var cn = new SQLiteConnection())
                     {
                         cn.ConnectionString = _connectionString;
                         cn.Open();
@@ -802,7 +802,7 @@ namespace GMap.NET.CacheProviders
             PureImage ret = null;
             try
             {
-                using (SQLiteConnection cn = new SQLiteConnection())
+                using (var cn = new SQLiteConnection())
                 {
                     cn.ConnectionString = _connectionString;
                     cn.Open();
@@ -821,12 +821,12 @@ namespace GMap.NET.CacheProviders
                         {
                             com.CommandText = string.Format(_finnalSqlSelect, pos.X, pos.Y, zoom, type);
 
-                            using (DbDataReader rd = com.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                            using (var rd = com.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
                             {
                                 if (rd.Read())
                                 {
                                     long length = rd.GetBytes(0, 0, null, 0, 0);
-                                    byte[] tile = new byte[length];
+                                    var tile = new byte[length];
                                     rd.GetBytes(0, 0, tile, 0, tile.Length);
                                     {
                                         if (GMapProvider.TileImageProxy != null)
@@ -871,7 +871,7 @@ namespace GMap.NET.CacheProviders
 
             try
             {
-                using (SQLiteConnection cn = new SQLiteConnection())
+                using (var cn = new SQLiteConnection())
                 {
                     cn.ConnectionString = _connectionString;
                     cn.Open();

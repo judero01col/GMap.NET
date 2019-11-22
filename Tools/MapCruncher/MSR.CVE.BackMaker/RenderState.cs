@@ -159,11 +159,11 @@ namespace MSR.CVE.BackMaker
             this.flushRenderedTileCachePackage = flushRenderedTileCachePackage;
             this.mapTileSourceFactory = mapTileSourceFactory;
             DebugThreadInterrupter.theInstance.AddThread("RenderState",
-                new ThreadStart(ThreadTask),
+                ThreadTask,
                 ThreadPriority.BelowNormal);
-            ResourceCounter resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("RenderState", -1);
+            var resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("RenderState", -1);
             resourceCounter.crement(1);
-            complaintBox = new RenderComplaintBox(new RenderComplaintBox.AnnounceDelegate(PostMessage));
+            complaintBox = new RenderComplaintBox(PostMessage);
         }
 
         private void OpenLog()
@@ -180,7 +180,7 @@ namespace MSR.CVE.BackMaker
         {
             disposeFlag = true;
             startRenderEvent.Set();
-            ResourceCounter resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("RenderState", -1);
+            var resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("RenderState", -1);
             resourceCounter.crement(-1);
             if (logWriter != null)
             {
@@ -298,7 +298,7 @@ namespace MSR.CVE.BackMaker
             //    m.Close();
             //}
 
-            ImageRef imageRef = (ImageRef)image.Duplicate("RenderState.PostImageResult");
+            var imageRef = (ImageRef)image.Duplicate("RenderState.PostImageResult");
             Monitor.Enter(this);
             ImageRef imageRef2;
             try
@@ -381,10 +381,10 @@ namespace MSR.CVE.BackMaker
                 PurgeDirectory(renderOutput, "legends");
                 CheckSignal();
                 PostStatus("Creating XML mashup descriptor");
-                CrunchedFile crunchedFile = CreateCrunchedFileDescriptor();
+                var crunchedFile = CreateCrunchedFileDescriptor();
                 PostStatus("Creating HTML sample file");
                 sampleHTMLUri = SampleHTMLWriter.Write(mashupScratchCopy,
-                    new SampleHTMLWriter.PostMessageDelegate(PostMessage),
+                    PostMessage,
                     renderOutput);
                 CopySourceData();
                 CheckSignal();
@@ -403,7 +403,7 @@ namespace MSR.CVE.BackMaker
                 while (renderQueue.Count > 0)
                 {
                     CheckSignal();
-                    RenderWorkUnit renderWorkUnit = renderQueue.Dequeue();
+                    var renderWorkUnit = renderQueue.Dequeue();
                     bool flag = renderWorkUnit.DoWork(this);
                     if (flag)
                     {
@@ -437,9 +437,9 @@ namespace MSR.CVE.BackMaker
 
         private Mashup DuplicateMashupDocumentForRender()
         {
-            Mashup mashup = _mashupDocument_UseScratchCopy.Duplicate();
-            List<Layer> list = new List<Layer>();
-            foreach (Layer current in mashup.layerList)
+            var mashup = _mashupDocument_UseScratchCopy.Duplicate();
+            var list = new List<Layer>();
+            foreach (var current in mashup.layerList)
             {
                 if (!current.SomeSourceMapIsReadyToLock())
                 {
@@ -447,7 +447,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            foreach (Layer current2 in list)
+            foreach (var current2 in list)
             {
                 mashup.layerList.Remove(current2);
             }
@@ -461,13 +461,13 @@ namespace MSR.CVE.BackMaker
             D.Say(0, "EstimateOuterLoop starts");
             estimateProgressLayerCount = 0;
             renderQueue.Clear();
-            List<RenderWorkUnit> list = new List<RenderWorkUnit>();
+            var list = new List<RenderWorkUnit>();
             boundsList = new List<TileRectangle>();
             rangeQueryData = new RangeQueryData();
             bool flag = true;
             if (mashupScratchCopy != null)
             {
-                foreach (Layer current in mashupScratchCopy.layerList)
+                foreach (var current in mashupScratchCopy.layerList)
                 {
                     List<RenderWorkUnit> list2;
                     try
@@ -491,9 +491,9 @@ namespace MSR.CVE.BackMaker
                     }
 
                     list2.Sort();
-                    List<RangeDescriptor> list3 = new List<RangeDescriptor>();
+                    var list3 = new List<RangeDescriptor>();
                     rangeQueryData[current] = list3;
-                    foreach (RenderWorkUnit current2 in list2)
+                    foreach (var current2 in list2)
                     {
                         if (list3.Count >= 100)
                         {
@@ -529,7 +529,7 @@ namespace MSR.CVE.BackMaker
                 initialQueueSize = renderQueue.Count;
                 string message = string.Format("Estimated output size: {0} tiles, about {1:f}MB",
                     renderQueue.Count,
-                    (double)renderQueue.Count * 0.085);
+                    renderQueue.Count * 0.085);
                 estimateProgressLayerCount++;
                 PostStatus(message);
                 PostMessage(message);
@@ -546,17 +546,17 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                RenderToOptions renderToOptions = mashupScratchCopy.GetRenderOptions().renderToOptions;
+                var renderToOptions = mashupScratchCopy.GetRenderOptions().renderToOptions;
                 RenderOutputMethod baseMethod;
                 if (renderToOptions is RenderToFileOptions)
                 {
-                    RenderToFileOptions renderToFileOptions = (RenderToFileOptions)renderToOptions;
+                    var renderToFileOptions = (RenderToFileOptions)renderToOptions;
                     if (renderToFileOptions.outputFolder == "")
                     {
                         throw new SetupFailed(true, "Please select an output folder.");
                     }
 
-                    FileOutputMethod fileOutputMethod = new FileOutputMethod(renderToFileOptions.outputFolder);
+                    var fileOutputMethod = new FileOutputMethod(renderToFileOptions.outputFolder);
                     PostStatus(string.Format("Creating {0}", renderToFileOptions.outputFolder));
                     try
                     {
@@ -576,7 +576,7 @@ namespace MSR.CVE.BackMaker
                         throw new Exception("Unimplemented renderToOptions type");
                     }
 
-                    RenderToS3Options renderToS3Options = (RenderToS3Options)renderToOptions;
+                    var renderToS3Options = (RenderToS3Options)renderToOptions;
                     S3Credentials s3Credentials;
                     try
                     {
@@ -590,8 +590,8 @@ namespace MSR.CVE.BackMaker
                                 arg));
                     }
 
-                    S3Adaptor s3adaptor = new S3Adaptor(s3Credentials.accessKeyId, s3Credentials.secretAccessKey);
-                    S3OutputMethod s3OutputMethod = new S3OutputMethod(s3adaptor,
+                    var s3adaptor = new S3Adaptor(s3Credentials.accessKeyId, s3Credentials.secretAccessKey);
+                    var s3OutputMethod = new S3OutputMethod(s3adaptor,
                         renderToS3Options.s3bucket,
                         renderToS3Options.s3pathPrefix);
                     baseMethod = s3OutputMethod;
@@ -626,9 +626,9 @@ namespace MSR.CVE.BackMaker
 
         private void DebugEmitRenderPlan(Queue<RenderWorkUnit> renderQueue)
         {
-            FileStream fileStream = new FileStream("RenderPlan.txt", FileMode.Create, FileAccess.Write);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
-            foreach (RenderWorkUnit current in renderQueue)
+            var fileStream = new FileStream("RenderPlan.txt", FileMode.Create, FileAccess.Write);
+            var streamWriter = new StreamWriter(fileStream);
+            foreach (var current in renderQueue)
             {
                 streamWriter.WriteLine(current.ToString());
             }
@@ -646,11 +646,11 @@ namespace MSR.CVE.BackMaker
 
             EstimateLayer_SetupUI(layer);
             int spillCountBefore = EstimateLayer_PrepareToSelectRenderingStrategy();
-            List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront = EstimateLayer_MakeSourceMapList(layer);
-            ProposedTileSet proposedTileSet =
+            var sourceMapRenderInfosBackToFront = EstimateLayer_MakeSourceMapList(layer);
+            var proposedTileSet =
                 EstimateLayer_MakeProposedTileSet(layer, boundsList, sourceMapRenderInfosBackToFront);
             bool useStagedRendering = EstimateLayer_SelectRenderingStrategy(layer, spillCountBefore);
-            List<CompositeTileUnit> list = new List<CompositeTileUnit>(proposedTileSet.Values);
+            var list = new List<CompositeTileUnit>(proposedTileSet.Values);
             list.Sort();
             return EstimateLayer_CreateRenderList(layer,
                 sourceMapRenderInfosBackToFront,
@@ -678,12 +678,12 @@ namespace MSR.CVE.BackMaker
 
         private List<SourceMapRenderInfo> EstimateLayer_MakeSourceMapList(Layer layer)
         {
-            List<SourceMapRenderInfo> list = new List<SourceMapRenderInfo>();
-            foreach (SourceMap current in layer.GetBackToFront())
+            var list = new List<SourceMapRenderInfo>();
+            foreach (var current in layer.GetBackToFront())
             {
                 CheckSignal();
                 PostStatus(string.Format("(opening {0})", current.displayName));
-                SourceMapRenderInfo sourceMapRenderInfo = new SourceMapRenderInfo();
+                var sourceMapRenderInfo = new SourceMapRenderInfo();
                 sourceMapRenderInfo.sourceMap = current;
                 if (!current.ReadyToLock())
                 {
@@ -718,14 +718,14 @@ namespace MSR.CVE.BackMaker
             List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront)
         {
             int num = 0;
-            MapRectangle rect = layer.renderClip.rect;
-            ProposedTileSet proposedTileSet = new ProposedTileSet();
-            foreach (SourceMapRenderInfo current in sourceMapRenderInfosBackToFront)
+            var rect = layer.renderClip.rect;
+            var proposedTileSet = new ProposedTileSet();
+            foreach (var current in sourceMapRenderInfosBackToFront)
             {
                 AddCredit(current.warpedMapTileSource.GetRendererCredit());
                 current.warpedMapTileSource.GetOpenDocumentFuture(FutureFeatures.Cached)
                     .Realize("EstimateLayer_MakeProposedTileSet");
-                BoundsPresent boundsPresent = (BoundsPresent)current.warpedMapTileSource
+                var boundsPresent = (BoundsPresent)current.warpedMapTileSource
                     .GetUserBounds(null, FutureFeatures.Cached).Realize("RenderState.EstimateOneLayer");
                 current.renderBoundsBoundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
                 if (rect != null)
@@ -735,7 +735,7 @@ namespace MSR.CVE.BackMaker
 
                 current.renderBoundsBoundingBox = current.renderBoundsBoundingBox.ClipTo(
                     CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
-                RenderBounds renderBounds =
+                var renderBounds =
                     mercatorCoordinateSystem.MakeRenderBounds(current.renderBoundsBoundingBox);
                 string fileSuffix = "." + mashupScratchCopy.GetRenderOptions().outputTileType.extn;
                 RenderedTileNamingScheme renderedTileNamingScheme =
@@ -759,7 +759,7 @@ namespace MSR.CVE.BackMaker
                             k <= tileRectangle.BottomRight.TileX;
                             k += tileRectangle.StrideX)
                         {
-                            TileAddress tileAddress = new TileAddress(k, j, i);
+                            var tileAddress = new TileAddress(k, j, i);
                             proposedTileSet.MakeLayeredTileWork(tileAddress,
                                 layer,
                                 renderOutput.MakeChildMethod(renderedTileNamingScheme.GetFilePrefix()),
@@ -841,10 +841,10 @@ namespace MSR.CVE.BackMaker
             }
 
             PostStatus(string.Format("Organizing {0}", layer.displayName));
-            LayerApplierMaker layerApplierMaker = new LayerApplierMaker(mapTileSourceFactory.GetCachePackage());
-            List<RenderWorkUnit> list = new List<RenderWorkUnit>();
+            var layerApplierMaker = new LayerApplierMaker(mapTileSourceFactory.GetCachePackage());
+            var list = new List<RenderWorkUnit>();
             int num = 0;
-            foreach (CompositeTileUnit current in compositeTileUnits)
+            foreach (var current in compositeTileUnits)
             {
                 current.stage = num / 100;
                 if (vETileSource != null)
@@ -852,10 +852,10 @@ namespace MSR.CVE.BackMaker
                     current.AddSupplier(layerApplierMaker.MakeApplier(vETileSource, layer));
                 }
 
-                MapRectangle mapRectangle =
+                var mapRectangle =
                     CoordinateSystemUtilities.TileAddressToMapRectangle(mercatorCoordinateSystem,
                         current.GetTileAddress());
-                foreach (SourceMapRenderInfo current2 in sourceMapRenderInfosBackToFront)
+                foreach (var current2 in sourceMapRenderInfosBackToFront)
                 {
                     if (mapRectangle.intersects(current2.renderBoundsBoundingBox))
                     {
@@ -866,7 +866,7 @@ namespace MSR.CVE.BackMaker
                 list.Add(current);
                 if (useStagedRendering)
                 {
-                    foreach (SingleSourceUnit current3 in current.GetSingleSourceUnits())
+                    foreach (var current3 in current.GetSingleSourceUnits())
                     {
                         list.Add(current3);
                     }
@@ -883,17 +883,17 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                Dictionary<string, object> dictionary2 = new Dictionary<string, object>();
-                foreach (Layer current in mashupScratchCopy.layerList)
+                var dictionary = new Dictionary<string, object>();
+                var dictionary2 = new Dictionary<string, object>();
+                foreach (var current in mashupScratchCopy.layerList)
                 {
                     string filesystemName = current.GetFilesystemName();
-                    RenderOutputMethod outputMethod = baseOutputMethod.MakeChildMethod(filesystemName);
-                    EncodableHash encodableHash = new EncodableHash();
+                    var outputMethod = baseOutputMethod.MakeChildMethod(filesystemName);
+                    var encodableHash = new EncodableHash();
                     current.AccumulateRobustHash_PerTile(mapTileSourceFactory.GetCachePackage(), encodableHash);
                     try
                     {
-                        LayerMetadataFile layerMetadataFile = LayerMetadataFile.Read(outputMethod);
+                        var layerMetadataFile = LayerMetadataFile.Read(outputMethod);
                         if (layerMetadataFile.encodableHash == encodableHash)
                         {
                             dictionary[filesystemName] = true;
@@ -916,7 +916,7 @@ namespace MSR.CVE.BackMaker
                 {
                     string outputFolder =
                         ((RenderToFileOptions)mashupScratchCopy.GetRenderOptions().renderToOptions).outputFolder;
-                    string[] directories = Directory.GetDirectories(outputFolder, "Layer_*");
+                    var directories = Directory.GetDirectories(outputFolder, "Layer_*");
                     for (int i = 0; i < directories.Length; i++)
                     {
                         string path = directories[i];
@@ -935,7 +935,7 @@ namespace MSR.CVE.BackMaker
                     try
                     {
                         PostMessage(string.Format("Deleting stale directory {0}", current2));
-                        RenderOutputMethod renderOutputMethod = baseOutputMethod.MakeChildMethod(current2);
+                        var renderOutputMethod = baseOutputMethod.MakeChildMethod(current2);
                         renderOutputMethod.EmptyDirectory();
                     }
                     catch (Exception arg)
@@ -947,11 +947,11 @@ namespace MSR.CVE.BackMaker
                     }
                 }
 
-                foreach (Layer current3 in mashupScratchCopy.layerList)
+                foreach (var current3 in mashupScratchCopy.layerList)
                 {
                     string filesystemName2 = current3.GetFilesystemName();
-                    RenderOutputMethod renderOutputMethod2 = baseOutputMethod.MakeChildMethod(filesystemName2);
-                    EncodableHash encodableHash2 = new EncodableHash();
+                    var renderOutputMethod2 = baseOutputMethod.MakeChildMethod(filesystemName2);
+                    var encodableHash2 = new EncodableHash();
                     current3.AccumulateRobustHash_PerTile(mapTileSourceFactory.GetCachePackage(), encodableHash2);
                     new LayerMetadataFile(renderOutputMethod2, encodableHash2).Write();
                 }
@@ -967,7 +967,7 @@ namespace MSR.CVE.BackMaker
 
         private void PurgeDirectory(RenderOutputMethod baseOutputMethod, string dirName)
         {
-            RenderOutputMethod method = baseOutputMethod.MakeChildMethod(dirName);
+            var method = baseOutputMethod.MakeChildMethod(dirName);
             PostStatus(string.Format("Deleting old {0} directory", dirName));
             Label_0019:
             try
@@ -988,14 +988,14 @@ namespace MSR.CVE.BackMaker
 
         private void RenderLegends()
         {
-            RenderOutputMethod renderOutputMethod = renderOutput.MakeChildMethod("legends");
-            foreach (Layer current in mashupScratchCopy.layerList)
+            var renderOutputMethod = renderOutput.MakeChildMethod("legends");
+            foreach (var current in mashupScratchCopy.layerList)
             {
-                foreach (SourceMap current2 in current)
+                foreach (var current2 in current)
                 {
                     PostStatus("Opening " + current2.GetDisplayName() + " for legends.");
-                    UnwarpedMapTileSource displayableSource = mapTileSourceFactory.CreateUnwarpedSource(current2);
-                    foreach (Legend current3 in current2.legendList)
+                    var displayableSource = mapTileSourceFactory.CreateUnwarpedSource(current2);
+                    foreach (var current3 in current2.legendList)
                     {
                         CheckSignal();
                         string text = current2.GetLegendFilename(current3);
@@ -1030,12 +1030,12 @@ namespace MSR.CVE.BackMaker
 
         private void RenderThumbnails(CrunchedFile crunchedFile)
         {
-            RenderOutputMethod thumbnailOutput = renderOutput.MakeChildMethod("thumbnails");
+            var thumbnailOutput = renderOutput.MakeChildMethod("thumbnails");
             foreach (int current in new List<int> {200, 500})
             {
-                foreach (Layer current2 in mashupScratchCopy.layerList)
+                foreach (var current2 in mashupScratchCopy.layerList)
                 {
-                    CrunchedLayer crunchedLayer = crunchedFile[current2];
+                    var crunchedLayer = crunchedFile[current2];
                     if (current2.SomeSourceMapIsReadyToLock())
                     {
                         RenderThumbnail(thumbnailOutput,
@@ -1045,11 +1045,11 @@ namespace MSR.CVE.BackMaker
                             current);
                     }
 
-                    foreach (SourceMap current3 in current2)
+                    foreach (var current3 in current2)
                     {
                         if (current3.ReadyToLock())
                         {
-                            SourceMapRecord thumbnailCollection = crunchedLayer[current3];
+                            var thumbnailCollection = crunchedLayer[current3];
                             RenderThumbnail(thumbnailOutput,
                                 thumbnailCollection,
                                 ForceValidFilename(string.Format("{0}_{1}_{2}.png",
@@ -1068,8 +1068,8 @@ namespace MSR.CVE.BackMaker
             string thumbnailFilename, IDisplayableSource displayableSource, int maxImageDimension)
         {
             PostStatus("Rendering thumbnail " + thumbnailFilename);
-            LatentRegionHolder latentRegionHolder = new LatentRegionHolder(new DirtyEvent(), new DirtyEvent());
-            Present present = displayableSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached)
+            var latentRegionHolder = new LatentRegionHolder(new DirtyEvent(), new DirtyEvent());
+            var present = displayableSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached)
                 .Realize("RenderState.RenderThumbnails");
             if (!(present is BoundsPresent))
             {
@@ -1077,19 +1077,19 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            MapRectangle boundingBox = ((BoundsPresent)present).GetRenderRegion().GetBoundingBox();
+            var boundingBox = ((BoundsPresent)present).GetRenderRegion().GetBoundingBox();
             new MercatorCoordinateSystem();
-            LatLon nW = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetSW());
-            LatLon sE = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetNE());
-            MapRectangle mapRectangle = new MapRectangle(nW, sE);
-            Size size = mapRectangle.SizeWithAspectRatio(maxImageDimension);
-            IFuturePrototype imagePrototype =
+            var nW = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetSW());
+            var sE = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetNE());
+            var mapRectangle = new MapRectangle(nW, sE);
+            var size = mapRectangle.SizeWithAspectRatio(maxImageDimension);
+            var imagePrototype =
                 displayableSource.GetImagePrototype(new ImageParameterFromRawBounds(size), FutureFeatures.Cached);
-            IFuture future = imagePrototype.Curry(new ParamDict(new object[]
+            var future = imagePrototype.Curry(new ParamDict(new object[]
             {
                 TermName.ImageBounds, new MapRectangleParameter(boundingBox)
             }));
-            Present present2 = future.Realize("RenderState.RenderThumbnails");
+            var present2 = future.Realize("RenderState.RenderThumbnails");
             if (!(present2 is ImageRef))
             {
                 PostMessage(string.Format("Failure writing thumbnail {0}; skipping: {1}",
@@ -1177,16 +1177,16 @@ namespace MSR.CVE.BackMaker
             if (mashupScratchCopy.GetRenderOptions().publishSourceData)
             {
                 PostStatus("Copying Source Data");
-                RenderOutputMethod renderOutputMethod = renderOutput.MakeChildMethod(SourceDataDirName);
-                Stream stream =
+                var renderOutputMethod = renderOutput.MakeChildMethod(SourceDataDirName);
+                var stream =
                     renderOutputMethod.CreateFile(mashupScratchCopy.GetPublishedFilename(), "text/xml");
                 mashupScratchCopy.WriteXML(stream);
                 stream.Close();
-                foreach (Layer current in mashupScratchCopy.layerList)
+                foreach (var current in mashupScratchCopy.layerList)
                 {
-                    foreach (SourceMap current2 in current)
+                    foreach (var current2 in current)
                     {
-                        SourceDocument sourceDocument =
+                        var sourceDocument =
                             current2.documentFuture.RealizeSynchronously(mapTileSourceFactory.GetCachePackage());
                         string filesystemAbsolutePath = sourceDocument.localDocument.GetFilesystemAbsolutePath();
                         PostStatus(string.Format("Copying {0}", current2.GetDisplayName()));
@@ -1237,11 +1237,11 @@ namespace MSR.CVE.BackMaker
                     num5 = initialQueueSize;
                 }
 
-                double num6 = (double)num3 * 1.0 / (double)num2 * 0.1;
+                double num6 = num3 * 1.0 / num2 * 0.1;
                 double num7 = 0.0;
                 if (num4 > 0)
                 {
-                    num7 = (double)num5 * 1.0 / (double)num4 * 0.9;
+                    num7 = num5 * 1.0 / num4 * 0.9;
                 }
 
                 double num8 = num6 + num7;
@@ -1271,7 +1271,7 @@ namespace MSR.CVE.BackMaker
             ImageRef result;
             try
             {
-                ImageRef imageRef = lastRenderedImageRef;
+                var imageRef = lastRenderedImageRef;
                 if (imageRef == null)
                 {
                     result = null;

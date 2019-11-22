@@ -100,12 +100,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private RectangleF SelectSubRectangle(MapRectangle bounds, MapRectangle region, Size size)
         {
-            float num = (float)((region.lon0 - bounds.lon0) / bounds.LonExtent * (double)size.Width);
-            float num2 = (float)((double)size.Height -
-                                 (region.lat0 - bounds.lat0) / bounds.LatExtent * (double)size.Height);
-            float num3 = (float)((region.lon1 - bounds.lon0) / bounds.LonExtent * (double)size.Width);
-            float num4 = (float)((double)size.Height -
-                                 (region.lat1 - bounds.lat0) / bounds.LatExtent * (double)size.Height);
+            float num = (float)((region.lon0 - bounds.lon0) / bounds.LonExtent * size.Width);
+            float num2 = (float)(size.Height -
+                                 (region.lat0 - bounds.lat0) / bounds.LatExtent * size.Height);
+            float num3 = (float)((region.lon1 - bounds.lon0) / bounds.LonExtent * size.Width);
+            float num4 = (float)(size.Height -
+                                 (region.lat1 - bounds.lat0) / bounds.LatExtent * size.Height);
             return new RectangleF(num, num4, num3 - num, num2 - num4);
         }
 

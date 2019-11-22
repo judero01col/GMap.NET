@@ -87,7 +87,7 @@ namespace MSR.CVE.BackMaker
             openAsNewButton.TabIndex = 1;
             openAsNewButton.Text = "Open Backup as New";
             openAsNewButton.UseVisualStyleBackColor = true;
-            openAsNewButton.Click += new EventHandler(openAsNewButton_Click);
+            openAsNewButton.Click += openAsNewButton_Click;
             deleteBackupButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             deleteBackupButton.Location = new Point(156, 218);
             deleteBackupButton.Name = "deleteBackupButton";
@@ -95,7 +95,7 @@ namespace MSR.CVE.BackMaker
             deleteBackupButton.TabIndex = 1;
             deleteBackupButton.Text = "Delete Backup";
             deleteBackupButton.UseVisualStyleBackColor = true;
-            deleteBackupButton.Click += new EventHandler(deleteBackupButton_Click);
+            deleteBackupButton.Click += deleteBackupButton_Click;
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cancelButton.Location = new Point(269, 218);
             cancelButton.Name = "cancelButton";
@@ -103,7 +103,7 @@ namespace MSR.CVE.BackMaker
             cancelButton.TabIndex = 1;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
-            cancelButton.Click += new EventHandler(cancelButton_Click);
+            cancelButton.Click += cancelButton_Click;
             notifyIcon1.Text = "notifyIcon1";
             notifyIcon1.Visible = true;
             AutoScaleDimensions = new SizeF(6f, 13f);

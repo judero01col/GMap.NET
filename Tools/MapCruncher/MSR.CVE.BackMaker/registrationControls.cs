@@ -131,7 +131,7 @@ namespace MSR.CVE.BackMaker
             addPushPinButton.Text = "Add";
             toolTip.SetToolTip(addPushPinButton,
                 "To create a registration point, position the crosshairs over corresponding points on both maps.  Then click Add.");
-            addPushPinButton.Click += new EventHandler(addPushPinButton_Click);
+            addPushPinButton.Click += addPushPinButton_Click;
             updatePushPinButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             updatePushPinButton.Location = new Point(168, 0);
             updatePushPinButton.Margin = new Padding(3, 0, 0, 0);
@@ -141,7 +141,7 @@ namespace MSR.CVE.BackMaker
             updatePushPinButton.Text = "Update";
             toolTip.SetToolTip(updatePushPinButton,
                 "To move an existing point, highlight it on the list below.  Then reposition the crosshairs and click update.");
-            updatePushPinButton.Click += new EventHandler(updatePushPinButton_Click);
+            updatePushPinButton.Click += updatePushPinButton_Click;
             LockButtonTable.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             LockButtonTable.ColumnCount = 2;
             LockButtonTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
@@ -166,7 +166,7 @@ namespace MSR.CVE.BackMaker
             removePushPinButton.TabIndex = 1;
             removePushPinButton.Text = "Remove";
             toolTip.SetToolTip(removePushPinButton, "Removes the highlighted correspondence point.");
-            removePushPinButton.Click += new EventHandler(removePushPinButton_Click);
+            removePushPinButton.Click += removePushPinButton_Click;
             removeAllPushpinsButton.Anchor =
                 AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             removeAllPushpinsButton.Enabled = false;
@@ -176,7 +176,7 @@ namespace MSR.CVE.BackMaker
             removeAllPushpinsButton.TabIndex = 4;
             removeAllPushpinsButton.Text = "Remove All";
             toolTip.SetToolTip(removeAllPushpinsButton, "Removes all correspondence points.");
-            removeAllPushpinsButton.Click += new EventHandler(removeAllPushpinsButton_Click);
+            removeAllPushpinsButton.Click += removeAllPushpinsButton_Click;
             unlockTransformButton.Anchor =
                 AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             unlockTransformButton.Location = new Point(3, 32);
@@ -186,7 +186,7 @@ namespace MSR.CVE.BackMaker
             unlockTransformButton.Text = "Unlock";
             toolTip.SetToolTip(unlockTransformButton,
                 "Unlocks the source map from Virtual Earth, allowing additional points to be added.");
-            unlockTransformButton.Click += new EventHandler(unlockTransformButton_Click);
+            unlockTransformButton.Click += unlockTransformButton_Click;
             lockTransformButton.Anchor =
                 AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lockTransformButton.Location = new Point(81, 32);
@@ -196,7 +196,7 @@ namespace MSR.CVE.BackMaker
             lockTransformButton.Text = "Lock";
             toolTip.SetToolTip(lockTransformButton,
                 "Warps the source map to fit Virtual Earth using the existing correspondence points.");
-            lockTransformButton.Click += new EventHandler(lockTransformButton_Click);
+            lockTransformButton.Click += lockTransformButton_Click;
             pinList.AllowUserToAddRows = false;
             pinList.AllowUserToDeleteRows = false;
             pinList.AllowUserToOrderColumns = true;
@@ -218,8 +218,8 @@ namespace MSR.CVE.BackMaker
             pinList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             pinList.Size = new Size(224, 202);
             pinList.TabIndex = 7;
-            pinList.DoubleClick += new EventHandler(pinList_ItemActivate);
-            pinList.SelectionChanged += new EventHandler(pinList_SelectedIndexChanged);
+            pinList.DoubleClick += pinList_ItemActivate;
+            pinList.SelectionChanged += pinList_SelectedIndexChanged;
             pinIDcolumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             pinIDcolumn.HeaderText = "ID";
             pinIDcolumn.MinimumWidth = 15;
@@ -256,7 +256,7 @@ namespace MSR.CVE.BackMaker
                 "Selecting \"Affine\" forces MapCruncher to preserve straight lines in your map.  This reduces position accuracy.");
             forceAffineCheckBox.UseMnemonic = false;
             forceAffineCheckBox.UseVisualStyleBackColor = true;
-            forceAffineCheckBox.CheckedChanged += new EventHandler(checkBox1_CheckedChanged);
+            forceAffineCheckBox.CheckedChanged += checkBox1_CheckedChanged;
             panel1.Controls.Add(getStartedBox);
             panel1.Controls.Add(lockStatusText);
             panel1.Controls.Add(pinNameTable);
@@ -308,7 +308,7 @@ namespace MSR.CVE.BackMaker
 
         public void SetSelected(PositionAssociation pa)
         {
-            foreach (DataGridViewRow dataGridViewRow in (IEnumerable)pinList.Rows)
+            foreach (DataGridViewRow dataGridViewRow in pinList.Rows)
             {
                 if (dataGridViewRow.Tag == pa)
                 {
@@ -331,7 +331,7 @@ namespace MSR.CVE.BackMaker
 
         public PositionAssociation GetSelected()
         {
-            foreach (DataGridViewRow dataGridViewRow in (IEnumerable)pinList.Rows)
+            foreach (DataGridViewRow dataGridViewRow in pinList.Rows)
             {
                 if (dataGridViewRow.Selected)
                 {

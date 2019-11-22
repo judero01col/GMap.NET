@@ -37,7 +37,7 @@ namespace MSR.CVE.BackMaker
             singleSourceUnits.AddLast(new SingleSourceUnit(applier,
                 address,
                 stage,
-                new SingleSourceUnit.NeedThisTileDelegate(NeedThisTile)));
+                NeedThisTile));
         }
 
         public TileAddress GetTileAddress()

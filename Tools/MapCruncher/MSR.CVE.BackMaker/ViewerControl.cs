@@ -145,9 +145,9 @@ namespace MSR.CVE.BackMaker
                 {
                     Font font = new Font("Arial", 8f);
                     PointF pointF =
-                        new PointF((float)paintLocation.Left + (float)paintLocation.Width * 0.02f +
-                                   (float)offsetPixels,
-                            (float)paintLocation.Top + (float)paintLocation.Height * num);
+                        new PointF(paintLocation.Left + paintLocation.Width * 0.02f +
+                                   offsetPixels,
+                            paintLocation.Top + paintLocation.Height * num);
                     SizeF size = g.MeasureString(message, font);
                     g.FillEllipse(new SolidBrush(Color.Wheat), new RectangleF(pointF, size));
                     g.DrawString(message, font, new SolidBrush(Color.Crimson), pointF);
@@ -283,17 +283,17 @@ namespace MSR.CVE.BackMaker
         {
             InitializeComponent();
 
-            center = new MapPositionDelegate(new NoMapPosition().NoMapPositionDelegate);
+            center = new NoMapPosition().NoMapPositionDelegate;
             Dock = DockStyle.Fill;
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.OptimizedDoubleBuffer,
                 true);
             ContextMenu = new ContextMenu();
-            ContextMenu.Popup += new EventHandler(HandlePopup);
-            Layout += new LayoutEventHandler(ViewerControl_Layout);
+            ContextMenu.Popup += HandlePopup;
+            Layout += ViewerControl_Layout;
             zenButton.Size = new Size(0, 0);
-            zenButton.KeyDown += new KeyEventHandler(zenButton_KeyDown);
-            zenButton.KeyUp += new KeyEventHandler(zenButton_KeyUp);
+            zenButton.KeyDown += zenButton_KeyDown;
+            zenButton.KeyUp += zenButton_KeyUp;
             InitAppearance();
         }
 
@@ -730,19 +730,19 @@ namespace MSR.CVE.BackMaker
             graphics.DrawString(message,
                 new Font("Arial", 10f),
                 new SolidBrush(Color.Crimson),
-                new PointF((float)tileSize.Width * 0.02f, (float)tileSize.Height * 0.2f));
+                new PointF(tileSize.Width * 0.02f, tileSize.Height * 0.2f));
             graphics.DrawString(message,
                 new Font("Arial", 10f),
                 new SolidBrush(Color.Crimson),
-                new PointF((float)tileSize.Width * 0.02f, (float)tileSize.Height * 0.8f));
+                new PointF(tileSize.Width * 0.02f, tileSize.Height * 0.8f));
             return new ImageRef(new ImageRefCounted(gDIBigLockedImage));
         }
 
         private PointF MapPositionToPoint(LatLon pos)
         {
             Point translationInPixels = GetCoordinateSystem().GetTranslationInPixels(center().llz, pos);
-            PointF result = new PointF((float)(Width / 2 + translationInPixels.X),
-                (float)(Height / 2 + translationInPixels.Y));
+            PointF result = new PointF(Width / 2 + translationInPixels.X,
+                Height / 2 + translationInPixels.Y);
             return result;
         }
 
@@ -764,23 +764,23 @@ namespace MSR.CVE.BackMaker
             double num2 = 3.0;
             int num3 = 3;
             RectangleF layoutRectangle = new RectangleF(pointF.X - sizeF.Width / 2f,
-                (float)((double)(pointF.Y - sizeF.Height / 2f) - num),
+                (float)(pointF.Y - sizeF.Height / 2f - num),
                 sizeF.Width,
                 sizeF.Height);
             RectangleF rectangleF = new RectangleF(layoutRectangle.Location, layoutRectangle.Size);
             rectangleF.Inflate(size);
             PointF[] points = new[]
             {
-                pointF, new PointF((float)((double)pointF.X - num2), rectangleF.Bottom),
-                new PointF(rectangleF.Left + (float)num3, rectangleF.Bottom),
-                new PointF(rectangleF.Left, rectangleF.Bottom - (float)num3),
-                new PointF(rectangleF.Left, rectangleF.Top + (float)num3),
-                new PointF(rectangleF.Left + (float)num3, rectangleF.Top),
-                new PointF(rectangleF.Right - (float)num3, rectangleF.Top),
-                new PointF(rectangleF.Right, rectangleF.Top + (float)num3),
-                new PointF(rectangleF.Right, rectangleF.Bottom - (float)num3),
-                new PointF(rectangleF.Right - (float)num3, rectangleF.Bottom),
-                new PointF((float)((double)pointF.X + num2), rectangleF.Bottom)
+                pointF, new PointF((float)(pointF.X - num2), rectangleF.Bottom),
+                new PointF(rectangleF.Left + num3, rectangleF.Bottom),
+                new PointF(rectangleF.Left, rectangleF.Bottom - num3),
+                new PointF(rectangleF.Left, rectangleF.Top + num3),
+                new PointF(rectangleF.Left + num3, rectangleF.Top),
+                new PointF(rectangleF.Right - num3, rectangleF.Top),
+                new PointF(rectangleF.Right, rectangleF.Top + num3),
+                new PointF(rectangleF.Right, rectangleF.Bottom - num3),
+                new PointF(rectangleF.Right - num3, rectangleF.Bottom),
+                new PointF((float)(pointF.X + num2), rectangleF.Bottom)
             };
             e.Graphics.FillPolygon(fillBrush, points);
             e.Graphics.DrawPolygon(outlinePen, points);
@@ -812,10 +812,10 @@ namespace MSR.CVE.BackMaker
 
             PointF pointF = MapPositionToPoint(pav.position.pinPosition.latlon);
             PointF pointF2 = MapPositionToPoint(errorPosition.latlon);
-            RectangleF rectangleF = new RectangleF((float)(e.ClipRectangle.X - e.ClipRectangle.Width * 2),
-                (float)(e.ClipRectangle.Y - e.ClipRectangle.Height * 2),
-                (float)(e.ClipRectangle.Width * 5),
-                (float)(e.ClipRectangle.Height * 5));
+            RectangleF rectangleF = new RectangleF(e.ClipRectangle.X - e.ClipRectangle.Width * 2,
+                e.ClipRectangle.Y - e.ClipRectangle.Height * 2,
+                e.ClipRectangle.Width * 5,
+                e.ClipRectangle.Height * 5);
             if (!rectangleF.Contains(pointF) || !rectangleF.Contains(pointF2))
             {
                 return;
@@ -999,7 +999,7 @@ namespace MSR.CVE.BackMaker
             Region clipRegion = null;
             if (asyncRef.present == null)
             {
-                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(BoundsRefAvailable));
+                asyncRef.AddCallback(BoundsRefAvailable);
                 asyncRef.SetInterest(524290);
             }
 
@@ -1037,7 +1037,7 @@ namespace MSR.CVE.BackMaker
                 if (asyncRef2.present == null)
                 {
                     AsyncNotifier @object = new AsyncNotifier(this);
-                    asyncRef2.AddCallback(new AsyncRecord.CompleteCallback(@object.AsyncRecordComplete));
+                    asyncRef2.AddCallback(@object.AsyncRecordComplete);
                 }
 
                 activeTiles.Add(asyncRef2);
@@ -1276,7 +1276,7 @@ namespace MSR.CVE.BackMaker
             zoomOutButton.Size = new Size(82, 23);
             zoomOutButton.TabIndex = 9;
             zoomOutButton.Text = "Zoom Out";
-            zoomOutButton.Click += new EventHandler(zoomOutButton_Click);
+            zoomOutButton.Click += zoomOutButton_Click;
             // 
             // zoomInButton
             // 
@@ -1285,11 +1285,11 @@ namespace MSR.CVE.BackMaker
             zoomInButton.Size = new Size(82, 23);
             zoomInButton.TabIndex = 10;
             zoomInButton.Text = "Zoom In";
-            zoomInButton.Click += new EventHandler(zoomInButton_Click);
+            zoomInButton.Click += zoomInButton_Click;
             // 
             // creditsTextBox
             // 
-            creditsTextBox.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Right);
+            creditsTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             creditsTextBox.Location = new Point(330, 34);
             creditsTextBox.Multiline = true;
             creditsTextBox.Name = "creditsTextBox";
@@ -1309,8 +1309,8 @@ namespace MSR.CVE.BackMaker
             // 
             // displayProgressBar
             // 
-            displayProgressBar.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left
-                                                                             | AnchorStyles.Right);
+            displayProgressBar.Anchor = AnchorStyles.Top | AnchorStyles.Left
+                                                         | AnchorStyles.Right;
             displayProgressBar.Location = new Point(330, 14);
             displayProgressBar.Name = "displayProgressBar";
             displayProgressBar.Size = new Size(115, 19);

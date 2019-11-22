@@ -110,7 +110,7 @@ namespace MSR.CVE.BackMaker
             int num2 = (int)Math.Round(Top);
             int num3 = (int)Math.Round(Right);
             int num4 = (int)Math.Round(Bottom);
-            return new RectangleD((double)num, (double)num2, (double)(num3 - num), (double)(num4 - num2));
+            return new RectangleD(num, num2, num3 - num, num4 - num2);
         }
 
         public Int32Rect ToInt32Rect()

@@ -385,13 +385,13 @@ namespace BSE.Windows.Forms
             int iMaximum,
             int iValue)
         {
-            Rectangle outerRectangle = GetRectangleBackground(clientRectangle);
+            var outerRectangle = GetRectangleBackground(clientRectangle);
 
-            using (GraphicsPath outerRectangleGraphicsPath = GetBackgroundPath(outerRectangle, 4))
+            using (var outerRectangleGraphicsPath = GetBackgroundPath(outerRectangle, 4))
             {
                 if (outerRectangleGraphicsPath != null)
                 {
-                    using (LinearGradientBrush gradientBrush = GetGradientBackBrush(outerRectangle, colorBackgroundEnd))
+                    using (var gradientBrush = GetGradientBackBrush(outerRectangle, colorBackgroundEnd))
                     {
                         if (gradientBrush != null)
                         {
@@ -402,11 +402,11 @@ namespace BSE.Windows.Forms
                     // Draws the value rectangle
                     if (iValue > 0)
                     {
-                        Rectangle valueRectangle =
+                        var valueRectangle =
                             GetRectangleValue(outerRectangle, rightToLeft, iMinimum, iMaximum, iValue);
-                        using (GraphicsPath valueGraphicsPath = GetValuePath(valueRectangle, rightToLeft, 5))
+                        using (var valueGraphicsPath = GetValuePath(valueRectangle, rightToLeft, 5))
                         {
-                            using (LinearGradientBrush gradientBrush =
+                            using (var gradientBrush =
                                 GetGradientBackBrush(valueRectangle, colorValueEnd))
                             {
                                 if (gradientBrush != null)
@@ -417,7 +417,7 @@ namespace BSE.Windows.Forms
                         }
                     }
 
-                    using (Pen borderPen = new Pen(borderColor))
+                    using (var borderPen = new Pen(borderColor))
                     {
                         graphics.DrawPath(borderPen, outerRectangleGraphicsPath);
                     }
@@ -427,7 +427,7 @@ namespace BSE.Windows.Forms
 
         private static Rectangle GetRectangleBackground(Rectangle clientRectangle)
         {
-            Rectangle rectangleBackground = clientRectangle;
+            var rectangleBackground = clientRectangle;
             rectangleBackground.Inflate(-1, -1);
             return rectangleBackground;
         }
@@ -435,7 +435,7 @@ namespace BSE.Windows.Forms
         private static Rectangle GetRectangleValue(Rectangle backgroundRectangle, RightToLeft rightToLeft, int iMinimum,
             int iMaximum, int iValue)
         {
-            Rectangle valueRectangle = backgroundRectangle;
+            var valueRectangle = backgroundRectangle;
             int iProgressRange = iMaximum - iMinimum;
             int iValueRange = iValue - iMinimum;
             int iRange = (int)(iValueRange / (float)iProgressRange * backgroundRectangle.Width);
@@ -454,7 +454,7 @@ namespace BSE.Windows.Forms
             int y = bounds.Y;
             int width = bounds.Width;
             int height = bounds.Height;
-            GraphicsPath graphicsPath = new GraphicsPath();
+            var graphicsPath = new GraphicsPath();
             graphicsPath.AddArc(x, y, radius, radius, 180, 90); //Upper left corner
             graphicsPath.AddArc(x + width - radius, y, radius, radius, 270, 90); //Upper right corner
             graphicsPath.AddArc(x + width - radius, y + height - radius, radius, radius, 0, 90); //Lower right corner
@@ -469,7 +469,7 @@ namespace BSE.Windows.Forms
             int y = bounds.Y;
             int width = bounds.Width;
             int height = bounds.Height;
-            GraphicsPath graphicsPath = new GraphicsPath();
+            var graphicsPath = new GraphicsPath();
             if (rightToLeft == RightToLeft.No)
             {
                 graphicsPath.AddArc(x, y, radius, radius, 180, 90); //Upper left corner

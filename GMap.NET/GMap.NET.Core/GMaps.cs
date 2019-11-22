@@ -151,7 +151,7 @@ namespace GMap.NET
             {
                 try
                 {
-                    AppDomain d = AppDomain.CurrentDomain;
+                    var d = AppDomain.CurrentDomain;
                     var assembliesLoaded = d.GetAssemblies();
 
                     Assembly l = null;
@@ -168,10 +168,10 @@ namespace GMap.NET
 
                     if (l == null)
                     {
-                        var jj = Assembly.GetExecutingAssembly().Location;
-                        var hh = Path.GetDirectoryName(jj);
-                        var f1 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsForms.dll";
-                        var f2 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
+                        string jj = Assembly.GetExecutingAssembly().Location;
+                        string hh = Path.GetDirectoryName(jj);
+                        string f1 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsForms.dll";
+                        string f2 = hh + Path.DirectorySeparatorChar + "GMap.NET.WindowsPresentation.dll";
                         if (File.Exists(f1))
                         {
                             l = Assembly.LoadFile(f1);
@@ -260,7 +260,7 @@ namespace GMap.NET
 #if SQLite
             if (PrimaryCache is SQLitePureImageCache)
             {
-                StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
+                var db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
                 db.AppendFormat(CultureInfo.InvariantCulture,
                     "{0}{1}Data.gmdb",
                     GMapProvider.LanguageStr,
@@ -283,7 +283,7 @@ namespace GMap.NET
 #if SQLite
             if (PrimaryCache is SQLitePureImageCache)
             {
-                StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
+                var db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
                 db.AppendFormat(CultureInfo.InvariantCulture,
                     "{0}{1}Data.gmdb",
                     GMapProvider.LanguageStr,
@@ -308,7 +308,7 @@ namespace GMap.NET
             {
                 if (string.IsNullOrEmpty(file))
                 {
-                    StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
+                    var db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
                     db.AppendFormat(CultureInfo.InvariantCulture,
                         "{0}{1}Data.gmdb",
                         GMapProvider.LanguageStr,
@@ -354,7 +354,7 @@ namespace GMap.NET
 #endif
                     {
                         _cacheEngine = null;
-                        _cacheEngine = new Thread(new ThreadStart(CacheEngineLoop));
+                        _cacheEngine = new Thread(CacheEngineLoop);
                         _cacheEngine.Name = "CacheEngine";
                         _cacheEngine.IsBackground = false;
                         _cacheEngine.Priority = ThreadPriority.Lowest;
@@ -605,11 +605,11 @@ namespace GMap.NET
         {
             gpxType retVal;
 
-            using (StringReader stringReader = new StringReader(objectXml))
+            using (var stringReader = new StringReader(objectXml))
             {
-                XmlTextReader xmlReader = new XmlTextReader(stringReader);
+                var xmlReader = new XmlTextReader(stringReader);
 
-                XmlSerializer serializer = new XmlSerializer(typeof(gpxType));
+                var serializer = new XmlSerializer(typeof(gpxType));
                 retVal = serializer.Deserialize(xmlReader) as gpxType;
 
                 xmlReader.Close();
@@ -628,7 +628,7 @@ namespace GMap.NET
         {
             try
             {
-                gpxType gpx = new gpxType();
+                var gpx = new gpxType();
                 {
                     gpx.creator = "GMap.NET - http://greatmaps.codeplex.com";
                     gpx.trk = new trkType[1];
@@ -642,7 +642,7 @@ namespace GMap.NET
 
                 foreach (var session in sessions)
                 {
-                    trksegType seg = new trksegType();
+                    var seg = new trksegType();
                     {
                         seg.trkpt = new wptType[session.Count];
                     }
@@ -652,7 +652,7 @@ namespace GMap.NET
                     {
                         var point = session[i];
 
-                        wptType t = new wptType();
+                        var t = new wptType();
                         {
                             #region -- set values --
 

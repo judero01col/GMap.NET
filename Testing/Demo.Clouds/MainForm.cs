@@ -36,7 +36,7 @@ namespace CloudsDemo
                 }
 
                 mapControl.MapProvider = GMapProviders.BingSatelliteMap;
-                mapControl.OnMapZoomChanged += new MapZoomChanged(mapControl_OnMapZoomChanged);
+                mapControl.OnMapZoomChanged += mapControl_OnMapZoomChanged;
 
                 mainOverlay = new GMapOverlay("top");
                 mapControl.Overlays.Add(mainOverlay);

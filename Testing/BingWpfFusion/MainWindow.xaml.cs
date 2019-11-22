@@ -24,7 +24,7 @@ namespace BingMapsWpfUsingCache
 
             GMaps.Instance.EnableTileHost(8844);
 
-            Closing += new CancelEventHandler(MainWindow_Closing);
+            Closing += MainWindow_Closing;
 
             // The pushpin to add to the map.
             Pushpin pin = new Pushpin();

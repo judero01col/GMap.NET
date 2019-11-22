@@ -92,7 +92,7 @@ namespace MSR.CVE.BackMaker
             {
                 if (!ReadFile(pipeHandle.DangerousGetHandle(), array2, (uint)(len - i), array, 0u))
                 {
-                    if ((long)GetLastError() == 109L)
+                    if (GetLastError() == 109L)
                     {
                         throw new EndOfStreamException();
                     }

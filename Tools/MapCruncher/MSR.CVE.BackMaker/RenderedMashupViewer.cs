@@ -33,12 +33,12 @@ namespace MSR.CVE.BackMaker
             InitializeComponent();
             this.cachePackage = cachePackage;
             mapPos = new MapPosition(viewer);
-            viewer.Initialize(new MapPositionDelegate(GetMapPos), "Map Location");
+            viewer.Initialize(GetMapPos, "Map Location");
             viewer.ShowDMS = new MapDrawingOption(viewer, dmsMenuItem, false);
             SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
             mapPos.setPosition(viewer.GetCoordinateSystem().GetDefaultView());
             printDoc = new PrintDocument();
-            printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
+            printDoc.PrintPage += PrintPage;
         }
 
         private MapPosition GetMapPos()
@@ -131,14 +131,14 @@ namespace MSR.CVE.BackMaker
 
         private void PrintPage(object sender, PrintPageEventArgs e)
         {
-            e.Graphics.TranslateTransform((float)e.MarginBounds.X, (float)e.MarginBounds.Y);
+            e.Graphics.TranslateTransform(e.MarginBounds.X, e.MarginBounds.Y);
             Rectangle rectangle = new Rectangle(0, 0, e.MarginBounds.Width, e.MarginBounds.Height);
             e.Graphics.SetClip(rectangle);
             int num = 4;
-            float num2 = (float)(1 << num);
+            float num2 = 1 << num;
             e.Graphics.ScaleTransform(1f / num2, 1f / num2);
-            rectangle.Width = (int)((float)rectangle.Width * num2);
-            rectangle.Height = (int)((float)rectangle.Height * num2);
+            rectangle.Width = (int)(rectangle.Width * num2);
+            rectangle.Height = (int)(rectangle.Height * num2);
             GraphicsContainer container = e.Graphics.BeginContainer();
             PaintSpecification e2 = new PaintSpecification(e.Graphics, rectangle, rectangle.Size, true);
             viewer.PaintPrintWindow(e2, num);
@@ -198,15 +198,15 @@ namespace MSR.CVE.BackMaker
             pageSetupToolStripMenuItem.Name = "pageSetupToolStripMenuItem";
             pageSetupToolStripMenuItem.Size = new Size(160, 22);
             pageSetupToolStripMenuItem.Text = "Page Setup...";
-            pageSetupToolStripMenuItem.Click += new EventHandler(pageSetupToolStripMenuItem_Click);
+            pageSetupToolStripMenuItem.Click += pageSetupToolStripMenuItem_Click;
             printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
             printPreviewToolStripMenuItem.Size = new Size(160, 22);
             printPreviewToolStripMenuItem.Text = "Print Preview...";
-            printPreviewToolStripMenuItem.Click += new EventHandler(printPreviewToolStripMenuItem_Click);
+            printPreviewToolStripMenuItem.Click += printPreviewToolStripMenuItem_Click;
             printToolStripMenuItem.Name = "printToolStripMenuItem";
             printToolStripMenuItem.Size = new Size(160, 22);
             printToolStripMenuItem.Text = "Print...";
-            printToolStripMenuItem.Click += new EventHandler(printToolStripMenuItem_Click);
+            printToolStripMenuItem.Click += printToolStripMenuItem_Click;
             vEBackgroundToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
                 VEroadView, VEaerialView, VEhybridView
@@ -217,15 +217,15 @@ namespace MSR.CVE.BackMaker
             VEroadView.Name = "VEroadView";
             VEroadView.Size = new Size(148, 22);
             VEroadView.Text = "Roads";
-            VEroadView.Click += new EventHandler(VEroadView_Click);
+            VEroadView.Click += VEroadView_Click;
             VEaerialView.Name = "VEaerialView";
             VEaerialView.Size = new Size(148, 22);
             VEaerialView.Text = "Aerial Photos";
-            VEaerialView.Click += new EventHandler(VEaerialView_Click);
+            VEaerialView.Click += VEaerialView_Click;
             VEhybridView.Name = "VEhybridView";
             VEhybridView.Size = new Size(148, 22);
             VEhybridView.Text = "Hybrid";
-            VEhybridView.Click += new EventHandler(VEhybridView_Click);
+            VEhybridView.Click += VEhybridView_Click;
             mashupLayersMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
                 addLayerToolStripMenuItem, toolStripSeparator1
@@ -236,7 +236,7 @@ namespace MSR.CVE.BackMaker
             addLayerToolStripMenuItem.Name = "addLayerToolStripMenuItem";
             addLayerToolStripMenuItem.Size = new Size(146, 22);
             addLayerToolStripMenuItem.Text = "Add Layer...";
-            addLayerToolStripMenuItem.Click += new EventHandler(addLayerToolStripMenuItem_Click);
+            addLayerToolStripMenuItem.Click += addLayerToolStripMenuItem_Click;
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(143, 6);
             viewer.Dock = DockStyle.Fill;

@@ -52,7 +52,7 @@ namespace MSR.CVE.BackMaker
             sourceMapLegendFrame = new SourceMapLegendFrame(layer,
                 sourceMap,
                 legendRecords,
-                new SourceMapLegendFrame.ThumbnailDelegate(thumbnailForLegendFrame));
+                thumbnailForLegendFrame);
         }
 
         public SourceMapRecord(SourceMapInfo sourceMapInfo)

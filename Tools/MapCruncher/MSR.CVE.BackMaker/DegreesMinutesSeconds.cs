@@ -70,9 +70,9 @@ namespace MSR.CVE.BackMaker
                 }
 
                 int num3 = (int)num2;
-                double num4 = num2 - (double)num3;
+                double num4 = num2 - num3;
                 int num5 = (int)(num4 * 60.0);
-                double num6 = num4 * 60.0 - (double)num5;
+                double num6 = num4 * 60.0 - num5;
                 double num7 = num6 * 60.0;
                 result = string.Format("{0:###}° {1}' {2:##.000}\"", num3 * num, num5, num7);
             }

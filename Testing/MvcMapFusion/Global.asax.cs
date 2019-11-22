@@ -52,10 +52,10 @@ namespace MvcMapFusion
             if (worker == null)
             {
                 worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+                worker.DoWork += worker_DoWork;
                 worker.WorkerReportsProgress = false;
                 worker.WorkerSupportsCancellation = true;
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+                worker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
                 Application.Set("BackgroundWorker", worker);
             }

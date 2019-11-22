@@ -31,8 +31,8 @@ namespace MSR.CVE.BackMaker
             // 
             // groupBox1
             // 
-            groupBox1.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
-                                                                    | AnchorStyles.Left);
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom
+                                                | AnchorStyles.Left;
             groupBox1.BackColor = SystemColors.Control;
             groupBox1.Controls.Add(renderOptionsPanel);
             groupBox1.Location = new Point(2, 3);
@@ -54,9 +54,9 @@ namespace MSR.CVE.BackMaker
             // 
             // renderProgressPanel
             // 
-            renderProgressPanel.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
-                                                                              | AnchorStyles.Left
-                                                                              | AnchorStyles.Right);
+            renderProgressPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom
+                                                          | AnchorStyles.Left
+                                                          | AnchorStyles.Right;
             renderProgressPanel.BackColor = SystemColors.Control;
             renderProgressPanel.Location = new Point(280, 12);
             renderProgressPanel.Margin = new Padding(4, 4, 4, 4);
@@ -78,7 +78,7 @@ namespace MSR.CVE.BackMaker
         public RenderWindow()
         {
             InitializeComponent();
-            FormClosed += new FormClosedEventHandler(RenderWindow_FormClosed);
+            FormClosed += RenderWindow_FormClosed;
         }
 
         private void RenderWindow_FormClosed(object sender, FormClosedEventArgs e)

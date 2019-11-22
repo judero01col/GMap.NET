@@ -59,11 +59,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                RectangleD rectangleD = new RectangleD(mapRect.lon0 * (double)boundingBox.Width - 0.5,
-                    -mapRect.lat1 * (double)boundingBox.Height + (double)actualBoundingBox.Height - 0.5,
-                    (mapRect.lon1 - mapRect.lon0) * (double)boundingBox.Width + (double)hackRectangleAdjust,
-                    (mapRect.lat1 - mapRect.lat0) * (double)boundingBox.Height + (double)hackRectangleAdjust);
-                RectangleD rectangleD2 = new RectangleD(0.0, 0.0, (double)size.Width, (double)size.Height);
+                RectangleD rectangleD = new RectangleD(mapRect.lon0 * boundingBox.Width - 0.5,
+                    -mapRect.lat1 * boundingBox.Height + actualBoundingBox.Height - 0.5,
+                    (mapRect.lon1 - mapRect.lon0) * boundingBox.Width + hackRectangleAdjust,
+                    (mapRect.lat1 - mapRect.lat0) * boundingBox.Height + hackRectangleAdjust);
+                RectangleD rectangleD2 = new RectangleD(0.0, 0.0, size.Width, size.Height);
                 Reclip(actualBoundingBox, ref rectangleD, ref rectangleD2);
                 D.Say(10, string.Format("Rendering {0} from {1}", mapRect, rectangleD));
                 GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(size, "GDIVerb");
@@ -99,68 +99,68 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             double num6 = outRect.Right;
             double num7 = outRect.Y;
             double num8 = outRect.Bottom;
-            if (sourceRect.Right < (double)sourceBounds.Left || sourceRect.Right > (double)sourceBounds.Right)
+            if (sourceRect.Right < sourceBounds.Left || sourceRect.Right > sourceBounds.Right)
             {
-                if (sourceRect.Right < (double)sourceBounds.Left)
+                if (sourceRect.Right < sourceBounds.Left)
                 {
-                    num2 = (double)sourceBounds.Left;
+                    num2 = sourceBounds.Left;
                 }
                 else
                 {
-                    if (sourceRect.Right > (double)sourceBounds.Right)
+                    if (sourceRect.Right > sourceBounds.Right)
                     {
-                        num2 = (double)sourceBounds.Right;
+                        num2 = sourceBounds.Right;
                     }
                 }
 
                 num6 = outRect.Left + outRect.Width * (num2 - sourceRect.Left) / sourceRect.Width;
             }
 
-            if (sourceRect.Left < (double)sourceBounds.Left || sourceRect.Left > (double)sourceBounds.Right)
+            if (sourceRect.Left < sourceBounds.Left || sourceRect.Left > sourceBounds.Right)
             {
-                if (sourceRect.Left < (double)sourceBounds.Left)
+                if (sourceRect.Left < sourceBounds.Left)
                 {
-                    num = (double)sourceBounds.Left;
+                    num = sourceBounds.Left;
                 }
                 else
                 {
-                    if (sourceRect.Left > (double)sourceBounds.Right)
+                    if (sourceRect.Left > sourceBounds.Right)
                     {
-                        num = (double)sourceBounds.Right;
+                        num = sourceBounds.Right;
                     }
                 }
 
                 num5 = outRect.Left + outRect.Width * (num - sourceRect.Left) / sourceRect.Width;
             }
 
-            if (sourceRect.Top < (double)sourceBounds.Top || sourceRect.Top > (double)sourceBounds.Bottom)
+            if (sourceRect.Top < sourceBounds.Top || sourceRect.Top > sourceBounds.Bottom)
             {
-                if (sourceRect.Top < (double)sourceBounds.Top)
+                if (sourceRect.Top < sourceBounds.Top)
                 {
-                    num3 = (double)sourceBounds.Top;
+                    num3 = sourceBounds.Top;
                 }
                 else
                 {
-                    if (sourceRect.Top > (double)sourceBounds.Bottom)
+                    if (sourceRect.Top > sourceBounds.Bottom)
                     {
-                        num3 = (double)sourceBounds.Bottom;
+                        num3 = sourceBounds.Bottom;
                     }
                 }
 
                 num7 = outRect.Top + outRect.Height * (num3 - sourceRect.Top) / sourceRect.Height;
             }
 
-            if (sourceRect.Bottom < (double)sourceBounds.Top || sourceRect.Bottom > (double)sourceBounds.Bottom)
+            if (sourceRect.Bottom < sourceBounds.Top || sourceRect.Bottom > sourceBounds.Bottom)
             {
-                if (sourceRect.Bottom < (double)sourceBounds.Top)
+                if (sourceRect.Bottom < sourceBounds.Top)
                 {
-                    num4 = (double)sourceBounds.Top;
+                    num4 = sourceBounds.Top;
                 }
                 else
                 {
-                    if (sourceRect.Bottom > (double)sourceBounds.Bottom)
+                    if (sourceRect.Bottom > sourceBounds.Bottom)
                     {
-                        num4 = (double)sourceBounds.Bottom;
+                        num4 = sourceBounds.Bottom;
                     }
                 }
 
@@ -177,8 +177,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new BoundsPresent(new RenderRegion(new MapRectangle(0.0,
                     0.0,
-                    (double)(actualBoundingBox.Height / boundingBox.Height),
-                    (double)(actualBoundingBox.Width / boundingBox.Width)),
+                    actualBoundingBox.Height / boundingBox.Height,
+                    actualBoundingBox.Width / boundingBox.Width),
                 new DirtyEvent()));
         }
 
@@ -189,8 +189,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal Present ImageDetail(Size assumedDisplaySize)
         {
-            double num = Math.Max((double)loadedImage.Width / (double)assumedDisplaySize.Width,
-                (double)loadedImage.Height / (double)assumedDisplaySize.Height);
+            double num = Math.Max(loadedImage.Width / (double)assumedDisplaySize.Width,
+                loadedImage.Height / (double)assumedDisplaySize.Height);
             num = Math.Max(num, 1.0);
             int num2 = 1 + (int)Math.Ceiling(Math.Log(num) / Math.Log(2.0));
             D.Assert(num2 >= 0);

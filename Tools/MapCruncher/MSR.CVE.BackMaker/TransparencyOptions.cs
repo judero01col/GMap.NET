@@ -155,9 +155,9 @@ namespace MSR.CVE.BackMaker
             bool flag = false;
             foreach (TransparencyColor current in colorList)
             {
-                if (Math.Abs((int)(current.color.r - r)) <= current.fuzz &&
-                    Math.Abs((int)(current.color.g - g)) <= current.fuzz &&
-                    Math.Abs((int)(current.color.b - b)) <= current.fuzz)
+                if (Math.Abs(current.color.r - r) <= current.fuzz &&
+                    Math.Abs(current.color.g - g) <= current.fuzz &&
+                    Math.Abs(current.color.b - b) <= current.fuzz)
                 {
                     flag = true;
                     break;

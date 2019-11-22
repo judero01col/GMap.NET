@@ -44,7 +44,7 @@ namespace MSR.CVE.BackMaker
 
         public Mashup()
         {
-            dirtyEvent.Add(new DirtyListener(SetDirtyFlag));
+            dirtyEvent.Add(SetDirtyFlag);
             _layerList = new LayerList(dirtyEvent);
             renderOptions = new RenderOptions(dirtyEvent);
         }
@@ -196,7 +196,7 @@ namespace MSR.CVE.BackMaker
                 if (context.version != MonolithicMapPositionsSchema.schema && xMLTagReader.TagIs(LayerList.GetXMLTag()))
                 {
                     _layerList = new LayerList(context,
-                        new SourceMap.GetFilenameContext(GetFilenameContext),
+                        GetFilenameContext,
                         dirtyEvent,
                         readyToLockEvent);
                 }
@@ -213,7 +213,7 @@ namespace MSR.CVE.BackMaker
                         }
 
                         SourceMap sourceMap = new SourceMap(context,
-                            new SourceMap.GetFilenameContext(GetFilenameContext),
+                            GetFilenameContext,
                             dirtyEvent,
                             readyToLockEvent);
                         _layerList = new LayerList(dirtyEvent);
@@ -319,7 +319,7 @@ namespace MSR.CVE.BackMaker
 
         private Mashup(string fileName, Stream fromStream, out MashupFileWarningList warningList)
         {
-            dirtyEvent.Add(new DirtyListener(SetDirtyFlag));
+            dirtyEvent.Add(SetDirtyFlag);
             this.fileName = fileName;
             D.Assert(fileName == null || Path.GetFullPath(fileName).ToLower().Equals(fileName.ToLower()));
             bool flag = false;

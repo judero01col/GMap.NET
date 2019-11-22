@@ -21,17 +21,17 @@ namespace Demo.StreetView
         public Window1()
         {
             InitializeComponent();
-            Viewer.MouseLeftButtonDown += new MouseButtonEventHandler(Viewer_MouseLeftButtonDown);
-            Viewer.MouseMove += new MouseEventHandler(Viewer_MouseMove);
+            Viewer.MouseLeftButtonDown += Viewer_MouseLeftButtonDown;
+            Viewer.MouseMove += Viewer_MouseMove;
 
             buff.Orientation = Orientation.Vertical;
 
             // removes white lines between tiles!
             SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
 
-            loader.DoWork += new DoWorkEventHandler(loader_DoWork);
-            loader.ProgressChanged += new ProgressChangedEventHandler(loader_ProgressChanged);
-            loader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loader_RunWorkerCompleted);
+            loader.DoWork += loader_DoWork;
+            loader.ProgressChanged += loader_ProgressChanged;
+            loader.RunWorkerCompleted += loader_RunWorkerCompleted;
             loader.WorkerReportsProgress = true;
         }
 

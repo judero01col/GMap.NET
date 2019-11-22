@@ -125,9 +125,9 @@ namespace GMap.NET.MapProviders
                 // parse values
                 if (!string.IsNullOrEmpty(route))
                 {
-                    XmlDocument xmldoc = new XmlDocument();
+                    var xmldoc = new XmlDocument();
                     xmldoc.LoadXml(route);
-                    XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
+                    var xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
                     xmlnsManager.AddNamespace("sm", "http://earth.google.com/kml/2.0");
 
                     ///Folder/Placemark/LineString/coordinates
@@ -135,7 +135,7 @@ namespace GMap.NET.MapProviders
                         "/sm:kml/sm:Document/sm:Folder/sm:Placemark/sm:LineString/sm:coordinates",
                         xmlnsManager);
 
-                    string[] coordinates = coordNode.InnerText.Split('\n');
+                    var coordinates = coordNode.InnerText.Split('\n');
 
                     if (coordinates != null && coordinates.Length > 0)
                     {
@@ -151,7 +151,7 @@ namespace GMap.NET.MapProviders
                         {
                             if (coordinate != string.Empty)
                             {
-                                string[] XY = coordinate.Split(',');
+                                var XY = coordinate.Split(',');
 
                                 if (XY.Length == 2)
                                 {
@@ -179,7 +179,7 @@ namespace GMap.NET.MapProviders
 
                             if (instructions != null && instructions.Length > 0)
                             {
-                                foreach (var item in instructions)
+                                foreach (string item in instructions)
                                 {
                                     ret.Instructions.Add(item.Trim());
                                 }
@@ -324,7 +324,7 @@ namespace GMap.NET.MapProviders
 
         string MakeDetailedGeocoderUrl(Placemark placemark)
         {
-            var street = String.Join(" ", new[] {placemark.HouseNo, placemark.ThoroughfareName}).Trim();
+            string street = String.Join(" ", new[] {placemark.HouseNo, placemark.ThoroughfareName}).Trim();
 
             return string.Format(GeocoderDetailedUrlFormat,
                 street.Replace(' ', '+'),
@@ -372,10 +372,10 @@ namespace GMap.NET.MapProviders
                             Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
                         }
 
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(geo);
                         {
-                            XmlNodeList l = doc.SelectNodes("/searchresults/place");
+                            var l = doc.SelectNodes("/searchresults/place");
                             if (l != null)
                             {
                                 pointList = new List<PointLatLng>();
@@ -458,16 +458,16 @@ namespace GMap.NET.MapProviders
                             Cache.Instance.SaveContent(url, CacheType.PlacemarkCache, geo);
                         }
 
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(geo);
                         {
-                            XmlNode r = doc.SelectSingleNode("/reversegeocode/result");
+                            var r = doc.SelectSingleNode("/reversegeocode/result");
 
                             if (r != null)
                             {
                                 var p = new Placemark(r.InnerText);
 
-                                XmlNode ad = doc.SelectSingleNode("/reversegeocode/addressparts");
+                                var ad = doc.SelectSingleNode("/reversegeocode/addressparts");
 
                                 if (ad != null)
                                 {

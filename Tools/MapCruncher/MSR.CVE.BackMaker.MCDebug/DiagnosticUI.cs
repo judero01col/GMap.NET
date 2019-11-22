@@ -49,10 +49,10 @@ namespace MSR.CVE.BackMaker.MCDebug
         public DiagnosticUI()
         {
             InitializeComponent();
-            Shown += new EventHandler(DiagnosticUI_Shown);
-            Closing += new CancelEventHandler(DiagnosticUI_Closing);
+            Shown += DiagnosticUI_Shown;
+            Closing += DiagnosticUI_Closing;
             DebugThreadInterrupter.theInstance.AddThread("QueueListRedrawThread",
-                new ThreadStart(UpdateQueueListThread),
+                UpdateQueueListThread,
                 ThreadPriority.BelowNormal);
         }
 
@@ -78,11 +78,11 @@ namespace MSR.CVE.BackMaker.MCDebug
                 {
                     resourceCountersByName[resourceName] = new ResourceCounter(resourceName,
                         period,
-                        new ResourceCounter.NotifyDelegate(ResourceCounterCallback));
+                        ResourceCounterCallback);
                     if (canInvoke)
                     {
                         DebugThreadInterrupter.theInstance.AddThread("DiagnosticUI.CreateAllCountersInvokeThread",
-                            new ThreadStart(CreateAllCountersInvokeThread),
+                            CreateAllCountersInvokeThread,
                             ThreadPriority.Normal);
                     }
                 }
@@ -99,7 +99,7 @@ namespace MSR.CVE.BackMaker.MCDebug
 
         private void CreateAllCountersInvokeThread()
         {
-            CACDelegate method = new CACDelegate(CreateAllCounters);
+            CACDelegate method = CreateAllCounters;
             Invoke(method);
         }
 
@@ -160,7 +160,7 @@ namespace MSR.CVE.BackMaker.MCDebug
                 DateTime now = DateTime.Now;
                 if (lastQueueDraw.AddMilliseconds(200.0) < now && canInvoke)
                 {
-                    UQLDelegate method = new UQLDelegate(updateQueueList);
+                    UQLDelegate method = updateQueueList;
                     BeginInvoke(method);
                     lastQueueDraw = now;
                 }

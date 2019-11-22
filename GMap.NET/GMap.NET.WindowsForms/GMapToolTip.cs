@@ -110,7 +110,7 @@ namespace GMap.NET.WindowsForms
 
         public virtual void OnRender(Graphics g)
         {
-            Size st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
+            var st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
             RectangleF rect = new Rectangle(Marker.ToolTipPosition.X,
                 Marker.ToolTipPosition.Y - st.Height,
                 st.Width + TextPadding.Width,
@@ -187,7 +187,7 @@ namespace GMap.NET.WindowsForms
 
         public void DrawRoundRectangle(Graphics g, Pen pen, float h, float v, float width, float height, float radius)
         {
-            using (GraphicsPath gp = new GraphicsPath())
+            using (var gp = new GraphicsPath())
             {
                 gp.AddLine(h + radius, v, h + width - radius * 2, v);
                 gp.AddArc(h + width - radius * 2, v, radius * 2, radius * 2, 270, 90);
@@ -207,15 +207,15 @@ namespace GMap.NET.WindowsForms
 
         private void WriteString(Graphics g, string text, RectangleF rectText)
         {
-            string[] vec1 = text.Split('\n');
+            var vec1 = text.Split('\n');
             for (int i = 0; i < vec1.Length; i++)
             {
                 if (vec1[i] != "")
                 {
-                    string[] vec2 = vec1[i].Split('|');
+                    var vec2 = vec1[i].Split('|');
                     if (vec2.Length > 0)
                     {
-                        Size st = g.MeasureString(vec2[0], TitleFont).ToSize();
+                        var st = g.MeasureString(vec2[0], TitleFont).ToSize();
                         g.DrawString(String.Format("{0}", vec2[0]), TitleFont, Foreground, rectText, Format);
                         rectText.X += st.Width + 2;
                         if (vec2.Length > 1)
@@ -229,7 +229,7 @@ namespace GMap.NET.WindowsForms
                 }
                 else
                 {
-                    Size st = g.MeasureString("\n", TitleFont).ToSize();
+                    var st = g.MeasureString("\n", TitleFont).ToSize();
                     rectText.Y += st.Height;
                 }
             }

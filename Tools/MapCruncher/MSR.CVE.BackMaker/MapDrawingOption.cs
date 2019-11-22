@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker
             if (this.menuItem != null)
             {
                 this.menuItem.Checked = enabled;
-                this.menuItem.Click += new EventHandler(menuItem_Click);
+                this.menuItem.Click += menuItem_Click;
             }
         }
 

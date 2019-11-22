@@ -27,7 +27,7 @@ namespace Demo.StreetView
                 typeof(PanoramaViewer),
                 new PropertyMetadata(
                     (double)0,
-                    new PropertyChangedCallback(OnFieldOfViewChanged)));
+                    OnFieldOfViewChanged));
 
         internal static void OnFieldOfViewChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -55,7 +55,7 @@ namespace Demo.StreetView
                 typeof(PanoramaViewer),
                 new PropertyMetadata(
                     null,
-                    new PropertyChangedCallback(OnPanoramaImageChanged)));
+                    OnPanoramaImageChanged));
 
         internal static void OnPanoramaImageChanged(Object sender, DependencyPropertyChangedEventArgs e)
         {

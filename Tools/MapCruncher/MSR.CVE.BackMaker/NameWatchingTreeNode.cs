@@ -21,7 +21,7 @@ namespace MSR.CVE.BackMaker
             UpdateName();
             if (tag is SourceMap)
             {
-                ((SourceMap)tag).readyToLockChangedEvent.Add(new DirtyListener(UpdateNameListener));
+                ((SourceMap)tag).readyToLockChangedEvent.Add(UpdateNameListener);
             }
         }
 
@@ -29,7 +29,7 @@ namespace MSR.CVE.BackMaker
         {
             if (Tag is SourceMap)
             {
-                ((SourceMap)Tag).readyToLockChangedEvent.Remove(new DirtyListener(UpdateNameListener));
+                ((SourceMap)Tag).readyToLockChangedEvent.Remove(UpdateNameListener);
             }
         }
 

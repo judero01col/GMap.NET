@@ -108,7 +108,7 @@ namespace GMap.NET.MapProviders
 
             #endregion
 
-            var arg = pos.X.ToString() + pos.Y.ToString() + (3 * pos.X + pos.Y).ToString();
+            string arg = pos.X.ToString() + pos.Y.ToString() + (3 * pos.X + pos.Y).ToString();
 
             string ret = "&s=";
             int offset = 0;

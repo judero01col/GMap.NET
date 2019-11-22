@@ -19,7 +19,7 @@ namespace GMap.NET.MapProviders
         {
             list = new List<GMapProvider>();
 
-            Type type = typeof(GMapProviders);
+            var type = typeof(GMapProviders);
 
             foreach (var p in type.GetFields())
             {
@@ -492,7 +492,7 @@ namespace GMap.NET.MapProviders
             PureImage ret = null;
 
 #if !PocketPC
-            WebRequest request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
+            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
 #else
             WebRequest request = WebRequest.Create(url);
 #endif
@@ -586,7 +586,7 @@ namespace GMap.NET.MapProviders
             string ret = string.Empty;
 
 #if !PocketPC
-            WebRequest request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
+            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
 #else
             WebRequest request = WebRequest.Create(url);
 #endif
@@ -655,9 +655,9 @@ namespace GMap.NET.MapProviders
 
             if (response != null)
             {
-                using (Stream responseStream = response.GetResponseStream())
+                using (var responseStream = response.GetResponseStream())
                 {
-                    using (StreamReader read = new StreamReader(responseStream, Encoding.UTF8))
+                    using (var read = new StreamReader(responseStream, Encoding.UTF8))
                     {
                         ret = read.ReadToEnd();
                     }
@@ -694,7 +694,7 @@ namespace GMap.NET.MapProviders
 
         public override int GetHashCode()
         {
-            return (int)DbId;
+            return DbId;
         }
 
         public override bool Equals(object obj)

@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker
                     new TileAddress(0, 0, ContinuousCoordinateSystem.theInstance.GetDefaultView().zoom)
                 })).Realize("SourceMap.CheckRendererSanity");
             AsyncRef asyncRef = (AsyncRef)present;
-            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(RendererSanityCheckComplete));
+            asyncRef.AddCallback(RendererSanityCheckComplete);
             new PersistentInterest(asyncRef);
         }
 

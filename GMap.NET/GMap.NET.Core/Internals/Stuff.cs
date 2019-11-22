@@ -15,8 +15,8 @@ namespace GMap.NET.Internals
     {
         public static string EnumToString(Enum value)
         {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-            DescriptionAttribute[] attributes =
+            var fi = value.GetType().GetField(value.ToString());
+            var attributes =
                 (DescriptionAttribute[])fi.GetCustomAttributes(
                     typeof(DescriptionAttribute),
                     false);
@@ -36,8 +36,8 @@ namespace GMap.NET.Internals
 
             for (int i = 0; i < N; ++i)
             {
-                int r = i + (int)random.Next(N - i);
-                T t = deck[r];
+                int r = i + random.Next(N - i);
+                var t = deck[r];
                 deck[r] = deck[i];
                 deck[i] = t;
             }
@@ -46,7 +46,7 @@ namespace GMap.NET.Internals
         public static MemoryStream CopyStream(Stream inputStream, bool SeekOriginBegin)
         {
             const int readSize = 32 * 1024;
-            byte[] buffer = new byte[readSize];
+            var buffer = new byte[readSize];
             var ms = new MemoryStream();
             {
                 int count;
@@ -67,11 +67,11 @@ namespace GMap.NET.Internals
 
         public static bool IsRunningOnVistaOrLater()
         {
-            OperatingSystem os = Environment.OSVersion;
+            var os = Environment.OSVersion;
 
             if (os.Platform == PlatformID.Win32NT)
             {
-                Version vs = os.Version;
+                var vs = os.Version;
 
                 if (vs.Major >= 6 && vs.Minor >= 0)
                 {
@@ -84,11 +84,11 @@ namespace GMap.NET.Internals
 
         public static bool IsRunningOnWin7orLater()
         {
-            OperatingSystem os = Environment.OSVersion;
+            var os = Environment.OSVersion;
 
             if (os.Platform == PlatformID.Win32NT)
             {
-                Version vs = os.Version;
+                var vs = os.Version;
 
                 if (vs.Major >= 6 && vs.Minor > 0)
                 {
@@ -102,7 +102,7 @@ namespace GMap.NET.Internals
         public static void RemoveInvalidPathSymbols(ref string url)
         {
 #if !PocketPC
-            char[] ilg = Path.GetInvalidFileNameChars();
+            var ilg = Path.GetInvalidFileNameChars();
 #else
             char[] ilg = new char[41];
             for(int i = 0; i < 32; i++)
@@ -132,21 +132,21 @@ namespace GMap.NET.Internals
 
             using (var HashProvider = new SHA1CryptoServiceProvider())
             {
-                byte[] TDESKey = HashProvider.ComputeHash(Encoding.UTF8.GetBytes(Passphrase));
+                var TDESKey = HashProvider.ComputeHash(Encoding.UTF8.GetBytes(Passphrase));
                 Array.Resize(ref TDESKey, 16);
 
-                using (TripleDESCryptoServiceProvider TDESAlgorithm = new TripleDESCryptoServiceProvider())
+                using (var TDESAlgorithm = new TripleDESCryptoServiceProvider())
                 {
                     TDESAlgorithm.Key = TDESKey;
                     TDESAlgorithm.Mode = CipherMode.ECB;
                     TDESAlgorithm.Padding = PaddingMode.PKCS7;
 
-                    byte[] DataToEncrypt = Encoding.UTF8.GetBytes(Message);
+                    var DataToEncrypt = Encoding.UTF8.GetBytes(Message);
 
                     // Step 5. Attempt to encrypt the string
                     try
                     {
-                        using (ICryptoTransform Encryptor = TDESAlgorithm.CreateEncryptor())
+                        using (var Encryptor = TDESAlgorithm.CreateEncryptor())
                         {
                             Results = Encryptor.TransformFinalBlock(DataToEncrypt, 0, DataToEncrypt.Length);
                         }
@@ -170,11 +170,11 @@ namespace GMap.NET.Internals
 
             using (var HashProvider = new SHA1CryptoServiceProvider())
             {
-                byte[] TDESKey = HashProvider.ComputeHash(Encoding.UTF8.GetBytes(Passphrase));
+                var TDESKey = HashProvider.ComputeHash(Encoding.UTF8.GetBytes(Passphrase));
                 Array.Resize(ref TDESKey, 16);
 
                 // Step 2. Create a new TripleDESCryptoServiceProvider object
-                using (TripleDESCryptoServiceProvider TDESAlgorithm = new TripleDESCryptoServiceProvider())
+                using (var TDESAlgorithm = new TripleDESCryptoServiceProvider())
                 {
                     // Step 3. Setup the decoder
                     TDESAlgorithm.Key = TDESKey;
@@ -182,12 +182,12 @@ namespace GMap.NET.Internals
                     TDESAlgorithm.Padding = PaddingMode.PKCS7;
 
                     // Step 4. Convert the input string to a byte[]
-                    byte[] DataToDecrypt = Convert.FromBase64String(Message);
+                    var DataToDecrypt = Convert.FromBase64String(Message);
 
                     // Step 5. Attempt to decrypt the string
                     try
                     {
-                        using (ICryptoTransform Decryptor = TDESAlgorithm.CreateDecryptor())
+                        using (var Decryptor = TDESAlgorithm.CreateDecryptor())
                         {
                             Results = Decryptor.TransformFinalBlock(DataToDecrypt, 0, DataToDecrypt.Length);
                         }
@@ -212,7 +212,7 @@ namespace GMap.NET.Internals
 
         public static string GString(string Message)
         {
-            var ret = DecryptString(Message, manifesto);
+            string ret = DecryptString(Message, manifesto);
 
             return ret;
         }

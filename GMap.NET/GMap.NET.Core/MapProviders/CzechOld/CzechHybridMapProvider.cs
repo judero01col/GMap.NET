@@ -69,7 +69,7 @@ namespace GMap.NET.MapProviders
             // http://m2.mapserver.mapy.cz/hybrid/9_7d00000_7b80000
 
             long xx = pos.X << (28 - zoom);
-            long yy = ((long)Math.Pow(2.0, (double)zoom) - 1 - pos.Y) << (28 - zoom);
+            long yy = ((long)Math.Pow(2.0, zoom) - 1 - pos.Y) << (28 - zoom);
 
             return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, xx, yy);
         }

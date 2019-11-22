@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker
             string text = "";
             for (int i = 0; i < digitalInput.Length; i++)
             {
-                text += Convert.ToChar((int)('A' + (digitalInput[i] - '0')));
+                text += Convert.ToChar('A' + (digitalInput[i] - '0'));
             }
 
             return text;

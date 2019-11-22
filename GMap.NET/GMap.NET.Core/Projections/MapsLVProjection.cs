@@ -72,7 +72,7 @@ namespace GMap.NET.Projections
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            double[] lks = new[] {lng, lat};
+            var lks = new[] {lng, lat};
             lks = DTM10(lks);
             lks = MTD10(lks);
             lks = DTM00(lks);
@@ -88,11 +88,11 @@ namespace GMap.NET.Projections
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)
         {
-            PointLatLng ret = PointLatLng.Empty;
+            var ret = PointLatLng.Empty;
 
             double res = GetTileMatrixResolution(zoom);
 
-            double[] lks = new[] {x * res + orignX, orignY - y * res};
+            var lks = new[] {x * res + orignX, orignY - y * res};
             lks = MTD11(lks);
             lks = DTM10(lks);
             lks = MTD10(lks);

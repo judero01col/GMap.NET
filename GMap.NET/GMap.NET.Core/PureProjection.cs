@@ -83,7 +83,7 @@ namespace GMap.NET
         {
             if (useCache)
             {
-                GPoint ret = GPoint.Empty;
+                var ret = GPoint.Empty;
                 if (!_fromLatLngToPixelCache[zoom].TryGetValue(p, out ret))
                 {
                     ret = FromLatLngToPixel(p.Lat, p.Lng, zoom);
@@ -121,7 +121,7 @@ namespace GMap.NET
         {
             if (useCache)
             {
-                PointLatLng ret = PointLatLng.Empty;
+                var ret = PointLatLng.Empty;
                 if (!_fromPixelToLatLngCache[zoom].TryGetValue(p, out ret))
                 {
                     ret = FromPixelToLatLng(p.X, p.Y, zoom);
@@ -185,8 +185,8 @@ namespace GMap.NET
         /// <returns></returns>
         public virtual GSize GetTileMatrixSizeXY(int zoom)
         {
-            GSize sMin = GetTileMatrixMinXY(zoom);
-            GSize sMax = GetTileMatrixMaxXY(zoom);
+            var sMin = GetTileMatrixMinXY(zoom);
+            var sMax = GetTileMatrixMaxXY(zoom);
 
             return new GSize(sMax.Width - sMin.Width + 1, sMax.Height - sMin.Height + 1);
         }
@@ -198,7 +198,7 @@ namespace GMap.NET
         /// <returns></returns>
         public long GetTileMatrixItemCount(int zoom)
         {
-            GSize s = GetTileMatrixSizeXY(zoom);
+            var s = GetTileMatrixSizeXY(zoom);
             return s.Width * s.Height;
         }
 
@@ -209,7 +209,7 @@ namespace GMap.NET
         /// <returns></returns>
         public virtual GSize GetTileMatrixSizePixel(int zoom)
         {
-            GSize s = GetTileMatrixSizeXY(zoom);
+            var s = GetTileMatrixSizeXY(zoom);
             return new GSize(s.Width * TileSize.Width, s.Height * TileSize.Height);
         }
 
@@ -218,16 +218,16 @@ namespace GMap.NET
         /// </summary>
         public List<GPoint> GetAreaTileList(RectLatLng rect, int zoom, int padding)
         {
-            List<GPoint> ret = new List<GPoint>();
+            var ret = new List<GPoint>();
 
-            GPoint topLeft = FromPixelToTileXY(FromLatLngToPixel(rect.LocationTopLeft, zoom));
-            GPoint rightBottom = FromPixelToTileXY(FromLatLngToPixel(rect.LocationRightBottom, zoom));
+            var topLeft = FromPixelToTileXY(FromLatLngToPixel(rect.LocationTopLeft, zoom));
+            var rightBottom = FromPixelToTileXY(FromLatLngToPixel(rect.LocationRightBottom, zoom));
 
             for (long x = topLeft.X - padding; x <= rightBottom.X + padding; x++)
             {
                 for (long y = topLeft.Y - padding; y <= rightBottom.Y + padding; y++)
                 {
-                    GPoint p = new GPoint(x, y);
+                    var p = new GPoint(x, y);
                     if (!ret.Contains(p) && p.X >= 0 && p.Y >= 0)
                     {
                         ret.Add(p);
@@ -436,8 +436,8 @@ namespace GMap.NET
 
         public double GetDistanceInPixels(GPoint point1, GPoint point2)
         {
-            double a = (double)(point2.X - point1.X);
-            double b = (double)(point2.Y - point1.Y);
+            double a = point2.X - point1.X;
+            double b = point2.Y - point1.Y;
 
             return Sqrt(a * a + b * b);
         }
@@ -448,12 +448,12 @@ namespace GMap.NET
         /// <returns>A double value in degrees. From 0 to 360.</returns>
         public double GetBearing(PointLatLng p1, PointLatLng p2)
         {
-            var latitude1 = DegreesToRadians(p1.Lat);
-            var latitude2 = DegreesToRadians(p2.Lat);
-            var longitudeDifference = DegreesToRadians(p2.Lng - p1.Lng);
+            double latitude1 = DegreesToRadians(p1.Lat);
+            double latitude2 = DegreesToRadians(p2.Lat);
+            double longitudeDifference = DegreesToRadians(p2.Lng - p1.Lng);
 
-            var y = Sin(longitudeDifference) * Cos(latitude2);
-            var x = Cos(latitude1) * Sin(latitude2) - Sin(latitude1) * Cos(latitude2) * Cos(longitudeDifference);
+            double y = Sin(longitudeDifference) * Cos(latitude2);
+            double x = Cos(latitude1) * Sin(latitude2) - Sin(latitude1) * Cos(latitude2) * Cos(longitudeDifference);
 
             return (RadiansToDegrees(Atan2(y, x)) + 360) % 360;
         }
@@ -507,7 +507,7 @@ namespace GMap.NET
 
         public static List<PointLatLng> PolylineDecode(string encodedPath)
         {
-            List<PointLatLng> path = new List<PointLatLng>();
+            var path = new List<PointLatLng>();
 
             // https://github.com/googlemaps/google-maps-services-java/blob/master/src/main/java/com/google/maps/internal/PolylineEncoding.java
             int len = encodedPath.Length;
@@ -561,9 +561,9 @@ namespace GMap.NET
             long lastLat = 0;
             long lastLng = 0;
 
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
-            foreach (PointLatLng point in path)
+            foreach (var point in path)
             {
                 long lat = Convert.ToInt64(Round(point.Lat * 1e5));
                 long lng = Convert.ToInt64(Round(point.Lng * 1e5));

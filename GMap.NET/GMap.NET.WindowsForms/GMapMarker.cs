@@ -126,7 +126,7 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                Point ret = _area.Location;
+                var ret = _area.Location;
                 ret.Offset(-Offset.X, -Offset.Y);
                 return ret;
             }

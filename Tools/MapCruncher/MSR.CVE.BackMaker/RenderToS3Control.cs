@@ -85,7 +85,7 @@ namespace MSR.CVE.BackMaker
             toolTip1.SetToolTip(credentialsBrowseButton,
                 "Select existing or create new credentials file from browser.");
             credentialsBrowseButton.UseVisualStyleBackColor = true;
-            credentialsBrowseButton.Click += new EventHandler(credentialsBrowseButton_Click);
+            credentialsBrowseButton.Click += credentialsBrowseButton_Click;
             editButton.Location = new Point(140, 32);
             editButton.Name = "editButton";
             editButton.Size = new Size(66, 20);
@@ -93,7 +93,7 @@ namespace MSR.CVE.BackMaker
             editButton.Text = "Edit...";
             toolTip1.SetToolTip(editButton, "Edit this credentials file.");
             editButton.UseVisualStyleBackColor = true;
-            editButton.Click += new EventHandler(editButton_Click);
+            editButton.Click += editButton_Click;
             AutoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
@@ -114,10 +114,10 @@ namespace MSR.CVE.BackMaker
         public RenderToS3Control()
         {
             InitializeComponent();
-            s3CredentialsFilename.LostFocus += new EventHandler(s3Credentials_LostFocus);
+            s3CredentialsFilename.LostFocus += s3Credentials_LostFocus;
             UpdateButtons();
-            s3Bucket.LostFocus += new EventHandler(s3Bucket_LostFocus);
-            s3PathPrefix.LostFocus += new EventHandler(s3PathPrefix_LostFocus);
+            s3Bucket.LostFocus += s3Bucket_LostFocus;
+            s3PathPrefix.LostFocus += s3PathPrefix_LostFocus;
         }
 
         private void s3PathPrefix_LostFocus(object sender, EventArgs e)

@@ -39,8 +39,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             primarySource.Freeze();
             actualBoundingBox = new RectangleF(0f,
                 0f,
-                (float)primarySource.PixelWidth,
-                (float)primarySource.PixelHeight);
+                primarySource.PixelWidth,
+                primarySource.PixelHeight);
             boundingBox = SourceMapRendererTools.ToSquare(actualBoundingBox);
             if (sourceFilename.EndsWith("emf") || sourceFilename.EndsWith("wmf"))
             {
@@ -82,16 +82,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                RectangleD rectangleD = new RectangleD(mapRect.lon0 * (double)boundingBox.Width - 0.5,
-                    -mapRect.lat1 * (double)boundingBox.Height + (double)actualBoundingBox.Height - 0.5,
-                    (mapRect.lon1 - mapRect.lon0) * (double)boundingBox.Width + (double)hackRectangleAdjust,
-                    (mapRect.lat1 - mapRect.lat0) * (double)boundingBox.Height + (double)hackRectangleAdjust);
+                RectangleD rectangleD = new RectangleD(mapRect.lon0 * boundingBox.Width - 0.5,
+                    -mapRect.lat1 * boundingBox.Height + actualBoundingBox.Height - 0.5,
+                    (mapRect.lon1 - mapRect.lon0) * boundingBox.Width + hackRectangleAdjust,
+                    (mapRect.lat1 - mapRect.lat0) * boundingBox.Height + hackRectangleAdjust);
                 RectangleD rectangleD2 = rectangleD.Grow(2.0);
-                RectangleD r = new RectangleD((double)actualBoundingBox.X,
-                    (double)actualBoundingBox.Y,
-                    (double)actualBoundingBox.Width,
-                    (double)actualBoundingBox.Height);
-                RectangleD dest = new RectangleD(0.0, 0.0, (double)size.Width, (double)size.Height);
+                RectangleD r = new RectangleD(actualBoundingBox.X,
+                    actualBoundingBox.Y,
+                    actualBoundingBox.Width,
+                    actualBoundingBox.Height);
+                RectangleD dest = new RectangleD(0.0, 0.0, size.Width, size.Height);
                 ScaleAndTranslate scaleAndTranslate = new ScaleAndTranslate(rectangleD, dest);
                 RectangleD rectangleD3 = rectangleD2.Intersect(r).Round();
                 RectangleD rectangleD4 = scaleAndTranslate.Apply(rectangleD.Intersect(r));
@@ -202,8 +202,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new BoundsPresent(new RenderRegion(new MapRectangle(0.0,
                     0.0,
-                    (double)(actualBoundingBox.Height / boundingBox.Height),
-                    (double)(actualBoundingBox.Width / boundingBox.Width)),
+                    actualBoundingBox.Height / boundingBox.Height,
+                    actualBoundingBox.Width / boundingBox.Width),
                 new DirtyEvent()));
         }
 
@@ -218,8 +218,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                double num = Math.Max((double)primarySource.PixelWidth / (double)assumedDisplaySize.Width,
-                    (double)primarySource.PixelHeight / (double)assumedDisplaySize.Height);
+                double num = Math.Max(primarySource.PixelWidth / (double)assumedDisplaySize.Width,
+                    primarySource.PixelHeight / (double)assumedDisplaySize.Height);
                 num = Math.Max(num, 1.0);
                 int num2 = 1 + (int)Math.Ceiling(Math.Log(num) / Math.Log(2.0));
                 D.Assert(num2 >= 0);

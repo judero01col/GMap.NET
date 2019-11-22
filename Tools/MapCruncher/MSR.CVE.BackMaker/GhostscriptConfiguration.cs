@@ -62,7 +62,7 @@ namespace MSR.CVE.BackMaker
 
             string[] subKeyNames = registryKey.GetSubKeyNames();
             status += string.Format("Found subkeys for versions {0}\n", subKeyNames.ToString());
-            Array.Sort<string>(subKeyNames, new Comparison<string>(VersionComparison));
+            Array.Sort<string>(subKeyNames, VersionComparison);
             string text = subKeyNames[subKeyNames.Length - 1];
             status += string.Format("Examining registry info for version {0}\n", text);
             registryKey = registryKey.OpenSubKey(text);
@@ -155,7 +155,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            Array.Sort<string>(directories, new Comparison<string>(VersionComparison));
+            Array.Sort<string>(directories, VersionComparison);
             string arg = directories[directories.Length - 1] + "\\bin\\";
             status += string.Format("Considering filesystem path {0}\n", arg);
             return LookInDirectory(arg);

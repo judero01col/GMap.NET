@@ -126,13 +126,13 @@ namespace GMap.NET.MapProviders
                     {
                         #region -- match versions --
 
-                        Regex reg = new Regex(string.Format(@"https?://mts?\d.{0}/maps/vt\?lyrs=m@(\d*)", Server),
+                        var reg = new Regex(string.Format(@"https?://mts?\d.{0}/maps/vt\?lyrs=m@(\d*)", Server),
                             RegexOptions.IgnoreCase);
-                        Match mat = reg.Match(html);
+                        var mat = reg.Match(html);
 
                         if (mat.Success)
                         {
-                            GroupCollection gc = mat.Groups;
+                            var gc = mat.Groups;
                             int count = gc.Count;
 
                             if (count > 0)
@@ -168,7 +168,7 @@ namespace GMap.NET.MapProviders
 
                         if (mat.Success)
                         {
-                            GroupCollection gc = mat.Groups;
+                            var gc = mat.Groups;
                             int count = gc.Count;
 
                             if (count > 0)
@@ -196,7 +196,7 @@ namespace GMap.NET.MapProviders
 
                         if (mat.Success)
                         {
-                            GroupCollection gc = mat.Groups;
+                            var gc = mat.Groups;
                             int count = gc.Count;
 
                             if (count > 1)
@@ -496,7 +496,7 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(geo))
                 {
-                    StrucGeocode GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(geo);
+                    var GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(geo);
 
                     if (GeoResult != null)
                     {
@@ -534,7 +534,7 @@ namespace GMap.NET.MapProviders
 
         GeoCoderStatusCode GetPlacemarkFromReverseGeocoderUrl(string url, out List<Placemark> placemarkList)
         {
-            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
+            var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             placemarkList = null;
 
             try
@@ -569,7 +569,7 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(reverse))
                 {
-                    StrucGeocode GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(reverse);
+                    var GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(reverse);
 
                     if (GeoResult != null)
                     {
@@ -914,7 +914,7 @@ namespace GMap.NET.MapProviders
             string wpLatLng = string.Empty;
             int i = 0;
 
-            foreach (var wp in wayPoints)
+            foreach (string wp in wayPoints)
             {
                 wpLatLng += string.Format(CultureInfo.InvariantCulture,
                     i++ == 0 ? "{0}" : "|{0}",
@@ -936,7 +936,7 @@ namespace GMap.NET.MapProviders
 
         DirectionsStatusCode GetDirectionsUrl(string url, out GDirections direction)
         {
-            DirectionsStatusCode ret = DirectionsStatusCode.UNKNOWN_ERROR;
+            var ret = DirectionsStatusCode.UNKNOWN_ERROR;
             direction = null;
 
             try
@@ -959,7 +959,7 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(kml))
                 {
-                    StrucDirection DirectionResult = JsonConvert.DeserializeObject<StrucDirection>(kml);
+                    var DirectionResult = JsonConvert.DeserializeObject<StrucDirection>(kml);
 
                     if (DirectionResult != null)
                     {
@@ -1041,7 +1041,7 @@ namespace GMap.NET.MapProviders
 
                                     for (int i = 0; i < DirectionResult.routes[0].legs[0].steps.Count; i++)
                                     {
-                                        GDirectionStep step = new GDirectionStep();
+                                        var step = new GDirectionStep();
                                         Debug.WriteLine("----------------------");
 
                                         step.TravelMode = DirectionResult.routes[0].legs[0].steps[i].travel_mode;
@@ -1280,9 +1280,9 @@ namespace GMap.NET.MapProviders
 
         string GetSignature(Uri uri)
         {
-            byte[] encodedPathQuery = Encoding.ASCII.GetBytes(uri.LocalPath + uri.Query);
+            var encodedPathQuery = Encoding.ASCII.GetBytes(uri.LocalPath + uri.Query);
             var hashAlgorithm = new HMACSHA1(_privateKeyBytes);
-            byte[] hashed = hashAlgorithm.ComputeHash(encodedPathQuery);
+            var hashed = hashAlgorithm.ComputeHash(encodedPathQuery);
             return Convert.ToBase64String(hashed).Replace("+", "-").Replace("/", "_");
         }
 

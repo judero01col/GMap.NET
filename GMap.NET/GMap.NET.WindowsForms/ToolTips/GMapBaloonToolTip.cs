@@ -35,8 +35,8 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         public override void OnRender(Graphics g)
         {
-            Size st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
-            Rectangle rect = new Rectangle(Marker.ToolTipPosition.X,
+            var st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
+            var rect = new Rectangle(Marker.ToolTipPosition.X,
                 Marker.ToolTipPosition.Y - st.Height,
                 st.Width + TextPadding.Width,
                 st.Height + TextPadding.Height);

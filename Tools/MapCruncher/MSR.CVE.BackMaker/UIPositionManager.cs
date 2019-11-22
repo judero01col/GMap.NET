@@ -14,8 +14,8 @@ namespace MSR.CVE.BackMaker
         {
             _smPos = new MapPosition(this);
             _vePos = new MapPosition(this);
-            smViewer.Initialize(new MapPositionDelegate(GetSMPos), "Source Map Position");
-            veViewer.Initialize(new MapPositionDelegate(GetVEPos), "Virtual Earth Position");
+            smViewer.Initialize(GetSMPos, "Source Map Position");
+            veViewer.Initialize(GetVEPos, "Virtual Earth Position");
             smUpdate = smViewer;
             veUpdate = veViewer;
             slaved = false;

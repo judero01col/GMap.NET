@@ -1,6 +1,5 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace BSE.Windows.Forms
 {
@@ -10,7 +9,7 @@ namespace BSE.Windows.Forms
     public class Office2007BlueColorTable : OfficeColorTable
 	{
 		#region FieldsPrivate
-        private PanelColors m_panelColorTable;
+        private PanelColors _panelColorTable;
         #endregion
 
 		#region Properties
@@ -21,11 +20,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if (m_panelColorTable == null)
+                if (_panelColorTable == null)
                 {
-                    m_panelColorTable = new PanelColorsOffice2007Blue();
+                    _panelColorTable = new PanelColorsOffice2007Blue();
                 }
-                return m_panelColorTable;
+                return _panelColorTable;
             }
         }
 		#endregion

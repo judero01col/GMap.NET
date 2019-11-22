@@ -32,7 +32,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             if (present is AsyncRef)
             {
                 AsyncRef asyncRef = (AsyncRef)present;
-                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(PresentReadyCallback));
+                asyncRef.AddCallback(PresentReadyCallback);
                 asyncRef.SetInterest(interestValue);
                 AsyncRef asyncRef2 = (AsyncRef)asyncRef.Duplicate(refCredit + "2");
                 new PersistentInterest(asyncRef);

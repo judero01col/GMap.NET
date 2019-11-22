@@ -59,18 +59,18 @@ namespace BSE.Windows.Forms
 
       #region FieldsPrivate
 
-      private bool m_bShowBorder;
-      private bool m_bShowGradientBackground;
-      private bool m_bShowExpandIcon;
-      private bool m_bShowCloseIcon;
-      private int m_iCaptionHeight;
-      private LinearGradientMode m_linearGradientMode;
-      private Color m_colorGradientBackground;
-      private CaptionStyle m_captionStyle;
-      private PanelStyle m_ePanelStyle;
-      private ColorScheme m_eColorScheme;
-      private XPanderPanelCollection m_xpanderPanels;
-      private PanelColors m_panelColors;
+      private bool _bShowBorder;
+      private bool _bShowGradientBackground;
+      private bool _bShowExpandIcon;
+      private bool _bShowCloseIcon;
+      private int _iCaptionHeight;
+      private LinearGradientMode _linearGradientMode;
+      private Color _colorGradientBackground;
+      private CaptionStyle _captionStyle;
+      private PanelStyle _ePanelStyle;
+      private ColorScheme _eColorScheme;
+      private XPanderPanelCollection _xpanderPanels;
+      private PanelColors _panelColors;
 
       #endregion
 
@@ -103,7 +103,7 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_xpanderPanels;
+            return _xpanderPanels;
          }
       }
       /// <summary>
@@ -116,14 +116,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_ePanelStyle;
+            return _ePanelStyle;
          }
          set
          {
-            if(value != m_ePanelStyle)
+            if(value != _ePanelStyle)
             {
-               m_ePanelStyle = value;
-               OnPanelStyleChanged(this, new PanelStyleChangeEventArgs(m_ePanelStyle));
+               _ePanelStyle = value;
+               OnPanelStyleChanged(this, new PanelStyleChangeEventArgs(_ePanelStyle));
             }
          }
       }
@@ -134,11 +134,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_panelColors;
+            return _panelColors;
          }
          set
          {
-            m_panelColors = value;
+            _panelColors = value;
          }
       }
       /// <summary>
@@ -151,14 +151,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_eColorScheme;
+            return _eColorScheme;
          }
          set
          {
-            if(value != m_eColorScheme)
+            if(value != _eColorScheme)
             {
-               m_eColorScheme = value;
-               OnColorSchemeChanged(this, new ColorSchemeChangeEventArgs(m_eColorScheme));
+               _eColorScheme = value;
+               OnColorSchemeChanged(this, new ColorSchemeChangeEventArgs(_eColorScheme));
             }
          }
       }
@@ -171,11 +171,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_captionStyle;
+            return _captionStyle;
          }
          set
          {
-            m_captionStyle = value;
+            _captionStyle = value;
             OnCaptionStyleChanged(this, EventArgs.Empty);
          }
       }
@@ -189,13 +189,13 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_linearGradientMode;
+            return _linearGradientMode;
          }
          set
          {
-            if(value != m_linearGradientMode)
+            if(value != _linearGradientMode)
             {
-               m_linearGradientMode = value;
+               _linearGradientMode = value;
                Invalidate(false);
             }
          }
@@ -210,13 +210,13 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_bShowGradientBackground;
+            return _bShowGradientBackground;
          }
          set
          {
-            if(value != m_bShowGradientBackground)
+            if(value != _bShowGradientBackground)
             {
-               m_bShowGradientBackground = value;
+               _bShowGradientBackground = value;
                Invalidate(false);
             }
          }
@@ -231,16 +231,16 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_bShowBorder;
+            return _bShowBorder;
          }
          set
          {
-            if(value != m_bShowBorder)
+            if(value != _bShowBorder)
             {
-               m_bShowBorder = value;
+               _bShowBorder = value;
                foreach(XPanderPanel xpanderPanel in XPanderPanels)
                {
-                  xpanderPanel.ShowBorder = m_bShowBorder;
+                  xpanderPanel.ShowBorder = _bShowBorder;
                }
                Invalidate(false);
             }
@@ -256,16 +256,16 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_bShowExpandIcon;
+            return _bShowExpandIcon;
          }
          set
          {
-            if(value != m_bShowExpandIcon)
+            if(value != _bShowExpandIcon)
             {
-               m_bShowExpandIcon = value;
+               _bShowExpandIcon = value;
                foreach(XPanderPanel xpanderPanel in XPanderPanels)
                {
-                  xpanderPanel.ShowExpandIcon = m_bShowExpandIcon;
+                  xpanderPanel.ShowExpandIcon = _bShowExpandIcon;
                }
             }
          }
@@ -280,16 +280,16 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_bShowCloseIcon;
+            return _bShowCloseIcon;
          }
          set
          {
-            if(value != m_bShowCloseIcon)
+            if(value != _bShowCloseIcon)
             {
-               m_bShowCloseIcon = value;
+               _bShowCloseIcon = value;
                foreach(XPanderPanel xpanderPanel in XPanderPanels)
                {
-                  xpanderPanel.ShowCloseIcon = m_bShowCloseIcon;
+                  xpanderPanel.ShowCloseIcon = _bShowCloseIcon;
                }
             }
          }
@@ -304,13 +304,13 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_colorGradientBackground;
+            return _colorGradientBackground;
          }
          set
          {
-            if(value != m_colorGradientBackground)
+            if(value != _colorGradientBackground)
             {
-               m_colorGradientBackground = value;
+               _colorGradientBackground = value;
                Invalidate(false);
             }
          }
@@ -325,7 +325,7 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return m_iCaptionHeight;
+            return _iCaptionHeight;
          }
          set
          {
@@ -336,7 +336,7 @@ namespace BSE.Windows.Forms
                    System.Globalization.CultureInfo.CurrentUICulture,
                    Resources.IDS_InvalidOperationExceptionInteger, value, "CaptionHeight", Constants.CaptionMinHeight));
             }
-            m_iCaptionHeight = value;
+            _iCaptionHeight = value;
             OnCaptionHeightChanged(this, EventArgs.Empty);
          }
       }
@@ -357,7 +357,7 @@ namespace BSE.Windows.Forms
 
          InitializeComponent();
 
-         m_xpanderPanels = new XPanderPanelCollection(this);
+         _xpanderPanels = new XPanderPanelCollection(this);
 
          ShowBorder = true;
          PanelStyle = PanelStyle.Default;
@@ -396,17 +396,17 @@ namespace BSE.Windows.Forms
                "panel"));
          }
 
-         XPanderPanel xpanderPanel = panel as XPanderPanel;
+         var xpanderPanel = panel as XPanderPanel;
          if(xpanderPanel != null)
          {
-            foreach(XPanderPanel tmpXPanderPanel in m_xpanderPanels)
+            foreach(XPanderPanel tmpXPanderPanel in _xpanderPanels)
             {
                if(tmpXPanderPanel.Equals(xpanderPanel) == false)
                {
                   tmpXPanderPanel.Expand = false;
                }
             }
-            PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["Expand"];
+            var propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["Expand"];
             if(propertyDescriptor != null)
             {
                propertyDescriptor.SetValue(xpanderPanel, true);
@@ -423,10 +423,10 @@ namespace BSE.Windows.Forms
       protected override void OnPaintBackground(PaintEventArgs pevent)
       {
          base.OnPaintBackground(pevent);
-         if(m_bShowGradientBackground)
+         if(_bShowGradientBackground)
          {
-            Rectangle rectangle = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
-            using(LinearGradientBrush linearGradientBrush = new LinearGradientBrush(
+            var rectangle = new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height);
+            using(var linearGradientBrush = new LinearGradientBrush(
                 rectangle,
                 BackColor,
                 GradientBackground,
@@ -443,7 +443,7 @@ namespace BSE.Windows.Forms
       protected override void OnControlAdded(ControlEventArgs e)
       {
          base.OnControlAdded(e);
-         XPanderPanel xpanderPanel = e.Control as XPanderPanel;
+         var xpanderPanel = e.Control as XPanderPanel;
          if(xpanderPanel != null)
          {
             if(xpanderPanel.Expand)
@@ -458,8 +458,8 @@ namespace BSE.Windows.Forms
                }
             }
             xpanderPanel.Parent = this;
-            xpanderPanel.Anchor = ((AnchorStyles) (((AnchorStyles.Top | AnchorStyles.Left)
-						| AnchorStyles.Right)));
+            xpanderPanel.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
+                                  | AnchorStyles.Right;
             xpanderPanel.Left = Padding.Left;
             xpanderPanel.Width = ClientRectangle.Width	- Padding.Left - Padding.Right;
             xpanderPanel.PanelStyle = PanelStyle;
@@ -469,13 +469,13 @@ namespace BSE.Windows.Forms
                xpanderPanel.SetPanelProperties(PanelColors);
             }
             xpanderPanel.ShowBorder = ShowBorder;
-            xpanderPanel.ShowCloseIcon = m_bShowCloseIcon;
-            xpanderPanel.ShowExpandIcon = m_bShowExpandIcon;
-            xpanderPanel.CaptionStyle = m_captionStyle;
+            xpanderPanel.ShowCloseIcon = _bShowCloseIcon;
+            xpanderPanel.ShowExpandIcon = _bShowExpandIcon;
+            xpanderPanel.CaptionStyle = _captionStyle;
             xpanderPanel.Top = GetTopPosition();
-            xpanderPanel.PanelStyleChanged += new EventHandler<PanelStyleChangeEventArgs>(XpanderPanelPanelStyleChanged);
-            xpanderPanel.ExpandClick += new EventHandler<EventArgs>(XPanderPanelExpandClick);
-            xpanderPanel.CloseClick += new EventHandler<EventArgs>(XPanderPanelCloseClick);
+            xpanderPanel.PanelStyleChanged += XpanderPanelPanelStyleChanged;
+            xpanderPanel.ExpandClick += XPanderPanelExpandClick;
+            xpanderPanel.CloseClick += XPanderPanelCloseClick;
          }
          else
          {
@@ -490,14 +490,14 @@ namespace BSE.Windows.Forms
       {
          base.OnControlRemoved(e);
 
-         XPanderPanel xpanderPanel =
+         var xpanderPanel =
 				e.Control as XPanderPanel;
 
          if(xpanderPanel != null)
          {
-            xpanderPanel.PanelStyleChanged -= new EventHandler<PanelStyleChangeEventArgs>(XpanderPanelPanelStyleChanged);
-            xpanderPanel.ExpandClick -= new EventHandler<EventArgs>(XPanderPanelExpandClick);
-            xpanderPanel.CloseClick -= new EventHandler<EventArgs>(XPanderPanelCloseClick);
+            xpanderPanel.PanelStyleChanged -= XpanderPanelPanelStyleChanged;
+            xpanderPanel.ExpandClick -= XPanderPanelExpandClick;
+            xpanderPanel.CloseClick -= XPanderPanelCloseClick;
          }
       }
       /// <summary>
@@ -509,9 +509,9 @@ namespace BSE.Windows.Forms
          base.OnResize(e);
          int iXPanderPanelCaptionHeight = 0;
 
-         if(m_xpanderPanels != null)
+         if(_xpanderPanels != null)
          {
-            foreach(XPanderPanel xpanderPanel in m_xpanderPanels)
+            foreach(XPanderPanel xpanderPanel in _xpanderPanels)
             {
                xpanderPanel.Width = ClientRectangle.Width - Padding.Left	- Padding.Right;
                if(xpanderPanel.Visible == false)
@@ -521,7 +521,7 @@ namespace BSE.Windows.Forms
                iXPanderPanelCaptionHeight += xpanderPanel.CaptionHeight;
             }
 
-            foreach(XPanderPanel xpanderPanel in m_xpanderPanels)
+            foreach(XPanderPanel xpanderPanel in _xpanderPanels)
             {
                if(xpanderPanel.Expand)
                {
@@ -538,25 +538,25 @@ namespace BSE.Windows.Forms
       /// <param name="e">A PanelStyleChangeEventArgs that contains the event data.</param>
       protected virtual void OnPanelStyleChanged(object sender, PanelStyleChangeEventArgs e)
       {
-         PanelStyle panelStyle = e.PanelStyle;
+         var panelStyle = e.PanelStyle;
          Padding = new Padding(0);
 
          foreach(XPanderPanel xpanderPanel in XPanderPanels)
          {
-            PropertyDescriptorCollection propertyDescriptorCollection = TypeDescriptor.GetProperties(xpanderPanel);
+            var propertyDescriptorCollection = TypeDescriptor.GetProperties(xpanderPanel);
             if(propertyDescriptorCollection.Count > 0)
             {
-               PropertyDescriptor propertyDescriptorPanelStyle = propertyDescriptorCollection["PanelStyle"];
+               var propertyDescriptorPanelStyle = propertyDescriptorCollection["PanelStyle"];
                if(propertyDescriptorPanelStyle != null)
                {
                   propertyDescriptorPanelStyle.SetValue(xpanderPanel, panelStyle);
                }
-               PropertyDescriptor propertyDescriptorLeft = propertyDescriptorCollection["Left"];
+               var propertyDescriptorLeft = propertyDescriptorCollection["Left"];
                if(propertyDescriptorLeft != null)
                {
                   propertyDescriptorLeft.SetValue(xpanderPanel, Padding.Left);
                }
-               PropertyDescriptor propertyDescriptorWidth = propertyDescriptorCollection["Width"];
+               var propertyDescriptorWidth = propertyDescriptorCollection["Width"];
                if(propertyDescriptorWidth != null)
                {
                   propertyDescriptorWidth.SetValue(
@@ -580,10 +580,10 @@ namespace BSE.Windows.Forms
       /// <param name="e">A EventArgs that contains the event data.</param>
       protected virtual void OnColorSchemeChanged(object sender, ColorSchemeChangeEventArgs e)
       {
-         ColorScheme eColorScheme = e.ColorSchema;
+         var eColorScheme = e.ColorSchema;
          foreach(XPanderPanel xpanderPanel in XPanderPanels)
          {
-            PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["ColorScheme"];
+            var propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["ColorScheme"];
             if(propertyDescriptor != null)
             {
                propertyDescriptor.SetValue(xpanderPanel, eColorScheme);
@@ -603,10 +603,10 @@ namespace BSE.Windows.Forms
       {
          foreach(XPanderPanel xpanderPanel in XPanderPanels)
          {
-            PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["CaptionHeight"];
+            var propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["CaptionHeight"];
             if(propertyDescriptor != null)
             {
-               propertyDescriptor.SetValue(xpanderPanel, m_iCaptionHeight);
+               propertyDescriptor.SetValue(xpanderPanel, _iCaptionHeight);
             }
          }
          if(CaptionHeightChanged != null)
@@ -623,10 +623,10 @@ namespace BSE.Windows.Forms
       {
          foreach(XPanderPanel xpanderPanel in XPanderPanels)
          {
-            PropertyDescriptor propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["CaptionStyle"];
+            var propertyDescriptor = TypeDescriptor.GetProperties(xpanderPanel)["CaptionStyle"];
             if(propertyDescriptor != null)
             {
-               propertyDescriptor.SetValue(xpanderPanel, m_captionStyle);
+               propertyDescriptor.SetValue(xpanderPanel, _captionStyle);
             }
          }
          if(CaptionStyleChanged != null)
@@ -640,7 +640,7 @@ namespace BSE.Windows.Forms
 
       private void XPanderPanelExpandClick(object sender, EventArgs e)
       {
-         XPanderPanel xpanderPanel = sender as XPanderPanel;
+         var xpanderPanel = sender as XPanderPanel;
          if(xpanderPanel != null)
          {
             Expand(xpanderPanel);
@@ -649,7 +649,7 @@ namespace BSE.Windows.Forms
 
       private void XPanderPanelCloseClick(object sender, EventArgs e)
       {
-         XPanderPanel xpanderPanel = sender as XPanderPanel;
+         var xpanderPanel = sender as XPanderPanel;
          if(xpanderPanel != null)
          {
             Controls.Remove(xpanderPanel);
@@ -658,8 +658,8 @@ namespace BSE.Windows.Forms
 
       private void XpanderPanelPanelStyleChanged(object sender, PanelStyleChangeEventArgs e)
       {
-         PanelStyle panelStyle = e.PanelStyle;
-         if(panelStyle != m_ePanelStyle)
+         var panelStyle = e.PanelStyle;
+         if(panelStyle != _ePanelStyle)
          {
             PanelStyle = panelStyle;
          }
@@ -672,10 +672,10 @@ namespace BSE.Windows.Forms
 
          //The next top position is the highest top value + that controls height, with a
          //little vertical spacing thrown in for good measure
-         IEnumerator enumerator = XPanderPanels.GetEnumerator();
+         var enumerator = XPanderPanels.GetEnumerator();
          while(enumerator.MoveNext())
          {
-            XPanderPanel xpanderPanel = (XPanderPanel) enumerator.Current;
+            var xpanderPanel = (XPanderPanel) enumerator.Current;
 
             if(xpanderPanel.Visible)
             {
@@ -707,7 +707,7 @@ namespace BSE.Windows.Forms
       #region FieldsPrivate
 
       private Pen m_borderPen = new Pen(Color.FromKnownColor(KnownColor.ControlDarkDark));
-      private XPanderPanelList m_xpanderPanelList;
+      private XPanderPanelList _xpanderPanelList;
 
       #endregion
 
@@ -726,11 +726,11 @@ namespace BSE.Windows.Forms
       public override void Initialize(IComponent component)
       {
          base.Initialize(component);
-         m_xpanderPanelList = (XPanderPanelList) Control;
+         _xpanderPanelList = (XPanderPanelList) Control;
          //Disable the autoscroll feature for the control during design time.  The control
          //itself sets this property to true when it initializes at run time.  Trying to position
          //controls in this control with the autoscroll property set to True is problematic.
-         m_xpanderPanelList.AutoScroll = false;
+         _xpanderPanelList.AutoScroll = false;
       }
       /// <summary>
       /// This member overrides ParentControlDesigner.ActionLists
@@ -740,7 +740,7 @@ namespace BSE.Windows.Forms
          get
          {
             // Create action list collection
-            DesignerActionListCollection actionLists = new DesignerActionListCollection();
+            var actionLists = new DesignerActionListCollection();
 
             // Add custom action list
             actionLists.Add(new XPanderPanelListDesignerActionList(Component));
@@ -784,7 +784,7 @@ namespace BSE.Windows.Forms
       protected override void OnPaintAdornments(PaintEventArgs e)
       {
          base.OnPaintAdornments(e);
-         e.Graphics.DrawRectangle(m_borderPen, 0, 0, m_xpanderPanelList.Width - 2, m_xpanderPanelList.Height - 2);
+         e.Graphics.DrawRectangle(m_borderPen, 0, 0, _xpanderPanelList.Width - 2, _xpanderPanelList.Height - 2);
       }
 
       #endregion
@@ -918,7 +918,7 @@ namespace BSE.Windows.Forms
       public override DesignerActionItemCollection GetSortedActionItems()
       {
          // Create list to store designer action items
-         DesignerActionItemCollection actionItems = new DesignerActionItemCollection();
+         var actionItems = new DesignerActionItemCollection();
 
          actionItems.Add(
            new DesignerActionMethodItem(
@@ -1021,7 +1021,7 @@ namespace BSE.Windows.Forms
       private void SetProperty(string propertyName, object value)
       {
          // Get property
-         PropertyDescriptor property
+         var property
                 = TypeDescriptor.GetProperties(XPanderPanelList)[propertyName];
          // Set property value
          property.SetValue(XPanderPanelList, value);
@@ -1031,8 +1031,8 @@ namespace BSE.Windows.Forms
       //the specified object
       private static string GetCategory(object source, string propertyName)
       {
-         System.Reflection.PropertyInfo property = source.GetType().GetProperty(propertyName);
-         CategoryAttribute attribute = (CategoryAttribute) property.GetCustomAttributes(typeof(CategoryAttribute), false)[0];
+         var property = source.GetType().GetProperty(propertyName);
+         var attribute = (CategoryAttribute) property.GetCustomAttributes(typeof(CategoryAttribute), false)[0];
          if(attribute == null)
          {
             return null;
@@ -1177,7 +1177,7 @@ namespace BSE.Windows.Forms
       /// <param name="xpanderPanel">The XPanderPanel to insert into the Collection.</param>
       public void Insert(int index, XPanderPanel xpanderPanel)
       {
-         ((IList) this).Insert(index, (object) xpanderPanel);
+         ((IList) this).Insert(index, xpanderPanel);
       }
       /// <summary>
       /// Copies the elements of the collection to an Array, starting at a particular Array index.
@@ -1259,7 +1259,7 @@ namespace BSE.Windows.Forms
       /// <returns>The position into which the new element was inserted.</returns>
       int IList.Add(object value)
       {
-         XPanderPanel xpanderPanel = value as XPanderPanel;
+         var xpanderPanel = value as XPanderPanel;
          if(xpanderPanel == null)
          {
             throw new ArgumentException(string.Format(System.Globalization.CultureInfo.CurrentUICulture,
@@ -1352,7 +1352,7 @@ namespace BSE.Windows.Forms
    {
       #region FieldsPrivate
 
-      private CollectionForm m_collectionForm;
+      private CollectionForm _collectionForm;
 
       #endregion
 
@@ -1376,15 +1376,15 @@ namespace BSE.Windows.Forms
       /// <returns> A CollectionEditor.CollectionForm to provide as the user interface for editing the collection.</returns>
       protected override CollectionForm CreateCollectionForm()
       {
-         m_collectionForm = base.CreateCollectionForm();
-         return m_collectionForm;
+         _collectionForm = base.CreateCollectionForm();
+         return _collectionForm;
       }
       /// <summary>
       /// Creates a new instance of the specified collection item type.
       /// </summary>
-      /// <param name="ItemType">The type of item to create.</param>
+      /// <param name="itemType">The type of item to create.</param>
       /// <returns> A new instance of the specified object.</returns>
-      protected override Object CreateInstance(Type ItemType)
+      protected override Object CreateInstance(Type itemType)
       {
          /* you can create the new instance yourself 
               * ComplexItem ci=new ComplexItem(2,"ComplexItem",null);
@@ -1392,8 +1392,8 @@ namespace BSE.Windows.Forms
               *but this time let it to do the job... 
               */
 
-         XPanderPanel xpanderPanel =
-                (XPanderPanel) base.CreateInstance(ItemType);
+         var xpanderPanel =
+                (XPanderPanel) base.CreateInstance(itemType);
 
          if(Context.Instance != null)
          {

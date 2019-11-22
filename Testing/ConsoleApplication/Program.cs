@@ -24,7 +24,7 @@ namespace ConsoleApplication
         {
             int i = 0;
 
-            PointLatLng last = PointLatLng.Empty;
+            var last = PointLatLng.Empty;
 
             foreach (var l in GpsLog())
             {
@@ -115,7 +115,7 @@ namespace ConsoleApplication
 
                 int total = import.Count;
 
-                foreach (var i in import)
+                foreach (string i in import)
                 {
                     //using (Bitmap pic = new Bitmap(i))
                     //{
@@ -131,7 +131,7 @@ namespace ConsoleApplication
                     //    }
                     //}                 
 
-                    var qk = Path.GetFileNameWithoutExtension(i);
+                    string qk = Path.GetFileNameWithoutExtension(i);
 
                     int x = 0;
                     int y = 0;
@@ -154,7 +154,7 @@ namespace ConsoleApplication
             if (false)
             {
                 var dirs = Directory.GetDirectories(@"D:\Temp\tmap\TOP50LKS");
-                foreach (var dir in dirs)
+                foreach (string dir in dirs)
                 {
                     var jpg = Directory.GetFiles(dir, "*.jpg");
 
@@ -166,7 +166,7 @@ namespace ConsoleApplication
                         continue;
                     }
 
-                    foreach (var j in jpg)
+                    foreach (string j in jpg)
                     {
                         files += "\"" + j + "\" ";
                     }
@@ -184,7 +184,7 @@ namespace ConsoleApplication
 
             return;
 
-            AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
+            AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad;
 
             GMapProvider.WebProxy = new WebProxy("127.0.0.1", 1080);
             GMapProvider.IsSocksProxy = true;
@@ -325,7 +325,7 @@ namespace ConsoleApplication
                 var pos = new PointLatLng(54.6961334816182, 25.2985095977783);
 
                 {
-                    var zoom = 4;
+                    int zoom = 4;
                     var px = p.FromPixelToTileXY(p.FromLatLngToPixel(pos, zoom));
                     Exception ex = null;
                     var img = GMaps.Instance.GetImageFrom(GMapProviders.LithuaniaMap, px, zoom, out ex);
@@ -337,7 +337,7 @@ namespace ConsoleApplication
                     double scale = p.GetGroundResolution(i, pos.Lat);
                     double scale2 = p.GetGroundResolution(i + 1, pos.Lat);
 
-                    var s = scale / scale2;
+                    double s = scale / scale2;
 
                     Debug.WriteLine(i + "/" + (i + 1) + " = " + s);
                 }
@@ -350,7 +350,7 @@ namespace ConsoleApplication
 
                 GMaps.Instance.Mode = AccessMode.CacheOnly;
 
-                using (Core c = new Core())
+                using (var c = new Core())
                 {
                     //c.compensationOffset = new GPoint(200, 200);
 
@@ -391,7 +391,7 @@ namespace ConsoleApplication
                     Debug.WriteLine(i + " start");
 
                     //using(Core c = new Core())
-                    Core c = new Core();
+                    var c = new Core();
                     {
                         var f = c.OnMapOpen();
 
@@ -421,18 +421,18 @@ namespace ConsoleApplication
             if (false)
             {
                 //-34,8859309407532, Lng=-58,359375
-                PointLatLng p1 = new PointLatLng(-34.608, -58.348);
-                PointLatLng p2 = new PointLatLng(-34.608, -58.348);
+                var p1 = new PointLatLng(-34.608, -58.348);
+                var p2 = new PointLatLng(-34.608, -58.348);
 
                 //Sets up a array to contain the x and y coordinates
-                double[] xy = new double[4] {p1.Lng, p1.Lat, p2.Lng, p2.Lat};
+                var xy = new double[4] {p1.Lng, p1.Lat, p2.Lng, p2.Lat};
 
                 //An array for the z coordinate
-                double[] z = new double[1];
+                var z = new double[1];
                 z[0] = 1;
 
-                ProjectionInfo pStart = KnownCoordinateSystems.Geographic.World.WGS1984;
-                ProjectionInfo pEnd = new ProjectionInfo();
+                var pStart = KnownCoordinateSystems.Geographic.World.WGS1984;
+                var pEnd = new ProjectionInfo();
 
                 //ProjectionInfo pEnd = new ProjectionInfo("+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=4200000 +y_0=-1300000 +ellps=WGS84 +datum=WGS84 +to_meter=0.03125 +no_defs");
                 //ProjectionInfo pEnd = new ProjectionInfo("+proj=tmerc +lat_0=-34.629269 +lon_0=-58.4633 +k=0.9999980000000001 +x_0=100000 +y_0=100000 +ellps=intl +units=m +no_defs");

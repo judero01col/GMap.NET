@@ -32,15 +32,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Size size = new Size(256, 256);
             Bitmap image = new Bitmap(size.Width * 3, size.Height * 3);
             Graphics graphics = Graphics.FromImage(image);
-            float num5 = (float)(1 << num);
-            RectangleF srcRect = new RectangleF((float)(num3 * size.Width) / num5 - 0.5f + (float)size.Width,
-                (float)(num4 * size.Height) / num5 - 0.5f + (float)size.Height,
-                (float)size.Width / num5,
-                (float)size.Height / num5);
+            float num5 = 1 << num;
+            RectangleF srcRect = new RectangleF(num3 * size.Width / num5 - 0.5f + size.Width,
+                num4 * size.Height / num5 - 0.5f + size.Height,
+                size.Width / num5,
+                size.Height / num5);
             for (int i = -1; i <= 1; i++)
             {
                 bool flag = true;
-                if (i == -1 && srcRect.X >= (float)size.Width || i == 1 && srcRect.Right < (float)(2 * size.Width - 1))
+                if (i == -1 && srcRect.X >= size.Width || i == 1 && srcRect.Right < 2 * size.Width - 1)
                 {
                     flag = false;
                 }
@@ -48,8 +48,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 for (int j = -1; j <= 1; j++)
                 {
                     bool flag2 = true;
-                    if (j == -1 && srcRect.Y >= (float)size.Height ||
-                        j == 1 && srcRect.Bottom < (float)(2 * size.Height - 1))
+                    if (j == -1 && srcRect.Y >= size.Height ||
+                        j == 1 && srcRect.Bottom < 2 * size.Height - 1)
                     {
                         flag2 = false;
                     }
@@ -107,7 +107,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Bitmap bitmap = new Bitmap(size.Width, size.Height);
             Graphics graphics2 = Graphics.FromImage(bitmap);
             graphics2.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            RectangleF destRect2 = new RectangleF(0f, 0f, (float)size.Width, (float)size.Height);
+            RectangleF destRect2 = new RectangleF(0f, 0f, size.Width, size.Height);
             graphics2.DrawImage(image, destRect2, srcRect, GraphicsUnit.Pixel);
             graphics2.Dispose();
             GDIBigLockedImage image3 = new GDIBigLockedImage(bitmap);

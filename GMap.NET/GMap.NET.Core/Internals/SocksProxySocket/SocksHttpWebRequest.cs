@@ -259,15 +259,15 @@ namespace GMap.NET.Internals
                 {
                     if (!headerDone)
                     {
-                        var headPart = Encoding.UTF8.GetString(buffer, 0, bytesReceived > 1024 ? 1024 : bytesReceived);
-                        var indexOfFirstBlankLine = headPart.IndexOf("\r\n\r\n");
+                        string headPart = Encoding.UTF8.GetString(buffer, 0, bytesReceived > 1024 ? 1024 : bytesReceived);
+                        int indexOfFirstBlankLine = headPart.IndexOf("\r\n\r\n");
                         if (indexOfFirstBlankLine > 0)
                         {
                             headPart = headPart.Substring(0, indexOfFirstBlankLine);
                             header += headPart;
                             headerDone = true;
 
-                            var headerPartLength = Encoding.UTF8.GetByteCount(headPart) + 4;
+                            int headerPartLength = Encoding.UTF8.GetByteCount(headPart) + 4;
 
                             // 0123456789
                             //   ----

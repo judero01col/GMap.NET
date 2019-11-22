@@ -1,12 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms.VisualStyles;
-using System;
-using Microsoft.Win32;
-using System.IO;
 
 namespace BSE.Windows.Forms
 {
@@ -238,8 +232,8 @@ namespace BSE.Windows.Forms
 
         #region FieldsPrivate
 
-		private Dictionary<KnownColors, Color> m_dictionaryRGBTable;
-        private PanelColors m_panelColorTable;
+		private Dictionary<KnownColors, Color> _dictionaryRGBTable;
+        private PanelColors _panelColorTable;
 
 		#endregion
 
@@ -749,11 +743,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if (m_panelColorTable == null)
+                if (_panelColorTable == null)
                 {
-                    m_panelColorTable = new PanelColors();
+                    _panelColorTable = new PanelColors();
                 }
-                return m_panelColorTable;
+                return _panelColorTable;
             }
         }
         /// <summary>
@@ -767,48 +761,42 @@ namespace BSE.Windows.Forms
                 if (value.Equals(base.UseSystemColors) == false)
                 {
                     base.UseSystemColors = value;
-                    if (m_dictionaryRGBTable != null)
+                    if (_dictionaryRGBTable != null)
                     {
-                        m_dictionaryRGBTable.Clear();
-                        m_dictionaryRGBTable = null;
+                        _dictionaryRGBTable.Clear();
+                        _dictionaryRGBTable = null;
                     }
                 }
             }
         }
         internal Color FromKnownColor(KnownColors color)
         {
-			return (Color)ColorTable[color];
+			return ColorTable[color];
         }
         
         private Dictionary<KnownColors, Color> ColorTable
         {
 			get
 			{
-				if (m_dictionaryRGBTable == null)
+				if (_dictionaryRGBTable == null)
 				{
-					m_dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
+					_dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
 					if (UseSystemColors || (ToolStripManager.VisualStylesEnabled == false))
 					{
-						InitBaseColors(m_dictionaryRGBTable);
+						InitBaseColors(_dictionaryRGBTable);
 					}
 					else
 					{
-						InitColors(m_dictionaryRGBTable);
+						InitColors(_dictionaryRGBTable);
 					}
 				}
-				return m_dictionaryRGBTable;
+				return _dictionaryRGBTable;
 			}
         }
 
 		#endregion
 
 		#region MethodsPublic
-		/// <summary>
-        /// Initializes a new instance of the ProfessionalColorTable class.
-        /// </summary>
-        public ProfessionalColorTable()
-        {
-        }
 
         #endregion
 

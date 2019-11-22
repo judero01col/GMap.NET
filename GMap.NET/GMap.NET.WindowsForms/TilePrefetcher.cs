@@ -32,15 +32,15 @@ namespace GMap.NET
         {
             InitializeComponent();
 
-            GMaps.Instance.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
-            GMaps.Instance.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
-            GMaps.Instance.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
+            GMaps.Instance.OnTileCacheComplete += OnTileCacheComplete;
+            GMaps.Instance.OnTileCacheStart += OnTileCacheStart;
+            GMaps.Instance.OnTileCacheProgress += OnTileCacheProgress;
 
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.ProgressChanged += worker_ProgressChanged;
+            worker.DoWork += worker_DoWork;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
         readonly AutoResetEvent _done = new AutoResetEvent(true);
@@ -115,9 +115,9 @@ namespace GMap.NET
 
         public void Stop()
         {
-            GMaps.Instance.OnTileCacheComplete -= new TileCacheComplete(OnTileCacheComplete);
-            GMaps.Instance.OnTileCacheStart -= new TileCacheStart(OnTileCacheStart);
-            GMaps.Instance.OnTileCacheProgress -= new TileCacheProgress(OnTileCacheProgress);
+            GMaps.Instance.OnTileCacheComplete -= OnTileCacheComplete;
+            GMaps.Instance.OnTileCacheStart -= OnTileCacheStart;
+            GMaps.Instance.OnTileCacheProgress -= OnTileCacheProgress;
 
             _done.Set();
 
@@ -219,7 +219,7 @@ namespace GMap.NET
                 if (worker.CancellationPending)
                     break;
 
-                GPoint p = _list[i];
+                var p = _list[i];
                 {
                     if (CacheTiles(_zoom, p))
                     {
@@ -249,7 +249,7 @@ namespace GMap.NET
                     }
                 }
 
-                worker.ReportProgress((int)((i + 1) * 100 / _all), i + 1);
+                worker.ReportProgress((i + 1) * 100 / _all, i + 1);
 
                 if (_sleep > 0)
                 {
@@ -288,12 +288,12 @@ namespace GMap.NET
                     var px = Overlay.Control.MapProvider.Projection.FromTileXYToPixel(l.Value);
                     var p = Overlay.Control.MapProvider.Projection.FromPixelToLatLng(px, _zoom);
 
-                    var r1 = Overlay.Control.MapProvider.Projection.GetGroundResolution(_zoom, p.Lat);
-                    var r2 = Overlay.Control.MapProvider.Projection.GetGroundResolution((int)Overlay.Control.Zoom,
+                    double r1 = Overlay.Control.MapProvider.Projection.GetGroundResolution(_zoom, p.Lat);
+                    double r2 = Overlay.Control.MapProvider.Projection.GetGroundResolution((int)Overlay.Control.Zoom,
                         p.Lat);
-                    var sizeDiff = r2 / r1;
+                    double sizeDiff = r2 / r1;
 
-                    GMapMarkerTile m = new GMapMarkerTile(p,
+                    var m = new GMapMarkerTile(p,
                         (int)(Overlay.Control.MapProvider.Projection.TileSize.Width / sizeDiff));
                     Overlay.Markers.Add(m);
                 }

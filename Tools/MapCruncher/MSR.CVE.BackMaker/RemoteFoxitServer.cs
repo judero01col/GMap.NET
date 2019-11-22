@@ -23,7 +23,7 @@ namespace MSR.CVE.BackMaker
 
         public int Run()
         {
-            NamedPipeClient namedPipeClient = new NamedPipeClient(pipeGuid);
+            var namedPipeClient = new NamedPipeClient(pipeGuid);
             bool flag = true;
             while (!flag)
             {
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
                 Thread.Sleep(250);
             }
 
-            namedPipeClient.RunServer(new NamedPipeBase.ServerHandler(Server));
+            namedPipeClient.RunServer(Server);
             return 0;
         }
 
@@ -63,7 +63,7 @@ namespace MSR.CVE.BackMaker
 
             if (genericRequest is RenderRequest)
             {
-                RenderRequest renderRequest = (RenderRequest)genericRequest;
+                var renderRequest = (RenderRequest)genericRequest;
                 if (foxitViewer == null)
                 {
                     reply = new ExceptionMessageRecord("Not open");

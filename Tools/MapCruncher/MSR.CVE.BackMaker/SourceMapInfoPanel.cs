@@ -27,9 +27,9 @@ namespace MSR.CVE.BackMaker
         public SourceMapInfoPanel()
         {
             InitializeComponent();
-            mapFileURLTextBox.LostFocus += new EventHandler(mapFileURLTextBox_LostFocus);
-            mapHomePageTextBox.LostFocus += new EventHandler(mapHomePageTextBox_LostFocus);
-            mapDescriptionTextBox.LostFocus += new EventHandler(descriptionTextBox_LostFocus);
+            mapFileURLTextBox.LostFocus += mapFileURLTextBox_LostFocus;
+            mapHomePageTextBox.LostFocus += mapHomePageTextBox_LostFocus;
+            mapDescriptionTextBox.LostFocus += descriptionTextBox_LostFocus;
             MercatorCoordinateSystem mercatorCoordinateSystem = new MercatorCoordinateSystem();
             closestZoomUpDown.Minimum = mercatorCoordinateSystem.GetZoomRange().min;
             closestZoomUpDown.Maximum = mercatorCoordinateSystem.GetZoomRange().max;
@@ -68,13 +68,13 @@ namespace MSR.CVE.BackMaker
         {
             if (this.sourceMap != null)
             {
-                this.sourceMap.sourceMapRenderOptions.dirtyEvent.Remove(new DirtyListener(ZoomChangedHandler));
+                this.sourceMap.sourceMapRenderOptions.dirtyEvent.Remove(ZoomChangedHandler);
             }
 
             this.sourceMap = sourceMap;
             if (this.sourceMap != null)
             {
-                this.sourceMap.sourceMapRenderOptions.dirtyEvent.Add(new DirtyListener(ZoomChangedHandler));
+                this.sourceMap.sourceMapRenderOptions.dirtyEvent.Add(ZoomChangedHandler);
             }
 
             update();
@@ -217,7 +217,7 @@ namespace MSR.CVE.BackMaker
             closestZoomUpDown.Name = "closestZoomUpDown";
             closestZoomUpDown.Size = new Size(46, 20);
             closestZoomUpDown.TabIndex = 8;
-            closestZoomUpDown.ValueChanged += new EventHandler(closestZoomUpDown_ValueChanged);
+            closestZoomUpDown.ValueChanged += closestZoomUpDown_ValueChanged;
             label3.AutoSize = true;
             label3.Location = new Point(3, 48);
             label3.Name = "label3";

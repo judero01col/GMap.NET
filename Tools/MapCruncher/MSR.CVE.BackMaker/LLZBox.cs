@@ -38,8 +38,8 @@ namespace MSR.CVE.BackMaker
         public LLZBox()
         {
             InitializeComponent();
-            latText.LostFocus += new EventHandler(latText_TextChanged);
-            lonText.LostFocus += new EventHandler(lonText_TextChanged);
+            latText.LostFocus += latText_TextChanged;
+            lonText.LostFocus += lonText_TextChanged;
         }
 
         private void latText_TextChanged(object sender, EventArgs e)

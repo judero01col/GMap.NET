@@ -9,7 +9,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             interestList = new InterestList();
             interestList.Add(asyncRef);
             interestList.Activate();
-            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(AsyncCompleteCallback));
+            asyncRef.AddCallback(AsyncCompleteCallback);
         }
 
         public void AsyncCompleteCallback(AsyncRef boundsAsyncRef)

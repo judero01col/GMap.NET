@@ -101,8 +101,8 @@ namespace MSR.CVE.BackMaker
         public LegendOptionsPanel()
         {
             InitializeComponent();
-            renderedSizeSpinner.ValueChanged += new EventHandler(renderedSizeSpinner_ValueChanged);
-            previewPanel.Paint += new PaintEventHandler(previewPanel_Paint);
+            renderedSizeSpinner.ValueChanged += renderedSizeSpinner_ValueChanged;
+            previewPanel.Paint += previewPanel_Paint;
             renderedSizeSpinner.Minimum = Legend.renderedSizeRange.min;
             renderedSizeSpinner.Maximum = Legend.renderedSizeRange.max;
         }
@@ -131,14 +131,14 @@ namespace MSR.CVE.BackMaker
 
             if (_legend != null)
             {
-                _legend.dirtyEvent.Remove(new DirtyListener(LegendChanged));
+                _legend.dirtyEvent.Remove(LegendChanged);
             }
 
             _legend = legend;
             this.displayableSource = displayableSource;
             if (_legend != null)
             {
-                _legend.dirtyEvent.Add(new DirtyListener(LegendChanged));
+                _legend.dirtyEvent.Add(LegendChanged);
                 LegendChanged();
             }
 
@@ -220,7 +220,7 @@ namespace MSR.CVE.BackMaker
                             if (asyncRef.present == null)
                             {
                                 waitingForCI = new CallbackIgnorinator(this);
-                                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(waitingForCI.Callback));
+                                asyncRef.AddCallback(waitingForCI.Callback);
                                 asyncRef.SetInterest(524296);
                                 previewInterest = new InterestList();
                                 previewInterest.Add(asyncRef);

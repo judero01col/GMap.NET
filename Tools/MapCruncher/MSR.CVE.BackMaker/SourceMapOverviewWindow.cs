@@ -49,7 +49,7 @@ namespace MSR.CVE.BackMaker
         {
             InitializeComponent();
             mapPos = new MapPosition(viewerControl);
-            viewerControl.Initialize(new MapPositionDelegate(GetMapPos), "Overview");
+            viewerControl.Initialize(GetMapPos, "Overview");
         }
 
         public void Initialize(ClosedDelegate closedDelegate, MapDrawingOption ShowDMS)
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker
             this.closedDelegate = closedDelegate;
             viewerControl.ShowDMS = ShowDMS;
             mapPos.setPosition(new ContinuousCoordinateSystem().GetDefaultView());
-            Closed += new EventHandler(SourceMapOverviewWindow_Closed);
+            Closed += SourceMapOverviewWindow_Closed;
         }
 
         private void SourceMapOverviewWindow_Closed(object sender, EventArgs e)

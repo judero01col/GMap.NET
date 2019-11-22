@@ -244,7 +244,7 @@ namespace MSR.CVE.BackMaker
             for (int i = 0; i < numWorkerThreads; i++)
             {
                 DebugThreadInterrupter.theInstance.AddThread(string.Format("QueuedTileProvider {0}-{1}", debugName, i),
-                    new ThreadStart(workerThread),
+                    workerThread,
                     ThreadPriority.BelowNormal);
             }
         }

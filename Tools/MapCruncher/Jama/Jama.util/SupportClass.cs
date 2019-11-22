@@ -429,7 +429,7 @@ public class SupportClass
             int result;
             if (position >= 0 && position < buffer.Length)
             {
-                result = (int)buffer[position++];
+                result = buffer[position++];
             }
             else
             {
@@ -510,7 +510,7 @@ public class SupportClass
         {
             for (int i = index + count; i >= index; i--)
             {
-                UnRead((int)array[i]);
+                UnRead(array[i]);
             }
         }
     }
@@ -636,7 +636,7 @@ public class SupportClass
         private bool isWordChar(int data)
         {
             char c = (char)data;
-            return data != -1 && (c > 'ÿ' || attribute[(int)c] == 1 || attribute[(int)c] == 16);
+            return data != -1 && (c > 'ÿ' || attribute[c] == 1 || attribute[c] == 16);
         }
 
         public StreamTokenizerSupport(StringReader reader)
@@ -730,13 +730,13 @@ public class SupportClass
                                 }
                                 else
                                 {
-                                    if (attribute[(int)c] == 4)
+                                    if (attribute[c] == 4)
                                     {
                                         num2 = 7;
                                     }
                                     else
                                     {
-                                        if (attribute[(int)c] == 1)
+                                        if (attribute[c] == 1)
                                         {
                                             buf.Append(c);
                                             ttype = -3;
@@ -744,7 +744,7 @@ public class SupportClass
                                         }
                                         else
                                         {
-                                            if (attribute[(int)c] == 16)
+                                            if (attribute[c] == 16)
                                             {
                                                 ttype = -2;
                                                 buf.Append(c);
@@ -766,10 +766,10 @@ public class SupportClass
                                             }
                                             else
                                             {
-                                                if (attribute[(int)c] == 8)
+                                                if (attribute[c] == 8)
                                                 {
                                                     c2 = c;
-                                                    ttype = (int)c;
+                                                    ttype = c;
                                                     num2 = 6;
                                                 }
                                                 else
@@ -780,9 +780,9 @@ public class SupportClass
                                                     }
                                                     else
                                                     {
-                                                        if (attribute[(int)c] == 0)
+                                                        if (attribute[c] == 0)
                                                         {
-                                                            ttype = (int)c;
+                                                            ttype = c;
                                                             num2 = 100;
                                                         }
                                                         else
@@ -832,7 +832,7 @@ public class SupportClass
                             {
                                 if (num3 != -1)
                                 {
-                                    unread((int)c);
+                                    unread(c);
                                 }
 
                                 sval = buf.ToString();
@@ -841,9 +841,9 @@ public class SupportClass
 
                             break;
                         case 2:
-                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-')
+                            if (num3 == -1 || attribute[c] != 16 || c == '-')
                             {
-                                if (attribute[(int)c] == 4 && char.IsNumber(c))
+                                if (attribute[c] == 4 && char.IsNumber(c))
                                 {
                                     buf.Append(c);
                                     num2 = 3;
@@ -852,7 +852,7 @@ public class SupportClass
                                 {
                                     if (num3 != -1)
                                     {
-                                        unread((int)c);
+                                        unread(c);
                                     }
 
                                     ttype = 45;
@@ -874,21 +874,21 @@ public class SupportClass
 
                             break;
                         case 3:
-                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-')
+                            if (num3 == -1 || attribute[c] != 16 || c == '-')
                             {
-                                if (char.IsNumber(c) && attribute[(int)c] == 1)
+                                if (char.IsNumber(c) && attribute[c] == 1)
                                 {
                                     buf.Append(c);
                                 }
                                 else
                                 {
-                                    if (c == '.' && attribute[(int)c] == 2)
+                                    if (c == '.' && attribute[c] == 2)
                                     {
                                         buf.Append(c);
                                     }
                                     else
                                     {
-                                        if (num3 != -1 && attribute[(int)c] == 4 && char.IsNumber(c))
+                                        if (num3 != -1 && attribute[c] == 4 && char.IsNumber(c))
                                         {
                                             buf.Append(c);
                                         }
@@ -896,7 +896,7 @@ public class SupportClass
                                         {
                                             if (num3 != -1)
                                             {
-                                                unread((int)c);
+                                                unread(c);
                                             }
 
                                             try
@@ -923,9 +923,9 @@ public class SupportClass
 
                             break;
                         case 4:
-                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-' || c == '.')
+                            if (num3 == -1 || attribute[c] != 16 || c == '-' || c == '.')
                             {
-                                if (attribute[(int)c] == 4 && char.IsNumber(c))
+                                if (attribute[c] == 4 && char.IsNumber(c))
                                 {
                                     buf.Append(c);
                                 }
@@ -933,7 +933,7 @@ public class SupportClass
                                 {
                                     if (num3 != -1)
                                     {
-                                        unread((int)c);
+                                        unread(c);
                                     }
 
                                     string text = buf.ToString();
@@ -944,7 +944,7 @@ public class SupportClass
                                     }
                                     else
                                     {
-                                        if (text.Equals(".") && 1 == attribute[(int)c3])
+                                        if (text.Equals(".") && 1 == attribute[c3])
                                         {
                                             ttype = 46;
                                         }
@@ -971,11 +971,11 @@ public class SupportClass
 
                             break;
                         case 5:
-                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-' || c == '.')
+                            if (num3 == -1 || attribute[c] != 16 || c == '-' || c == '.')
                             {
                                 if (num3 != -1)
                                 {
-                                    unread((int)c);
+                                    unread(c);
                                 }
 
                                 try
@@ -1000,7 +1000,7 @@ public class SupportClass
                                 sval = buf.ToString();
                                 if (c == '\r' || c == '\n')
                                 {
-                                    unread((int)c);
+                                    unread(c);
                                 }
 
                                 num2 = 100;
@@ -1028,7 +1028,7 @@ public class SupportClass
                             {
                                 if (c == '\n' || c == '\r')
                                 {
-                                    unread((int)c);
+                                    unread(c);
                                     num2 = 0;
                                 }
                             }
@@ -1037,7 +1037,7 @@ public class SupportClass
                         case 8:
                             if (c != '\n' && num3 != -1)
                             {
-                                unread((int)c);
+                                unread(c);
                             }
 
                             num2 = 100;
@@ -1045,7 +1045,7 @@ public class SupportClass
                         case 9:
                             if (c != '\n' && num3 != -1)
                             {
-                                unread((int)c);
+                                unread(c);
                             }
 
                             num2 = 0;
@@ -1065,7 +1065,7 @@ public class SupportClass
                                 {
                                     if (num3 != -1)
                                     {
-                                        unread((int)c);
+                                        unread(c);
                                     }
 
                                     ttype = 47;
@@ -1169,7 +1169,7 @@ public class SupportClass
                                                         {
                                                             if (c >= '0' && c <= '7')
                                                             {
-                                                                num = (int)(c - '0');
+                                                                num = c - '0';
                                                                 num2 = 14;
                                                             }
                                                             else
@@ -1197,13 +1197,13 @@ public class SupportClass
                                 }
                                 else
                                 {
-                                    unread((int)c);
+                                    unread(c);
                                     num2 = 6;
                                 }
                             }
                             else
                             {
-                                int num4 = num * 8 + (int)(c - '0');
+                                int num4 = num * 8 + (c - '0');
                                 if (num4 < 256)
                                 {
                                     num = num4;
@@ -1381,7 +1381,7 @@ public class SupportClass
             int result;
             if (position >= 0 && position < buffer.Length)
             {
-                result = (int)buffer[position++];
+                result = buffer[position++];
             }
             else
             {
@@ -1467,7 +1467,7 @@ public class SupportClass
         {
             for (int i = index + count; i >= index; i--)
             {
-                UnRead((int)array[i]);
+                UnRead(array[i]);
             }
         }
     }
@@ -1498,7 +1498,7 @@ public class SupportClass
             int result;
             if (position >= 0 && position < buffer.Length)
             {
-                result = (int)buffer[position++];
+                result = buffer[position++];
             }
             else
             {
@@ -1560,7 +1560,7 @@ public class SupportClass
         {
             for (int i = index + count; i >= index; i--)
             {
-                UnRead((int)array[i]);
+                UnRead(array[i]);
             }
         }
     }

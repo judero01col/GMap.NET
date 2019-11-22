@@ -9,71 +9,71 @@ namespace Jama.test
         {
             int num = 0;
             int value = 0;
-            double[] array = new[] {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
-            double[] y = new[] {1.0, 4.0, 7.0, 10.0, 2.0, 5.0, 8.0, 11.0, 3.0, 6.0, 9.0, 12.0};
-            double[][] array2 = new[]
+            var array = new[] {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
+            var y = new[] {1.0, 4.0, 7.0, 10.0, 2.0, 5.0, 8.0, 11.0, 3.0, 6.0, 9.0, 12.0};
+            var array2 = new[]
             {
                 new[] {1.0, 4.0, 7.0, 10.0}, new[] {2.0, 5.0, 8.0, 11.0},
                 new[] {3.0, 6.0, 9.0, 12.0}
             };
-            double[][] a = array2;
-            double[][] a2 = new[]
+            var a = array2;
+            var a2 = new[]
             {
                 new[] {1.0, 2.0, 3.0}, new[] {4.0, 5.0, 6.0}, new[] {7.0, 8.0, 9.0},
                 new[] {10.0, 11.0, 12.0}
             };
-            double[][] a3 = new[] {new[] {5.0, 8.0, 11.0}, new[] {6.0, 9.0, 12.0}};
-            double[][] a4 = new[]
+            var a3 = new[] {new[] {5.0, 8.0, 11.0}, new[] {6.0, 9.0, 12.0}};
+            var a4 = new[]
             {
                 new[] {1.0, 4.0, 7.0}, new[] {2.0, 5.0, 8.0, 11.0}, new[] {3.0, 6.0, 9.0, 12.0}
             };
-            double[][] a5 = new[]
+            var a5 = new[]
             {
                 new[] {4.0, 1.0, 1.0}, new[] {1.0, 2.0, 3.0}, new[] {1.0, 3.0, 6.0}
             };
-            double[][] array3 = new double[3][];
-            double[][] arg_1CC_0 = array3;
+            var array3 = new double[3][];
+            var arg_1CC_0 = array3;
             int arg_1CC_1 = 0;
-            double[] array4 = new double[4];
+            var array4 = new double[4];
             array4[0] = 1.0;
             arg_1CC_0[arg_1CC_1] = array4;
-            double[][] arg_1E7_0 = array3;
+            var arg_1E7_0 = array3;
             int arg_1E7_1 = 1;
             array4 = new double[4];
             array4[1] = 1.0;
             arg_1E7_0[arg_1E7_1] = array4;
-            double[][] arg_202_0 = array3;
+            var arg_202_0 = array3;
             int arg_202_1 = 2;
             array4 = new double[4];
             array4[2] = 1.0;
             arg_202_0[arg_202_1] = array4;
-            double[][] a6 = array3;
+            var a6 = array3;
             array3 = new double[4][];
-            double[][] arg_229_0 = array3;
+            var arg_229_0 = array3;
             int arg_229_1 = 0;
             array4 = new double[4];
             array4[1] = 1.0;
             arg_229_0[arg_229_1] = array4;
-            double[][] arg_251_0 = array3;
+            var arg_251_0 = array3;
             int arg_251_1 = 1;
             array4 = new double[4];
             array4[0] = 1.0;
             array4[2] = 2E-07;
             arg_251_0[arg_251_1] = array4;
             array3[2] = new[] {0.0, -2E-07, 0.0, 1.0};
-            double[][] arg_294_0 = array3;
+            var arg_294_0 = array3;
             int arg_294_1 = 3;
             array4 = new double[4];
             array4[2] = 1.0;
             arg_294_0[arg_294_1] = array4;
-            double[][] a7 = array3;
-            double[][] a8 = new[]
+            var a7 = array3;
+            var a8 = new[]
             {
                 new[] {166.0, 188.0, 210.0}, new[] {188.0, 214.0, 240.0},
                 new[] {210.0, 240.0, 270.0}
             };
-            double[][] a9 = new[] {new[] {13.0}, new[] {15.0}};
-            double[][] a10 = new[] {new[] {1.0, 3.0}, new[] {7.0, 9.0}};
+            var a9 = new[] {new[] {13.0}, new[] {15.0}};
+            var a10 = new[] {new[] {1.0, 3.0}, new[] {7.0, 9.0}};
             int num2 = 3;
             int num3 = 4;
             int m = 5;
@@ -85,10 +85,10 @@ namespace Jama.test
             int num5 = 2;
             int num6 = 1;
             int num7 = 3;
-            int[] r = new[] {1, 2};
-            int[] r2 = new[] {1, 3};
-            int[] c = new[] {1, 2, 3};
-            int[] c2 = new[] {1, 2, 4};
+            var r = new[] {1, 2};
+            var r2 = new[] {1, 3};
+            var c = new[] {1, 2, 3};
+            var c2 = new[] {1, 2, 4};
             double y2 = 33.0;
             double y3 = 30.0;
             double y4 = 15.0;
@@ -141,10 +141,10 @@ namespace Jama.test
             }
 
             jamaMatrix = new JamaMatrix(array, m2);
-            JamaMatrix jamaMatrix2 = new JamaMatrix(array2);
+            var jamaMatrix2 = new JamaMatrix(array2);
             num8 = jamaMatrix2.get_Renamed(0, 0);
             array2[0][0] = 0.0;
-            JamaMatrix jamaMatrix3 = jamaMatrix2.minus(jamaMatrix);
+            var jamaMatrix3 = jamaMatrix2.minus(jamaMatrix);
             array2[0][0] = num8;
             jamaMatrix2 = JamaMatrix.constructWithCopy(array2);
             num8 = jamaMatrix2.get_Renamed(0, 0);
@@ -159,7 +159,7 @@ namespace Jama.test
             }
 
             array2[0][0] = array[0];
-            JamaMatrix x = new JamaMatrix(a6);
+            var x = new JamaMatrix(a6);
             try
             {
                 check(x, JamaMatrix.identity(3, 4));
@@ -191,7 +191,7 @@ namespace Jama.test
             }
 
             jamaMatrix2 = new JamaMatrix(array2);
-            double[][] array5 = jamaMatrix2.Array;
+            var array5 = jamaMatrix2.Array;
             if (array5 != array2)
             {
                 num = try_failure(num, "getArray... ", "");
@@ -217,7 +217,7 @@ namespace Jama.test
                 num = try_failure(num, "getArrayCopy... ", "data not successfully (deep) copied");
             }
 
-            double[] x2 = jamaMatrix2.ColumnPackedCopy;
+            var x2 = jamaMatrix2.ColumnPackedCopy;
             try
             {
                 check(x2, array);
@@ -278,7 +278,7 @@ namespace Jama.test
                 num = try_failure(num, "get(int,int)... ", "Unexpected ArrayIndexOutOfBoundsException");
             }
 
-            JamaMatrix jamaMatrix4 = new JamaMatrix(a3);
+            var jamaMatrix4 = new JamaMatrix(a3);
             JamaMatrix jamaMatrix5;
             try
             {
@@ -705,8 +705,8 @@ namespace Jama.test
             }
 
             print("\nTesting array-like methods...\n");
-            JamaMatrix b = new JamaMatrix(array, m3);
-            JamaMatrix jamaMatrix6 = JamaMatrix.random(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension);
+            var b = new JamaMatrix(array, m3);
+            var jamaMatrix6 = JamaMatrix.random(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension);
             jamaMatrix = jamaMatrix6;
             try
             {
@@ -731,7 +731,7 @@ namespace Jama.test
 
             jamaMatrix = jamaMatrix6.copy();
             jamaMatrix.minusEquals(jamaMatrix6);
-            JamaMatrix jamaMatrix7 = new JamaMatrix(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension);
+            var jamaMatrix7 = new JamaMatrix(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension);
             try
             {
                 jamaMatrix.minusEquals(b);
@@ -810,7 +810,7 @@ namespace Jama.test
             }
 
             jamaMatrix = jamaMatrix6.copy();
-            JamaMatrix y5 = new JamaMatrix(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension, 1.0);
+            var y5 = new JamaMatrix(jamaMatrix.RowDimension, jamaMatrix.ColumnDimension, 1.0);
             jamaMatrix3 = jamaMatrix.arrayLeftDivide(jamaMatrix6);
             try
             {
@@ -943,7 +943,7 @@ namespace Jama.test
             print("\nTesting I/O methods...\n");
             print("\nTesting linear algebra methods...\n");
             jamaMatrix = new JamaMatrix(array, 3);
-            JamaMatrix y6 = new JamaMatrix(a2);
+            var y6 = new JamaMatrix(a2);
             y6 = jamaMatrix.transpose();
             try
             {
@@ -1006,7 +1006,7 @@ namespace Jama.test
                 num = try_failure(num, "det()...", "incorrect determinant calculation");
             }
 
-            JamaMatrix jamaMatrix8 = new JamaMatrix(a8);
+            var jamaMatrix8 = new JamaMatrix(a8);
             try
             {
                 check(jamaMatrix.times(jamaMatrix.transpose()), jamaMatrix8);
@@ -1028,7 +1028,7 @@ namespace Jama.test
             }
 
             jamaMatrix = new JamaMatrix(array, 4);
-            QRDecomposition qRDecomposition = jamaMatrix.qr();
+            var qRDecomposition = jamaMatrix.qr();
             jamaMatrix6 = qRDecomposition.R;
             try
             {
@@ -1040,7 +1040,7 @@ namespace Jama.test
                 num = try_failure(num, "QRDecomposition...", "incorrect QR decomposition calculation");
             }
 
-            SingularValueDecomposition singularValueDecomposition = jamaMatrix.svd();
+            var singularValueDecomposition = jamaMatrix.svd();
             try
             {
                 check(jamaMatrix,
@@ -1055,11 +1055,11 @@ namespace Jama.test
                     "incorrect singular value decomposition calculation");
             }
 
-            JamaMatrix jamaMatrix9 = new JamaMatrix(a);
+            var jamaMatrix9 = new JamaMatrix(a);
             try
             {
-                check((double)jamaMatrix9.rank(),
-                    (double)(Math.Min(jamaMatrix9.RowDimension, jamaMatrix9.ColumnDimension) - 1));
+                check(jamaMatrix9.rank(),
+                    Math.Min(jamaMatrix9.RowDimension, jamaMatrix9.ColumnDimension) - 1);
                 try_success("rank()...", "");
             }
             catch (SystemException)
@@ -1069,7 +1069,7 @@ namespace Jama.test
 
             jamaMatrix2 = new JamaMatrix(a10);
             singularValueDecomposition = jamaMatrix2.svd();
-            double[] singularValues = singularValueDecomposition.SingularValues;
+            var singularValues = singularValueDecomposition.SingularValues;
             try
             {
                 check(jamaMatrix2.cond(),
@@ -1085,7 +1085,7 @@ namespace Jama.test
             int columnDimension = jamaMatrix.ColumnDimension;
             jamaMatrix = jamaMatrix.getMatrix(0, columnDimension - 1, 0, columnDimension - 1);
             jamaMatrix.set_Renamed(0, 0, 0.0);
-            LUDecomposition lUDecomposition = jamaMatrix.lu();
+            var lUDecomposition = jamaMatrix.lu();
             try
             {
                 check(jamaMatrix.getMatrix(lUDecomposition.Pivot, 0, columnDimension - 1),
@@ -1097,7 +1097,7 @@ namespace Jama.test
                 num = try_failure(num, "LUDecomposition...", "incorrect LU decomposition calculation");
             }
 
-            JamaMatrix b2 = jamaMatrix.inverse();
+            var b2 = jamaMatrix.inverse();
             try
             {
                 check(jamaMatrix.times(b2), JamaMatrix.identity(3, 3));
@@ -1109,7 +1109,7 @@ namespace Jama.test
             }
 
             y5 = new JamaMatrix(jamaMatrix4.RowDimension, 1, 1.0);
-            JamaMatrix b3 = new JamaMatrix(a9);
+            var b3 = new JamaMatrix(a9);
             jamaMatrix8 = jamaMatrix4.getMatrix(0, jamaMatrix4.RowDimension - 1, 0, jamaMatrix4.RowDimension - 1);
             try
             {
@@ -1126,8 +1126,8 @@ namespace Jama.test
             }
 
             jamaMatrix = new JamaMatrix(a5);
-            CholeskyDecomposition choleskyDecomposition = jamaMatrix.chol();
-            JamaMatrix l = choleskyDecomposition.getL();
+            var choleskyDecomposition = jamaMatrix.chol();
+            var l = choleskyDecomposition.getL();
             try
             {
                 check(jamaMatrix, l.times(l.transpose()));
@@ -1151,9 +1151,9 @@ namespace Jama.test
                     "incorrect Choleskydecomposition solve calculation");
             }
 
-            EigenvalueDecomposition eigenvalueDecomposition = jamaMatrix.eig();
-            JamaMatrix d2 = eigenvalueDecomposition.D;
-            JamaMatrix v = eigenvalueDecomposition.getV();
+            var eigenvalueDecomposition = jamaMatrix.eig();
+            var d2 = eigenvalueDecomposition.D;
+            var v = eigenvalueDecomposition.getV();
             try
             {
                 check(jamaMatrix.times(v), v.times(d2));
@@ -1220,8 +1220,8 @@ namespace Jama.test
 
         private static void check(double[][] x, double[][] y)
         {
-            JamaMatrix x2 = new JamaMatrix(x);
-            JamaMatrix y2 = new JamaMatrix(y);
+            var x2 = new JamaMatrix(x);
+            var y2 = new JamaMatrix(y);
             check(x2, y2);
         }
 

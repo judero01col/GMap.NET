@@ -58,10 +58,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             stableFreshCountPathname = Path.Combine(cacheDir, "FreshCount.txt");
             CreateCacheDirIfNeeded();
             DebugThreadInterrupter.theInstance.AddThread("DiskCache.DeferredWriteThread",
-                new ThreadStart(DeferredWriteThread),
+                DeferredWriteThread,
                 ThreadPriority.Normal);
             DebugThreadInterrupter.theInstance.AddThread("DiskCache.EvictThread",
-                new ThreadStart(EvictThread),
+                EvictThread,
                 ThreadPriority.Normal);
             resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("DiskCache", -1);
         }

@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker
 
         public void Add(DirtyEvent listener)
         {
-            Add(new DirtyListener(listener.SetDirty));
+            Add(listener.SetDirty);
         }
 
         public void Remove(DirtyListener listener)
@@ -40,7 +40,7 @@ namespace MSR.CVE.BackMaker
 
         public void Remove(DirtyEvent listener)
         {
-            Remove(new DirtyListener(listener.SetDirty));
+            Remove(listener.SetDirty);
         }
     }
 }

@@ -80,12 +80,12 @@ namespace GMap.NET.MapProviders
             var px2 = px1;
 
             px1.Offset(0, Projection.TileSize.Height);
-            PointLatLng p1 = Projection.FromPixelToLatLng(px1, zoom);
+            var p1 = Projection.FromPixelToLatLng(px1, zoom);
 
             px2.Offset(Projection.TileSize.Width, 0);
-            PointLatLng p2 = Projection.FromPixelToLatLng(px2, zoom);
+            var p2 = Projection.FromPixelToLatLng(px2, zoom);
 
-            var ret = string.Format(CultureInfo.InvariantCulture,
+            string ret = string.Format(CultureInfo.InvariantCulture,
                 UrlFormat,
                 p1.Lng,
                 p1.Lat,

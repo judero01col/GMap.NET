@@ -20,7 +20,7 @@ namespace Jama.examples
                 {
                     for (int i = 0; i < n; i++)
                     {
-                        array[i][j] = (double)(n * ((i + j + num) % n) + (i + 2 * j + num2) % n + 1);
+                        array[i][j] = n * ((i + j + num) % n) + (i + 2 * j + num2) % n + 1;
                     }
                 }
             }
@@ -34,11 +34,11 @@ namespace Jama.examples
                         {
                             if ((i + 1) / 2 % 2 == (j + 1) / 2 % 2)
                             {
-                                array[i][j] = (double)(n * n - n * i - j);
+                                array[i][j] = n * n - n * i - j;
                             }
                             else
                             {
-                                array[i][j] = (double)(n * i + j + 1);
+                                array[i][j] = n * i + j + 1;
                             }
                         }
                     }
@@ -54,9 +54,9 @@ namespace Jama.examples
                         {
                             double num5 = jamaMatrix.get_Renamed(i, j);
                             array[i][j] = num5;
-                            array[i][j + num3] = num5 + (double)(2 * num3 * num3);
-                            array[i + num3][j] = num5 + (double)(3 * num3 * num3);
-                            array[i + num3][j + num3] = num5 + (double)(num3 * num3);
+                            array[i][j + num3] = num5 + 2 * num3 * num3;
+                            array[i + num3][j] = num5 + 3 * num3 * num3;
+                            array[i + num3][j + num3] = num5 + num3 * num3;
                         }
                     }
 
@@ -137,18 +137,18 @@ namespace Jama.examples
                 JamaMatrix u = lUDecomposition.U;
                 int[] pivot = lUDecomposition.Pivot;
                 JamaMatrix jamaMatrix2 = l.times(u).minus(jamaMatrix.getMatrix(pivot, 0, i - 1));
-                double x = jamaMatrix2.norm1() / ((double)i * num);
+                double x = jamaMatrix2.norm1() / (i * num);
                 print(fixedWidthDoubletoString(x, 12, 3));
                 QRDecomposition qRDecomposition = new QRDecomposition(jamaMatrix);
                 JamaMatrix q = qRDecomposition.Q;
                 jamaMatrix2 = qRDecomposition.R;
                 jamaMatrix2 = q.times(jamaMatrix2).minus(jamaMatrix);
-                x = jamaMatrix2.norm1() / ((double)i * num);
+                x = jamaMatrix2.norm1() / (i * num);
                 print(fixedWidthDoubletoString(x, 12, 3));
                 print("\n");
             }
 
-            double x2 = (double)(DateTime.Now.Ticks - now.Ticks) / 1000.0;
+            double x2 = (DateTime.Now.Ticks - now.Ticks) / 1000.0;
             print("\nElapsed Time = " + fixedWidthDoubletoString(x2, 12, 3) + " seconds\n");
             print("Adios\n");
         }

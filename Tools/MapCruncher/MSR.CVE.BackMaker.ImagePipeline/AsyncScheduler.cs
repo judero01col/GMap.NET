@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     if (current.asyncRecord.PrepareToQueue())
                     {
-                        current.asyncRecord.AddCallback(new AsyncRecord.CompleteCallback(EvictFromCache));
+                        current.asyncRecord.AddCallback(EvictFromCache);
                         list.Add(current.asyncRecord.GetQTPRef());
                     }
                 }

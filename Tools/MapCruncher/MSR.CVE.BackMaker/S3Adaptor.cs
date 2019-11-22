@@ -22,7 +22,7 @@ namespace MSR.CVE.BackMaker
         {
             WebRequest webRequest =
                 BuildWebRequest("PUT", bucket + "/" + EncodeKeyForSignature(key), headers);
-            webRequest.ContentLength = (long)content.Bytes.Length;
+            webRequest.ContentLength = content.Bytes.Length;
             Stream requestStream = webRequest.GetRequestStream();
             requestStream.Write(content.Bytes, 0, content.Bytes.Length);
             requestStream.Close();

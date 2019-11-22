@@ -17,7 +17,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         protected double pixelsPerDegree(int zoomLevel)
         {
-            return 512.0 * Math.Pow(2.0, (double)(zoomLevel - 5));
+            return 512.0 * Math.Pow(2.0, zoomLevel - 5);
         }
 
         protected double exactZoom(double pixelsPerDegree)
@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         protected double pixelsToDegrees(long pixels, int zoomLevel)
         {
-            return (double)pixels / pixelsPerDegree(zoomLevel);
+            return pixels / pixelsPerDegree(zoomLevel);
         }
 
         protected long degreesToPixels(double degrees, int zoomLevel)
@@ -43,8 +43,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public LatLonZoom GetTranslationInLatLon(LatLonZoom oldCenterPosition, Point mouseMotion)
         {
             return new LatLonZoom(
-                oldCenterPosition.lat + pixelsToDegrees((long)mouseMotion.Y, oldCenterPosition.zoom),
-                oldCenterPosition.lon - pixelsToDegrees((long)mouseMotion.X, oldCenterPosition.zoom),
+                oldCenterPosition.lat + pixelsToDegrees(mouseMotion.Y, oldCenterPosition.zoom),
+                oldCenterPosition.lon - pixelsToDegrees(mouseMotion.X, oldCenterPosition.zoom),
                 oldCenterPosition.zoom);
         }
 
@@ -77,7 +77,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public LatLonZoom GetBestViewContaining(MapRectangle newBounds, Size size)
         {
             LatLon center = newBounds.GetCenter();
-            int zoom = (int)(exactZoom((double)size.Height / (newBounds.lat1 - newBounds.lat0)) + 0.99);
+            int zoom = (int)(exactZoom(size.Height / (newBounds.lat1 - newBounds.lat0)) + 0.99);
             return new LatLonZoom(center.lat, center.lon, zoom);
         }
 
@@ -85,15 +85,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             Point64 point = new Point64(degreesToPixels(llz.lon, llz.zoom),
                 degreesToPixels(llz.lat, llz.zoom));
-            return new TileAddress((int)Math.Floor((double)point.X / 512.0),
-                (int)Math.Floor((double)point.Y / 512.0),
+            return new TileAddress((int)Math.Floor(point.X / 512.0),
+                (int)Math.Floor(point.Y / 512.0),
                 llz.zoom);
         }
 
         public LatLon GetLatLonOfTileNW(TileAddress ta)
         {
-            double lat = pixelsToDegrees(((long)ta.TileY + 1L) * 512L - 1L, ta.ZoomLevel);
-            double lon = pixelsToDegrees((long)ta.TileX * 512L, ta.ZoomLevel);
+            double lat = pixelsToDegrees((ta.TileY + 1L) * 512L - 1L, ta.ZoomLevel);
+            double lon = pixelsToDegrees(ta.TileX * 512L, ta.ZoomLevel);
             return new LatLon(lat, lon);
         }
 
@@ -121,8 +121,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Point64 point = new Point64(degreesToPixels(unclippedMapWindow.GetNW().lon, center.zoom),
                 degreesToPixels(unclippedMapWindow.GetNW().lat, center.zoom));
             tileDisplayDescriptorArray.topLeftTileOffset = new Point(
-                (int)((long)(tileDisplayDescriptorArray.topLeftTile.TileX * 512) - point.X),
-                (int)(point.Y - (long)((tileDisplayDescriptorArray.topLeftTile.TileY + 1) * 512)));
+                (int)(tileDisplayDescriptorArray.topLeftTile.TileX * 512 - point.X),
+                (int)(point.Y - (tileDisplayDescriptorArray.topLeftTile.TileY + 1) * 512));
             tileDisplayDescriptorArray.layout = addressLayout;
             tileDisplayDescriptorArray.tileSize = GetTileSize();
             return tileDisplayDescriptorArray;

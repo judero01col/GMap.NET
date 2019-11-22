@@ -80,8 +80,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 for (int j = 0; j <= degree - i; j++)
                 {
-                    jamaMatrix.SetElement(num, 0, (double)i);
-                    jamaMatrix.SetElement(num, 1, (double)j);
+                    jamaMatrix.SetElement(num, 0, i);
+                    jamaMatrix.SetElement(num, 1, j);
                     num++;
                 }
             }

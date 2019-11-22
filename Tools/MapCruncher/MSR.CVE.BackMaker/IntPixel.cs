@@ -19,10 +19,10 @@ namespace MSR.CVE.BackMaker
 
         public void addWeighted(double weight, PixelStruct pix)
         {
-            r += (int)(weight * (double)pix.r);
-            g += (int)(weight * (double)pix.g);
-            b += (int)(weight * (double)pix.b);
-            a += (int)(weight * (double)pix.a);
+            r += (int)(weight * pix.r);
+            g += (int)(weight * pix.g);
+            b += (int)(weight * pix.b);
+            a += (int)(weight * pix.a);
         }
 
         public PixelStruct AsPixel()

@@ -29,15 +29,15 @@ namespace GMap.NET.WindowsPresentation
         {
             InitializeComponent();
 
-            GMaps.Instance.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
-            GMaps.Instance.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
-            GMaps.Instance.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
+            GMaps.Instance.OnTileCacheComplete += OnTileCacheComplete;
+            GMaps.Instance.OnTileCacheStart += OnTileCacheStart;
+            GMaps.Instance.OnTileCacheProgress += OnTileCacheProgress;
 
             _worker.WorkerReportsProgress = true;
             _worker.WorkerSupportsCancellation = true;
-            _worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-            _worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            _worker.ProgressChanged += worker_ProgressChanged;
+            _worker.DoWork += worker_DoWork;
+            _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
         readonly AutoResetEvent done = new AutoResetEvent(true);
@@ -108,9 +108,9 @@ namespace GMap.NET.WindowsPresentation
 
         public void Stop()
         {
-            GMaps.Instance.OnTileCacheComplete -= new TileCacheComplete(OnTileCacheComplete);
-            GMaps.Instance.OnTileCacheStart -= new TileCacheStart(OnTileCacheStart);
-            GMaps.Instance.OnTileCacheProgress -= new TileCacheProgress(OnTileCacheProgress);
+            GMaps.Instance.OnTileCacheComplete -= OnTileCacheComplete;
+            GMaps.Instance.OnTileCacheStart -= OnTileCacheStart;
+            GMaps.Instance.OnTileCacheProgress -= OnTileCacheProgress;
 
             done.Set();
 
@@ -202,7 +202,7 @@ namespace GMap.NET.WindowsPresentation
                 if (_worker.CancellationPending)
                     break;
 
-                GPoint p = _list[i];
+                var p = _list[i];
                 {
                     if (CacheTiles(_zoom, p))
                     {
@@ -224,7 +224,7 @@ namespace GMap.NET.WindowsPresentation
                     }
                 }
 
-                _worker.ReportProgress((int)((i + 1) * 100 / _all), i + 1);
+                _worker.ReportProgress((i + 1) * 100 / _all, i + 1);
 
                 Thread.Sleep(_sleep);
             }

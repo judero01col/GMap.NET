@@ -108,7 +108,7 @@ namespace Jama
                 double[] array = new double[m];
                 for (int i = 0; i < m; i++)
                 {
-                    array[i] = (double)piv[i];
+                    array[i] = piv[i];
                 }
 
                 return array;
@@ -189,7 +189,7 @@ namespace Jama
                 throw new ArgumentException("Matrix must be square.");
             }
 
-            double num = (double)pivsign;
+            double num = pivsign;
             for (int i = 0; i < n; i++)
             {
                 num *= LU[i][i];

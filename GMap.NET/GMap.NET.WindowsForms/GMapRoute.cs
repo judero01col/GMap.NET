@@ -130,7 +130,7 @@ namespace GMap.NET.WindowsForms
             {
                 for (int i = 0; i < LocalPoints.Count; i++)
                 {
-                    GPoint p2 = LocalPoints[i];
+                    var p2 = LocalPoints[i];
 
                     if (i == 0)
                     {
@@ -138,7 +138,7 @@ namespace GMap.NET.WindowsForms
                     }
                     else
                     {
-                        PointF p = _graphicsPath.GetLastPoint();
+                        var p = _graphicsPath.GetLastPoint();
                         _graphicsPath.AddLine(p.X, p.Y, p2.X, p2.Y);
                     }
                 }

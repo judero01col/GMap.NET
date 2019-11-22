@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker
         public RenderReply(byte[] sourceData, int offset, long length, int stride)
         {
             data = new byte[length];
-            Array.Copy(sourceData, (long)offset, data, 0L, length);
+            Array.Copy(sourceData, offset, data, 0L, length);
             this.stride = stride;
         }
 

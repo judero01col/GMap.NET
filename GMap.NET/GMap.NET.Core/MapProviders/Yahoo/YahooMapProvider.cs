@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -203,10 +203,10 @@ namespace GMap.NET.MapProviders
                             Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
                         }
 
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(geo);
                         {
-                            XmlNodeList l = doc.SelectNodes("/ResultSet/Result");
+                            var l = doc.SelectNodes("/ResultSet/Result");
                             if (l != null)
                             {
                                 pointList = new List<PointLatLng>();
@@ -216,7 +216,7 @@ namespace GMap.NET.MapProviders
                                     var nn = n.SelectSingleNode("quality");
                                     if (nn != null)
                                     {
-                                        var quality = int.Parse(nn.InnerText);
+                                        int quality = int.Parse(nn.InnerText);
                                         if (quality < MinExpectedQuality) continue;
 
                                         nn = n.SelectSingleNode("latitude");
@@ -281,10 +281,10 @@ namespace GMap.NET.MapProviders
                             Cache.Instance.SaveContent(url, CacheType.PlacemarkCache, geo);
                         }
 
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(geo);
                         {
-                            XmlNodeList l = doc.SelectNodes("/ResultSet/Result");
+                            var l = doc.SelectNodes("/ResultSet/Result");
                             if (l != null)
                             {
                                 placemarkList = new List<Placemark>();
@@ -294,7 +294,7 @@ namespace GMap.NET.MapProviders
                                     var vl = n.SelectSingleNode("name");
                                     if (vl == null) continue;
 
-                                    Placemark placemark = new Placemark(vl.InnerText);
+                                    var placemark = new Placemark(vl.InnerText);
 
                                     vl = n.SelectSingleNode("level0");
                                     if (vl != null)

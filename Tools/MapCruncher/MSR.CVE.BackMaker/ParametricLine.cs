@@ -94,7 +94,7 @@ namespace MSR.CVE.BackMaker
             List<LatLon> list = new List<LatLon>();
             for (int i = 0; i < NumSteps; i++)
             {
-                list.Add(t((double)i / (double)NumSteps));
+                list.Add(t(i / (double)NumSteps));
             }
 
             return list;

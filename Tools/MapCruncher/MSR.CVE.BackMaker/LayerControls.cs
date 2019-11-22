@@ -125,27 +125,27 @@ namespace MSR.CVE.BackMaker
         {
             InitializeComponent();
             layerTreeView.Tag = this;
-            layerTreeView.AfterSelect += new TreeViewEventHandler(NodeSelectedHandler);
-            layerTreeView.AfterExpand += new TreeViewEventHandler(NodeExpandedHandler);
-            layerTreeView.AfterCollapse += new TreeViewEventHandler(NodeExpandedHandler);
-            layerTreeView.AfterLabelEdit += new NodeLabelEditEventHandler(NodeLabelEditHandler);
-            layerTreeView.MouseDown += new MouseEventHandler(layerTreeView_MouseDown);
-            layerTreeView.ItemDrag += new ItemDragEventHandler(layerTreeView_ItemDrag);
-            layerTreeView.DragEnter += new DragEventHandler(layerTreeView_DragEnter);
-            layerTreeView.DragOver += new DragEventHandler(layerTreeView_DragOver);
-            layerTreeView.DragDrop += new DragEventHandler(layerTreeView_DragDrop);
-            layerTreeView.DragLeave += new EventHandler(layerTreeView_DragLeave);
+            layerTreeView.AfterSelect += NodeSelectedHandler;
+            layerTreeView.AfterExpand += NodeExpandedHandler;
+            layerTreeView.AfterCollapse += NodeExpandedHandler;
+            layerTreeView.AfterLabelEdit += NodeLabelEditHandler;
+            layerTreeView.MouseDown += layerTreeView_MouseDown;
+            layerTreeView.ItemDrag += layerTreeView_ItemDrag;
+            layerTreeView.DragEnter += layerTreeView_DragEnter;
+            layerTreeView.DragOver += layerTreeView_DragOver;
+            layerTreeView.DragDrop += layerTreeView_DragDrop;
+            layerTreeView.DragLeave += layerTreeView_DragLeave;
             ContextMenu = new ContextMenu();
-            ContextMenu.Popup += new EventHandler(PopupHandler);
-            addLayerItem = new MenuItem("Add Layer", new EventHandler(AddLayerHandler));
+            ContextMenu.Popup += PopupHandler;
+            addLayerItem = new MenuItem("Add Layer", AddLayerHandler);
             ContextMenu.MenuItems.Add(addLayerItem);
-            addSourceMapItem = new MenuItem("Add Source Map", new EventHandler(AddSourceMapHandler));
+            addSourceMapItem = new MenuItem("Add Source Map", AddSourceMapHandler);
             ContextMenu.MenuItems.Add(addSourceMapItem);
-            addLegendItem = new MenuItem("Add Legend", new EventHandler(AddLegendHandler));
+            addLegendItem = new MenuItem("Add Legend", AddLegendHandler);
             ContextMenu.MenuItems.Add(addLegendItem);
-            renameMenuItem = new MenuItem("Rename", new EventHandler(RenameHandler));
+            renameMenuItem = new MenuItem("Rename", RenameHandler);
             ContextMenu.MenuItems.Add(renameMenuItem);
-            removeItem = new MenuItem("Remove", new EventHandler(RemoveHandler));
+            removeItem = new MenuItem("Remove", RemoveHandler);
             ContextMenu.MenuItems.Add(removeItem);
         }
 
@@ -457,7 +457,7 @@ namespace MSR.CVE.BackMaker
 
         public void CancelSourceMap(Layer layer, SourceMap sourceMap)
         {
-            ReloadDelegate method = new ReloadDelegate(Reload);
+            ReloadDelegate method = Reload;
             Invoke(method);
         }
 

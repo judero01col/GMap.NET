@@ -146,16 +146,16 @@ namespace GMap.NET.WindowsForms
 
         void CreateEvents()
         {
-            Markers.CollectionChanged += new NotifyCollectionChangedEventHandler(Markers_CollectionChanged);
-            Routes.CollectionChanged += new NotifyCollectionChangedEventHandler(Routes_CollectionChanged);
-            Polygons.CollectionChanged += new NotifyCollectionChangedEventHandler(Polygons_CollectionChanged);
+            Markers.CollectionChanged += Markers_CollectionChanged;
+            Routes.CollectionChanged += Routes_CollectionChanged;
+            Polygons.CollectionChanged += Polygons_CollectionChanged;
         }
 
         void ClearEvents()
         {
-            Markers.CollectionChanged -= new NotifyCollectionChangedEventHandler(Markers_CollectionChanged);
-            Routes.CollectionChanged -= new NotifyCollectionChangedEventHandler(Routes_CollectionChanged);
-            Polygons.CollectionChanged -= new NotifyCollectionChangedEventHandler(Polygons_CollectionChanged);
+            Markers.CollectionChanged -= Markers_CollectionChanged;
+            Routes.CollectionChanged -= Routes_CollectionChanged;
+            Polygons.CollectionChanged -= Polygons_CollectionChanged;
         }
 
         public void Clear()
@@ -283,7 +283,7 @@ namespace GMap.NET.WindowsForms
         {
             if (Control != null)
             {
-                foreach (GMapMarker obj in Markers)
+                foreach (var obj in Markers)
                 {
                     if (obj.IsVisible)
                     {
@@ -291,7 +291,7 @@ namespace GMap.NET.WindowsForms
                     }
                 }
 
-                foreach (GMapPolygon obj in Polygons)
+                foreach (var obj in Polygons)
                 {
                     if (obj.IsVisible)
                     {
@@ -299,7 +299,7 @@ namespace GMap.NET.WindowsForms
                     }
                 }
 
-                foreach (GMapRoute obj in Routes)
+                foreach (var obj in Routes)
                 {
                     if (obj.IsVisible)
                     {
@@ -319,7 +319,7 @@ namespace GMap.NET.WindowsForms
             {
                 if (Control.RoutesEnabled)
                 {
-                    foreach (GMapRoute r in Routes)
+                    foreach (var r in Routes)
                     {
                         if (r.IsVisible)
                         {
@@ -330,7 +330,7 @@ namespace GMap.NET.WindowsForms
 
                 if (Control.PolygonsEnabled)
                 {
-                    foreach (GMapPolygon r in Polygons)
+                    foreach (var r in Polygons)
                     {
                         if (r.IsVisible)
                         {
@@ -342,7 +342,7 @@ namespace GMap.NET.WindowsForms
                 if (Control.MarkersEnabled)
                 {
                     // markers
-                    foreach (GMapMarker m in Markers)
+                    foreach (var m in Markers)
                     {
                         //if(m.IsVisible && (m.DisableRegionCheck || Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y)))
                         if (m.IsVisible || m.DisableRegionCheck)
@@ -363,7 +363,7 @@ namespace GMap.NET.WindowsForms
                 if (Control.MarkersEnabled)
                 {
                     // tooltips above
-                    foreach (GMapMarker m in Markers)
+                    foreach (var m in Markers)
                     {
                         //if(m.ToolTip != null && m.IsVisible && Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y))
                         if (m.ToolTip != null && m.IsVisible)
@@ -401,15 +401,15 @@ namespace GMap.NET.WindowsForms
             info.AddValue("Id", Id);
             info.AddValue("IsVisible", IsVisibile);
 
-            GMapMarker[] markerArray = new GMapMarker[Markers.Count];
+            var markerArray = new GMapMarker[Markers.Count];
             Markers.CopyTo(markerArray, 0);
             info.AddValue("Markers", markerArray);
 
-            GMapRoute[] routeArray = new GMapRoute[Routes.Count];
+            var routeArray = new GMapRoute[Routes.Count];
             Routes.CopyTo(routeArray, 0);
             info.AddValue("Routes", routeArray);
 
-            GMapPolygon[] polygonArray = new GMapPolygon[Polygons.Count];
+            var polygonArray = new GMapPolygon[Polygons.Count];
             Polygons.CopyTo(polygonArray, 0);
             info.AddValue("Polygons", polygonArray);
         }
@@ -449,21 +449,21 @@ namespace GMap.NET.WindowsForms
         public void OnDeserialization(object sender)
         {
             // Populate Markers
-            foreach (GMapMarker marker in deserializedMarkerArray)
+            foreach (var marker in deserializedMarkerArray)
             {
                 marker.Overlay = this;
                 Markers.Add(marker);
             }
 
             // Populate Routes
-            foreach (GMapRoute route in deserializedRouteArray)
+            foreach (var route in deserializedRouteArray)
             {
                 route.Overlay = this;
                 Routes.Add(route);
             }
 
             // Populate Polygons
-            foreach (GMapPolygon polygon in deserializedPolygonArray)
+            foreach (var polygon in deserializedPolygonArray)
             {
                 polygon.Overlay = this;
                 Polygons.Add(polygon);

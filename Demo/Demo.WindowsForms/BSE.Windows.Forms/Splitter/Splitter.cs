@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 
 namespace BSE.Windows.Forms
@@ -15,7 +11,7 @@ namespace BSE.Windows.Forms
     /// The splitter control supports in difference to the <see cref="System.Windows.Forms.Splitter"/> the using
     /// of a transparent backcolor.
     /// </remarks>
-    /// <copyright>Copyright � 2006-2008 Uwe Eichkorn
+    /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
     /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
     /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
     /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR

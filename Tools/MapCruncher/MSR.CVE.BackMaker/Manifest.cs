@@ -387,8 +387,8 @@ namespace MSR.CVE.BackMaker
                 Converter<ManifestRecord, ManifestRecord> converter = null;
                 for (int i = 0; i < num; i++)
                 {
-                    int index = (int)((double)i / (double)num * recordList.Count);
-                    int num4 = (int)((i + 1.0) / (double)num * recordList.Count);
+                    int index = (int)(i / (double)num * recordList.Count);
+                    int num4 = (int)((i + 1.0) / num * recordList.Count);
                     if (converter == null)
                     {
                         converter = mr => mr.ReplaceBlock(subBlocks[i]);

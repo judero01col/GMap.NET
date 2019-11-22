@@ -158,10 +158,10 @@ namespace BSE.Windows.Forms
 
         #region FieldsPrivate
 
-        private BasePanel m_basePanel;
-		private System.Windows.Forms.ProfessionalColorTable m_professionalColorTable;
-		private Dictionary<KnownColors, Color> m_dictionaryRGBTable;
-		private bool m_bUseSystemColors;
+        private BasePanel _basePanel;
+		private System.Windows.Forms.ProfessionalColorTable _professionalColorTable;
+		private Dictionary<KnownColors, Color> _dictionaryRGBTable;
+		private bool _bUseSystemColors;
 
         #endregion
 
@@ -402,13 +402,13 @@ namespace BSE.Windows.Forms
 		/// </summary>
         public bool UseSystemColors
 		{
-			get { return m_bUseSystemColors; }
+			get { return _bUseSystemColors; }
 			set
 			{
-				if (value.Equals(m_bUseSystemColors) == false)
+				if (value.Equals(_bUseSystemColors) == false)
 				{
-					m_bUseSystemColors = value;
-					m_professionalColorTable.UseSystemColors = m_bUseSystemColors;
+					_bUseSystemColors = value;
+					_professionalColorTable.UseSystemColors = _bUseSystemColors;
                     Clear();
 				}
 			}
@@ -418,37 +418,37 @@ namespace BSE.Windows.Forms
         /// </summary>
         public BasePanel Panel
 		{
-			get { return m_basePanel; }
-			set { m_basePanel = value; }
+			get { return _basePanel; }
+			set { _basePanel = value; }
 		}
 		internal Color FromKnownColor(KnownColors color)
 		{
-			return (Color)ColorTable[color];
+			return ColorTable[color];
 		}
         private Dictionary<KnownColors, Color> ColorTable
         {
             get
             {
-                if (m_dictionaryRGBTable == null)
+                if (_dictionaryRGBTable == null)
                 {
-                    m_dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
-                    if ((m_basePanel != null) && (m_basePanel.ColorScheme == ColorScheme.Professional))
+                    _dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
+                    if ((_basePanel != null) && (_basePanel.ColorScheme == ColorScheme.Professional))
                     {
-                        if (m_bUseSystemColors || (ToolStripManager.VisualStylesEnabled == false))
+                        if (_bUseSystemColors || (ToolStripManager.VisualStylesEnabled == false))
                         {
-                            InitBaseColors(m_dictionaryRGBTable);
+                            InitBaseColors(_dictionaryRGBTable);
                         }
                         else
                         {
-                            InitColors(m_dictionaryRGBTable);
+                            InitColors(_dictionaryRGBTable);
                         }
                     }
                     else
                     {
-                        InitCustomColors(m_dictionaryRGBTable);
+                        InitCustomColors(_dictionaryRGBTable);
                     }
                 }
-                return m_dictionaryRGBTable;
+                return _dictionaryRGBTable;
             }
         }
 
@@ -460,7 +460,7 @@ namespace BSE.Windows.Forms
 		/// </summary>
 		public PanelColors()
 		{
-			m_professionalColorTable = new System.Windows.Forms.ProfessionalColorTable();
+			_professionalColorTable = new System.Windows.Forms.ProfessionalColorTable();
 		}
 		/// <summary>
         /// Initialize a new instance of the PanelColors class.
@@ -468,7 +468,7 @@ namespace BSE.Windows.Forms
         /// <param name="basePanel">Base class for the panel or xpanderpanel control.</param>
         public PanelColors(BasePanel basePanel) : this()
         {
-            m_basePanel = basePanel;
+            _basePanel = basePanel;
         }
         /// <summary>
         /// Clears the current color table
@@ -494,43 +494,43 @@ namespace BSE.Windows.Forms
 
 		private void InitBaseColors(Dictionary<KnownColors, Color> rgbTable)
 		{
-            rgbTable[KnownColors.BorderColor] = m_professionalColorTable.GripDark;
-            rgbTable[KnownColors.InnerBorderColor] = m_professionalColorTable.GripLight;
+            rgbTable[KnownColors.BorderColor] = _professionalColorTable.GripDark;
+            rgbTable[KnownColors.InnerBorderColor] = _professionalColorTable.GripLight;
             rgbTable[KnownColors.PanelCaptionCloseIcon] = SystemColors.ControlText;
             rgbTable[KnownColors.PanelCaptionExpandIcon] = SystemColors.ControlText;
-            rgbTable[KnownColors.PanelCaptionGradientBegin] = m_professionalColorTable.ToolStripGradientBegin;
-            rgbTable[KnownColors.PanelCaptionGradientEnd] = m_professionalColorTable.ToolStripGradientEnd;
-            rgbTable[KnownColors.PanelCaptionGradientMiddle] = m_professionalColorTable.ToolStripGradientMiddle;
-            rgbTable[KnownColors.PanelCaptionSelectedGradientBegin] = m_professionalColorTable.ButtonSelectedGradientBegin;
-            rgbTable[KnownColors.PanelCaptionSelectedGradientEnd] = m_professionalColorTable.ButtonSelectedGradientEnd;
-            rgbTable[KnownColors.PanelContentGradientBegin] = m_professionalColorTable.ToolStripContentPanelGradientBegin;
-			rgbTable[KnownColors.PanelContentGradientEnd] = m_professionalColorTable.ToolStripContentPanelGradientEnd;
+            rgbTable[KnownColors.PanelCaptionGradientBegin] = _professionalColorTable.ToolStripGradientBegin;
+            rgbTable[KnownColors.PanelCaptionGradientEnd] = _professionalColorTable.ToolStripGradientEnd;
+            rgbTable[KnownColors.PanelCaptionGradientMiddle] = _professionalColorTable.ToolStripGradientMiddle;
+            rgbTable[KnownColors.PanelCaptionSelectedGradientBegin] = _professionalColorTable.ButtonSelectedGradientBegin;
+            rgbTable[KnownColors.PanelCaptionSelectedGradientEnd] = _professionalColorTable.ButtonSelectedGradientEnd;
+            rgbTable[KnownColors.PanelContentGradientBegin] = _professionalColorTable.ToolStripContentPanelGradientBegin;
+			rgbTable[KnownColors.PanelContentGradientEnd] = _professionalColorTable.ToolStripContentPanelGradientEnd;
 			rgbTable[KnownColors.PanelCaptionText] = SystemColors.ControlText;
             rgbTable[KnownColors.PanelCollapsedCaptionText] = SystemColors.ControlText;
-			rgbTable[KnownColors.XPanderPanelBackColor] = m_professionalColorTable.ToolStripContentPanelGradientBegin;
+			rgbTable[KnownColors.XPanderPanelBackColor] = _professionalColorTable.ToolStripContentPanelGradientBegin;
 			rgbTable[KnownColors.XPanderPanelCaptionCloseIcon] = SystemColors.ControlText;
 			rgbTable[KnownColors.XPanderPanelCaptionExpandIcon] = SystemColors.ControlText;
 			rgbTable[KnownColors.XPanderPanelCaptionText] = SystemColors.ControlText;
-			rgbTable[KnownColors.XPanderPanelCaptionGradientBegin] = m_professionalColorTable.ToolStripGradientBegin;
-			rgbTable[KnownColors.XPanderPanelCaptionGradientEnd] = m_professionalColorTable.ToolStripGradientEnd;
-			rgbTable[KnownColors.XPanderPanelCaptionGradientMiddle] = m_professionalColorTable.ToolStripGradientMiddle;
-            rgbTable[KnownColors.XPanderPanelFlatCaptionGradientBegin] = m_professionalColorTable.ToolStripGradientMiddle;
-            rgbTable[KnownColors.XPanderPanelFlatCaptionGradientEnd] = m_professionalColorTable.ToolStripGradientBegin;
-            rgbTable[KnownColors.XPanderPanelPressedCaptionBegin] = m_professionalColorTable.ButtonPressedGradientBegin;
-            rgbTable[KnownColors.XPanderPanelPressedCaptionEnd] = m_professionalColorTable.ButtonPressedGradientEnd;
-            rgbTable[KnownColors.XPanderPanelPressedCaptionMiddle] = m_professionalColorTable.ButtonPressedGradientMiddle;
-            rgbTable[KnownColors.XPanderPanelCheckedCaptionBegin] = m_professionalColorTable.ButtonCheckedGradientBegin;
-            rgbTable[KnownColors.XPanderPanelCheckedCaptionEnd] = m_professionalColorTable.ButtonCheckedGradientEnd;
-            rgbTable[KnownColors.XPanderPanelCheckedCaptionMiddle] = m_professionalColorTable.ButtonCheckedGradientMiddle;
-            rgbTable[KnownColors.XPanderPanelSelectedCaptionBegin] = m_professionalColorTable.ButtonSelectedGradientBegin;
-            rgbTable[KnownColors.XPanderPanelSelectedCaptionEnd] = m_professionalColorTable.ButtonSelectedGradientEnd;
-            rgbTable[KnownColors.XPanderPanelSelectedCaptionMiddle] = m_professionalColorTable.ButtonSelectedGradientMiddle;
+			rgbTable[KnownColors.XPanderPanelCaptionGradientBegin] = _professionalColorTable.ToolStripGradientBegin;
+			rgbTable[KnownColors.XPanderPanelCaptionGradientEnd] = _professionalColorTable.ToolStripGradientEnd;
+			rgbTable[KnownColors.XPanderPanelCaptionGradientMiddle] = _professionalColorTable.ToolStripGradientMiddle;
+            rgbTable[KnownColors.XPanderPanelFlatCaptionGradientBegin] = _professionalColorTable.ToolStripGradientMiddle;
+            rgbTable[KnownColors.XPanderPanelFlatCaptionGradientEnd] = _professionalColorTable.ToolStripGradientBegin;
+            rgbTable[KnownColors.XPanderPanelPressedCaptionBegin] = _professionalColorTable.ButtonPressedGradientBegin;
+            rgbTable[KnownColors.XPanderPanelPressedCaptionEnd] = _professionalColorTable.ButtonPressedGradientEnd;
+            rgbTable[KnownColors.XPanderPanelPressedCaptionMiddle] = _professionalColorTable.ButtonPressedGradientMiddle;
+            rgbTable[KnownColors.XPanderPanelCheckedCaptionBegin] = _professionalColorTable.ButtonCheckedGradientBegin;
+            rgbTable[KnownColors.XPanderPanelCheckedCaptionEnd] = _professionalColorTable.ButtonCheckedGradientEnd;
+            rgbTable[KnownColors.XPanderPanelCheckedCaptionMiddle] = _professionalColorTable.ButtonCheckedGradientMiddle;
+            rgbTable[KnownColors.XPanderPanelSelectedCaptionBegin] = _professionalColorTable.ButtonSelectedGradientBegin;
+            rgbTable[KnownColors.XPanderPanelSelectedCaptionEnd] = _professionalColorTable.ButtonSelectedGradientEnd;
+            rgbTable[KnownColors.XPanderPanelSelectedCaptionMiddle] = _professionalColorTable.ButtonSelectedGradientMiddle;
 			rgbTable[KnownColors.XPanderPanelSelectedCaptionText] = SystemColors.ControlText;
 		}
 
 		private void InitCustomColors(Dictionary<KnownColors, Color> rgbTable)
 		{
-            Panel panel = m_basePanel as Panel;
+            var panel = _basePanel as Panel;
             if (panel != null)
             {
                 rgbTable[KnownColors.BorderColor] = panel.CustomColors.BorderColor;
@@ -548,7 +548,7 @@ namespace BSE.Windows.Forms
                 rgbTable[KnownColors.PanelCollapsedCaptionText] = panel.CustomColors.CollapsedCaptionText;
             }
 
-			XPanderPanel xpanderPanel = m_basePanel as XPanderPanel;
+			var xpanderPanel = _basePanel as XPanderPanel;
 			if (xpanderPanel != null)
 			{
                 rgbTable[KnownColors.BorderColor] = xpanderPanel.CustomColors.BorderColor;
@@ -577,11 +577,11 @@ namespace BSE.Windows.Forms
 
         private void ResetRGBTable()
         {
-            if (m_dictionaryRGBTable != null)
+            if (_dictionaryRGBTable != null)
             {
-                m_dictionaryRGBTable.Clear();
+                _dictionaryRGBTable.Clear();
             }
-            m_dictionaryRGBTable = null;
+            _dictionaryRGBTable = null;
         }
 
         #endregion

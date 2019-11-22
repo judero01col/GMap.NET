@@ -19,19 +19,19 @@ namespace Demo.WindowsForms.CustomMarkers
       static readonly Point[] Arrow = new[] { new Point(-7, 7), new Point(0, -22), new Point(7, 7), new Point(0, 2) };
 
       public float Bearing = 0;
-      private float scale = 1;
+      private float _scale = 1;
 
       public float Scale
       {
          get
          {
-            return scale;
+            return _scale;
          }
          set
          {
-            scale = value;
+            _scale = value;
 
-            Size = new Size((int)(14*scale), (int)(14*scale));
+            Size = new Size((int)(14*_scale), (int)(14*_scale));
             Offset = new Point(-Size.Width / 2, (int)(-Size.Height / 1.4));
          }
       } 

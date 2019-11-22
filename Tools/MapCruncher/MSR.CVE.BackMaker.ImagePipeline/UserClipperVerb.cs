@@ -33,8 +33,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(imageRef.image.Size, "UserClipperVerb");
             gDIBigLockedImage.SetClip(clipRegion);
             gDIBigLockedImage.DrawImageOntoThis(imageRef.image,
-                new RectangleF(0f, 0f, (float)gDIBigLockedImage.Size.Width, (float)gDIBigLockedImage.Size.Height),
-                new RectangleF(0f, 0f, (float)imageRef.image.Size.Width, (float)imageRef.image.Size.Height));
+                new RectangleF(0f, 0f, gDIBigLockedImage.Size.Width, gDIBigLockedImage.Size.Height),
+                new RectangleF(0f, 0f, imageRef.image.Size.Width, imageRef.image.Size.Height));
             ImageRef result = new ImageRef(new ImageRefCounted(gDIBigLockedImage));
             boundsPresent.Dispose();
             imageRef.Dispose();

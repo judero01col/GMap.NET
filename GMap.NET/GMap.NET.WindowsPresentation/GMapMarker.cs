@@ -230,7 +230,7 @@ namespace GMap.NET.WindowsPresentation
         {
             if (Map != null)
             {
-                GPoint p = Map.FromLatLngToLocal(Position);
+                var p = Map.FromLatLngToLocal(Position);
                 p.Offset(-(long)Map.MapTranslateTransform.X, -(long)Map.MapTranslateTransform.Y);
 
                 LocalPositionX = (int)(p.X + (long)Offset.X);

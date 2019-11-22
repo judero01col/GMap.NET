@@ -220,7 +220,7 @@ namespace MSR.CVE.BackMaker
             double num = (lat1 - lat0) / (lon1 - lon0);
             if (num > 1.0)
             {
-                return new Size((int)((double)longDimension / num), longDimension);
+                return new Size((int)(longDimension / num), longDimension);
             }
 
             return new Size(longDimension, (int)(longDimension * num));
@@ -228,7 +228,7 @@ namespace MSR.CVE.BackMaker
 
         public MapRectangle SquareOff()
         {
-            double num = Math.Max((double)(lon1 - lon0), (double)(lat1 - lat0));
+            double num = Math.Max(lon1 - lon0, lat1 - lat0);
             return new MapRectangle(lat0, lon0, lat0 + num, lon0 + num);
         }
 
@@ -243,10 +243,10 @@ namespace MSR.CVE.BackMaker
             MapRectangle box = null;
             return AddToBoundingBox(
                 AddToBoundingBox(
-                    AddToBoundingBox(AddToBoundingBox(box, transformer.getTransformedPoint((PointD)GetSW())),
-                        transformer.getTransformedPoint((PointD)GetSE())),
-                    transformer.getTransformedPoint((PointD)GetNW())),
-                transformer.getTransformedPoint((PointD)GetNE()));
+                    AddToBoundingBox(AddToBoundingBox(box, transformer.getTransformedPoint(GetSW())),
+                        transformer.getTransformedPoint(GetSE())),
+                    transformer.getTransformedPoint(GetNW())),
+                transformer.getTransformedPoint(GetNE()));
         }
 
         internal static MapRectangle Union(MapRectangle box1, MapRectangle box2)

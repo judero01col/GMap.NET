@@ -63,7 +63,7 @@ namespace GMap.NET.Internals
             server.Start();
             listen = true;
 
-            Thread t = new Thread(() =>
+            var t = new Thread(() =>
             {
                 Debug.WriteLine("TileHttpHost: " + server.LocalEndpoint);
 
@@ -77,7 +77,7 @@ namespace GMap.NET.Internals
                         }
                         else
                         {
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), server.AcceptTcpClient());
+                            ThreadPool.QueueUserWorkItem(ProcessRequest, server.AcceptTcpClient());
                         }
                     }
                     catch (Exception ex)
@@ -98,13 +98,13 @@ namespace GMap.NET.Internals
         {
             try
             {
-                using (TcpClient c = p as TcpClient)
+                using (var c = p as TcpClient)
                 {
                     using (var s = c.GetStream())
                     {
-                        using (StreamReader r = new StreamReader(s, Encoding.UTF8))
+                        using (var r = new StreamReader(s, Encoding.UTF8))
                         {
-                            var request = r.ReadLine();
+                            string request = r.ReadLine();
 
                             if (!string.IsNullOrEmpty(request) && request.StartsWith("GET"))
                             {

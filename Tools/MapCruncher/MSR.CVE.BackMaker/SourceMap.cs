@@ -166,7 +166,7 @@ namespace MSR.CVE.BackMaker
 
         public void WriteXML(MashupWriteContext wc)
         {
-            XmlTextWriter writer = wc.writer;
+            var writer = wc.writer;
             writer.WriteStartElement("SourceMap");
             writer.WriteAttributeString("DisplayName", displayName);
             writer.WriteAttributeString("Expanded", _expanded.ToString(CultureInfo.InvariantCulture));
@@ -213,7 +213,7 @@ namespace MSR.CVE.BackMaker
             readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
             this.filenameContextDelegate = filenameContextDelegate;
             latentRegionHolder = new LatentRegionHolder(dirtyEvent, readyToLockChangedEvent);
-            XMLTagReader xMLTagReader = context.NewTagReader("SourceMap");
+            var xMLTagReader = context.NewTagReader("SourceMap");
             context.ExpectIdentity(this);
             string attribute = context.reader.GetAttribute("SourceMapFilename");
             if (attribute != null)
@@ -247,7 +247,7 @@ namespace MSR.CVE.BackMaker
                         if (xMLTagReader.TagIs(LocalDocumentDescriptor.GetXMLTag()))
                         {
                             context.AssertUnique(_documentFuture);
-                            LocalDocumentDescriptor localDocumentDescriptor =
+                            var localDocumentDescriptor =
                                 new LocalDocumentDescriptor(context, filenameContextDelegate());
                             _documentFuture = new GeneralDocumentFuture(
                                 new FutureDocumentFromFilesystem(localDocumentDescriptor.GetFilesystemAbsolutePath(),
@@ -257,7 +257,7 @@ namespace MSR.CVE.BackMaker
                         {
                             if (xMLTagReader.TagIs("LastSourceMapPosition"))
                             {
-                                XMLTagReader xMLTagReader2 = context.NewTagReader("LastSourceMapPosition");
+                                var xMLTagReader2 = context.NewTagReader("LastSourceMapPosition");
                                 while (xMLTagReader2.FindNextStartTag())
                                 {
                                     if (xMLTagReader2.TagIs(MapPosition.GetXMLTag(context.version)))
@@ -272,7 +272,7 @@ namespace MSR.CVE.BackMaker
                             {
                                 if (xMLTagReader.TagIs("LastVEPosition"))
                                 {
-                                    XMLTagReader xMLTagReader3 = context.NewTagReader("LastVEPosition");
+                                    var xMLTagReader3 = context.NewTagReader("LastVEPosition");
                                     while (xMLTagReader3.FindNextStartTag())
                                     {
                                         if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
@@ -334,11 +334,11 @@ namespace MSR.CVE.BackMaker
                                                         {
                                                             if (xMLTagReader.TagIs("SnapView"))
                                                             {
-                                                                XMLTagReader xMLTagReader4 =
+                                                                var xMLTagReader4 =
                                                                     context.NewTagReader("SnapView");
                                                                 string requiredAttribute =
                                                                     context.GetRequiredAttribute("Context");
-                                                                LatLonZoom latLonZoom = default(LatLonZoom);
+                                                                var latLonZoom = default(LatLonZoom);
                                                                 bool flag = false;
                                                                 bool flag2 = true;
                                                                 CoordinateSystemIfc coordSys;
@@ -553,7 +553,7 @@ namespace MSR.CVE.BackMaker
         public void AccumulateRobustHash_PerTile(CachePackage cachePackage, IRobustHash hash)
         {
             hash.Accumulate("SourceMap:");
-            SourceDocument sourceDocument = _documentFuture.RealizeSynchronously(cachePackage);
+            var sourceDocument = _documentFuture.RealizeSynchronously(cachePackage);
             sourceDocument.localDocument.AccumulateRobustHash(hash);
             AccumulateRobustHash_Common(hash);
         }
@@ -582,16 +582,16 @@ namespace MSR.CVE.BackMaker
         {
             if (sourceMapRenderOptions.maxZoom == -1)
             {
-                MapRectangle userBoundingBox = GetUserBoundingBox(mapTileSourceFactory);
+                var userBoundingBox = GetUserBoundingBox(mapTileSourceFactory);
                 if (userBoundingBox == null)
                 {
                     return;
                 }
 
-                Size size = new Size(600, 600);
-                LatLonZoom bestViewContaining =
+                var size = new Size(600, 600);
+                var bestViewContaining =
                     new MercatorCoordinateSystem().GetBestViewContaining(userBoundingBox, size);
-                IntParameter intParameter = (IntParameter)mapTileSourceFactory.CreateUnwarpedSource(this)
+                var intParameter = (IntParameter)mapTileSourceFactory.CreateUnwarpedSource(this)
                     .GetImageDetailPrototype(FutureFeatures.Cached)
                     .Curry(new ParamDict(new object[] {TermName.ImageDetail, new SizeParameter(size)}))
                     .Realize("SourceMap.AutoSelectMaxZoom");
@@ -616,15 +616,15 @@ namespace MSR.CVE.BackMaker
                 return null;
             }
 
-            Present present = warpedMapTileSource.GetUserBounds(null, FutureFeatures.Cached)
+            var present = warpedMapTileSource.GetUserBounds(null, FutureFeatures.Cached)
                 .Realize("SourceMap.AutoSelectMaxZoom");
             if (!(present is BoundsPresent))
             {
                 return null;
             }
 
-            BoundsPresent boundsPresent = (BoundsPresent)present;
-            MapRectangle boundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
+            var boundsPresent = (BoundsPresent)present;
+            var boundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
             return boundingBox.ClipTo(
                 CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
         }

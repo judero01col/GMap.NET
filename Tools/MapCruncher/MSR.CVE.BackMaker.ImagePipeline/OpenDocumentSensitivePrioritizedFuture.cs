@@ -58,7 +58,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     activeAsyncRef = (AsyncRef)future.Realize("ODSPF");
                     AsyncRef asyncRef = (AsyncRef)activeAsyncRef.Duplicate(refCredit);
                     prioritizer.Realizing(this);
-                    activeAsyncRef.AddCallback(new AsyncRecord.CompleteCallback(AsyncCompleteCallback));
+                    activeAsyncRef.AddCallback(AsyncCompleteCallback);
                     result = asyncRef;
                 }
             }

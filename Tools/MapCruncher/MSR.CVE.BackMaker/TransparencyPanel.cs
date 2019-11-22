@@ -69,7 +69,7 @@ namespace MSR.CVE.BackMaker
             addTransparencyButton.TabIndex = 0;
             addTransparencyButton.Text = "Add Color Under Crosshairs";
             addTransparencyButton.UseVisualStyleBackColor = true;
-            addTransparencyButton.Click += new EventHandler(addTransparencyButton_Click);
+            addTransparencyButton.Click += addTransparencyButton_Click;
             colorGrid.AllowUserToAddRows = false;
             colorGrid.AllowUserToDeleteRows = false;
             colorGrid.AllowUserToResizeRows = false;
@@ -93,7 +93,7 @@ namespace MSR.CVE.BackMaker
             colorGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             colorGrid.Size = new Size(213, 158);
             colorGrid.TabIndex = 1;
-            colorGrid.SelectionChanged += new EventHandler(pinList_SelectedIndexChanged);
+            colorGrid.SelectionChanged += pinList_SelectedIndexChanged;
             color.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             color.HeaderText = "Color";
             color.Name = "color";
@@ -119,7 +119,7 @@ namespace MSR.CVE.BackMaker
             removeTransparencyButton.TabIndex = 2;
             removeTransparencyButton.Text = "Remove Selected Color";
             removeTransparencyButton.UseVisualStyleBackColor = true;
-            removeTransparencyButton.Click += new EventHandler(removeTransparencyButton_Click);
+            removeTransparencyButton.Click += removeTransparencyButton_Click;
             normalTransparencyButton.AutoSize = true;
             normalTransparencyButton.Checked = true;
             normalTransparencyButton.Location = new Point(3, 31);
@@ -130,7 +130,7 @@ namespace MSR.CVE.BackMaker
             normalTransparencyButton.Text = "Make selected colors transparent";
             normalTransparencyButton.UseVisualStyleBackColor = true;
             normalTransparencyButton.CheckedChanged +=
-                new EventHandler(normalTransparencyButton_CheckedChanged);
+                normalTransparencyButton_CheckedChanged;
             invertedTransparencyButton.AutoSize = true;
             invertedTransparencyButton.Location = new Point(3, 55);
             invertedTransparencyButton.Name = "invertedTransparencyButton";
@@ -140,7 +140,7 @@ namespace MSR.CVE.BackMaker
             invertedTransparencyButton.Text = "Display only selected colors";
             invertedTransparencyButton.UseVisualStyleBackColor = true;
             invertedTransparencyButton.CheckedChanged +=
-                new EventHandler(invertedTransparencyButton_CheckedChanged);
+                invertedTransparencyButton_CheckedChanged;
             noTransparencyButton.AutoSize = true;
             noTransparencyButton.Location = new Point(3, 78);
             noTransparencyButton.Name = "noTransparencyButton";
@@ -149,19 +149,19 @@ namespace MSR.CVE.BackMaker
             noTransparencyButton.TabStop = true;
             noTransparencyButton.Text = "Disable transparency";
             noTransparencyButton.UseVisualStyleBackColor = true;
-            noTransparencyButton.CheckedChanged += new EventHandler(noTransparencyButton_CheckedChanged);
+            noTransparencyButton.CheckedChanged += noTransparencyButton_CheckedChanged;
             fuzzSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             fuzzSpinner.Location = new Point(62, 321);
             fuzzSpinner.Name = "fuzzSpinner";
             fuzzSpinner.Size = new Size(42, 20);
             fuzzSpinner.TabIndex = 6;
-            fuzzSpinner.ValueChanged += new EventHandler(exactnessSpinner_ValueChanged);
+            fuzzSpinner.ValueChanged += exactnessSpinner_ValueChanged;
             haloSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             haloSpinner.Location = new Point(165, 321);
             haloSpinner.Name = "haloSpinner";
             haloSpinner.Size = new Size(48, 20);
             haloSpinner.TabIndex = 7;
-            haloSpinner.ValueChanged += new EventHandler(haloSpinner_ValueChanged);
+            haloSpinner.ValueChanged += haloSpinner_ValueChanged;
             label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label1.AutoSize = true;
             label1.Location = new Point(0, 323);
@@ -184,7 +184,7 @@ namespace MSR.CVE.BackMaker
             useDocumentTransparencyCheckbox.Text = "Use document transparency";
             useDocumentTransparencyCheckbox.UseVisualStyleBackColor = true;
             useDocumentTransparencyCheckbox.CheckedChanged +=
-                new EventHandler(useDocumentTransparencyCheckbox_CheckedChanged);
+                useDocumentTransparencyCheckbox_CheckedChanged;
             AutoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(useDocumentTransparencyCheckbox);
@@ -223,14 +223,14 @@ namespace MSR.CVE.BackMaker
             if (this.sourceMap != null)
             {
                 this.sourceMap.transparencyOptions.transparencyOptionsChangedEvent -=
-                    new TransparencyOptionsChangedDelegate(TransparencyChangedHandler);
+                    TransparencyChangedHandler;
             }
 
             this.sourceMap = sourceMap;
             if (this.sourceMap != null)
             {
                 this.sourceMap.transparencyOptions.transparencyOptionsChangedEvent +=
-                    new TransparencyOptionsChangedDelegate(TransparencyChangedHandler);
+                    TransparencyChangedHandler;
             }
 
             update();
@@ -252,7 +252,7 @@ namespace MSR.CVE.BackMaker
             {
                 if (tc != null)
                 {
-                    foreach (DataGridViewRow dataGridViewRow in (IEnumerable)colorGrid.Rows)
+                    foreach (DataGridViewRow dataGridViewRow in colorGrid.Rows)
                     {
                         if (((TransparencyColor)dataGridViewRow.Tag).color == tc.color)
                         {
@@ -284,7 +284,7 @@ namespace MSR.CVE.BackMaker
 
         public TransparencyColor GetSelected()
         {
-            foreach (DataGridViewRow dataGridViewRow in (IEnumerable)colorGrid.Rows)
+            foreach (DataGridViewRow dataGridViewRow in colorGrid.Rows)
             {
                 if (dataGridViewRow.Selected)
                 {

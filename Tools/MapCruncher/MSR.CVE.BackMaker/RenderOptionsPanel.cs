@@ -51,7 +51,7 @@ namespace MSR.CVE.BackMaker
             publishSourceMapsTip.SetToolTip(publishSourcesCheckbox,
                 "Provides site visitors with all of the data needed to re-render your crunchup.");
             publishSourcesCheckbox.UseVisualStyleBackColor = true;
-            publishSourcesCheckbox.CheckedChanged += new EventHandler(publishSourcesCheckbox_CheckedChanged);
+            publishSourcesCheckbox.CheckedChanged += publishSourcesCheckbox_CheckedChanged;
             publishSourcesLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             publishSourcesLabel.BackColor = SystemColors.ControlLightLight;
             publishSourcesLabel.BorderStyle = BorderStyle.None;
@@ -64,8 +64,8 @@ namespace MSR.CVE.BackMaker
             publishSourcesLabel.Text = "Copy source maps and crunchup data to output folder";
             publishSourceMapsTip.SetToolTip(publishSourcesLabel,
                 "Provides site visitors with all of the data needed to re-render your crunchup.");
-            publishSourcesLabel.TextChanged += new EventHandler(textBox1_TextChanged);
-            publishSourceMapsTip.Popup += new PopupEventHandler(publishSourceMapsTip_Popup);
+            publishSourcesLabel.TextChanged += textBox1_TextChanged;
+            publishSourceMapsTip.Popup += publishSourceMapsTip_Popup;
             permitCompositionCheckbox.AutoSize = true;
             permitCompositionCheckbox.Location = new Point(3, 239);
             permitCompositionCheckbox.Name = "permitCompositionCheckbox";
@@ -74,7 +74,7 @@ namespace MSR.CVE.BackMaker
             permitCompositionCheckbox.Text = "Permit composition";
             permitCompositionCheckbox.UseVisualStyleBackColor = true;
             permitCompositionCheckbox.CheckedChanged +=
-                new EventHandler(permitCompositionCheckbox_CheckedChanged);
+                permitCompositionCheckbox_CheckedChanged;
             panel1.BackColor = SystemColors.ControlLightLight;
             panel1.Controls.Add(renderToS3radio);
             panel1.Controls.Add(label1);
@@ -87,7 +87,7 @@ namespace MSR.CVE.BackMaker
             panel1.Name = "panel1";
             panel1.Size = new Size(332, 362);
             panel1.TabIndex = 18;
-            panel1.Paint += new PaintEventHandler(panel1_Paint);
+            panel1.Paint += panel1_Paint;
             renderToFileRadio.AutoSize = true;
             renderToFileRadio.Location = new Point(19, 23);
             renderToFileRadio.Name = "renderToFileRadio";
@@ -96,14 +96,14 @@ namespace MSR.CVE.BackMaker
             renderToFileRadio.TabStop = true;
             renderToFileRadio.Text = "File";
             renderToFileRadio.UseVisualStyleBackColor = true;
-            renderToFileRadio.CheckedChanged += new EventHandler(renderToFileRadio_CheckedChanged);
+            renderToFileRadio.CheckedChanged += renderToFileRadio_CheckedChanged;
             label1.AutoSize = true;
             label1.Location = new Point(3, 7);
             label1.Name = "label1";
             label1.Size = new Size(57, 13);
             label1.TabIndex = 19;
             label1.Text = "Render to:";
-            label1.Click += new EventHandler(label1_Click);
+            label1.Click += label1_Click;
             renderToS3radio.AutoSize = true;
             renderToS3radio.Location = new Point(79, 23);
             renderToS3radio.Name = "renderToS3radio";
@@ -112,7 +112,7 @@ namespace MSR.CVE.BackMaker
             renderToS3radio.TabStop = true;
             renderToS3radio.Text = "S3";
             renderToS3radio.UseVisualStyleBackColor = true;
-            renderToS3radio.CheckedChanged += new EventHandler(renderToS3radio_CheckedChanged);
+            renderToS3radio.CheckedChanged += renderToS3radio_CheckedChanged;
             AutoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
@@ -147,13 +147,13 @@ namespace MSR.CVE.BackMaker
 
             if (this.renderOptions != null)
             {
-                this.renderOptions.dirtyEvent.Remove(new DirtyListener(PromptReload));
+                this.renderOptions.dirtyEvent.Remove(PromptReload);
             }
 
             this.renderOptions = renderOptions;
             if (this.renderOptions != null)
             {
-                this.renderOptions.dirtyEvent.Add(new DirtyListener(PromptReload));
+                this.renderOptions.dirtyEvent.Add(PromptReload);
             }
 
             PromptReload();

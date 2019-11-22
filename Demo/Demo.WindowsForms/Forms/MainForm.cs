@@ -18,8 +18,6 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET.WindowsForms.ToolTips;
 using System.Reflection;
-using GMap.NET.CacheProviders;
-using System.Linq;
 using BSE.Windows.Forms;
 
 namespace Demo.WindowsForms
@@ -27,25 +25,25 @@ namespace Demo.WindowsForms
     public partial class MainForm : Form
     {
         // layers
-        readonly GMapOverlay top = new GMapOverlay();
-        internal readonly GMapOverlay objects = new GMapOverlay("objects");
-        internal readonly GMapOverlay routes = new GMapOverlay("routes");
-        internal readonly GMapOverlay polygons = new GMapOverlay("polygons");
+        readonly GMapOverlay _top = new GMapOverlay();
+        internal readonly GMapOverlay Objects = new GMapOverlay("objects");
+        internal readonly GMapOverlay Routes = new GMapOverlay("routes");
+        internal readonly GMapOverlay Polygons = new GMapOverlay("polygons");
 
         // marker
-        GMapMarker currentMarker;
+        GMapMarker _currentMarker;
 
         // polygons
-        GMapPolygon polygon;
+        GMapPolygon _polygon;
 
         // etc
-        readonly Random rnd = new Random();
-        readonly DescendingComparer ComparerIpStatus = new DescendingComparer();
-        GMapMarkerRect CurentRectMarker;
-        string mobileGpsLog = string.Empty;
-        bool isMouseDown;
-        PointLatLng start;
-        PointLatLng end;
+        readonly Random _rnd = new Random();
+        readonly DescendingComparer _comparerIpStatus = new DescendingComparer();
+        GMapMarkerRect _curentRectMarker;
+        string _mobileGpsLog = string.Empty;
+        bool _isMouseDown;
+        PointLatLng _start;
+        PointLatLng _end;
 
         public MainForm()
         {
@@ -92,41 +90,41 @@ namespace Demo.WindowsForms
 
                 // map events
                 {
-                    MainMap.OnPositionChanged += new PositionChanged(MainMap_OnPositionChanged);
-                    MainMap.OnTileLoadStart += new TileLoadStart(MainMap_OnTileLoadStart);
-                    MainMap.OnTileLoadComplete += new TileLoadComplete(MainMap_OnTileLoadComplete);
+                    MainMap.OnPositionChanged += MainMap_OnPositionChanged;
+                    MainMap.OnTileLoadStart += MainMap_OnTileLoadStart;
+                    MainMap.OnTileLoadComplete += MainMap_OnTileLoadComplete;
                     MainMap.OnMapClick += MainMap_OnMapClick;
 
-                    MainMap.OnMapZoomChanged += new MapZoomChanged(MainMap_OnMapZoomChanged);
-                    MainMap.OnMapTypeChanged += new MapTypeChanged(MainMap_OnMapTypeChanged);
+                    MainMap.OnMapZoomChanged += MainMap_OnMapZoomChanged;
+                    MainMap.OnMapTypeChanged += MainMap_OnMapTypeChanged;
 
-                    MainMap.OnMarkerClick += new MarkerClick(MainMap_OnMarkerClick);
+                    MainMap.OnMarkerClick += MainMap_OnMarkerClick;
                     MainMap.OnMarkerDoubleClick += MainMap_OnMarkerDoubleClick;
 
-                    MainMap.OnMarkerEnter += new MarkerEnter(MainMap_OnMarkerEnter);
-                    MainMap.OnMarkerLeave += new MarkerLeave(MainMap_OnMarkerLeave);
+                    MainMap.OnMarkerEnter += MainMap_OnMarkerEnter;
+                    MainMap.OnMarkerLeave += MainMap_OnMarkerLeave;
 
-                    MainMap.OnPolygonEnter += new PolygonEnter(MainMap_OnPolygonEnter);
-                    MainMap.OnPolygonLeave += new PolygonLeave(MainMap_OnPolygonLeave);
+                    MainMap.OnPolygonEnter += MainMap_OnPolygonEnter;
+                    MainMap.OnPolygonLeave += MainMap_OnPolygonLeave;
 
                     MainMap.OnPolygonClick += MainMap_OnPolygonClick;
                     MainMap.OnPolygonDoubleClick += MainMap_OnPolygonDoubleClick;
 
-                    MainMap.OnRouteEnter += new RouteEnter(MainMap_OnRouteEnter);
-                    MainMap.OnRouteLeave += new RouteLeave(MainMap_OnRouteLeave);
+                    MainMap.OnRouteEnter += MainMap_OnRouteEnter;
+                    MainMap.OnRouteLeave += MainMap_OnRouteLeave;
 
                     MainMap.OnRouteClick += MainMap_OnRouteClick;
                     MainMap.OnRouteDoubleClick += MainMap_OnRouteDoubleClick;
 
-                    MainMap.Manager.OnTileCacheComplete += new TileCacheComplete(OnTileCacheComplete);
-                    MainMap.Manager.OnTileCacheStart += new TileCacheStart(OnTileCacheStart);
-                    MainMap.Manager.OnTileCacheProgress += new TileCacheProgress(OnTileCacheProgress);
+                    MainMap.Manager.OnTileCacheComplete += OnTileCacheComplete;
+                    MainMap.Manager.OnTileCacheStart += OnTileCacheStart;
+                    MainMap.Manager.OnTileCacheProgress += OnTileCacheProgress;
                 }
 
-                MainMap.MouseMove += new MouseEventHandler(MainMap_MouseMove);
-                MainMap.MouseDown += new MouseEventHandler(MainMap_MouseDown);
-                MainMap.MouseUp += new MouseEventHandler(MainMap_MouseUp);
-                MainMap.MouseDoubleClick += new MouseEventHandler(MainMap_MouseDoubleClick);
+                MainMap.MouseMove += MainMap_MouseMove;
+                MainMap.MouseDown += MainMap_MouseDown;
+                MainMap.MouseUp += MainMap_MouseUp;
+                MainMap.MouseDoubleClick += MainMap_MouseDoubleClick;
 
                 // get map types
             #if !MONO   // mono doesn't handle it, so we 'lost' provider list ;]
@@ -162,75 +160,75 @@ namespace Demo.WindowsForms
                 #region -- demo workers --
                 // flight demo
                 {
-                    flightWorker.DoWork += new DoWorkEventHandler(flight_DoWork);
-                    flightWorker.ProgressChanged += new ProgressChangedEventHandler(flight_ProgressChanged);
-                    flightWorker.WorkerSupportsCancellation = true;
-                    flightWorker.WorkerReportsProgress = true;
+                    _flightWorker.DoWork += flight_DoWork;
+                    _flightWorker.ProgressChanged += flight_ProgressChanged;
+                    _flightWorker.WorkerSupportsCancellation = true;
+                    _flightWorker.WorkerReportsProgress = true;
                 }
 
                 // vehicle demo
                 {
-                    transportWorker.DoWork += new DoWorkEventHandler(transport_DoWork);
-                    transportWorker.ProgressChanged += new ProgressChangedEventHandler(transport_ProgressChanged);
-                    transportWorker.WorkerSupportsCancellation = true;
-                    transportWorker.WorkerReportsProgress = true;
+                    _transportWorker.DoWork += transport_DoWork;
+                    _transportWorker.ProgressChanged += transport_ProgressChanged;
+                    _transportWorker.WorkerSupportsCancellation = true;
+                    _transportWorker.WorkerReportsProgress = true;
                 }
 
                 // Connections
                 {
-                    connectionsWorker.DoWork += new DoWorkEventHandler(connectionsWorker_DoWork);
-                    connectionsWorker.ProgressChanged += new ProgressChangedEventHandler(connectionsWorker_ProgressChanged);
-                    connectionsWorker.WorkerSupportsCancellation = true;
-                    connectionsWorker.WorkerReportsProgress = true;
+                    _connectionsWorker.DoWork += connectionsWorker_DoWork;
+                    _connectionsWorker.ProgressChanged += connectionsWorker_ProgressChanged;
+                    _connectionsWorker.WorkerSupportsCancellation = true;
+                    _connectionsWorker.WorkerReportsProgress = true;
 
-                    ipInfoSearchWorker.DoWork += new DoWorkEventHandler(ipInfoSearchWorker_DoWork);
-                    ipInfoSearchWorker.WorkerSupportsCancellation = true;
+                    _ipInfoSearchWorker.DoWork += ipInfoSearchWorker_DoWork;
+                    _ipInfoSearchWorker.WorkerSupportsCancellation = true;
 
-                    iptracerWorker.DoWork += new DoWorkEventHandler(iptracerWorker_DoWork);
-                    iptracerWorker.WorkerSupportsCancellation = true;
+                    _iptracerWorker.DoWork += iptracerWorker_DoWork;
+                    _iptracerWorker.WorkerSupportsCancellation = true;
 
                     GridConnections.AutoGenerateColumns = false;
 
 #if SQLite
-                    IpCache.CacheLocation = MainMap.CacheLocation;
+                    _ipCache.CacheLocation = MainMap.CacheLocation;
 #endif
                 }
 
                 // perf
-                timerPerf.Tick += new EventHandler(timer_Tick);
+                _timerPerf.Tick += timer_Tick;
                 #endregion
 
                 // add custom layers  
                 {
-                    MainMap.Overlays.Add(routes);
-                    MainMap.Overlays.Add(polygons);
-                    MainMap.Overlays.Add(objects);
-                    MainMap.Overlays.Add(top);
+                    MainMap.Overlays.Add(Routes);
+                    MainMap.Overlays.Add(Polygons);
+                    MainMap.Overlays.Add(Objects);
+                    MainMap.Overlays.Add(_top);
 
-                    routes.Routes.CollectionChanged += new GMap.NET.ObjectModel.NotifyCollectionChangedEventHandler(Routes_CollectionChanged);
-                    objects.Markers.CollectionChanged += new GMap.NET.ObjectModel.NotifyCollectionChangedEventHandler(Markers_CollectionChanged);
+                    Routes.Routes.CollectionChanged += Routes_CollectionChanged;
+                    Objects.Markers.CollectionChanged += Markers_CollectionChanged;
                 }
 
                 // set current marker
-                currentMarker = new GMarkerGoogle(MainMap.Position, GMarkerGoogleType.arrow);
-                currentMarker.IsHitTestVisible = false;
-                top.Markers.Add(currentMarker);
+                _currentMarker = new GMarkerGoogle(MainMap.Position, GMarkerGoogleType.arrow);
+                _currentMarker.IsHitTestVisible = false;
+                _top.Markers.Add(_currentMarker);
 
                 //MainMap.VirtualSizeEnabled = true;
                 //if(false)
                 {
                     // add my city location for demo
                     GeoCoderStatusCode status;
-                    PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
+                    var pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
 
                     if (pos != null && status == GeoCoderStatusCode.OK)
                     {
-                        currentMarker.Position = pos.Value;
+                        _currentMarker.Position = pos.Value;
 
                         GMapMarker myCity = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green_small);
                         myCity.ToolTipMode = MarkerTooltipMode.Always;
                         myCity.ToolTipText = "Welcome to Lithuania! ;}";
-                        objects.Markers.Add(myCity);
+                        Objects.Markers.Add(myCity);
                     }
 
                     // add some points in lithuania
@@ -239,7 +237,7 @@ namespace Demo.WindowsForms
                     AddLocationLithuania("Šiauliai");
                     AddLocationLithuania("Panevėžys");
 
-                    if (objects.Markers.Count > 0)
+                    if (Objects.Markers.Count > 0)
                     {
                         MainMap.ZoomAndCenterMarkers(null);
                     }
@@ -248,13 +246,13 @@ namespace Demo.WindowsForms
 
                     try
                     {
-                        GMapOverlay overlay = DeepClone<GMapOverlay>(objects);
+                        var overlay = DeepClone<GMapOverlay>(Objects);
                         Debug.WriteLine("ISerializable status for markers: OK");
 
-                        GMapOverlay overlay2 = DeepClone<GMapOverlay>(polygons);
+                        var overlay2 = DeepClone<GMapOverlay>(Polygons);
                         Debug.WriteLine("ISerializable status for polygons: OK");
 
-                        GMapOverlay overlay3 = DeepClone<GMapOverlay>(routes);
+                        var overlay3 = DeepClone<GMapOverlay>(Routes);
                         Debug.WriteLine("ISerializable status for routes: OK");
                     }
                     catch (Exception ex)
@@ -272,7 +270,7 @@ namespace Demo.WindowsForms
             }
         }
 
-        private void MainMap_OnMapClick(PointLatLng PointClick, MouseEventArgs e)
+        private void MainMap_OnMapClick(PointLatLng pointClick, MouseEventArgs e)
         {
             MainMap.FromLocalToLatLng(e.X, e.Y);
         }
@@ -318,12 +316,12 @@ namespace Demo.WindowsForms
 
         void Markers_CollectionChanged(object sender, GMap.NET.ObjectModel.NotifyCollectionChangedEventArgs e)
         {
-            textBoxMarkerCount.Text = objects.Markers.Count.ToString();
+            textBoxMarkerCount.Text = Objects.Markers.Count.ToString();
         }
 
         void Routes_CollectionChanged(object sender, GMap.NET.ObjectModel.NotifyCollectionChangedEventArgs e)
         {
-            textBoxrouteCount.Text = routes.Routes.Count.ToString();
+            textBoxrouteCount.Text = Routes.Routes.Count.ToString();
         }
 
         #region -- performance test --
@@ -333,37 +331,37 @@ namespace Demo.WindowsForms
             return min + (rng.NextDouble() * (max - min));
         }
 
-        int tt;
+        int _tt;
         void timer_Tick(object sender, EventArgs e)
         {
-            var pos = new PointLatLng(NextDouble(rnd, MainMap.ViewArea.Top, MainMap.ViewArea.Bottom), NextDouble(rnd, MainMap.ViewArea.Left, MainMap.ViewArea.Right));
+            var pos = new PointLatLng(NextDouble(_rnd, MainMap.ViewArea.Top, MainMap.ViewArea.Bottom), NextDouble(_rnd, MainMap.ViewArea.Left, MainMap.ViewArea.Right));
             GMapMarker m = new GMarkerGoogle(pos, GMarkerGoogleType.green_pushpin);
             {
-                m.ToolTipText = (tt++).ToString();
+                m.ToolTipText = (_tt++).ToString();
                 m.ToolTipMode = MarkerTooltipMode.Always;
             }
 
-            objects.Markers.Add(m);
+            Objects.Markers.Add(m);
 
-            if (tt >= 333)
+            if (_tt >= 333)
             {
-                timerPerf.Stop();
-                tt = 0;
+                _timerPerf.Stop();
+                _tt = 0;
             }
         }
 
-        System.Windows.Forms.Timer timerPerf = new System.Windows.Forms.Timer();
+        System.Windows.Forms.Timer _timerPerf = new System.Windows.Forms.Timer();
         #endregion
 
         #region -- flight demo --
-        BackgroundWorker flightWorker = new BackgroundWorker();
+        BackgroundWorker _flightWorker = new BackgroundWorker();
 
-        readonly List<FlightRadarData> flights = new List<FlightRadarData>();
-        readonly Dictionary<int, GMapMarker> flightMarkers = new Dictionary<int, GMapMarker>();
+        readonly List<FlightRadarData> _flights = new List<FlightRadarData>();
+        readonly Dictionary<int, GMapMarker> _flightMarkers = new Dictionary<int, GMapMarker>();
 
-        bool firstLoadFlight = true;
-        GMapMarker currentFlight;
-        RectLatLng flightBounds = new RectLatLng(54.4955675218741, -0.966796875, 28.916015625, 13.3830987326932);
+        bool _firstLoadFlight = true;
+        GMapMarker _currentFlight;
+        RectLatLng _flightBounds = new RectLatLng(54.4955675218741, -0.966796875, 28.916015625, 13.3830987326932);
 
         void flight_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -371,14 +369,14 @@ namespace Demo.WindowsForms
             // call Refresh to perform single refresh and reset invalidation state
             MainMap.HoldInvalidation = true;
 
-            lock (flights)
+            lock (_flights)
             {
-                if (flightBounds != MainMap.ViewArea)
+                if (_flightBounds != MainMap.ViewArea)
                 {
-                    flightBounds = MainMap.ViewArea;
-                    foreach (var m in objects.Markers)
+                    _flightBounds = MainMap.ViewArea;
+                    foreach (var m in Objects.Markers)
                     {
-                        if (!flightBounds.Contains(m.Position))
+                        if (!_flightBounds.Contains(m.Position))
                         {
                             m.IsVisible = false;
                         }
@@ -389,40 +387,40 @@ namespace Demo.WindowsForms
                     }
                 }
 
-                foreach (FlightRadarData d in flights)
+                foreach (var d in _flights)
                 {
                     GMapMarker marker;
 
-                    if (!flightMarkers.TryGetValue(d.Id, out marker))
+                    if (!_flightMarkers.TryGetValue(d.Id, out marker))
                     {
-                        marker = new GMarkerArrow(d.point);
+                        marker = new GMarkerArrow(d.Point);
                         marker.Tag = d.Id;
                         marker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-                        (marker as GMarkerArrow).Bearing = d.bearing;
+                        (marker as GMarkerArrow).Bearing = d.Bearing;
 
-                        flightMarkers[d.Id] = marker;
-                        objects.Markers.Add(marker);
+                        _flightMarkers[d.Id] = marker;
+                        Objects.Markers.Add(marker);
                     }
                     else
                     {
-                        marker.Position = d.point;
-                        (marker as GMarkerArrow).Bearing = d.bearing;
+                        marker.Position = d.Point;
+                        (marker as GMarkerArrow).Bearing = d.Bearing;
                     }
-                    marker.ToolTipText = d.name + ", " + d.altitude + ", " + d.speed;
+                    marker.ToolTipText = d.Name + ", " + d.Altitude + ", " + d.Speed;
 
-                    if (currentFlight != null && currentFlight == marker)
+                    if (_currentFlight != null && _currentFlight == marker)
                     {
                         MainMap.Position = marker.Position;
-                        MainMap.Bearing = (float)d.bearing;
+                        MainMap.Bearing = d.Bearing;
                     }
                 }
             }
 
-            if (firstLoadFlight)
+            if (_firstLoadFlight)
             {
                 MainMap.Zoom = 5;
                 MainMap.SetZoomToFitRect(new RectLatLng(54.4955675218741, -0.966796875, 28.916015625, 13.3830987326932));
-                firstLoadFlight = false;
+                _firstLoadFlight = false;
             }
             MainMap.Refresh();
         }
@@ -431,15 +429,15 @@ namespace Demo.WindowsForms
         {
             //bool restartSesion = true;
 
-            while (!flightWorker.CancellationPending)
+            while (!_flightWorker.CancellationPending)
             {
                 try
                 {
-                    lock (flights)
+                    lock (_flights)
                     {
                         //Stuff.GetFlightRadarData(flights, lastPosition, lastZoom, restartSesion);
 
-                        Stuff.GetFlightRadarData(flights, flightBounds);
+                        Stuff.GetFlightRadarData(_flights, _flightBounds);
 
                         //if(flights.Count > 0 && restartSesion)
                         //{
@@ -447,7 +445,7 @@ namespace Demo.WindowsForms
                         //}
                     }
 
-                    flightWorker.ReportProgress(100);
+                    _flightWorker.ReportProgress(100);
                 }
                 catch (Exception ex)
                 {
@@ -456,24 +454,24 @@ namespace Demo.WindowsForms
                 Thread.Sleep(5 * 1000);
             }
 
-            flightMarkers.Clear();
+            _flightMarkers.Clear();
         }
 
         #endregion
 
         #region -- transport demo --
-        BackgroundWorker transportWorker = new BackgroundWorker();
+        BackgroundWorker _transportWorker = new BackgroundWorker();
 
         #region -- old vehicle demo --
-        readonly List<VehicleData> trolleybus = new List<VehicleData>();
-        readonly Dictionary<int, GMapMarker> trolleybusMarkers = new Dictionary<int, GMapMarker>();
+        readonly List<VehicleData> _trolleybus = new List<VehicleData>();
+        readonly Dictionary<int, GMapMarker> _trolleybusMarkers = new Dictionary<int, GMapMarker>();
 
-        readonly List<VehicleData> bus = new List<VehicleData>();
-        readonly Dictionary<int, GMapMarker> busMarkers = new Dictionary<int, GMapMarker>();
+        readonly List<VehicleData> _bus = new List<VehicleData>();
+        readonly Dictionary<int, GMapMarker> _busMarkers = new Dictionary<int, GMapMarker>();
         #endregion
 
-        bool firstLoadTrasport = true;
-        GMapMarker currentTransport;
+        bool _firstLoadTrasport = true;
+        GMapMarker _currentTransport;
 
         void transport_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -482,20 +480,20 @@ namespace Demo.WindowsForms
             MainMap.HoldInvalidation = true;
 
             #region -- vehicle demo --
-            lock (trolleybus)
+            lock (_trolleybus)
             {
-                foreach (VehicleData d in trolleybus)
+                foreach (var d in _trolleybus)
                 {
                     GMapMarker marker;
 
-                    if (!trolleybusMarkers.TryGetValue(d.Id, out marker))
+                    if (!_trolleybusMarkers.TryGetValue(d.Id, out marker))
                     {
                         marker = new GMarkerGoogle(new PointLatLng(d.Lat, d.Lng), GMarkerGoogleType.red_small);
                         marker.Tag = d.Id;
                         marker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
 
-                        trolleybusMarkers[d.Id] = marker;
-                        objects.Markers.Add(marker);
+                        _trolleybusMarkers[d.Id] = marker;
+                        Objects.Markers.Add(marker);
                     }
                     else
                     {
@@ -504,7 +502,7 @@ namespace Demo.WindowsForms
                     }
                     marker.ToolTipText = "Trolley " + d.Line + (d.Bearing.HasValue ? ", bearing: " + d.Bearing.Value.ToString() : string.Empty) + ", " + d.Time;
 
-                    if (currentTransport != null && currentTransport == marker)
+                    if (_currentTransport != null && _currentTransport == marker)
                     {
                         MainMap.Position = marker.Position;
                         if (d.Bearing.HasValue)
@@ -515,20 +513,20 @@ namespace Demo.WindowsForms
                 }
             }
 
-            lock (bus)
+            lock (_bus)
             {
-                foreach (VehicleData d in bus)
+                foreach (var d in _bus)
                 {
                     GMapMarker marker;
 
-                    if (!busMarkers.TryGetValue(d.Id, out marker))
+                    if (!_busMarkers.TryGetValue(d.Id, out marker))
                     {
                         marker = new GMarkerGoogle(new PointLatLng(d.Lat, d.Lng), GMarkerGoogleType.green_small);
                         marker.Tag = d.Id;
                         marker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
 
-                        busMarkers[d.Id] = marker;
-                        objects.Markers.Add(marker);
+                        _busMarkers[d.Id] = marker;
+                        Objects.Markers.Add(marker);
                     }
                     else
                     {
@@ -537,7 +535,7 @@ namespace Demo.WindowsForms
                     }
                     marker.ToolTipText = "Bus " + d.Line + (d.Bearing.HasValue ? ", bearing: " + d.Bearing.Value.ToString() : string.Empty) + ", " + d.Time;
 
-                    if (currentTransport != null && currentTransport == marker)
+                    if (_currentTransport != null && _currentTransport == marker)
                     {
                         MainMap.Position = marker.Position;
                         if (d.Bearing.HasValue)
@@ -549,34 +547,34 @@ namespace Demo.WindowsForms
             }
             #endregion
 
-            if (firstLoadTrasport)
+            if (_firstLoadTrasport)
             {
                 MainMap.Zoom = 5;
                 MainMap.ZoomAndCenterMarkers("objects");
-                firstLoadTrasport = false;
+                _firstLoadTrasport = false;
             }
             MainMap.Refresh();
         }
 
         void transport_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!transportWorker.CancellationPending)
+            while (!_transportWorker.CancellationPending)
             {
                 try
                 {
                     #region -- old vehicle demo --
-                    lock (trolleybus)
+                    lock (_trolleybus)
                     {
-                        Stuff.GetVilniusTransportData(TransportType.TrolleyBus, string.Empty, trolleybus);
+                        Stuff.GetVilniusTransportData(TransportType.TrolleyBus, string.Empty, _trolleybus);
                     }
 
-                    lock (bus)
+                    lock (_bus)
                     {
-                        Stuff.GetVilniusTransportData(TransportType.Bus, string.Empty, bus);
+                        Stuff.GetVilniusTransportData(TransportType.Bus, string.Empty, _bus);
                     }
                     #endregion
 
-                    transportWorker.ReportProgress(100);
+                    _transportWorker.ReportProgress(100);
                 }
                 catch (Exception ex)
                 {
@@ -585,51 +583,51 @@ namespace Demo.WindowsForms
                 Thread.Sleep(2 * 1000);
             }
 
-            trolleybusMarkers.Clear();
-            busMarkers.Clear();
+            _trolleybusMarkers.Clear();
+            _busMarkers.Clear();
         }
 
         #endregion
 
         #region -- tcp/ip connections demo --
-        BackgroundWorker connectionsWorker = new BackgroundWorker();
-        BackgroundWorker ipInfoSearchWorker = new BackgroundWorker();
-        BackgroundWorker iptracerWorker = new BackgroundWorker();
+        BackgroundWorker _connectionsWorker = new BackgroundWorker();
+        BackgroundWorker _ipInfoSearchWorker = new BackgroundWorker();
+        BackgroundWorker _iptracerWorker = new BackgroundWorker();
 
-        readonly Dictionary<string, IpInfo> TcpState = new Dictionary<string, IpInfo>();
-        readonly Dictionary<string, IpInfo> TcpTracePoints = new Dictionary<string, IpInfo>();
-        readonly Dictionary<string, List<PingReply>> TraceRoutes = new Dictionary<string, List<PingReply>>();
+        readonly Dictionary<string, IpInfo> _tcpState = new Dictionary<string, IpInfo>();
+        readonly Dictionary<string, IpInfo> _tcpTracePoints = new Dictionary<string, IpInfo>();
+        readonly Dictionary<string, List<PingReply>> _traceRoutes = new Dictionary<string, List<PingReply>>();
 
-        readonly List<string> TcpStateNeedLocationInfo = new List<string>();
-        readonly Queue<string> TcpStateNeedtraceInfo = new Queue<string>();
+        readonly List<string> _tcpStateNeedLocationInfo = new List<string>();
+        readonly Queue<string> _tcpStateNeedTraceInfo = new Queue<string>();
 
-        volatile bool TryTraceConnection;
-        GMapMarker lastTcpmarker;
+        volatile bool _tryTraceConnection;
+        GMapMarker _lastTcpMarker;
 #if SQLite
-        readonly SQLiteIpCache IpCache = new SQLiteIpCache();
+        readonly SQLiteIpCache _ipCache = new SQLiteIpCache();
 #endif
 
-        readonly Dictionary<string, GMapMarker> tcpConnections = new Dictionary<string, GMapMarker>();
-        readonly Dictionary<string, GMapRoute> tcpRoutes = new Dictionary<string, GMapRoute>();
+        readonly Dictionary<string, GMapMarker> _tcpConnections = new Dictionary<string, GMapMarker>();
+        readonly Dictionary<string, GMapRoute> _tcpRoutes = new Dictionary<string, GMapRoute>();
 
-        readonly List<IpStatus> CountryStatusView = new List<IpStatus>();
-        readonly SortedDictionary<string, int> CountryStatus = new SortedDictionary<string, int>();
+        readonly List<IpStatus> _countryStatusView = new List<IpStatus>();
+        readonly SortedDictionary<string, int> _countryStatus = new SortedDictionary<string, int>();
 
-        readonly List<string> SelectedCountries = new List<string>();
-        readonly Dictionary<int, Process> ProcessList = new Dictionary<int, Process>();
+        readonly List<string> _selectedCountries = new List<string>();
+        readonly Dictionary<int, Process> _processList = new Dictionary<int, Process>();
 
         void ipInfoSearchWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!ipInfoSearchWorker.CancellationPending)
+            while (!_ipInfoSearchWorker.CancellationPending)
             {
                 try
                 {
                     string iplist = string.Empty;
 
-                    lock (TcpStateNeedLocationInfo)
+                    lock (_tcpStateNeedLocationInfo)
                     {
                         //int count = 0;
-                        foreach (var info in TcpStateNeedLocationInfo)
+                        foreach (string info in _tcpStateNeedLocationInfo)
                         {
                             if (iplist.Length > 0)
                             {
@@ -647,13 +645,13 @@ namespace Demo.WindowsForms
                     // fill location info
                     if (!string.IsNullOrEmpty(iplist))
                     {
-                        List<IpInfo> ips = GetIpHostInfo(iplist);
+                        var ips = GetIpHostInfo(iplist);
                         foreach (var i in ips)
                         {
-                            lock (TcpState)
+                            lock (_tcpState)
                             {
                                 IpInfo info;
-                                if (TcpState.TryGetValue(i.Ip, out info))
+                                if (_tcpState.TryGetValue(i.Ip, out info))
                                 {
                                     info.CountryName = i.CountryName;
                                     info.RegionName = i.RegionName;
@@ -667,20 +665,20 @@ namespace Demo.WindowsForms
                                         info.Ip = i.Ip;
 
                                         // add host for tracing
-                                        lock (TcpStateNeedtraceInfo)
+                                        lock (_tcpStateNeedTraceInfo)
                                         {
-                                            if (!TcpStateNeedtraceInfo.Contains(i.Ip))
+                                            if (!_tcpStateNeedTraceInfo.Contains(i.Ip))
                                             {
-                                                TcpStateNeedtraceInfo.Enqueue(i.Ip);
+                                                _tcpStateNeedTraceInfo.Enqueue(i.Ip);
                                             }
                                         }
                                     }
 
-                                    lock (TcpStateNeedLocationInfo)
+                                    lock (_tcpStateNeedLocationInfo)
                                     {
-                                        TcpStateNeedLocationInfo.Remove(i.Ip);
+                                        _tcpStateNeedLocationInfo.Remove(i.Ip);
 
-                                        Debug.WriteLine("TcpStateNeedLocationInfo: " + TcpStateNeedLocationInfo.Count + " left...");
+                                        Debug.WriteLine("TcpStateNeedLocationInfo: " + _tcpStateNeedLocationInfo.Count + " left...");
                                     }
                                 }
                             }
@@ -703,38 +701,38 @@ namespace Demo.WindowsForms
 
         void iptracerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!iptracerWorker.CancellationPending)
+            while (!_iptracerWorker.CancellationPending)
             {
                 try
                 {
-                    string Ip = string.Empty;
+                    string ip = string.Empty;
                     int count;
-                    lock (TcpStateNeedtraceInfo)
+                    lock (_tcpStateNeedTraceInfo)
                     {
-                        count = TcpStateNeedtraceInfo.Count;
+                        count = _tcpStateNeedTraceInfo.Count;
                         if (count > 0)
                         {
-                            Ip = TcpStateNeedtraceInfo.Dequeue();
+                            ip = _tcpStateNeedTraceInfo.Dequeue();
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(Ip))
+                    if (!string.IsNullOrEmpty(ip))
                     {
                         string tracertIps = string.Empty;
 
                         List<PingReply> tracert;
 
                         bool contains;
-                        lock (TraceRoutes)
+                        lock (_traceRoutes)
                         {
-                            contains = TraceRoutes.TryGetValue(Ip, out tracert);
+                            contains = _traceRoutes.TryGetValue(ip, out tracert);
                         }
 
                         if (!contains)
                         {
-                            Debug.WriteLine("GetTraceRoute: " + Ip + ", left " + count);
+                            Debug.WriteLine("GetTraceRoute: " + ip + ", left " + count);
 
-                            tracert = TraceRoute.GetTraceRoute(Ip);
+                            tracert = TraceRoute.GetTraceRoute(ip);
                             if (tracert != null)
                             {
                                 if (tracert[tracert.Count - 1].Status == IPStatus.Success)
@@ -753,27 +751,27 @@ namespace Demo.WindowsForms
 
                                     if (!string.IsNullOrEmpty(tracertIps))
                                     {
-                                        List<IpInfo> tinfo = GetIpHostInfo(tracertIps);
+                                        var tinfo = GetIpHostInfo(tracertIps);
                                         if (tinfo.Count > 0)
                                         {
                                             for (int i = 0; i < tinfo.Count; i++)
                                             {
-                                                IpInfo ti = tinfo[i];
+                                                var ti = tinfo[i];
                                                 ti.TracePoint = true;
 
                                                 if (ti.CountryName != "Reserved")
                                                 {
-                                                    lock (TcpTracePoints)
+                                                    lock (_tcpTracePoints)
                                                     {
-                                                        TcpTracePoints[ti.Ip] = ti;
+                                                        _tcpTracePoints[ti.Ip] = ti;
                                                     }
                                                 }
                                             }
                                             tinfo.Clear();
 
-                                            lock (TraceRoutes)
+                                            lock (_traceRoutes)
                                             {
-                                                TraceRoutes[Ip] = tracert;
+                                                _traceRoutes[ip] = tracert;
                                             }
                                         }
                                     }
@@ -781,9 +779,9 @@ namespace Demo.WindowsForms
                                 else
                                 {
                                     // move failed, eque itself again
-                                    lock (TcpStateNeedtraceInfo)
+                                    lock (_tcpStateNeedTraceInfo)
                                     {
-                                        TcpStateNeedtraceInfo.Enqueue(Ip);
+                                        _tcpStateNeedTraceInfo.Enqueue(ip);
                                     }
                                 }
                             }
@@ -806,9 +804,9 @@ namespace Demo.WindowsForms
         void connectionsWorker_DoWork(object sender, DoWorkEventArgs e)
         {
 #if !MONO
-            IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+            var properties = IPGlobalProperties.GetIPGlobalProperties();
 
-            while (!connectionsWorker.CancellationPending)
+            while (!_connectionsWorker.CancellationPending)
             {
                 try
                 {
@@ -833,7 +831,7 @@ namespace Demo.WindowsForms
                     //  </Location> 
                     #endregion
 
-                    lock (TcpState)
+                    lock (_tcpState)
                     {
                         //TcpConnectionInformation[] tcpInfoList = properties.GetActiveTcpConnections();
                         //foreach(TcpConnectionInformation i in tcpInfoList)
@@ -841,33 +839,33 @@ namespace Demo.WindowsForms
 
                         //}
 
-                        CountryStatus.Clear();
+                        _countryStatus.Clear();
                         ManagedIpHelper.UpdateExtendedTcpTable(false);
 
-                        foreach (TcpRow i in ManagedIpHelper.TcpRows)
+                        foreach (var i in ManagedIpHelper.TcpRows)
                         {
                             #region -- update TcpState --
-                            string Ip = i.RemoteEndPoint.Address.ToString();
+                            string ip = i.RemoteEndPoint.Address.ToString();
 
                             // exclude local network
-                            if (!Ip.StartsWith("192.168.") && !Ip.StartsWith("127.0."))
+                            if (!ip.StartsWith("192.168.") && !ip.StartsWith("127.0."))
                             {
                                 IpInfo info;
-                                if (!TcpState.TryGetValue(Ip, out info))
+                                if (!_tcpState.TryGetValue(ip, out info))
                                 {
                                     info = new IpInfo();
-                                    TcpState[Ip] = info;
+                                    _tcpState[ip] = info;
 
                                     // request location info
-                                    lock (TcpStateNeedLocationInfo)
+                                    lock (_tcpStateNeedLocationInfo)
                                     {
-                                        if (!TcpStateNeedLocationInfo.Contains(Ip))
+                                        if (!_tcpStateNeedLocationInfo.Contains(ip))
                                         {
-                                            TcpStateNeedLocationInfo.Add(Ip);
+                                            _tcpStateNeedLocationInfo.Add(ip);
 
-                                            if (!ipInfoSearchWorker.IsBusy)
+                                            if (!_ipInfoSearchWorker.IsBusy)
                                             {
-                                                ipInfoSearchWorker.RunWorkerAsync();
+                                                _ipInfoSearchWorker.RunWorkerAsync();
                                             }
                                         }
                                     }
@@ -880,10 +878,10 @@ namespace Demo.WindowsForms
                                 try
                                 {
                                     Process p;
-                                    if (!ProcessList.TryGetValue(i.ProcessId, out p))
+                                    if (!_processList.TryGetValue(i.ProcessId, out p))
                                     {
                                         p = Process.GetProcessById(i.ProcessId);
-                                        ProcessList[i.ProcessId] = p;
+                                        _processList[i.ProcessId] = p;
                                     }
                                     info.ProcessName = p.ProcessName;
                                 }
@@ -893,13 +891,13 @@ namespace Demo.WindowsForms
 
                                 if (!string.IsNullOrEmpty(info.CountryName))
                                 {
-                                    if (!CountryStatus.ContainsKey(info.CountryName))
+                                    if (!_countryStatus.ContainsKey(info.CountryName))
                                     {
-                                        CountryStatus[info.CountryName] = 1;
+                                        _countryStatus[info.CountryName] = 1;
                                     }
                                     else
                                     {
-                                        CountryStatus[info.CountryName]++;
+                                        _countryStatus[info.CountryName]++;
                                     }
                                 }
                             }
@@ -908,21 +906,21 @@ namespace Demo.WindowsForms
                     }
 
                     // launch tracer if needed
-                    if (TryTraceConnection)
+                    if (_tryTraceConnection)
                     {
-                        if (!iptracerWorker.IsBusy)
+                        if (!_iptracerWorker.IsBusy)
                         {
-                            lock (TcpStateNeedtraceInfo)
+                            lock (_tcpStateNeedTraceInfo)
                             {
-                                if (TcpStateNeedtraceInfo.Count > 0)
+                                if (_tcpStateNeedTraceInfo.Count > 0)
                                 {
-                                    iptracerWorker.RunWorkerAsync();
+                                    _iptracerWorker.RunWorkerAsync();
                                 }
                             }
                         }
                     }
 
-                    connectionsWorker.ReportProgress(100);
+                    _connectionsWorker.ReportProgress(100);
                 }
                 catch (Exception ex)
                 {
@@ -930,7 +928,7 @@ namespace Demo.WindowsForms
                 }
                 Thread.Sleep(3333);
             }
-            tcpConnections.Clear();
+            _tcpConnections.Clear();
 #endif
         }
 
@@ -942,27 +940,27 @@ namespace Demo.WindowsForms
                 // call Refresh to perform single refresh and reset invalidation state
                 MainMap.HoldInvalidation = true;
 
-                SelectedCountries.Clear();
-                Int32 SelectedCountriesCount = GridConnections.Rows.GetRowCount(DataGridViewElementStates.Selected);
-                if (SelectedCountriesCount > 0)
+                _selectedCountries.Clear();
+                Int32 selectedCountriesCount = GridConnections.Rows.GetRowCount(DataGridViewElementStates.Selected);
+                if (selectedCountriesCount > 0)
                 {
-                    for (int i = 0; i < SelectedCountriesCount; i++)
+                    for (int i = 0; i < selectedCountriesCount; i++)
                     {
                         string country = GridConnections.SelectedRows[i].Cells[0].Value as string;
-                        SelectedCountries.Add(country);
+                        _selectedCountries.Add(country);
                     }
                 }
 
-                ComparerIpStatus.SortOnlyCountryName = !(SelectedCountriesCount == 0);
+                _comparerIpStatus.SortOnlyCountryName = !(selectedCountriesCount == 0);
 
-                lock (TcpState)
+                lock (_tcpState)
                 {
                     bool snap = true;
-                    foreach (var tcp in TcpState)
+                    foreach (var tcp in _tcpState)
                     {
                         GMapMarker marker;
 
-                        if (!tcpConnections.TryGetValue(tcp.Key, out marker))
+                        if (!_tcpConnections.TryGetValue(tcp.Key, out marker))
                         {
                             if (!string.IsNullOrEmpty(tcp.Value.Ip))
                             {
@@ -970,13 +968,13 @@ namespace Demo.WindowsForms
                                 marker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
                                 marker.Tag = tcp.Value.CountryName;
 
-                                tcpConnections[tcp.Key] = marker;
+                                _tcpConnections[tcp.Key] = marker;
                                 {
-                                    if (!(SelectedCountriesCount > 0 && !SelectedCountries.Contains(tcp.Value.CountryName)))
+                                    if (!(selectedCountriesCount > 0 && !_selectedCountries.Contains(tcp.Value.CountryName)))
                                     {
-                                        objects.Markers.Add(marker);
+                                        Objects.Markers.Add(marker);
 
-                                        UpdateMarkerTcpIpToolTip(marker, tcp.Value, "(" + objects.Markers.Count + ") ");
+                                        UpdateMarkerTcpIpToolTip(marker, tcp.Value, "(" + Objects.Markers.Count + ") ");
 
                                         if (snap)
                                         {
@@ -986,13 +984,13 @@ namespace Demo.WindowsForms
                                             }
                                             snap = false;
 
-                                            if (lastTcpmarker != null)
+                                            if (_lastTcpMarker != null)
                                             {
                                                 marker.ToolTipMode = MarkerTooltipMode.Always;
-                                                lastTcpmarker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                                                _lastTcpMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
                                             }
 
-                                            lastTcpmarker = marker;
+                                            _lastTcpMarker = marker;
                                         }
                                     }
                                 }
@@ -1000,19 +998,19 @@ namespace Demo.WindowsForms
                         }
                         else
                         {
-                            if ((DateTime.Now - tcp.Value.StatusTime > TimeSpan.FromSeconds(8)) || (SelectedCountriesCount > 0 && !SelectedCountries.Contains(tcp.Value.CountryName)))
+                            if ((DateTime.Now - tcp.Value.StatusTime > TimeSpan.FromSeconds(8)) || (selectedCountriesCount > 0 && !_selectedCountries.Contains(tcp.Value.CountryName)))
                             {
-                                objects.Markers.Remove(marker);
+                                Objects.Markers.Remove(marker);
 
                                 GMapRoute route;
-                                if (tcpRoutes.TryGetValue(tcp.Key, out route))
+                                if (_tcpRoutes.TryGetValue(tcp.Key, out route))
                                 {
-                                    routes.Routes.Remove(route);
+                                    Routes.Routes.Remove(route);
                                 }
 
-                                lock (TcpStateNeedLocationInfo)
+                                lock (_tcpStateNeedLocationInfo)
                                 {
-                                    bool r = TcpStateNeedLocationInfo.Remove(tcp.Key);
+                                    bool r = _tcpStateNeedLocationInfo.Remove(tcp.Key);
                                     if (r)
                                     {
                                         Debug.WriteLine("TcpStateNeedLocationInfo: removed " + tcp.Key + " " + r);
@@ -1022,33 +1020,33 @@ namespace Demo.WindowsForms
                             else
                             {
                                 marker.Position = new PointLatLng(tcp.Value.Latitude, tcp.Value.Longitude);
-                                if (!objects.Markers.Contains(marker))
+                                if (!Objects.Markers.Contains(marker))
                                 {
-                                    objects.Markers.Add(marker);
+                                    Objects.Markers.Add(marker);
                                 }
                                 UpdateMarkerTcpIpToolTip(marker, tcp.Value, string.Empty);
 
-                                if (TryTraceConnection)
+                                if (_tryTraceConnection)
                                 {
                                     // routes
                                     GMapRoute route;
-                                    if (!tcpRoutes.TryGetValue(tcp.Key, out route))
+                                    if (!_tcpRoutes.TryGetValue(tcp.Key, out route))
                                     {
-                                        lock (TraceRoutes)
+                                        lock (_traceRoutes)
                                         {
                                             List<PingReply> tr;
-                                            if (TraceRoutes.TryGetValue(tcp.Key, out tr))
+                                            if (_traceRoutes.TryGetValue(tcp.Key, out tr))
                                             {
                                                 if (tr != null)
                                                 {
-                                                    List<PointLatLng> points = new List<PointLatLng>();
+                                                    var points = new List<PointLatLng>();
                                                     foreach (var add in tr)
                                                     {
                                                         IpInfo info;
 
-                                                        lock (TcpTracePoints)
+                                                        lock (_tcpTracePoints)
                                                         {
-                                                            if (TcpTracePoints.TryGetValue(add.Address.ToString(), out info))
+                                                            if (_tcpTracePoints.TryGetValue(add.Address.ToString(), out info))
                                                             {
                                                                 if (!string.IsNullOrEmpty(info.Ip))
                                                                 {
@@ -1070,8 +1068,8 @@ namespace Demo.WindowsForms
                                                         route.Stroke.EndCap = LineCap.ArrowAnchor;
                                                         route.Stroke.LineJoin = LineJoin.Round;
 
-                                                        routes.Routes.Add(route);
-                                                        tcpRoutes[tcp.Key] = route;
+                                                        Routes.Routes.Add(route);
+                                                        _tcpRoutes[tcp.Key] = route;
                                                     }
                                                 }
                                             }
@@ -1079,9 +1077,9 @@ namespace Demo.WindowsForms
                                     }
                                     else
                                     {
-                                        if (!routes.Routes.Contains(route))
+                                        if (!Routes.Routes.Contains(route))
                                         {
-                                            routes.Routes.Add(route);
+                                            Routes.Routes.Add(route);
                                         }
                                     }
                                 }
@@ -1092,38 +1090,38 @@ namespace Demo.WindowsForms
                     // update grid data
                     if (panelMenu.Expand && xPanderPanelLive.Expand)
                     {
-                        bool empty = CountryStatusView.Count == 0;
+                        bool empty = _countryStatusView.Count == 0;
 
-                        if (!ComparerIpStatus.SortOnlyCountryName)
+                        if (!_comparerIpStatus.SortOnlyCountryName)
                         {
-                            CountryStatusView.Clear();
+                            _countryStatusView.Clear();
                         }
 
-                        foreach (var c in CountryStatus)
+                        foreach (var c in _countryStatus)
                         {
-                            IpStatus s = new IpStatus();
+                            var s = new IpStatus();
                             {
                                 s.CountryName = c.Key;
                                 s.ConnectionsCount = c.Value;
                             }
 
-                            if (ComparerIpStatus.SortOnlyCountryName)
+                            if (_comparerIpStatus.SortOnlyCountryName)
                             {
-                                int idx = CountryStatusView.FindIndex(p => p.CountryName == c.Key);
+                                int idx = _countryStatusView.FindIndex(p => p.CountryName == c.Key);
                                 if (idx >= 0)
                                 {
-                                    CountryStatusView[idx] = s;
+                                    _countryStatusView[idx] = s;
                                 }
                             }
                             else
                             {
-                                CountryStatusView.Add(s);
+                                _countryStatusView.Add(s);
                             }
                         }
 
-                        CountryStatusView.Sort(ComparerIpStatus);
+                        _countryStatusView.Sort(_comparerIpStatus);
 
-                        GridConnections.RowCount = CountryStatusView.Count;
+                        GridConnections.RowCount = _countryStatusView.Count;
                         GridConnections.Refresh();
 
                         if (empty)
@@ -1143,10 +1141,10 @@ namespace Demo.WindowsForms
 
         void GridConnections_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (e.RowIndex >= CountryStatusView.Count)
+            if (e.RowIndex >= _countryStatusView.Count)
                 return;
 
-            IpStatus val = CountryStatusView[e.RowIndex];
+            var val = _countryStatusView[e.RowIndex];
 
             switch (GridConnections.Columns[e.ColumnIndex].Name)
             {
@@ -1162,9 +1160,9 @@ namespace Demo.WindowsForms
 
         Color GetRandomColor()
         {
-            byte r = Convert.ToByte(rnd.Next(0, 111));
-            byte g = Convert.ToByte(rnd.Next(0, 111));
-            byte b = Convert.ToByte(rnd.Next(0, 111));
+            byte r = Convert.ToByte(_rnd.Next(0, 111));
+            byte g = Convert.ToByte(_rnd.Next(0, 111));
+            byte b = Convert.ToByte(_rnd.Next(0, 111));
 
             return Color.FromArgb(144, r, g, b);
         }
@@ -1200,16 +1198,16 @@ namespace Demo.WindowsForms
 
         List<IpInfo> GetIpHostInfo(string iplist)
         {
-            List<IpInfo> ret = new List<IpInfo>();
+            var ret = new List<IpInfo>();
             bool retry = false;
 
             string iplistNew = string.Empty;
 
-            string[] ips = iplist.Split(',');
-            foreach (var ip in ips)
+            var ips = iplist.Split(',');
+            foreach (string ip in ips)
             {
 #if SQLite
-                IpInfo val = IpCache.GetDataFromCache(ip);
+                var val = _ipCache.GetDataFromCache(ip);
 #else
                 IpInfo val = null;
 #endif
@@ -1238,7 +1236,7 @@ namespace Demo.WindowsForms
                     ret.Clear();
                     try
                     {
-                        HttpWebRequest httpReq = WebRequest.Create(reqUrl) as HttpWebRequest;
+                        var httpReq = WebRequest.Create(reqUrl) as HttpWebRequest;
                         {
                             string result;
                             using (var response = httpReq.GetResponse() as HttpWebResponse)
@@ -1251,17 +1249,17 @@ namespace Demo.WindowsForms
                                 response.Close();
                             }
 
-                            XmlDocument x = new XmlDocument();
+                            var x = new XmlDocument();
                             x.LoadXml(result);
 
-                            XmlNodeList nodes = x.SelectNodes("/Response");
+                            var nodes = x.SelectNodes("/Response");
                             foreach (XmlNode node in nodes)
                             {
-                                string Ip = node.SelectSingleNode("Ip").InnerText;
+                                string ip = node.SelectSingleNode("Ip").InnerText;
 
-                                IpInfo info = new IpInfo();
+                                var info = new IpInfo();
                                 {
-                                    info.Ip = Ip;
+                                    info.Ip = ip;
                                     info.CountryName = node.SelectSingleNode("CountryName").InnerText;
                                     info.RegionName = node.SelectSingleNode("RegionName").InnerText;
                                     info.City = node.SelectSingleNode("City").InnerText;
@@ -1273,7 +1271,7 @@ namespace Demo.WindowsForms
                                 }
 
 #if SQLite
-                                IpCache.PutDataToCache(Ip, info);
+                                _ipCache.PutDataToCache(ip, info);
 #endif
                             }
                         }
@@ -1301,9 +1299,9 @@ namespace Demo.WindowsForms
 
         void RegeneratePolygon()
         {
-            List<PointLatLng> polygonPoints = new List<PointLatLng>();
+            var polygonPoints = new List<PointLatLng>();
 
-            foreach (GMapMarker m in objects.Markers)
+            foreach (var m in Objects.Markers)
             {
                 if (m is GMapMarkerRect)
                 {
@@ -1312,24 +1310,24 @@ namespace Demo.WindowsForms
                 }
             }
 
-            if (polygon == null)
+            if (_polygon == null)
             {
-                polygon = new GMapPolygon(polygonPoints, "polygon test");
-                polygon.IsHitTestVisible = true;
-                polygons.Polygons.Add(polygon);
+                _polygon = new GMapPolygon(polygonPoints, "polygon test");
+                _polygon.IsHitTestVisible = true;
+                Polygons.Polygons.Add(_polygon);
             }
             else
             {
-                polygon.Points.Clear();
-                polygon.Points.AddRange(polygonPoints);
+                _polygon.Points.Clear();
+                _polygon.Points.AddRange(polygonPoints);
 
-                if (polygons.Polygons.Count == 0)
+                if (Polygons.Polygons.Count == 0)
                 {
-                    polygons.Polygons.Add(polygon);
+                    Polygons.Polygons.Add(_polygon);
                 }
                 else
                 {
-                    MainMap.UpdatePolygonLocalPosition(polygon);
+                    MainMap.UpdatePolygonLocalPosition(_polygon);
                 }
             }
         }
@@ -1356,13 +1354,13 @@ namespace Demo.WindowsForms
 
                 var log = Stuff.GetRoutesFromMobileLog(file, date, dateEnd, 10);
 
-                if (routes != null)
+                if (Routes != null)
                 {
-                    List<PointLatLng> track = new List<PointLatLng>();
+                    var track = new List<PointLatLng>();
 
                     var sessions = new List<List<GpsLog>>(log);
 
-                    PointLatLng lastPoint = PointLatLng.Empty;
+                    var lastPoint = PointLatLng.Empty;
 
                     foreach (var session in sessions)
                     {
@@ -1373,11 +1371,11 @@ namespace Demo.WindowsForms
                             track.Add(lastPoint);
                             track.Add(session[0].Position);
 
-                            GMapRoute grl = new GMapRoute(track, "");
+                            var grl = new GMapRoute(track, "");
                             grl.Stroke = new Pen(GMapRoute.DefaultStroke.Brush);
                             grl.Stroke.Color = Color.Red;
                             grl.Stroke.Width = 2.0f;
-                            routes.Routes.Add(grl);
+                            Routes.Routes.Add(grl);
                         }
 
                         track.Clear();
@@ -1391,8 +1389,8 @@ namespace Demo.WindowsForms
                         {
                             lastPoint = track[track.Count - 1];
 
-                            GMapRoute gr = new GMapRoute(track, "");
-                            routes.Routes.Add(gr);
+                            var gr = new GMapRoute(track, "");
+                            Routes.Routes.Add(gr);
                         }
                         else
                         {
@@ -1420,21 +1418,21 @@ namespace Demo.WindowsForms
         void AddLocationLithuania(string place)
         {
             GeoCoderStatusCode status;
-            PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, " + place, out status);
+            var pos = GMapProviders.GoogleMap.GetPoint("Lithuania, " + place, out status);
             if (pos != null && status == GeoCoderStatusCode.OK)
             {
-                GMarkerGoogle m = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green);
+                var m = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green);
                 m.ToolTip = new GMapRoundedToolTip(m);
 
-                GMapMarkerRect mBorders = new GMapMarkerRect(pos.Value);
+                var mBorders = new GMapMarkerRect(pos.Value);
                 {
                     mBorders.InnerMarker = m;
                     mBorders.ToolTipText = place;
                     mBorders.ToolTipMode = MarkerTooltipMode.Always;
                 }
 
-                objects.Markers.Add(m);
-                objects.Markers.Add(mBorders);
+                Objects.Markers.Add(m);
+                Objects.Markers.Add(mBorders);
             }
         }
 
@@ -1445,14 +1443,14 @@ namespace Demo.WindowsForms
                 string launch = string.Empty;
 
                 var x = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-                foreach (var f in x)
+                foreach (string f in x)
                 {
                     if (f.Contains("leafletjs"))
                     {
-                        var fName = f.Replace("Demo.WindowsForms.", string.Empty);
+                        string fName = f.Replace("Demo.WindowsForms.", string.Empty);
                         fName = fName.Replace(".", "\\");
-                        var ll = fName.LastIndexOf("\\");
-                        var name = fName.Substring(0, ll) + "." + fName.Substring(ll + 1, fName.Length - ll - 1);
+                        int ll = fName.LastIndexOf("\\");
+                        string name = fName.Substring(0, ll) + "." + fName.Substring(ll + 1, fName.Length - ll - 1);
 
                         //Demo.WindowsForms.leafletjs.dist.leaflet.js
 
@@ -1465,7 +1463,7 @@ namespace Demo.WindowsForms
                                 launch = fileFullPath;
                             }
 
-                            var dir = Path.GetDirectoryName(fileFullPath);
+                            string dir = Path.GetDirectoryName(fileFullPath);
                             if (!Directory.Exists(dir))
                             {
                                 Directory.CreateDirectory(dir);
@@ -1474,8 +1472,8 @@ namespace Demo.WindowsForms
                             using (var fileStream = File.Create(fileFullPath, (int)stream.Length))
                             {
                                 // Fill the bytes[] array with the stream data
-                                byte[] bytesInStream = new byte[stream.Length];
-                                stream.Read(bytesInStream, 0, (int)bytesInStream.Length);
+                                var bytesInStream = new byte[stream.Length];
+                                stream.Read(bytesInStream, 0, bytesInStream.Length);
 
                                 // Use FileStream object to write to the specified file
                                 fileStream.Write(bytesInStream, 0, bytesInStream.Length);
@@ -1508,7 +1506,7 @@ namespace Demo.WindowsForms
             int db = 0;
             try
             {
-                DirectoryInfo di = new DirectoryInfo(MainMap.CacheLocation);
+                var di = new DirectoryInfo(MainMap.CacheLocation);
                 var dbs = di.GetFiles("*.gmdb", SearchOption.AllDirectories);
                 foreach (var d in dbs)
                 {
@@ -1571,9 +1569,9 @@ namespace Demo.WindowsForms
         {
             if (item is GMapMarkerRect)
             {
-                CurentRectMarker = null;
+                _curentRectMarker = null;
 
-                GMapMarkerRect rc = item as GMapMarkerRect;
+                var rc = item as GMapMarkerRect;
                 rc.Pen.Color = Color.Blue;
 
                 Debug.WriteLine("OnMarkerLeave: " + item.Position);
@@ -1584,40 +1582,40 @@ namespace Demo.WindowsForms
         {
             if (item is GMapMarkerRect)
             {
-                GMapMarkerRect rc = item as GMapMarkerRect;
+                var rc = item as GMapMarkerRect;
                 rc.Pen.Color = Color.Red;
 
-                CurentRectMarker = rc;
+                _curentRectMarker = rc;
             }
             Debug.WriteLine("OnMarkerEnter: " + item.Position);
         }
 
-        GMapPolygon currentPolygon;
+        GMapPolygon _currentPolygon;
         void MainMap_OnPolygonLeave(GMapPolygon item)
         {
-            currentPolygon = null;
+            _currentPolygon = null;
             item.Stroke.Color = Color.MidnightBlue;
             Debug.WriteLine("OnPolygonLeave: " + item.Name);
         }
 
         void MainMap_OnPolygonEnter(GMapPolygon item)
         {
-            currentPolygon = item;
+            _currentPolygon = item;
             item.Stroke.Color = Color.Red;
             Debug.WriteLine("OnPolygonEnter: " + item.Name);
         }
 
-        GMapRoute currentRoute;
+        GMapRoute _currentRoute;
         void MainMap_OnRouteLeave(GMapRoute item)
         {
-            currentRoute = null;
+            _currentRoute = null;
             item.Stroke.Color = Color.MidnightBlue;
             Debug.WriteLine("OnRouteLeave: " + item.Name);
         }
 
         void MainMap_OnRouteEnter(GMapRoute item)
         {
-            currentRoute = item;
+            _currentRoute = item;
             item.Stroke.Color = Color.Red;
             Debug.WriteLine("OnRouteEnter: " + item.Name);
         }
@@ -1639,7 +1637,7 @@ namespace Demo.WindowsForms
         {
             if (e.Button == MouseButtons.Left)
             {
-                isMouseDown = false;
+                _isMouseDown = false;
             }
         }
 
@@ -1647,23 +1645,23 @@ namespace Demo.WindowsForms
         void MainMap_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             var cc = new GMapMarkerCircle(MainMap.FromLocalToLatLng(e.X, e.Y));
-            objects.Markers.Add(cc);
+            Objects.Markers.Add(cc);
         }
 
         void MainMap_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                isMouseDown = true;
+                _isMouseDown = true;
 
-                if (currentMarker.IsVisible)
+                if (_currentMarker.IsVisible)
                 {
-                    currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
+                    _currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
 
-                    var px = MainMap.MapProvider.Projection.FromLatLngToPixel(currentMarker.Position.Lat, currentMarker.Position.Lng, (int)MainMap.Zoom);
+                    var px = MainMap.MapProvider.Projection.FromLatLngToPixel(_currentMarker.Position.Lat, _currentMarker.Position.Lng, (int)MainMap.Zoom);
                     var tile = MainMap.MapProvider.Projection.FromPixelToTileXY(px);
 
-                    Debug.WriteLine("MouseDown: geo: " + currentMarker.Position + " | px: " + px + " | tile: " + tile);
+                    Debug.WriteLine("MouseDown: geo: " + _currentMarker.Position + " | px: " + px + " | tile: " + tile);
                 }
             }
         }
@@ -1671,38 +1669,38 @@ namespace Demo.WindowsForms
         // move current marker with left holding
         void MainMap_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && isMouseDown)
+            if (e.Button == MouseButtons.Left && _isMouseDown)
             {
-                if (CurentRectMarker == null)
+                if (_curentRectMarker == null)
                 {
-                    if (currentMarker.IsVisible)
+                    if (_currentMarker.IsVisible)
                     {
-                        currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
+                        _currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
                     }
                 }
                 else // move rect marker
                 {
-                    PointLatLng pnew = MainMap.FromLocalToLatLng(e.X, e.Y);
+                    var pnew = MainMap.FromLocalToLatLng(e.X, e.Y);
 
-                    int? pIndex = (int?)CurentRectMarker.Tag;
+                    var pIndex = (int?)_curentRectMarker.Tag;
                     if (pIndex.HasValue)
                     {
-                        if (pIndex < polygon.Points.Count)
+                        if (pIndex < _polygon.Points.Count)
                         {
-                            polygon.Points[pIndex.Value] = pnew;
-                            MainMap.UpdatePolygonLocalPosition(polygon);
+                            _polygon.Points[pIndex.Value] = pnew;
+                            MainMap.UpdatePolygonLocalPosition(_polygon);
                         }
                     }
 
-                    if (currentMarker.IsVisible)
+                    if (_currentMarker.IsVisible)
                     {
-                        currentMarker.Position = pnew;
+                        _currentMarker.Position = pnew;
                     }
-                    CurentRectMarker.Position = pnew;
+                    _curentRectMarker.Position = pnew;
 
-                    if (CurentRectMarker.InnerMarker != null)
+                    if (_curentRectMarker.InnerMarker != null)
                     {
-                        CurentRectMarker.InnerMarker.Position = pnew;
+                        _curentRectMarker.InnerMarker.Position = pnew;
                     }
                 }
 
@@ -1728,7 +1726,7 @@ namespace Demo.WindowsForms
                     var pos = GMapProviders.GoogleMap.GetPlacemark(item.Position, out status);
                     if (status == GeoCoderStatusCode.OK && pos != null)
                     {
-                        GMapMarkerRect v = item as GMapMarkerRect;
+                        var v = item as GMapMarkerRect;
                         {
                             v.ToolTipText = pos.Value.Address;
                         }
@@ -1739,13 +1737,13 @@ namespace Demo.WindowsForms
                 {
                     if (item.Tag != null)
                     {
-                        if (currentTransport != null)
+                        if (_currentTransport != null)
                         {
-                            currentTransport.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-                            currentTransport = null;
+                            _currentTransport.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                            _currentTransport = null;
                         }
-                        currentTransport = item;
-                        currentTransport.ToolTipMode = MarkerTooltipMode.Always;
+                        _currentTransport = item;
+                        _currentTransport.ToolTipMode = MarkerTooltipMode.Always;
                     }
                 }
             }
@@ -1768,9 +1766,9 @@ namespace Demo.WindowsForms
         }
 
         // loader end loading tiles
-        void MainMap_OnTileLoadComplete(long ElapsedMilliseconds)
+        void MainMap_OnTileLoadComplete(long elapsedMilliseconds)
         {
-            MainMap.ElapsedMilliseconds = ElapsedMilliseconds;
+            MainMap.ElapsedMilliseconds = elapsedMilliseconds;
 
             MethodInvoker m = delegate ()
             {
@@ -1793,15 +1791,15 @@ namespace Demo.WindowsForms
             textBoxLatCurrent.Text = point.Lat.ToString(CultureInfo.InvariantCulture);
             textBoxLngCurrent.Text = point.Lng.ToString(CultureInfo.InvariantCulture);
 
-            lock (flights)
+            lock (_flights)
             {
-                lastPosition = point;
-                lastZoom = (int)MainMap.Zoom;
+                _lastPosition = point;
+                _lastZoom = (int)MainMap.Zoom;
             }
         }
 
-        PointLatLng lastPosition;
-        int lastZoom;
+        PointLatLng _lastPosition;
+        int _lastZoom;
 
         // center markers on start
         private void MainForm_Load(object sender, EventArgs e)
@@ -1837,12 +1835,12 @@ namespace Demo.WindowsForms
 
         #region -- ui events --
 
-        bool UserAcceptedLicenseOnce;
+        bool _userAcceptedLicenseOnce;
 
         // change map type
         private void comboBoxMapType_DropDownClosed(object sender, EventArgs e)
         {
-            if (!UserAcceptedLicenseOnce)
+            if (!_userAcceptedLicenseOnce)
             {
                 if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "License.txt"))
                 {
@@ -1853,18 +1851,18 @@ namespace Demo.WindowsForms
 
                     if (DialogResult.Yes == d.ShowDialog())
                     {
-                        UserAcceptedLicenseOnce = true;
+                        _userAcceptedLicenseOnce = true;
                         Text += " - license accepted by " + Environment.UserName + " at " + DateTime.Now;
                     }
                 }
                 else
                 {
                     // user deleted License.txt ;}
-                    UserAcceptedLicenseOnce = true;
+                    _userAcceptedLicenseOnce = true;
                 }
             }
 
-            if (UserAcceptedLicenseOnce)
+            if (_userAcceptedLicenseOnce)
             {
                 MainMap.MapProvider = comboBoxMapType.SelectedItem as GMapProvider;
             }
@@ -1895,7 +1893,7 @@ namespace Demo.WindowsForms
         {
             if ((Keys)e.KeyChar == Keys.Enter)
             {
-                GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
+                var status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
 
                 if (status != GeoCoderStatusCode.OK)
                 {
@@ -1907,7 +1905,7 @@ namespace Demo.WindowsForms
         // go to
         private void button8_Click(object sender, EventArgs e)
         {
-            GeoCoderStatusCode status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
+            var status = MainMap.SetPositionByKeywords(textBoxGeo.Text);
 
             if (status != GeoCoderStatusCode.OK)
             {
@@ -1950,31 +1948,31 @@ namespace Demo.WindowsForms
         // add test route
         private void button3_Click(object sender, EventArgs e)
         {
-            RoutingProvider rp = MainMap.MapProvider as RoutingProvider;
+            var rp = MainMap.MapProvider as RoutingProvider;
             if (rp == null)
             {
                 rp = GMapProviders.OpenStreetMap; // use OpenStreetMap if provider does not implement routing
             }
 
-            MapRoute route = rp.GetRoute(start, end, false, false, (int)MainMap.Zoom);
+            var route = rp.GetRoute(_start, _end, false, false, (int)MainMap.Zoom);
             if (route != null)
             {
                 // add route
-                GMapRoute r = new GMapRoute(route.Points, route.Name);
+                var r = new GMapRoute(route.Points, route.Name);
                 r.IsHitTestVisible = true;
-                routes.Routes.Add(r);
+                Routes.Routes.Add(r);
 
                 // add route start/end marks
-                GMapMarker m1 = new GMarkerGoogle(start, GMarkerGoogleType.green_big_go);
+                GMapMarker m1 = new GMarkerGoogle(_start, GMarkerGoogleType.green_big_go);
                 m1.ToolTipText = "Start: " + route.Name;
                 m1.ToolTipMode = MarkerTooltipMode.Always;
 
-                GMapMarker m2 = new GMarkerGoogle(end, GMarkerGoogleType.red_big_stop);
-                m2.ToolTipText = "End: " + end.ToString();
+                GMapMarker m2 = new GMarkerGoogle(_end, GMarkerGoogleType.red_big_stop);
+                m2.ToolTipText = "End: " + _end.ToString();
                 m2.ToolTipMode = MarkerTooltipMode.Always;
 
-                objects.Markers.Add(m1);
-                objects.Markers.Add(m2);
+                Objects.Markers.Add(m1);
+                Objects.Markers.Add(m2);
 
                 MainMap.ZoomAndCenterRoute(r);
             }
@@ -1983,13 +1981,13 @@ namespace Demo.WindowsForms
         // add marker on current position
         private void button4_Click(object sender, EventArgs e)
         {
-            GMarkerGoogle m = new GMarkerGoogle(currentMarker.Position, GMarkerGoogleType.green_pushpin);
-            GMapMarkerRect mBorders = new GMapMarkerRect(currentMarker.Position);
+            var m = new GMarkerGoogle(_currentMarker.Position, GMarkerGoogleType.green_pushpin);
+            var mBorders = new GMapMarkerRect(_currentMarker.Position);
             {
                 mBorders.InnerMarker = m;
-                if (polygon != null)
+                if (_polygon != null)
                 {
-                    mBorders.Tag = polygon.Points.Count;
+                    mBorders.Tag = _polygon.Points.Count;
                 }
                 mBorders.ToolTipMode = MarkerTooltipMode.Always;
             }
@@ -1998,7 +1996,7 @@ namespace Demo.WindowsForms
             if (checkBoxPlacemarkInfo.Checked)
             {
                 GeoCoderStatusCode status;
-                var ret = GMapProviders.GoogleMap.GetPlacemark(currentMarker.Position, out status);
+                var ret = GMapProviders.GoogleMap.GetPlacemark(_currentMarker.Position, out status);
                 if (status == GeoCoderStatusCode.OK && ret != null)
                 {
                     p = ret;
@@ -2011,11 +2009,11 @@ namespace Demo.WindowsForms
             }
             else
             {
-                mBorders.ToolTipText = currentMarker.Position.ToString();
+                mBorders.ToolTipText = _currentMarker.Position.ToString();
             }
 
-            objects.Markers.Add(m);
-            objects.Markers.Add(mBorders);
+            Objects.Markers.Add(m);
+            Objects.Markers.Add(mBorders);
 
             RegeneratePolygon();
         }
@@ -2023,25 +2021,25 @@ namespace Demo.WindowsForms
         // clear routes
         private void button6_Click(object sender, EventArgs e)
         {
-            routes.Routes.Clear();
+            Routes.Routes.Clear();
         }
 
         // clear polygons
         private void button15_Click(object sender, EventArgs e)
         {
-            polygons.Polygons.Clear();
+            Polygons.Polygons.Clear();
         }
 
         // clear markers
         private void button5_Click(object sender, EventArgs e)
         {
-            objects.Markers.Clear();
+            Objects.Markers.Clear();
         }
 
         // show current marker
         private void checkBoxCurrentMarker_CheckedChanged(object sender, EventArgs e)
         {
-            currentMarker.IsVisible = checkBoxCurrentMarker.Checked;
+            _currentMarker.IsVisible = checkBoxCurrentMarker.Checked;
         }
 
         // can drag
@@ -2053,13 +2051,13 @@ namespace Demo.WindowsForms
         // set route start
         private void buttonSetStart_Click(object sender, EventArgs e)
         {
-            start = currentMarker.Position;
+            _start = _currentMarker.Position;
         }
 
         // set route end
         private void buttonSetEnd_Click(object sender, EventArgs e)
         {
-            end = currentMarker.Position;
+            _end = _currentMarker.Position;
         }
 
         // zoom to max for markers
@@ -2083,18 +2081,18 @@ namespace Demo.WindowsForms
         // prefetch
         private void button11_Click(object sender, EventArgs e)
         {
-            RectLatLng area = MainMap.SelectedArea;
+            var area = MainMap.SelectedArea;
             if (!area.IsEmpty)
             {
                 for (int i = (int)MainMap.Zoom; i <= MainMap.MaxZoom; i++)
                 {
-                    DialogResult res = MessageBox.Show("Ready ripp at Zoom = " + i + " ?", "GMap.NET", MessageBoxButtons.YesNoCancel);
+                    var res = MessageBox.Show("Ready ripp at Zoom = " + i + " ?", "GMap.NET", MessageBoxButtons.YesNoCancel);
 
                     if (res == DialogResult.Yes)
                     {
-                        using (TilePrefetcher obj = new TilePrefetcher())
+                        using (var obj = new TilePrefetcher())
                         {
-                            obj.Overlay = objects; // set overlay if you want to see cache progress on the map
+                            obj.Overlay = Objects; // set overlay if you want to see cache progress on the map
 
                             obj.Shuffle = MainMap.Manager.Mode != AccessMode.CacheOnly;
 
@@ -2124,12 +2122,12 @@ namespace Demo.WindowsForms
         {
             try
             {
-                using (SaveFileDialog sfd = new SaveFileDialog())
+                using (var sfd = new SaveFileDialog())
                 {
                     sfd.Filter = "PNG (*.png)|*.png";
                     sfd.FileName = "GMap.NET image";
 
-                    Image tmpImage = MainMap.ToImage();
+                    var tmpImage = MainMap.ToImage();
                     if (tmpImage != null)
                     {
                         using (tmpImage)
@@ -2159,7 +2157,7 @@ namespace Demo.WindowsForms
         // launch static map maker
         private void button13_Click(object sender, EventArgs e)
         {
-            StaticImage st = new StaticImage(this);
+            var st = new StaticImage(this);
             st.Owner = this;
             st.Show();
         }
@@ -2181,14 +2179,14 @@ namespace Demo.WindowsForms
 
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    routes.Routes.Clear();
+                    Routes.Routes.Clear();
 
-                    mobileGpsLog = dlg.FileName;
+                    _mobileGpsLog = dlg.FileName;
 
                     // add routes
                     AddGpsMobileLogRoutes(dlg.FileName);
 
-                    if (routes.Routes.Count > 0)
+                    if (Routes.Routes.Count > 0)
                     {
                         MainMap.ZoomAndCenterRoutes(null);
                     }
@@ -2219,27 +2217,27 @@ namespace Demo.WindowsForms
             }
             else if (e.KeyCode == Keys.Delete)
             {
-                if (currentPolygon != null)
+                if (_currentPolygon != null)
                 {
-                    polygons.Polygons.Remove(currentPolygon);
-                    currentPolygon = null;
+                    Polygons.Polygons.Remove(_currentPolygon);
+                    _currentPolygon = null;
                 }
 
-                if (currentRoute != null)
+                if (_currentRoute != null)
                 {
-                    routes.Routes.Remove(currentRoute);
-                    currentRoute = null;
+                    Routes.Routes.Remove(_currentRoute);
+                    _currentRoute = null;
                 }
 
-                if (CurentRectMarker != null)
+                if (_curentRectMarker != null)
                 {
-                    objects.Markers.Remove(CurentRectMarker);
+                    Objects.Markers.Remove(_curentRectMarker);
 
-                    if (CurentRectMarker.InnerMarker != null)
+                    if (_curentRectMarker.InnerMarker != null)
                     {
-                        objects.Markers.Remove(CurentRectMarker.InnerMarker);
+                        Objects.Markers.Remove(_curentRectMarker.InnerMarker);
                     }
-                    CurentRectMarker = null;
+                    _curentRectMarker = null;
 
                     RegeneratePolygon();
                 }
@@ -2248,10 +2246,10 @@ namespace Demo.WindowsForms
             {
                 MainMap.Bearing = 0;
 
-                if (currentTransport != null && !MainMap.IsMouseOverMarker)
+                if (_currentTransport != null && !MainMap.IsMouseOverMarker)
                 {
-                    currentTransport.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-                    currentTransport = null;
+                    _currentTransport.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                    _currentTransport = null;
                 }
             }
         }
@@ -2293,53 +2291,53 @@ namespace Demo.WindowsForms
         // engage some live demo
         private void RealTimeChanged(object sender, EventArgs e)
         {
-            objects.Markers.Clear();
-            polygons.Polygons.Clear();
-            routes.Routes.Clear();
+            Objects.Markers.Clear();
+            Polygons.Polygons.Clear();
+            Routes.Routes.Clear();
 
             // start performance test
             if (radioButtonPerf.Checked)
             {
-                timerPerf.Interval = 44;
-                timerPerf.Start();
+                _timerPerf.Interval = 44;
+                _timerPerf.Start();
             }
             else
             {
                 // stop performance test
-                timerPerf.Stop();
+                _timerPerf.Stop();
             }
 
             // start realtime transport tracking demo
             if (radioButtonFlight.Checked)
             {
-                if (!flightWorker.IsBusy)
+                if (!_flightWorker.IsBusy)
                 {
-                    firstLoadFlight = true;
-                    flightWorker.RunWorkerAsync();
+                    _firstLoadFlight = true;
+                    _flightWorker.RunWorkerAsync();
                 }
             }
             else
             {
-                if (flightWorker.IsBusy)
+                if (_flightWorker.IsBusy)
                 {
-                    flightWorker.CancelAsync();
+                    _flightWorker.CancelAsync();
                 }
             }
 
             // vehicle demo
             if (radioButtonVehicle.Checked)
             {
-                if (!transportWorker.IsBusy)
+                if (!_transportWorker.IsBusy)
                 {
-                    firstLoadTrasport = true;
-                    transportWorker.RunWorkerAsync();
+                    _firstLoadTrasport = true;
+                    _transportWorker.RunWorkerAsync();
                 }
             }
             else
             {
-                if (transportWorker.IsBusy)
+                if (_transportWorker.IsBusy)
                 {
-                    transportWorker.CancelAsync();
+                    _transportWorker.CancelAsync();
                 }
             }
 
@@ -2351,33 +2349,33 @@ namespace Demo.WindowsForms
                 checkBoxTraceRoute.Visible = true;
                 GridConnections.Refresh();
 
-                if (!connectionsWorker.IsBusy)
+                if (!_connectionsWorker.IsBusy)
                 {
                     MainMap.Zoom = 5;
 
-                    connectionsWorker.RunWorkerAsync();
+                    _connectionsWorker.RunWorkerAsync();
                 }
             }
             else
             {
-                CountryStatusView.Clear();
+                _countryStatusView.Clear();
                 GridConnections.Visible = false;
                 checkBoxTcpIpSnap.Visible = false;
                 checkBoxTraceRoute.Visible = false;
 
-                if (connectionsWorker.IsBusy)
+                if (_connectionsWorker.IsBusy)
                 {
-                    connectionsWorker.CancelAsync();
+                    _connectionsWorker.CancelAsync();
                 }
 
-                if (ipInfoSearchWorker.IsBusy)
+                if (_ipInfoSearchWorker.IsBusy)
                 {
-                    ipInfoSearchWorker.CancelAsync();
+                    _ipInfoSearchWorker.CancelAsync();
                 }
 
-                if (iptracerWorker.IsBusy)
+                if (_iptracerWorker.IsBusy)
                 {
-                    iptracerWorker.CancelAsync();
+                    _iptracerWorker.CancelAsync();
                 }
             }
         }
@@ -2387,7 +2385,7 @@ namespace Demo.WindowsForms
         {
             try
             {
-                using (SaveFileDialog sfd = new SaveFileDialog())
+                using (var sfd = new SaveFileDialog())
                 {
                     sfd.Filter = "GPX (*.gpx)|*.gpx";
                     sfd.FileName = "mobile gps log";
@@ -2411,7 +2409,7 @@ namespace Demo.WindowsForms
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
-                        var log = Stuff.GetRoutesFromMobileLog(mobileGpsLog, date, dateEnd, 3.3);
+                        var log = Stuff.GetRoutesFromMobileLog(_mobileGpsLog, date, dateEnd, 3.3);
                         if (log != null)
                         {
                             if (MainMap.Manager.ExportGPX(log, sfd.FileName))
@@ -2449,14 +2447,14 @@ namespace Demo.WindowsForms
                     {
                         string gpx = File.ReadAllText(dlg.FileName);
 
-                        gpxType r = MainMap.Manager.DeserializeGPX(gpx);
+                        var r = MainMap.Manager.DeserializeGPX(gpx);
                         if (r != null)
                         {
                             if (r.trk.Length > 0)
                             {
                                 foreach (var trk in r.trk)
                                 {
-                                    List<PointLatLng> points = new List<PointLatLng>();
+                                    var points = new List<PointLatLng>();
 
                                     foreach (var seg in trk.trkseg)
                                     {
@@ -2466,13 +2464,13 @@ namespace Demo.WindowsForms
                                         }
                                     }
 
-                                    GMapRoute rt = new GMapRoute(points, string.Empty);
+                                    var rt = new GMapRoute(points, string.Empty);
                                     {
                                         rt.Stroke = new Pen(Color.FromArgb(144, Color.Red));
                                         rt.Stroke.Width = 5;
                                         rt.Stroke.DashStyle = DashStyle.DashDot;
                                     }
-                                    routes.Routes.Add(rt);
+                                    Routes.Routes.Add(rt);
                                 }
 
                                 MainMap.ZoomAndCenterRoutes(null);
@@ -2491,14 +2489,14 @@ namespace Demo.WindowsForms
         // enable/disable host tracing
         private void checkBoxTraceRoute_CheckedChanged(object sender, EventArgs e)
         {
-            TryTraceConnection = checkBoxTraceRoute.Checked;
-            if (!TryTraceConnection)
+            _tryTraceConnection = checkBoxTraceRoute.Checked;
+            if (!_tryTraceConnection)
             {
-                if (iptracerWorker.IsBusy)
+                if (_iptracerWorker.IsBusy)
                 {
-                    iptracerWorker.CancelAsync();
+                    _iptracerWorker.CancelAsync();
                 }
-                routes.Routes.Clear();
+                Routes.Routes.Clear();
             }
         }
 
@@ -2550,30 +2548,30 @@ namespace Demo.WindowsForms
         {
             try
             {
-                string Pol1 = "wjcmIoz|xC[\\WTcI`JiDvDmDxDcAlAKPGHg@t@qDfEq@v@yBhCa@d@{BbCWZkDnEeDzDkEzE}BnCyBfCsKzNoCtD}@jAgCnCSRONCBKJ_C|BiFrEuAnAwCrCGHGHkAnAaAbAg@h@GHQRk@n@mBnByAnA_AhAm@z@_CbCEDONOLEFo@n@oAnA{GrGuBnBq@l@YV{FbFoAjAGH{@~@gEjE_NhMyKfKeB`BcJpIgCdC}C`D_@\\uFpF}G~GWTyN~NyDzD{P`Qy@|@uIvI}A|A_@^]\\gDhD}DzDEFoIbIa@`@{FtFyFrF_@^qPdPkFjFoC~CuAvAo@n@g@d@a@^wAtAc@`@_@\\i@f@KLMJaJzIeHzGaC`Cg@h@_@`@yA`B_@`@m@r@eBvB{@fA]`@sGfIsC~D}A|B_AvAGLSXqBfDcEjHuGhLgAnBiArB{@zAmG|KYh@}KxRsBfDc@t@cAbBYh@mDdGeB|C_@r@kEtH[h@Yf@eAdBw@rAeB|CKNABKNoDtFEHsChEcGvHiEjFC@mHbIYXcC|B}AxAeExDwBlB}CpC_DrC]ZqDdDmAbA_@ZkC|BqBjBkAjAo@n@}@~@qGzGgEbFeB~BsBpC]b@_@f@mBvC{CvEsC|EQZ}@bBsAjCaEdIqBnEiBhE}HvQg@dAmDrH{DpHs@lA}D~G{EdIsC`EeDnE}@lAsFxGaJjK]`@a@d@yDnD_@\\cItHuKnJcA~@uF|EONw@l@}EfEaM|K_CtBEFGFIFUREDaAx@UP?@C@MJKJgAbAaBxAgBzAgBhBCB[XcCtB_BvAgGxFeD|C}C~CsBxBsGdHgAlAkIhJ_CpCMPOPyHnJW\\]b@_JnLY\\uHbKyBbDGHINSVsBvCW^kEnG[f@qAjBgLnQ}CjFYf@_E`HgHjMAB[j@gBjDYh@Q\\iBbEuItRq@fBUl@Wn@Qd@Qf@GNGNIRGNAB[z@Od@Qb@i@vAmCrHM^eG|QiEvO]lAkC|JgD|NcFrTyElSo@jCq@vCkBnHSr@}BjIs@fC{BjHCF}BbHEJOd@CFuA|Dm@~AaCnGGPaCdGoCnGq@|As@tAO^wArCkA`CmA~BqFrKqEpHMRMR_@l@a@n@CFCDOVq@dAw@lASXiL~OuCjDwIvJ{FvFqFnFiCjCyOhPEDEBIJIHA@CBEDGFEDaM|LaSfSuJvJcKfKwNtNwMzMyE|EKJ}B|B[\\ED_A|@WV";
-                List<PointLatLng> points = PureProjection.PolylineDecode(Pol1);
-                string Pol2 = PureProjection.PolylineEncode(points);
+                string pol1 = "wjcmIoz|xC[\\WTcI`JiDvDmDxDcAlAKPGHg@t@qDfEq@v@yBhCa@d@{BbCWZkDnEeDzDkEzE}BnCyBfCsKzNoCtD}@jAgCnCSRONCBKJ_C|BiFrEuAnAwCrCGHGHkAnAaAbAg@h@GHQRk@n@mBnByAnA_AhAm@z@_CbCEDONOLEFo@n@oAnA{GrGuBnBq@l@YV{FbFoAjAGH{@~@gEjE_NhMyKfKeB`BcJpIgCdC}C`D_@\\uFpF}G~GWTyN~NyDzD{P`Qy@|@uIvI}A|A_@^]\\gDhD}DzDEFoIbIa@`@{FtFyFrF_@^qPdPkFjFoC~CuAvAo@n@g@d@a@^wAtAc@`@_@\\i@f@KLMJaJzIeHzGaC`Cg@h@_@`@yA`B_@`@m@r@eBvB{@fA]`@sGfIsC~D}A|B_AvAGLSXqBfDcEjHuGhLgAnBiArB{@zAmG|KYh@}KxRsBfDc@t@cAbBYh@mDdGeB|C_@r@kEtH[h@Yf@eAdBw@rAeB|CKNABKNoDtFEHsChEcGvHiEjFC@mHbIYXcC|B}AxAeExDwBlB}CpC_DrC]ZqDdDmAbA_@ZkC|BqBjBkAjAo@n@}@~@qGzGgEbFeB~BsBpC]b@_@f@mBvC{CvEsC|EQZ}@bBsAjCaEdIqBnEiBhE}HvQg@dAmDrH{DpHs@lA}D~G{EdIsC`EeDnE}@lAsFxGaJjK]`@a@d@yDnD_@\\cItHuKnJcA~@uF|EONw@l@}EfEaM|K_CtBEFGFIFUREDaAx@UP?@C@MJKJgAbAaBxAgBzAgBhBCB[XcCtB_BvAgGxFeD|C}C~CsBxBsGdHgAlAkIhJ_CpCMPOPyHnJW\\]b@_JnLY\\uHbKyBbDGHINSVsBvCW^kEnG[f@qAjBgLnQ}CjFYf@_E`HgHjMAB[j@gBjDYh@Q\\iBbEuItRq@fBUl@Wn@Qd@Qf@GNGNIRGNAB[z@Od@Qb@i@vAmCrHM^eG|QiEvO]lAkC|JgD|NcFrTyElSo@jCq@vCkBnHSr@}BjIs@fC{BjHCF}BbHEJOd@CFuA|Dm@~AaCnGGPaCdGoCnGq@|As@tAO^wArCkA`CmA~BqFrKqEpHMRMR_@l@a@n@CFCDOVq@dAw@lASXiL~OuCjDwIvJ{FvFqFnFiCjCyOhPEDEBIJIHA@CBEDGFEDaM|LaSfSuJvJcKfKwNtNwMzMyE|EKJ}B|B[\\ED_A|@WV";
+                var points = PureProjection.PolylineDecode(pol1);
+                string pol2 = PureProjection.PolylineEncode(points);
 
-                if (Pol1 == Pol2)
+                if (pol1 == pol2)
                 {
 
                 }
 
-                string Pol3 = "";
+                string pol3 = "";
 
-                foreach (PointLatLng item in points)
+                foreach (var item in points)
                 {
-                    Pol3 += item.Lat + " " + item.Lng + ", ";
+                    pol3 += item.Lat + " " + item.Lng + ", ";
                 }
 
 
 
-                MapRoute Route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
+                var route = MainMap.RoutingProvider.GetRoute(MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, 10);
 
-                if (Route != null && Route.Status == RouteStatusCode.OK)
+                if (route != null && route.Status == RouteStatusCode.OK)
                 {
-                    GMapRoute oRoute = new GMapRoute(Route);
-                    routes.Routes.Add(oRoute);
+                    var oRoute = new GMapRoute(route);
+                    Routes.Routes.Add(oRoute);
 
                     //MapRoute Res = MainMap.RoadsProvider.GetRoadsRoute(Route.Points.GetRange(0, 50).ToList(), false);
 
@@ -2587,7 +2585,7 @@ namespace Demo.WindowsForms
                 //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, MainMap.Position, new PointLatLng(54.7261334816182, 25.2985095977783), false, false, false, false, true);
 
                 GeoCoderStatusCode gc;
-                PointLatLng? Point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
+                var point = MainMap.GeocodingProvider.GetPoint("Barranquilla", out gc);
 
                 //GDirections gd = null;
                 //DirectionsStatusCode Res = MainMap.DirectionsProvider.GetDirections(out gd, "Barranquilla", "Santa Marta", false, false, false, false, true);

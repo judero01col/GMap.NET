@@ -57,7 +57,7 @@ namespace GMap.NET.MapProviders
         /// <returns>A string containing the QuadKey.</returns>
         internal string TileXYToQuadKey(long tileX, long tileY, int levelOfDetail)
         {
-            StringBuilder quadKey = new StringBuilder();
+            var quadKey = new StringBuilder();
             for (int i = levelOfDetail; i > 0; i--)
             {
                 char digit = '0';
@@ -182,7 +182,7 @@ namespace GMap.NET.MapProviders
             {
                 try
                 {
-                    var key = ClientKey;
+                    string key = ClientKey;
 
                     // to avoid registration stuff, default key
                     if (TryGetDefaultKey && string.IsNullOrEmpty(ClientKey))
@@ -267,11 +267,11 @@ namespace GMap.NET.MapProviders
                         {
                             #region -- match versions --
 
-                            Regex reg = new Regex("tilegeneration:(\\d*)", RegexOptions.IgnoreCase);
-                            Match mat = reg.Match(html);
+                            var reg = new Regex("tilegeneration:(\\d*)", RegexOptions.IgnoreCase);
+                            var mat = reg.Match(html);
                             if (mat.Success)
                             {
-                                GroupCollection gc = mat.Groups;
+                                var gc = mat.Groups;
                                 int count = gc.Count;
                                 if (count == 2)
                                 {
@@ -316,10 +316,10 @@ namespace GMap.NET.MapProviders
 
         protected override bool CheckTileImageHttpResponse(WebResponse response)
         {
-            var pass = base.CheckTileImageHttpResponse(response);
+            bool pass = base.CheckTileImageHttpResponse(response);
             if (pass)
             {
-                var tileInfo = response.Headers.Get("X-VE-Tile-Info");
+                string tileInfo = response.Headers.Get("X-VE-Tile-Info");
                 if (tileInfo != null)
                 {
                     return !tileInfo.Equals("no-tile");
@@ -358,7 +358,7 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(r))
                     {
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(r);
 
                         XmlNode xn = doc["Response"];
@@ -367,7 +367,7 @@ namespace GMap.NET.MapProviders
                         if (string.Compare(statuscode, "200", true) == 0)
                         {
                             xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
-                            XmlNodeList xnl = xn.ChildNodes;
+                            var xnl = xn.ChildNodes;
 
                             foreach (XmlNode xno in xnl)
                             {
@@ -380,7 +380,7 @@ namespace GMap.NET.MapProviders
                                         Cache.Instance.SaveContent("GetTileUrl" + imageryType, CacheType.UrlCache, r);
                                     }
 
-                                    var baseTileUrl = imageUrl.InnerText;
+                                    string baseTileUrl = imageUrl.InnerText;
 
                                     if (baseTileUrl.Contains("{key}") || baseTileUrl.Contains("{token}"))
                                     {
@@ -418,7 +418,7 @@ namespace GMap.NET.MapProviders
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+            var points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
                 out tooltip,
                 out numLevels,
@@ -437,7 +437,7 @@ namespace GMap.NET.MapProviders
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+            var points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
                 zoom,
                 out tooltip,
                 out numLevels,
@@ -533,7 +533,7 @@ namespace GMap.NET.MapProviders
 
                     #region -- points --
 
-                    XmlDocument doc = new XmlDocument();
+                    var doc = new XmlDocument();
                     doc.LoadXml(route);
                     XmlNode xn = doc["Response"];
                     string statuscode = xn["StatusCode"].InnerText;
@@ -542,7 +542,7 @@ namespace GMap.NET.MapProviders
                         case "200":
                         {
                             xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"]["RoutePath"]["Line"];
-                            XmlNodeList xnl = xn.ChildNodes;
+                            var xnl = xn.ChildNodes;
                             if (xnl.Count > 0)
                             {
                                 points = new List<PointLatLng>();
@@ -708,7 +708,7 @@ namespace GMap.NET.MapProviders
                 {
                     if (geo.StartsWith("<?xml") && geo.Contains("<Response"))
                     {
-                        XmlDocument doc = new XmlDocument();
+                        var doc = new XmlDocument();
                         doc.LoadXml(geo);
                         XmlNode xn = doc["Response"];
                         string statuscode = xn["StatusCode"].InnerText;
@@ -718,7 +718,7 @@ namespace GMap.NET.MapProviders
                             {
                                 pointList = new List<PointLatLng>();
                                 xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
-                                XmlNodeList xnl = xn.ChildNodes;
+                                var xnl = xn.ChildNodes;
                                 foreach (XmlNode xno in xnl)
                                 {
                                     XmlNode latitude = xno["Point"]["Latitude"];

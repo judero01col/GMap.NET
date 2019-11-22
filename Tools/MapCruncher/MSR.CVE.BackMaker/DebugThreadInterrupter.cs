@@ -56,13 +56,13 @@ namespace MSR.CVE.BackMaker
 
         public DebugThreadInterrupter()
         {
-            AddThread("DebugThreadInterrupter", new ThreadStart(DoWork), ThreadPriority.Normal);
+            AddThread("DebugThreadInterrupter", DoWork, ThreadPriority.Normal);
         }
 
         public void AddThread(string name, ThreadStart start, ThreadPriority priority)
         {
             ThreadWrapper @object = new ThreadWrapper(start, this);
-            Thread thread = new Thread(new ThreadStart(@object.DoWork));
+            Thread thread = new Thread(@object.DoWork);
             thread.Priority = priority;
             thread.Name = name;
             RegisterThread(thread);

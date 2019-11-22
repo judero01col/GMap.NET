@@ -44,12 +44,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 (float)mapRect.lat0,
                 (float)(mapRect.lon1 - mapRect.lon0),
                 (float)(mapRect.lat1 - mapRect.lat0));
-            double num = (double)actualBoundingBox.Width / (double)boundingBox.Width;
-            double num2 = (double)actualBoundingBox.Height / (double)boundingBox.Height;
-            Size pagesize = new Size((int)Math.Round((double)size.Width / (double)rectangleF.Width * num),
-                (int)Math.Round((double)size.Height / (double)rectangleF.Height * num2));
-            Point topleft = new Point((int)Math.Round((double)-(double)pagesize.Width / num * mapRect.lon0),
-                (int)Math.Round((double)-(double)pagesize.Height / num2 * (num2 - mapRect.lat1)));
+            double num = actualBoundingBox.Width / (double)boundingBox.Width;
+            double num2 = actualBoundingBox.Height / (double)boundingBox.Height;
+            Size pagesize = new Size((int)Math.Round(size.Width / (double)rectangleF.Width * num),
+                (int)Math.Round(size.Height / (double)rectangleF.Height * num2));
+            Point topleft = new Point((int)Math.Round(-(double)pagesize.Width / num * mapRect.lon0),
+                (int)Math.Round(-(double)pagesize.Height / num2 * (num2 - mapRect.lat1)));
             if (pagesize.Width > 262144 || pagesize.Width <= 0 || pagesize.Height > 262144 || pagesize.Height <= 0)
             {
                 return new PresentFailureCode("Zoomed beyond FoxIt limits");
@@ -74,8 +74,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new BoundsPresent(new RenderRegion(new MapRectangle(0.0,
                     0.0,
-                    (double)(actualBoundingBox.Height / boundingBox.Height),
-                    (double)(actualBoundingBox.Width / boundingBox.Width)),
+                    actualBoundingBox.Height / boundingBox.Height,
+                    actualBoundingBox.Width / boundingBox.Width),
                 new DirtyEvent()));
         }
 
