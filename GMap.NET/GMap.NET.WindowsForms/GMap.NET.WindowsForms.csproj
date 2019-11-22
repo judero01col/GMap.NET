@@ -12,7 +12,8 @@
     <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
     <PackageId>GMap.NET.WinForms</PackageId>
-    <PackageReleaseNotes>- Add event OnMapClick
+    <PackageReleaseNotes>- OnMapClick method fix.
+- Add event OnMapClick
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>

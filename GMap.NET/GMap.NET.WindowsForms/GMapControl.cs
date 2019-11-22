@@ -34,6 +34,11 @@ namespace GMap.NET.WindowsForms
         public event MapClick OnMapClick;
 
         /// <summary>
+        ///     occurs when double clicked on map.
+        /// </summary>
+        public event MapDoubleClick OnMapDoubleClick;
+
+        /// <summary>
         ///     occurs when clicked on marker
         /// </summary>
         public event MarkerClick OnMarkerClick;
@@ -2112,10 +2117,7 @@ namespace GMap.NET.WindowsForms
                         zoomtofit = SetZoomToFitRect(SelectedArea);
                     }
 
-                    if (OnSelectionChange != null)
-                    {
-                        OnSelectionChange(SelectedArea, zoomtofit);
-                    }
+                    OnSelectionChange?.Invoke(SelectedArea, zoomtofit);
                 }
                 else
                 {
@@ -2132,7 +2134,7 @@ namespace GMap.NET.WindowsForms
 
             if (!Core.IsDragging)
             {
-                OnMapClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
+                bool OverlayObjet = false;
 
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
@@ -2156,6 +2158,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
                                 {
                                     OnMarkerClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2179,6 +2182,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.IsInside((int)rp.X, (int)rp.Y))
                                 {
                                     OnRouteClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2195,6 +2199,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.IsInside(FromLocalToLatLng(e.X, e.Y)))
                                 {
                                     OnPolygonClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2203,6 +2208,9 @@ namespace GMap.NET.WindowsForms
                         }
                     }
                 }
+
+                if (!OverlayObjet && Core.mouseDown == GPoint.Empty)
+                    OnMapClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
             }
 
             //m_mousepos = e.Location;
@@ -2218,6 +2226,8 @@ namespace GMap.NET.WindowsForms
 
             if (!Core.IsDragging)
             {
+                bool OverlayObjet = false;
+
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
                     var o = Overlays[i];
@@ -2240,6 +2250,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.LocalArea.Contains((int)rp.X, (int)rp.Y))
                                 {
                                     OnMarkerDoubleClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2263,6 +2274,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.IsInside((int)rp.X, (int)rp.Y))
                                 {
                                     OnRouteDoubleClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2279,6 +2291,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.IsInside(FromLocalToLatLng(e.X, e.Y)))
                                 {
                                     OnPolygonDoubleClick?.Invoke(m, e);
+                                    OverlayObjet = true;
                                     break;
                                 }
 
@@ -2287,6 +2300,9 @@ namespace GMap.NET.WindowsForms
                         }
                     }
                 }
+
+                if (!OverlayObjet && Core.mouseDown == GPoint.Empty)
+                    OnMapDoubleClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
             }
         }
 
@@ -3604,5 +3620,8 @@ namespace GMap.NET.WindowsForms
     public delegate void SelectionChange(RectLatLng Selection, bool ZoomToFit);
 
     public delegate void MapClick(PointLatLng PointClick, MouseEventArgs e);
+
+    public delegate void MapDoubleClick(PointLatLng PointClick, MouseEventArgs e);
+
 #endif
 }
