@@ -32,14 +32,14 @@ namespace BSE.Windows.Forms
         #endregion
         
         #region FieldsPrivate
-        private Color m_borderColor = System.Windows.Forms.ProfessionalColors.GripDark;
-        private Color m_captionCloseIcon = SystemColors.ControlText;
-        private Color m_captionExpandIcon = SystemColors.ControlText;
-        private Color m_captionGradientBegin = System.Windows.Forms.ProfessionalColors.ToolStripGradientBegin;
-        private Color m_captionGradientEnd = System.Windows.Forms.ProfessionalColors.ToolStripGradientEnd;
-        private Color m_captionGradientMiddle = System.Windows.Forms.ProfessionalColors.ToolStripGradientMiddle;
-        private Color m_captionText = SystemColors.ControlText;
-        private Color m_innerBorderColor = System.Windows.Forms.ProfessionalColors.GripLight;
+        private Color _borderColor = System.Windows.Forms.ProfessionalColors.GripDark;
+        private Color _captionCloseIcon = SystemColors.ControlText;
+        private Color _captionExpandIcon = SystemColors.ControlText;
+        private Color _captionGradientBegin = System.Windows.Forms.ProfessionalColors.ToolStripGradientBegin;
+        private Color _captionGradientEnd = System.Windows.Forms.ProfessionalColors.ToolStripGradientEnd;
+        private Color _captionGradientMiddle = System.Windows.Forms.ProfessionalColors.ToolStripGradientMiddle;
+        private Color _captionText = SystemColors.ControlText;
+        private Color _innerBorderColor = System.Windows.Forms.ProfessionalColors.GripLight;
         
         #endregion
 
@@ -50,12 +50,12 @@ namespace BSE.Windows.Forms
         [Description("The border color of a Panel or XPanderPanel.")]
         public virtual Color BorderColor
         {
-            get { return this.m_borderColor; }
+            get { return _borderColor; }
             set
             {
-                if (value.Equals(this.m_borderColor) == false)
+                if (value.Equals(_borderColor) == false)
                 {
-                    this.m_borderColor = value;
+                    _borderColor = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -66,12 +66,12 @@ namespace BSE.Windows.Forms
         [Description("The forecolor of a close icon in a Panel or XPanderPanel.")]
         public virtual Color CaptionCloseIcon
         {
-            get { return this.m_captionCloseIcon; }
+            get { return _captionCloseIcon; }
             set
             {
-                if (value.Equals(this.m_captionCloseIcon) == false)
+                if (value.Equals(_captionCloseIcon) == false)
                 {
-                    this.m_captionCloseIcon = value;
+                    _captionCloseIcon = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -82,12 +82,12 @@ namespace BSE.Windows.Forms
         [Description("The forecolor of an expand icon in a Panel or XPanderPanel.")]
         public virtual Color CaptionExpandIcon
         {
-            get { return this.m_captionExpandIcon; }
+            get { return _captionExpandIcon; }
             set
             {
-                if (value.Equals(this.m_captionExpandIcon) == false)
+                if (value.Equals(_captionExpandIcon) == false)
                 {
-                    this.m_captionExpandIcon = value;
+                    _captionExpandIcon = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -98,12 +98,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient at the caption on a Panel or XPanderPanel.")]
         public virtual Color CaptionGradientBegin
         {
-            get { return this.m_captionGradientBegin; }
+            get { return _captionGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionGradientBegin) == false)
+                if (value.Equals(_captionGradientBegin) == false)
                 {
-                    this.m_captionGradientBegin = value;
+                    _captionGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -114,12 +114,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient at the caption on a Panel or XPanderPanel")]
         public virtual Color CaptionGradientEnd
         {
-            get { return this.m_captionGradientEnd; }
+            get { return _captionGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionGradientEnd) == false)
+                if (value.Equals(_captionGradientEnd) == false)
                 {
-                    this.m_captionGradientEnd = value;
+                    _captionGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -130,12 +130,12 @@ namespace BSE.Windows.Forms
         [Description("The middle color of the gradient at the caption on a Panel or XPanderPanel.")]
         public virtual Color CaptionGradientMiddle
         {
-            get { return this.m_captionGradientMiddle; }
+            get { return _captionGradientMiddle; }
             set
             {
-                if (value.Equals(this.m_captionGradientMiddle) == false)
+                if (value.Equals(_captionGradientMiddle) == false)
                 {
-                    this.m_captionGradientMiddle = value;
+                    _captionGradientMiddle = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -146,12 +146,12 @@ namespace BSE.Windows.Forms
         [Description("The text color at the caption on a Panel or XPanderPanel.")]
         public virtual Color CaptionText
         {
-            get { return this.m_captionText; }
+            get { return _captionText; }
             set
             {
-                if (value.Equals(this.m_captionText) == false)
+                if (value.Equals(_captionText) == false)
                 {
-                    this.m_captionText = value;
+                    _captionText = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -162,12 +162,12 @@ namespace BSE.Windows.Forms
         [Description("The inner border color of a Panel.")]
         public virtual Color InnerBorderColor
         {
-            get { return this.m_innerBorderColor; }
+            get { return _innerBorderColor; }
             set
             {
-                if (value.Equals(this.m_innerBorderColor) == false)
+                if (value.Equals(_innerBorderColor) == false)
                 {
-                    this.m_innerBorderColor = value;
+                    _innerBorderColor = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -182,9 +182,9 @@ namespace BSE.Windows.Forms
         /// <param name="e">A EventArgs that contains the event data.</param>
         protected virtual void OnCustomColorsChanged(object sender, EventArgs e)
         {
-            if (this.CustomColorsChanged != null)
+            if (CustomColorsChanged != null)
             {
-                this.CustomColorsChanged(sender, e);
+                CustomColorsChanged(sender, e);
             }
         }
         #endregion

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Xml;
-using GMap.NET;
-using System.Data.Common;
-using GMap.NET.MapProviders;
 using System.Text;
-using System.Diagnostics;
-
+using GMap.NET;
+using GMap.NET.MapProviders;
 #if !PocketPC
 using System.Net.NetworkInformation;
+
 #endif
 
 #if !MONO
@@ -19,11 +19,11 @@ using System.Net.NetworkInformation;
 using System.Data.SQLite;
 #endif
 #else
-   using SQLiteConnection=Mono.Data.Sqlite.SqliteConnection;
-   using SQLiteTransaction=Mono.Data.Sqlite.SqliteTransaction;
-   using SQLiteCommand=Mono.Data.Sqlite.SqliteCommand;
-   using SQLiteDataReader=Mono.Data.Sqlite.SqliteDataReader;
-   using SQLiteParameter=Mono.Data.Sqlite.SqliteParameter;
+   using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+   using SQLiteTransaction = Mono.Data.Sqlite.SqliteTransaction;
+   using SQLiteCommand = Mono.Data.Sqlite.SqliteCommand;
+   using SQLiteDataReader = Mono.Data.Sqlite.SqliteDataReader;
+   using SQLiteParameter = Mono.Data.Sqlite.SqliteParameter;
 #endif
 
 namespace Demo.WindowsForms
@@ -50,11 +50,11 @@ namespace Demo.WindowsForms
 
     public struct FlightRadarData
     {
-        public string name;
-        public PointLatLng point;
-        public int bearing;
-        public string altitude;
-        public string speed;
+        public string Name;
+        public PointLatLng Point;
+        public int Bearing;
+        public string Altitude;
+        public string Speed;
         public int Id;
     }
 
@@ -66,17 +66,17 @@ namespace Demo.WindowsForms
 #if !PocketPC
         public static bool PingNetwork(string hostNameOrAddress)
         {
-            bool pingStatus = false;
+            bool pingStatus;
 
-            using (Ping p = new Ping())
+            using (var p = new Ping())
             {
-                byte[] buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                var buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 int timeout = 4444; // 4s
 
                 try
                 {
-                    PingReply reply = p.Send(hostNameOrAddress, timeout, buffer);
-                    pingStatus = (reply.Status == IPStatus.Success);
+                    var reply = p.Send(hostNameOrAddress, timeout, buffer);
+                    pingStatus = reply.Status == IPStatus.Success;
                 }
                 catch (Exception)
                 {
@@ -89,7 +89,7 @@ namespace Demo.WindowsForms
 #endif
 
         /// <summary>
-        /// gets routes from gpsd log file
+        ///     gets routes from gpsd log file
         /// </summary>
         /// <param name="gpsdLogFile"></param>
         /// <param name="start">start time(UTC) of route, null to read from very start</param>
@@ -100,24 +100,24 @@ namespace Demo.WindowsForms
             DateTime? end, double? maxPositionDilutionOfPrecision)
         {
 #if SQLite
-            using (SQLiteConnection cn = new SQLiteConnection())
+            using (var cn = new SQLiteConnection())
             {
 #if !MONO
                 cn.ConnectionString = string.Format("Data Source=\"{0}\";FailIfMissing=True;", gpsdLogFile);
 #else
-            cn.ConnectionString = string.Format("Version=3,URI=file://{0},FailIfMissing=True", gpsdLogFile);
+                cn.ConnectionString = string.Format("Version=3,URI=file://{0},FailIfMissing=True", gpsdLogFile);
 #endif
 
                 cn.Open();
                 {
-                    using (DbCommand cmd = cn.CreateCommand())
+                    using (var cmd = cn.CreateCommand())
                     {
                         cmd.CommandText = "SELECT * FROM GPS ";
 
                         if (start.HasValue)
                         {
                             cmd.CommandText += "WHERE TimeUTC >= @t1 ";
-                            SQLiteParameter lookupValue = new SQLiteParameter("@t1", start);
+                            var lookupValue = new SQLiteParameter("@t1", start);
                             cmd.Parameters.Add(lookupValue);
                         }
 
@@ -133,7 +133,7 @@ namespace Demo.WindowsForms
                             }
 
                             cmd.CommandText += "TimeUTC <= @t2 ";
-                            SQLiteParameter lookupValue = new SQLiteParameter("@t2", end);
+                            var lookupValue = new SQLiteParameter("@t2", end);
                             cmd.Parameters.Add(lookupValue);
                         }
 
@@ -149,19 +149,19 @@ namespace Demo.WindowsForms
                             }
 
                             cmd.CommandText += "(PositionDilutionOfPrecision <= @p3)";
-                            SQLiteParameter lookupValue = new SQLiteParameter("@p3", maxPositionDilutionOfPrecision);
+                            var lookupValue = new SQLiteParameter("@p3", maxPositionDilutionOfPrecision);
                             cmd.Parameters.Add(lookupValue);
                         }
 
-                        using (DbDataReader rd = cmd.ExecuteReader())
+                        using (var rd = cmd.ExecuteReader())
                         {
-                            List<GpsLog> points = new List<GpsLog>();
+                            var points = new List<GpsLog>();
 
                             long lastSessionCounter = -1;
 
                             while (rd.Read())
                             {
-                                GpsLog log = new GpsLog();
+                                var log = new GpsLog();
                                 {
                                     log.TimeUTC = (DateTime) rd["TimeUTC"];
                                     log.SessionCounter = (long) rd["SessionCounter"];
@@ -169,8 +169,8 @@ namespace Demo.WindowsForms
                                     log.Speed = rd["Speed"] as double?;
                                     log.SeaLevelAltitude = rd["SeaLevelAltitude"] as double?;
                                     log.EllipsoidAltitude = rd["EllipsoidAltitude"] as double?;
-                                    log.SatellitesInView = rd["SatellitesInView"] as System.Byte?;
-                                    log.SatelliteCount = rd["SatelliteCount"] as System.Byte?;
+                                    log.SatellitesInView = rd["SatellitesInView"] as Byte?;
+                                    log.SatelliteCount = rd["SatelliteCount"] as Byte?;
                                     log.Position = new PointLatLng((double) rd["Lat"], (double) rd["Lng"]);
                                     log.PositionDilutionOfPrecision = rd["PositionDilutionOfPrecision"] as double?;
                                     log.HorizontalDilutionOfPrecision = rd["HorizontalDilutionOfPrecision"] as double?;
@@ -182,7 +182,7 @@ namespace Demo.WindowsForms
 
                                 if (log.SessionCounter - lastSessionCounter != 1 && points.Count > 0)
                                 {
-                                    List<GpsLog> ret = new List<GpsLog>(points);
+                                    var ret = new List<GpsLog>(points);
                                     points.Clear();
                                     {
                                         yield return ret;
@@ -195,7 +195,7 @@ namespace Demo.WindowsForms
 
                             if (points.Count > 0)
                             {
-                                List<GpsLog> ret = new List<GpsLog>(points);
+                                var ret = new List<GpsLog>(points);
                                 points.Clear();
                                 {
                                     yield return ret;
@@ -203,7 +203,6 @@ namespace Demo.WindowsForms
                             }
 
                             points.Clear();
-                            points = null;
 
                             rd.Close();
                         }
@@ -212,14 +211,14 @@ namespace Demo.WindowsForms
                 cn.Close();
             }
 #else
-         return null;
+            return null;
 #endif
         }
 
-        static readonly Random r = new Random();
+        static readonly Random R = new Random();
 
         /// <summary>
-        /// gets realtime data from public transport in city vilnius of lithuania
+        ///     gets realtime data from public transport in city vilnius of lithuania
         /// </summary>
         /// <param name="type">type of transport</param>
         /// <param name="line">linenum or null to get all</param>
@@ -235,7 +234,7 @@ namespace Demo.WindowsForms
             string url = string.Format(CultureInfo.InvariantCulture,
                 "http://www.troleibusai.lt/eismas/get_gps.php?allowed=true&more=1&bus={0}&rand={1}",
                 type == TransportType.Bus ? 2 : 1,
-                r.NextDouble());
+                R.NextDouble());
 
             if (!string.IsNullOrEmpty(line))
             {
@@ -248,9 +247,9 @@ namespace Demo.WindowsForms
          url += "&app=GMap.NET.WindowsMobile";
 #endif
 
-            string xml = string.Empty;
+            string xml;
             {
-                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+                var request = (HttpWebRequest)WebRequest.Create(url);
 
                 request.UserAgent = GMapProvider.UserAgent;
                 request.Timeout = GMapProvider.TimeoutMs;
@@ -258,11 +257,11 @@ namespace Demo.WindowsForms
                 request.Accept = "*/*";
                 request.KeepAlive = true;
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var response = request.GetResponse() as HttpWebResponse)
                 {
-                    using (Stream responseStream = response.GetResponseStream())
+                    using (var responseStream = response.GetResponseStream())
                     {
-                        using (StreamReader read = new StreamReader(responseStream, Encoding.UTF8))
+                        using (var read = new StreamReader(responseStream, Encoding.UTF8))
                         {
                             xml = read.ReadToEnd();
                         }
@@ -280,12 +279,12 @@ namespace Demo.WindowsForms
             {
                 var items = xml.Split('&');
 
-                foreach (var it in items)
+                foreach (string it in items)
                 {
                     var sit = it.Split(';');
                     if (sit.Length == 8)
                     {
-                        VehicleData d = new VehicleData();
+                        var d = new VehicleData();
                         {
                             d.Id = int.Parse(sit[2]);
                             d.Lat = double.Parse(sit[0], CultureInfo.InvariantCulture);
@@ -404,7 +403,7 @@ namespace Demo.WindowsForms
             #endregion
         }
 
-        static string sessionId = string.Empty;
+        static string _sessionId = string.Empty;
 
 #if !PocketPC
         public static void GetFlightRadarData(List<FlightRadarData> ret, RectLatLng bounds)
@@ -424,21 +423,21 @@ namespace Demo.WindowsForms
             //if(!string.IsNullOrEmpty(sessionId))
             {
                 //var response = GetFlightRadarContentUsingHttp("http://arn.data.fr24.com/zones/fcgi/feed.js?bounds=63.056845879294244,55.95299968262111,5.99853515625,28.54248046875&faa=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=900&gliders=1&stats=1&", location, zoom, sessionId);
-                var response = GetFlightRadarContentUsingHttp(string.Format(CultureInfo.InvariantCulture,
+                string response = GetFlightRadarContentUsingHttp(string.Format(CultureInfo.InvariantCulture,
                     "http://arn.data.fr24.com/zones/fcgi/feed.js?bounds={0},{1},{2},{3}&faa=1&mlat=1&flarm=1&adsb=1&gnd=1&air=1&vehicles=1&estimated=1&maxage=900&gliders=1&stats=1&",
                     bounds.Top,
                     bounds.Bottom,
                     bounds.Left,
                     bounds.Right));
 
-                var items = response.Split(new string[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
+                var items = response.Split(new[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
 
                 //int i = 0;
-                foreach (var it in items)
+                foreach (string it in items)
                 {
                     if (it.Length > 11 && !it.Contains("full_count") && !it.Contains("stats"))
                     {
-                        var d = it.TrimEnd(']').Replace(":[", ",").Replace("\"", string.Empty);
+                        string d = it.TrimEnd(']').Replace(":[", ",").Replace("\"", string.Empty);
 
                         //Debug.WriteLine(++i + " -> " + d);
 
@@ -446,20 +445,20 @@ namespace Demo.WindowsForms
                         var par = d.Split(',');
                         if (par.Length >= 9)
                         {
-                            var id = Convert.ToInt32(par[0], 16);
-                            var name = par[8] + "|" + par[9] + "|" + par[10];
-                            var lat = par[2];
-                            var lng = par[3];
-                            var bearing = par[4];
-                            var altitude = (int) (int.Parse(par[5]) * 0.3048) + "m";
-                            var speed = (int) (int.Parse(par[6]) * 1.852) + "km/h";
+                            int id = Convert.ToInt32(par[0], 16);
+                            string name = par[8] + "|" + par[9] + "|" + par[10];
+                            string lat = par[2];
+                            string lng = par[3];
+                            string bearing = par[4];
+                            string altitude = (int)(int.Parse(par[5]) * 0.3048) + "m";
+                            string speed = (int)(int.Parse(par[6]) * 1.852) + "km/h";
 
-                            FlightRadarData fd = new FlightRadarData();
-                            fd.name = name;
-                            fd.bearing = int.Parse(bearing);
-                            fd.altitude = altitude;
-                            fd.speed = speed;
-                            fd.point = new PointLatLng(double.Parse(lat, CultureInfo.InvariantCulture),
+                            var fd = new FlightRadarData();
+                            fd.Name = name;
+                            fd.Bearing = int.Parse(bearing);
+                            fd.Altitude = altitude;
+                            fd.Speed = speed;
+                            fd.Point = new PointLatLng(double.Parse(lat, CultureInfo.InvariantCulture),
                                 double.Parse(lng, CultureInfo.InvariantCulture));
                             fd.Id = id;
 
@@ -490,9 +489,9 @@ namespace Demo.WindowsForms
 
         static string GetFlightRadarContentUsingHttp(string url)
         {
-            string ret = string.Empty;
+            string ret;
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
 
             request.UserAgent = GMapProvider.UserAgent;
             request.Timeout = GMapProvider.TimeoutMs;
@@ -502,7 +501,7 @@ namespace Demo.WindowsForms
             request.KeepAlive = true;
             //request.Headers.Add("Cookie", string.Format(System.Globalization.CultureInfo.InvariantCulture, "map_lat={0}; map_lon={1}; map_zoom={2}; " + (!string.IsNullOrEmpty(sid) ? "PHPSESSID=" + sid + ";" : string.Empty) + "__utma=109878426.303091014.1316587318.1316587318.1316587318.1; __utmb=109878426.2.10.1316587318; __utmz=109878426.1316587318.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)", p.Lat, p.Lng, zoom));
 
-            using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+            using (var response = request.GetResponse() as HttpWebResponse)
             {
                 //if(string.IsNullOrEmpty(sid))
                 //{
@@ -515,11 +514,11 @@ namespace Demo.WindowsForms
                 //   }
                 //}
 
-                using (Stream responseStream = response.GetResponseStream())
+                using (var responseStream = response.GetResponseStream())
                 {
-                    using (StreamReader read = new StreamReader(responseStream, Encoding.UTF8))
+                    using (var read = new StreamReader(responseStream, Encoding.UTF8))
                     {
-                        var tmp = read.ReadToEnd();
+                        string tmp = read.ReadToEnd();
                         //if(!string.IsNullOrEmpty(sid))
                         {
                             ret = tmp;

@@ -1,9 +1,9 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class TransparencyOptions
@@ -14,6 +14,7 @@ namespace MSR.CVE.BackMaker
             Inverted,
             Off
         }
+
         private const string TransparencyOptionsTag = "TransparencyOptions";
         private const string UseDocumentTransparencyAttr = "UseDocumentTransparency";
         private const string EnabledAttr = "Enabled";
@@ -32,189 +33,219 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._colorList;
+                return _colorList;
             }
         }
+
         public bool useDocumentTransparency
         {
             get
             {
-                return this._useDocumentTransparency;
+                return _useDocumentTransparency;
             }
             set
             {
-                if (this._useDocumentTransparency != value)
+                if (_useDocumentTransparency != value)
                 {
-                    this._useDocumentTransparency = value;
-                    this.SetDirty();
+                    _useDocumentTransparency = value;
+                    SetDirty();
                 }
             }
         }
+
         private void Initialize(DirtyEvent dirty)
         {
-            this.dirtyEvent = dirty;
-            this._colorList = new List<TransparencyColor>();
-            this._enabled = true;
-            this._inverted = false;
-            this._useDocumentTransparency = true;
-            this._fadeOptions = new FadeOptions(dirty);
+            dirtyEvent = dirty;
+            _colorList = new List<TransparencyColor>();
+            _enabled = true;
+            _inverted = false;
+            _useDocumentTransparency = true;
+            _fadeOptions = new FadeOptions(dirty);
         }
+
         public TransparencyOptions(TransparencyOptions prototype)
         {
-            this._enabled = prototype._enabled;
-            this._inverted = prototype._inverted;
-            this._useDocumentTransparency = prototype._useDocumentTransparency;
-            this._colorList = new List<TransparencyColor>();
-            this._colorList.AddRange(prototype._colorList);
-            this._fadeOptions = new FadeOptions(prototype._fadeOptions);
+            _enabled = prototype._enabled;
+            _inverted = prototype._inverted;
+            _useDocumentTransparency = prototype._useDocumentTransparency;
+            _colorList = new List<TransparencyColor>();
+            _colorList.AddRange(prototype._colorList);
+            _fadeOptions = new FadeOptions(prototype._fadeOptions);
         }
+
         public TransparencyOptions(DirtyEvent dirty)
         {
-            this.Initialize(dirty);
+            Initialize(dirty);
         }
+
         public TransparencyColor AddColor(Pixel color)
         {
             TransparencyColor transparencyColor = new TransparencyColor(color, 2, 0);
-            this._colorList.Add(transparencyColor);
-            this.SetDirty();
+            _colorList.Add(transparencyColor);
+            SetDirty();
             return transparencyColor;
         }
+
         public void RemoveColor(TransparencyColor tc)
         {
-            this._colorList.Remove(tc);
-            this.SetDirty();
+            _colorList.Remove(tc);
+            SetDirty();
         }
+
         public void SetFuzz(TransparencyColor tc, int newValue)
         {
-            if (this._colorList.Contains(tc) && tc.fuzz != newValue)
+            if (_colorList.Contains(tc) && tc.fuzz != newValue)
             {
-                this._colorList[this._colorList.IndexOf(tc)] = new TransparencyColor(tc.color, newValue, tc.halo);
-                this.SetDirty();
+                _colorList[_colorList.IndexOf(tc)] = new TransparencyColor(tc.color, newValue, tc.halo);
+                SetDirty();
             }
         }
+
         public void SetHalo(TransparencyColor tc, int newValue)
         {
-            if (this._colorList.Contains(tc) && tc.halo != newValue)
+            if (_colorList.Contains(tc) && tc.halo != newValue)
             {
-                this._colorList[this._colorList.IndexOf(tc)] = new TransparencyColor(tc.color, tc.fuzz, newValue);
-                this.SetDirty();
+                _colorList[_colorList.IndexOf(tc)] = new TransparencyColor(tc.color, tc.fuzz, newValue);
+                SetDirty();
             }
         }
-        public TransparencyOptions.TransparencyMode GetMode()
+
+        public TransparencyMode GetMode()
         {
-            if (!this._enabled)
+            if (!_enabled)
             {
-                return TransparencyOptions.TransparencyMode.Off;
+                return TransparencyMode.Off;
             }
-            if (this._inverted)
+
+            if (_inverted)
             {
-                return TransparencyOptions.TransparencyMode.Inverted;
+                return TransparencyMode.Inverted;
             }
-            return TransparencyOptions.TransparencyMode.Normal;
+
+            return TransparencyMode.Normal;
         }
+
         public void SetNormalTransparency()
         {
-            this._enabled = true;
-            this._inverted = false;
-            this.SetDirty();
+            _enabled = true;
+            _inverted = false;
+            SetDirty();
         }
+
         public void SetInvertedTransparency()
         {
-            this._enabled = true;
-            this._inverted = true;
-            this.SetDirty();
+            _enabled = true;
+            _inverted = true;
+            SetDirty();
         }
+
         public void SetDisabledTransparency()
         {
-            this._enabled = false;
-            this.SetDirty();
+            _enabled = false;
+            SetDirty();
         }
+
         public bool ShouldBeTransparent(byte r, byte g, byte b)
         {
-            if (!this._enabled)
+            if (!_enabled)
             {
                 return false;
             }
+
             bool flag = false;
-            foreach (TransparencyColor current in this.colorList)
+            foreach (TransparencyColor current in colorList)
             {
-                if (Math.Abs((int)(current.color.r - r)) <= current.fuzz && Math.Abs((int)(current.color.g - g)) <= current.fuzz && Math.Abs((int)(current.color.b - b)) <= current.fuzz)
+                if (Math.Abs(current.color.r - r) <= current.fuzz &&
+                    Math.Abs(current.color.g - g) <= current.fuzz &&
+                    Math.Abs(current.color.b - b) <= current.fuzz)
                 {
                     flag = true;
                     break;
                 }
             }
-            return flag != this._inverted;
+
+            return flag != _inverted;
         }
+
         public void SetDirty()
         {
-            if (this.transparencyOptionsChangedEvent != null)
+            if (transparencyOptionsChangedEvent != null)
             {
-                this.transparencyOptionsChangedEvent();
+                transparencyOptionsChangedEvent();
             }
-            this.dirtyEvent.SetDirty();
+
+            dirtyEvent.SetDirty();
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(this._useDocumentTransparency);
-            hash.Accumulate(this._enabled);
-            if (this._enabled)
+            hash.Accumulate(_useDocumentTransparency);
+            hash.Accumulate(_enabled);
+            if (_enabled)
             {
-                hash.Accumulate(this._inverted);
-                foreach (TransparencyColor current in this._colorList)
+                hash.Accumulate(_inverted);
+                foreach (TransparencyColor current in _colorList)
                 {
                     current.AccumulateRobustHash(hash);
                 }
             }
-            this._fadeOptions.AccumulateRobustHash(hash);
+
+            _fadeOptions.AccumulateRobustHash(hash);
         }
+
         public TransparencyOptions(MashupParseContext context, DirtyEvent dirty)
         {
-            this.Initialize(dirty);
+            Initialize(dirty);
             XMLTagReader xMLTagReader = context.NewTagReader("TransparencyOptions");
-            this._useDocumentTransparency = true;
-            context.GetAttributeBoolean("UseDocumentTransparency", ref this._useDocumentTransparency);
-            this._enabled = context.GetRequiredAttributeBoolean("Enabled");
-            this._inverted = context.GetRequiredAttributeBoolean("Inverted");
+            _useDocumentTransparency = true;
+            context.GetAttributeBoolean("UseDocumentTransparency", ref _useDocumentTransparency);
+            _enabled = context.GetRequiredAttributeBoolean("Enabled");
+            _inverted = context.GetRequiredAttributeBoolean("Inverted");
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(TransparencyColor.GetXMLTag()))
                 {
-                    this._colorList.Add(new TransparencyColor(context));
+                    _colorList.Add(new TransparencyColor(context));
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(FadeOptions.GetXMLTag()))
                     {
-                        this._fadeOptions = new FadeOptions(context, dirty);
+                        _fadeOptions = new FadeOptions(context, dirty);
                     }
                 }
             }
         }
+
         internal static string GetXMLTag()
         {
             return "TransparencyOptions";
         }
+
         internal void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("TransparencyOptions");
-            writer.WriteAttributeString("UseDocumentTransparency", this._useDocumentTransparency.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("Enabled", this._enabled.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("Inverted", this._inverted.ToString(CultureInfo.InvariantCulture));
-            foreach (TransparencyColor current in this._colorList)
+            writer.WriteAttributeString("UseDocumentTransparency",
+                _useDocumentTransparency.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Enabled", _enabled.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Inverted", _inverted.ToString(CultureInfo.InvariantCulture));
+            foreach (TransparencyColor current in _colorList)
             {
                 current.WriteXML(writer);
             }
-            this._fadeOptions.WriteXML(writer);
+
+            _fadeOptions.WriteXML(writer);
             writer.WriteEndElement();
         }
+
         internal bool Effectless()
         {
-            return this.colorList.Count == 0 || this.GetMode() == TransparencyOptions.TransparencyMode.Off;
+            return colorList.Count == 0 || GetMode() == TransparencyMode.Off;
         }
+
         internal FadeOptions GetFadeOptions()
         {
-            return this._fadeOptions;
+            return _fadeOptions;
         }
     }
 }

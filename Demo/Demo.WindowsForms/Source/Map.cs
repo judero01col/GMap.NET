@@ -15,32 +15,32 @@ namespace Demo.WindowsForms
       public long ElapsedMilliseconds;
 
 #if DEBUG
-      private int counter;
-      readonly Font DebugFont = new Font(FontFamily.GenericSansSerif, 14, FontStyle.Regular);
-      readonly Font DebugFontSmall = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Bold);
-      DateTime start;
-      DateTime end;
-      int delta;
+      private int _counter;
+      readonly Font _debugFont = new Font(FontFamily.GenericSansSerif, 14, FontStyle.Regular);
+      readonly Font _debugFontSmall = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Bold);
+      DateTime _start;
+      DateTime _end;
+      int _delta;
 
       protected override void OnPaint(PaintEventArgs e)
       {
-         start = DateTime.Now;
+         _start = DateTime.Now;
 
          base.OnPaint(e);
 
-         end = DateTime.Now;
-         delta = (int)(end - start).TotalMilliseconds;
+         _end = DateTime.Now;
+         _delta = (int)(_end - _start).TotalMilliseconds;
       }
 
       /// <summary>
       /// any custom drawing here
       /// </summary>
       /// <param name="drawingContext"></param>
-      protected override void OnPaintOverlays(System.Drawing.Graphics g)
+      protected override void OnPaintOverlays(Graphics g)
       {
          base.OnPaintOverlays(g);
 
-         g.DrawString(string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Zoom) + "z, " + MapProvider + ", refresh: " + counter++ + ", load: " + ElapsedMilliseconds + "ms, render: " + delta + "ms", DebugFont, Brushes.Blue, DebugFont.Height, DebugFont.Height + 20);
+         g.DrawString(string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Zoom) + "z, " + MapProvider + ", refresh: " + _counter++ + ", load: " + ElapsedMilliseconds + "ms, render: " + _delta + "ms", _debugFont, Brushes.Blue, _debugFont.Height, _debugFont.Height + 20);
 
          //g.DrawString(ViewAreaPixel.Location.ToString(), DebugFontSmall, Brushes.Blue, DebugFontSmall.Height, DebugFontSmall.Height);
 

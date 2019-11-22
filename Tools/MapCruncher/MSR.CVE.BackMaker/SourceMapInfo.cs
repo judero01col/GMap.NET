@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class SourceMapInfo
@@ -13,87 +13,94 @@ namespace MSR.CVE.BackMaker
         private string _mapFileURL = "";
         private string _mapHomePage = "";
         private string _mapDescription = "";
+
         public string mapFileURL
         {
             get
             {
-                return this._mapFileURL;
+                return _mapFileURL;
             }
             set
             {
-                if (this._mapFileURL != value)
+                if (_mapFileURL != value)
                 {
-                    this._mapFileURL = value;
-                    this.dirtyEvent.SetDirty();
+                    _mapFileURL = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
+
         public string mapHomePage
         {
             get
             {
-                return this._mapHomePage;
+                return _mapHomePage;
             }
             set
             {
-                if (this._mapHomePage != value)
+                if (_mapHomePage != value)
                 {
-                    this._mapHomePage = value;
-                    this.dirtyEvent.SetDirty();
+                    _mapHomePage = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
+
         public string mapDescription
         {
             get
             {
-                return this._mapDescription;
+                return _mapDescription;
             }
             set
             {
-                if (this._mapDescription != value)
+                if (_mapDescription != value)
                 {
-                    this._mapDescription = value;
-                    this.dirtyEvent.SetDirty();
+                    _mapDescription = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
+
         public SourceMapInfo(DirtyEvent parentDirty)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
+            dirtyEvent = new DirtyEvent(parentDirty);
         }
+
         public static string GetXMLTag()
         {
             return "SourceMapInfo";
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("SourceMapInfo");
             writer.WriteStartElement("MapFileURL");
-            writer.WriteAttributeString("url", this.mapFileURL);
+            writer.WriteAttributeString("url", mapFileURL);
             writer.WriteEndElement();
             writer.WriteStartElement("MapHomePage");
-            writer.WriteAttributeString("url", this.mapHomePage);
+            writer.WriteAttributeString("url", mapHomePage);
             writer.WriteEndElement();
-            XMLUtils.WriteStringXml(writer, "MapDescription", this.mapDescription);
+            XMLUtils.WriteStringXml(writer, "MapDescription", mapDescription);
             writer.WriteEndElement();
         }
+
         public SourceMapInfo(MashupParseContext context, DirtyEvent parentDirty)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
-            XMLTagReader xMLTagReader = context.NewTagReader(SourceMapInfo.GetXMLTag());
+            dirtyEvent = new DirtyEvent(parentDirty);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs("MapFileURL"))
                 {
                     if (context.version == SourceMapInfoAsCharDataSchema.schema)
                     {
-                        this._mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
+                        _mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
                     }
                     else
                     {
                         XMLTagReader xMLTagReader2 = context.NewTagReader("MapFileURL");
-                        this._mapFileURL = context.GetRequiredAttribute("url");
+                        _mapFileURL = context.GetRequiredAttribute("url");
                         xMLTagReader2.SkipAllSubTags();
                     }
                 }
@@ -103,12 +110,12 @@ namespace MSR.CVE.BackMaker
                     {
                         if (context.version == SourceMapInfoAsCharDataSchema.schema)
                         {
-                            this._mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
+                            _mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
                         }
                         else
                         {
                             XMLTagReader xMLTagReader3 = context.NewTagReader("MapHomePage");
-                            this._mapHomePage = context.GetRequiredAttribute("url");
+                            _mapHomePage = context.GetRequiredAttribute("url");
                             xMLTagReader3.SkipAllSubTags();
                         }
                     }
@@ -116,7 +123,7 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader.TagIs("MapDescription"))
                         {
-                            this._mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
+                            _mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
                         }
                     }
                 }

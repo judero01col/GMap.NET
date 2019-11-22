@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Docking", "Testing\Dem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.StreetView", "Testing\Demo.StreetView\Demo.StreetView.csproj", "{B6E411A2-DFD8-461E-8207-BDBA405264CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcMapFusion", "Testing\MvcMapFusion\MvcMapFusion.csproj", "{D9756CE8-3C3B-46A6-916F-CB40E4E35978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcMapFusion", "Testing\MvcMapFusion\MvcMapFusion.csproj", "{D9756CE8-3C3B-46A6-916F-CB40E4E35978}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SilverlightMapFusion.Web", "Testing\Silverlight\SilverlightMapFusion.Web\SilverlightMapFusion.Web.csproj", "{127D3FB1-5E4A-41F3-9B19-6FA67A3DDCA3}"
 EndProject
@@ -47,6 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Geocoding", "Testing\D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{404D7A37-56D9-46B1-BACC-E57F3720A818}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject

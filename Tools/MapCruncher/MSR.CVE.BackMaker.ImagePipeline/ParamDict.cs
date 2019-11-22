@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class ParamDict : Dictionary<TermName, Parameter>
@@ -7,6 +7,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public ParamDict()
         {
         }
+
         public ParamDict(params object[] list)
         {
             int i;
@@ -14,6 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 base[(TermName)list[i]] = (Parameter)((Parameter)list[i + 1]).Duplicate("Apply.Params");
             }
+
             D.Assert(i == list.Length, "unmatched pair in list.");
         }
     }

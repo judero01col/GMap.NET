@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class CachePackage : IDisposable
@@ -15,76 +16,85 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public MemoryCache asyncCache;
         public MemoryCache documentFetchCache;
         public DiskCache diskCache;
+
         private string suffix
         {
             get
             {
-                return "-" + this.identifier;
+                return "-" + identifier;
             }
         }
+
         public CachePackage()
         {
-            this.identifier = "root";
-            this.Flush();
-            this.openSourceDocumentCache = new SizeSensitiveCache("openDocumentCache" + this.suffix);
-            this.openDocumentPrioritizer = new OpenDocumentSensitivePrioritizer(this.openSourceDocumentCache);
-            this.diskCache = new DiskCache();
+            identifier = "root";
+            Flush();
+            openSourceDocumentCache = new SizeSensitiveCache("openDocumentCache" + suffix);
+            openDocumentPrioritizer = new OpenDocumentSensitivePrioritizer(openSourceDocumentCache);
+            diskCache = new DiskCache();
         }
+
         private CachePackage(string identifier)
         {
             this.identifier = identifier;
         }
+
         public CachePackage DeriveCache(string identifier)
         {
             CachePackage cachePackage = new CachePackage(identifier);
-            cachePackage.openSourceDocumentCache = this.openSourceDocumentCache;
-            cachePackage.openDocumentPrioritizer = this.openDocumentPrioritizer;
-            cachePackage.diskCache = this.diskCache;
+            cachePackage.openSourceDocumentCache = openSourceDocumentCache;
+            cachePackage.openDocumentPrioritizer = openDocumentPrioritizer;
+            cachePackage.diskCache = diskCache;
             cachePackage.Flush();
             return cachePackage;
         }
+
         public void Flush()
         {
-            this.PreflushDispose();
-            this.computeAsyncScheduler = new AsyncScheduler(1, "computeScheduler" + this.suffix);
-            this.networkAsyncScheduler = new AsyncScheduler(8, "networkScheduler" + this.suffix);
-            this.computeCache = new MemoryCache("computeCache" + this.suffix, 100);
-            this.networkCache = new MemoryCache("networkCache" + this.suffix);
-            this.boundsCache = new MemoryCache("boundsCache" + this.suffix);
-            this.asyncCache = new AsyncRecordCache("asyncCache" + this.suffix, true);
-            this.documentFetchCache = new MemoryCache("documentCache" + this.suffix, 10000);
+            PreflushDispose();
+            computeAsyncScheduler = new AsyncScheduler(1, "computeScheduler" + suffix);
+            networkAsyncScheduler = new AsyncScheduler(8, "networkScheduler" + suffix);
+            computeCache = new MemoryCache("computeCache" + suffix, 100);
+            networkCache = new MemoryCache("networkCache" + suffix);
+            boundsCache = new MemoryCache("boundsCache" + suffix);
+            asyncCache = new AsyncRecordCache("asyncCache" + suffix, true);
+            documentFetchCache = new MemoryCache("documentCache" + suffix, 10000);
         }
+
         private void PreflushDispose()
         {
-            if (this.computeAsyncScheduler != null)
+            if (computeAsyncScheduler != null)
             {
-                this.computeAsyncScheduler.Dispose();
-                this.networkAsyncScheduler.Dispose();
-                this.computeCache.Dispose();
-                this.networkCache.Dispose();
-                this.boundsCache.Dispose();
-                this.asyncCache.Dispose();
-                this.documentFetchCache.Dispose();
+                computeAsyncScheduler.Dispose();
+                networkAsyncScheduler.Dispose();
+                computeCache.Dispose();
+                networkCache.Dispose();
+                boundsCache.Dispose();
+                asyncCache.Dispose();
+                documentFetchCache.Dispose();
             }
         }
+
         public void Dispose()
         {
-            this.PreflushDispose();
-            if (this.identifier == "root")
+            PreflushDispose();
+            if (identifier == "root")
             {
-                this.openSourceDocumentCache.Dispose();
-                this.diskCache.Dispose();
+                openSourceDocumentCache.Dispose();
+                diskCache.Dispose();
             }
         }
+
         public void ClearSchedulers()
         {
-            if (this.computeAsyncScheduler != null)
+            if (computeAsyncScheduler != null)
             {
-                this.computeAsyncScheduler.Clear();
+                computeAsyncScheduler.Clear();
             }
-            if (this.networkAsyncScheduler != null)
+
+            if (networkAsyncScheduler != null)
             {
-                this.networkAsyncScheduler.Clear();
+                networkAsyncScheduler.Clear();
             }
         }
     }

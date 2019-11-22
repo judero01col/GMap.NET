@@ -24,15 +24,15 @@ namespace Demo.WindowsForms
    /// </summary>
    internal class SQLiteIpCache
    {
-      string cache;
-      string ipCache;
-      string db;
+      string _cache;
+      string _ipCache;
+      string _db;
 
       public string IpCache
       {
          get
          {
-            return ipCache;
+            return _ipCache;
          }
       }
 
@@ -43,20 +43,20 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return cache;
+            return _cache;
          }
          set
          {
-            cache = value;
-            ipCache = Path.Combine(cache, "IpGeoCacheDB") + Path.DirectorySeparatorChar;
+            _cache = value;
+            _ipCache = Path.Combine(_cache, "IpGeoCacheDB") + Path.DirectorySeparatorChar;
 
             // make empty db
             {
-               db = ipCache + "Data.ipdb";
+               _db = _ipCache + "Data.ipdb";
 
-               if(!File.Exists(db))
+               if(!File.Exists(_db))
                {
-                  CreateEmptyDB(db);
+                  CreateEmptyDB(_db);
                }
             }
          }
@@ -127,7 +127,7 @@ namespace Demo.WindowsForms
             using(SQLiteConnection cn = new SQLiteConnection())
             {
 #if !MONO
-               cn.ConnectionString = string.Format("Data Source=\"{0}\";", db);
+               cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
 #else
                cn.ConnectionString = string.Format("Version=3,URI=file://{0},FailIfMissing=True,Default Timeout=33", db);
 #endif
@@ -191,7 +191,7 @@ namespace Demo.WindowsForms
             using(SQLiteConnection cn = new SQLiteConnection())
             {
 #if !MONO
-               cn.ConnectionString = string.Format("Data Source=\"{0}\";", db);
+               cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
 #else
                cn.ConnectionString = string.Format("Version=3,URI=file://{0},Default Timeout=33", db);
 #endif

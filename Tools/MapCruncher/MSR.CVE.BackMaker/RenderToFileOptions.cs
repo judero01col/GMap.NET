@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderToFileOptions : RenderToOptions
@@ -7,40 +7,48 @@ namespace MSR.CVE.BackMaker
         private DirtyString _outputFolder;
         public static string xmlTag = "RenderToFile";
         private static string OutputFolderAttr = "Folder";
+
         public string outputFolder
         {
             get
             {
-                return this._outputFolder.myValue;
+                return _outputFolder.myValue;
             }
             set
             {
-                this._outputFolder.myValue = value;
+                _outputFolder.myValue = value;
             }
         }
+
         public RenderToFileOptions(DirtyEvent parentDirtyEvent)
         {
-            this._outputFolder = new DirtyString(parentDirtyEvent);
+            _outputFolder = new DirtyString(parentDirtyEvent);
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RenderToFileOptions.xmlTag);
-            writer.WriteAttributeString(RenderToFileOptions.OutputFolderAttr, this.outputFolder);
+            writer.WriteStartElement(xmlTag);
+            writer.WriteAttributeString(OutputFolderAttr, outputFolder);
             writer.WriteEndElement();
         }
+
         public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent, string byTagName)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(byTagName);
-            this._outputFolder = new DirtyString(parentDirtyEvent);
-            this.outputFolder = context.GetRequiredAttribute(RenderToFileOptions.OutputFolderAttr);
+            _outputFolder = new DirtyString(parentDirtyEvent);
+            outputFolder = context.GetRequiredAttribute(OutputFolderAttr);
             xMLTagReader.SkipAllSubTags();
         }
-        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context, parentDirtyEvent, RenderToFileOptions.xmlTag)
+
+        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context,
+            parentDirtyEvent,
+            xmlTag)
         {
         }
+
         public override string ToString()
         {
-            return string.Format("file:{0}", this.outputFolder);
+            return string.Format("file:{0}", outputFolder);
         }
     }
 }

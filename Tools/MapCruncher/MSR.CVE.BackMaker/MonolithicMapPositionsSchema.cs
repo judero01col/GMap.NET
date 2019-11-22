@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class MonolithicMapPositionsSchema : MashupXMLSchemaVersion
@@ -9,17 +8,20 @@ namespace MSR.CVE.BackMaker
         public const string monolithicZoomAttr = "zoom";
         public const string monolithicStyleAttr = "style";
         public static MonolithicMapPositionsSchema _schema;
+
         public static MonolithicMapPositionsSchema schema
         {
             get
             {
-                if (MonolithicMapPositionsSchema._schema == null)
+                if (_schema == null)
                 {
-                    MonolithicMapPositionsSchema._schema = new MonolithicMapPositionsSchema();
+                    _schema = new MonolithicMapPositionsSchema();
                 }
-                return MonolithicMapPositionsSchema._schema;
+
+                return _schema;
             }
         }
+
         private MonolithicMapPositionsSchema() : base("1.0")
         {
         }

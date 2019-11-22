@@ -1,7 +1,8 @@
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class QueuedTileProvider
@@ -11,92 +12,107 @@ namespace MSR.CVE.BackMaker
             private static int uniqueIDallocator;
             public QueueRequestIfc qr;
             public int queuedInterest;
-            private int uniqueID = QueuedTileProvider.QueueRequestCell.uniqueIDallocator++;
+            private int uniqueID = uniqueIDallocator++;
+
             public int CompareTo(object o)
             {
-                QueuedTileProvider.QueueRequestCell queueRequestCell = (QueuedTileProvider.QueueRequestCell)o;
-                int num = -this.queuedInterest.CompareTo(queueRequestCell.queuedInterest);
+                QueueRequestCell queueRequestCell = (QueueRequestCell)o;
+                int num = -queuedInterest.CompareTo(queueRequestCell.queuedInterest);
                 if (num != 0)
                 {
                     return num;
                 }
-                return this.uniqueID.CompareTo(queueRequestCell.uniqueID);
+
+                return uniqueID.CompareTo(queueRequestCell.uniqueID);
             }
+
             public override string ToString()
             {
-                return string.Format("#{0} {1}", this.queuedInterest, this.qr);
+                return string.Format("#{0} {1}", queuedInterest, qr);
             }
         }
+
         private class PriQueue
         {
-            private Dictionary<QueueRequestIfc, QueuedTileProvider.QueueRequestCell> cellMap = new Dictionary<QueueRequestIfc, QueuedTileProvider.QueueRequestCell>();
-            private BiSortedDictionary<QueuedTileProvider.QueueRequestCell, QueueRequestIfc> queue = new BiSortedDictionary<QueuedTileProvider.QueueRequestCell, QueueRequestIfc>();
+            private Dictionary<QueueRequestIfc, QueueRequestCell> cellMap =
+                new Dictionary<QueueRequestIfc, QueueRequestCell>();
+
+            private BiSortedDictionary<QueueRequestCell, QueueRequestIfc> queue =
+                new BiSortedDictionary<QueueRequestCell, QueueRequestIfc>();
+
             private ListUIIfc listUI;
+
             public PriQueue()
             {
-                this.listUI = DiagnosticUI.theDiagnostics;
+                listUI = DiagnosticUI.theDiagnostics;
             }
+
             public void Clear()
             {
-                this.TruncateQueue(0);
+                TruncateQueue(0);
             }
+
             public void TruncateQueue(int targetCount)
             {
-                List<QueuedTileProvider.QueueRequestCell> list = new List<QueuedTileProvider.QueueRequestCell>();
+                List<QueueRequestCell> list = new List<QueueRequestCell>();
                 Monitor.Enter(this);
                 try
                 {
-                    while (this.queue.Count > targetCount)
+                    while (queue.Count > targetCount)
                     {
-                        QueuedTileProvider.QueueRequestCell lastKey = this.queue.LastKey;
-                        this.cellMap.Remove(lastKey.qr);
-                        this.queue.Remove(lastKey);
+                        QueueRequestCell lastKey = queue.LastKey;
+                        cellMap.Remove(lastKey.qr);
+                        queue.Remove(lastKey);
                         list.Add(lastKey);
                     }
-                    this.UpdateDebugList();
+
+                    UpdateDebugList();
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
-                foreach (QueuedTileProvider.QueueRequestCell current in list)
+
+                foreach (QueueRequestCell current in list)
                 {
                     current.qr.DeQueued();
                 }
             }
+
             public void Enqueue(QueueRequestIfc qr)
             {
                 Monitor.Enter(this);
                 try
                 {
-                    QueuedTileProvider.QueueRequestCell queueRequestCell = new QueuedTileProvider.QueueRequestCell();
+                    QueueRequestCell queueRequestCell = new QueueRequestCell();
                     queueRequestCell.qr = qr;
                     queueRequestCell.queuedInterest = qr.GetInterest();
-                    this.cellMap.Add(qr, queueRequestCell);
-                    this.queue.Add(queueRequestCell, qr);
-                    this.UpdateDebugList();
+                    cellMap.Add(qr, queueRequestCell);
+                    queue.Add(queueRequestCell, qr);
+                    UpdateDebugList();
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             }
+
             public QueueRequestIfc Dequeue()
             {
                 Monitor.Enter(this);
                 QueueRequestIfc result;
                 try
                 {
-                    QueuedTileProvider.QueueRequestCell firstKey = this.queue.FirstKey;
+                    QueueRequestCell firstKey = queue.FirstKey;
                     if (firstKey == null)
                     {
                         result = null;
                     }
                     else
                     {
-                        this.queue.Remove(firstKey);
-                        this.cellMap.Remove(firstKey.qr);
-                        this.UpdateDebugList();
+                        queue.Remove(firstKey);
+                        cellMap.Remove(firstKey.qr);
+                        UpdateDebugList();
                         result = firstKey.qr;
                     }
                 }
@@ -104,20 +120,22 @@ namespace MSR.CVE.BackMaker
                 {
                     Monitor.Exit(this);
                 }
+
                 return result;
             }
+
             public void ChangePriority(QueueRequestIfc qr)
             {
                 Monitor.Enter(this);
                 try
                 {
-                    if (this.cellMap.ContainsKey(qr))
+                    if (cellMap.ContainsKey(qr))
                     {
-                        QueuedTileProvider.QueueRequestCell key = this.cellMap[qr];
-                        this.queue.Remove(key);
-                        this.cellMap.Remove(qr);
-                        this.Enqueue(qr);
-                        this.UpdateDebugList();
+                        QueueRequestCell key = cellMap[qr];
+                        queue.Remove(key);
+                        cellMap.Remove(qr);
+                        Enqueue(qr);
+                        UpdateDebugList();
                     }
                 }
                 finally
@@ -125,21 +143,24 @@ namespace MSR.CVE.BackMaker
                     Monitor.Exit(this);
                 }
             }
+
             public int Count()
             {
                 Monitor.Enter(this);
                 int count;
                 try
                 {
-                    D.Assert(this.cellMap.Count == this.queue.Count);
-                    count = this.queue.Count;
+                    D.Assert(cellMap.Count == queue.Count);
+                    count = queue.Count;
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
+
                 return count;
             }
+
             public override string ToString()
             {
                 Monitor.Enter(this);
@@ -148,37 +169,37 @@ namespace MSR.CVE.BackMaker
                 {
                     int num = 10;
                     string text = "";
-                    foreach (QueuedTileProvider.QueueRequestCell current in this.queue.Keys)
+                    foreach (QueueRequestCell current in queue.Keys)
                     {
                         if (num == 0)
                         {
                             text += "...\n";
                             break;
                         }
+
                         text = text + current.ToString() + "\n";
                         num--;
                     }
+
                     result = text;
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
+
                 return result;
             }
+
             public void DebugPrintQueue()
             {
                 Monitor.Enter(this);
                 try
                 {
                     D.Sayf(0, "Queue status:", new object[0]);
-                    foreach (QueuedTileProvider.QueueRequestCell current in this.queue)
+                    foreach (QueueRequestCell current in queue)
                     {
-                        D.Sayf(0, "interest {0} {1}", new object[]
-                        {
-                            current.queuedInterest,
-                            current.qr
-                        });
+                        D.Sayf(0, "interest {0} {1}", new object[] {current.queuedInterest, current.qr});
                     }
                 }
                 finally
@@ -186,11 +207,12 @@ namespace MSR.CVE.BackMaker
                     Monitor.Exit(this);
                 }
             }
+
             private void UpdateDebugList()
             {
                 int num = 10;
                 List<object> list = new List<object>();
-                foreach (QueuedTileProvider.QueueRequestCell current in this.queue)
+                foreach (QueueRequestCell current in queue)
                 {
                     list.Add(current);
                     if (list.Count >= num)
@@ -198,117 +220,134 @@ namespace MSR.CVE.BackMaker
                         break;
                     }
                 }
-                this.listUI.listChanged(list);
+
+                listUI.listChanged(list);
             }
         }
+
         private static int MAX_QLEN = 2000;
         private static int QueueSizeReportPeriod = 10;
         private int numWorkerThreads;
         private string debugName;
-        private QueuedTileProvider.PriQueue priQueue = new QueuedTileProvider.PriQueue();
-        private EventWaitHandle queueNonemptyEvent = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "QueuedTileProvider.queueNonemptyEvent");
+        private PriQueue priQueue = new PriQueue();
+
+        private EventWaitHandle queueNonemptyEvent = new CountedEventWaitHandle(false,
+            EventResetMode.ManualReset,
+            "QueuedTileProvider.queueNonemptyEvent");
+
         private int previousBucket = -1;
+
         public QueuedTileProvider(int numWorkerThreads, string debugName)
         {
             this.numWorkerThreads = numWorkerThreads;
             this.debugName = debugName;
             for (int i = 0; i < numWorkerThreads; i++)
             {
-                DebugThreadInterrupter.theInstance.AddThread(string.Format("QueuedTileProvider {0}-{1}", debugName, i), new ThreadStart(this.workerThread), ThreadPriority.BelowNormal);
+                DebugThreadInterrupter.theInstance.AddThread(string.Format("QueuedTileProvider {0}-{1}", debugName, i),
+                    workerThread,
+                    ThreadPriority.BelowNormal);
             }
         }
+
         public void Clear()
         {
-            this.priQueue.Clear();
+            priQueue.Clear();
         }
+
         public void ChangePriority(QueueRequestIfc qr)
         {
-            this.priQueue.ChangePriority(qr);
+            priQueue.ChangePriority(qr);
         }
+
         public void Dispose()
         {
             D.Say(1, "QTP Disposal in progress");
-            QueuedTileProvider.PriQueue obj;
-            Monitor.Enter(obj = this.priQueue);
+            PriQueue obj;
+            Monitor.Enter(obj = priQueue);
             try
             {
-                this.priQueue.Clear();
+                priQueue.Clear();
             }
             finally
             {
                 Monitor.Exit(obj);
             }
-            for (int i = 0; i < this.numWorkerThreads; i++)
+
+            for (int i = 0; i < numWorkerThreads; i++)
             {
-                this.enqueueTileRequest(new QueueSuicideRequest());
+                enqueueTileRequest(new QueueSuicideRequest());
             }
         }
+
         public void cancelOutstandingRequests()
         {
-            this.priQueue.Clear();
+            priQueue.Clear();
         }
+
         public void enqueueTileRequests(QueueRequestIfc[] qrlist)
         {
-            QueuedTileProvider.PriQueue obj;
-            Monitor.Enter(obj = this.priQueue);
+            PriQueue obj;
+            Monitor.Enter(obj = priQueue);
             try
             {
                 for (int i = 0; i < qrlist.Length; i++)
                 {
                     QueueRequestIfc queueRequestIfc = qrlist[i];
                     D.Say(10, string.Format("Queueing req {0}", queueRequestIfc.ToString()));
-                    this.priQueue.Enqueue(queueRequestIfc);
+                    priQueue.Enqueue(queueRequestIfc);
                 }
-                this.priQueue.TruncateQueue(QueuedTileProvider.MAX_QLEN);
-                this.queueNonemptyEvent.Set();
+
+                priQueue.TruncateQueue(MAX_QLEN);
+                queueNonemptyEvent.Set();
             }
             finally
             {
                 Monitor.Exit(obj);
             }
         }
+
         public void enqueueTileRequest(QueueRequestIfc qr)
         {
-            this.enqueueTileRequests(new QueueRequestIfc[]
-            {
-                qr
-            });
+            enqueueTileRequests(new[] {qr});
         }
+
         private QueueRequestIfc Dequeue()
         {
-            QueuedTileProvider.PriQueue obj;
-            Monitor.Enter(obj = this.priQueue);
+            PriQueue obj;
+            Monitor.Enter(obj = priQueue);
             QueueRequestIfc result;
             try
             {
-                QueueRequestIfc queueRequestIfc = this.priQueue.Dequeue();
+                QueueRequestIfc queueRequestIfc = priQueue.Dequeue();
                 if (queueRequestIfc == null)
                 {
-                    this.queueNonemptyEvent.Reset();
+                    queueNonemptyEvent.Reset();
                 }
+
                 result = queueRequestIfc;
             }
             finally
             {
                 Monitor.Exit(obj);
             }
+
             return result;
         }
+
         private void workerThread()
         {
             D.Say(10, "starting working thread");
             while (true)
             {
-                D.Say(10, string.Format("worker going to sleep; queue count {0}", this.priQueue.Count()));
-                this.queueNonemptyEvent.WaitOne();
+                D.Say(10, string.Format("worker going to sleep; queue count {0}", priQueue.Count()));
+                queueNonemptyEvent.WaitOne();
                 D.Say(10, "worker waking up");
-                QueueRequestIfc queueRequestIfc = this.Dequeue();
+                QueueRequestIfc queueRequestIfc = Dequeue();
                 if (queueRequestIfc == null)
                 {
-                    D.Sayf(10, "Worker thread continuing after apparent queue cancellation; queuelen {0}", new object[]
-                    {
-                        this.priQueue.Count()
-                    });
+                    D.Sayf(10,
+                        "Worker thread continuing after apparent queue cancellation; queuelen {0}",
+                        new object[] {priQueue.Count()});
                 }
                 else
                 {
@@ -316,35 +355,28 @@ namespace MSR.CVE.BackMaker
                     {
                         break;
                     }
-                    D.Sayf(10, "Processing {0}", new object[]
-                    {
-                        queueRequestIfc
-                    });
+
+                    D.Sayf(10, "Processing {0}", new object[] {queueRequestIfc});
                     queueRequestIfc.DoWork();
-                    D.Sayf(10, "done with {0}", new object[]
-                    {
-                        queueRequestIfc
-                    });
+                    D.Sayf(10, "done with {0}", new object[] {queueRequestIfc});
                 }
             }
+
             D.Say(3, "worker thread exiting");
         }
+
         public override string ToString()
         {
-            return this.priQueue.ToString();
+            return priQueue.ToString();
         }
+
         private void QueueLenStatus(string eventName)
         {
-            int num = this.priQueue.Count() / QueuedTileProvider.QueueSizeReportPeriod;
-            if (num != this.previousBucket)
+            int num = priQueue.Count() / QueueSizeReportPeriod;
+            if (num != previousBucket)
             {
-                this.previousBucket = num;
-                D.Sayf(0, "QTP({0}).{1}: count={2}", new object[]
-                {
-                    this.debugName,
-                    eventName,
-                    this.priQueue.Count()
-                });
+                previousBucket = num;
+                D.Sayf(0, "QTP({0}).{1}: count={2}", new object[] {debugName, eventName, priQueue.Count()});
             }
         }
     }

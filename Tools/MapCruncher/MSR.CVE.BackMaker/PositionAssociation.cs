@@ -1,7 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Globalization;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class PositionAssociation : IRobustlyHashable
@@ -18,146 +19,166 @@ namespace MSR.CVE.BackMaker
         private static string pinIdAttr = "pinId";
         private static string SourcePositionTag = "SourcePosition";
         private static string GlobalPositionTag = "GlobalPosition";
+
         public int pinId
         {
             get
             {
-                return this._pinId;
+                return _pinId;
             }
             set
             {
-                this._pinId = value;
-                this.dirtyEvent.SetDirty();
+                _pinId = value;
+                dirtyEvent.SetDirty();
             }
         }
+
         public string associationName
         {
             get
             {
-                return this._associationName;
+                return _associationName;
             }
             set
             {
-                this._associationName = value;
-                this.dirtyEvent.SetDirty();
+                _associationName = value;
+                dirtyEvent.SetDirty();
             }
         }
+
         public string qualityMessage
         {
             get
             {
-                return this._qualityMessage;
+                return _qualityMessage;
             }
             set
             {
-                this._qualityMessage = value;
+                _qualityMessage = value;
             }
         }
+
         public DisplayablePosition imagePosition
         {
             get
             {
-                return this._imagePosition;
+                return _imagePosition;
             }
         }
+
         public DisplayablePosition sourcePosition
         {
             get
             {
-                return this._sourcePosition;
+                return _sourcePosition;
             }
         }
+
         public DisplayablePosition globalPosition
         {
             get
             {
-                return this._globalPosition;
+                return _globalPosition;
             }
         }
-        public PositionAssociation(string associationName, LatLonZoom imagePosition, LatLonZoom sourcePosition, LatLonZoom globalPosition, DirtyEvent dirtyEvent)
+
+        public PositionAssociation(string associationName, LatLonZoom imagePosition, LatLonZoom sourcePosition,
+            LatLonZoom globalPosition, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
-            this._pinId = -1;
-            this._associationName = associationName;
-            this._imagePosition = new DisplayablePosition(imagePosition);
-            this._sourcePosition = new DisplayablePosition(sourcePosition);
-            this._globalPosition = new DisplayablePosition(globalPosition);
+            _pinId = -1;
+            _associationName = associationName;
+            _imagePosition = new DisplayablePosition(imagePosition);
+            _sourcePosition = new DisplayablePosition(sourcePosition);
+            _globalPosition = new DisplayablePosition(globalPosition);
         }
+
         public override int GetHashCode()
         {
-            return this._sourcePosition.GetHashCode() ^ this._globalPosition.GetHashCode() ^ this._pinId ^ this._associationName.GetHashCode();
+            return _sourcePosition.GetHashCode() ^ _globalPosition.GetHashCode() ^ _pinId ^
+                   _associationName.GetHashCode();
         }
+
         public void UpdateAssociation(LatLonZoom sourceLLZ, LatLonZoom globalLLZ)
         {
-            this._sourcePosition = new DisplayablePosition(sourceLLZ);
-            this._globalPosition = new DisplayablePosition(globalLLZ);
-            this.dirtyEvent.SetDirty();
+            _sourcePosition = new DisplayablePosition(sourceLLZ);
+            _globalPosition = new DisplayablePosition(globalLLZ);
+            dirtyEvent.SetDirty();
         }
+
         public static string XMLTag()
         {
-            return PositionAssociation.PositionAssociationTag;
+            return PositionAssociationTag;
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(PositionAssociation.PositionAssociationTag);
-            writer.WriteAttributeString(PositionAssociation.pinIdAttr, this._pinId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString(PositionAssociation.associationNameAttr, this._associationName);
-            writer.WriteStartElement(PositionAssociation.SourcePositionTag);
-            this._sourcePosition.WriteXML(writer);
+            writer.WriteStartElement(PositionAssociationTag);
+            writer.WriteAttributeString(pinIdAttr, _pinId.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(associationNameAttr, _associationName);
+            writer.WriteStartElement(SourcePositionTag);
+            _sourcePosition.WriteXML(writer);
             writer.WriteEndElement();
-            writer.WriteStartElement(PositionAssociation.GlobalPositionTag);
-            this._globalPosition.WriteXML(writer);
+            writer.WriteStartElement(GlobalPositionTag);
+            _globalPosition.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
+
         public PositionAssociation(MashupParseContext context, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
-            XMLTagReader xMLTagReader = context.NewTagReader(PositionAssociation.PositionAssociationTag);
-            this._pinId = -1;
-            context.GetAttributeInt(PositionAssociation.pinIdAttr, ref this._pinId);
-            if ((this.associationName = context.reader.GetAttribute(PositionAssociation.associationNameAttr)) == null)
+            XMLTagReader xMLTagReader = context.NewTagReader(PositionAssociationTag);
+            _pinId = -1;
+            context.GetAttributeInt(pinIdAttr, ref _pinId);
+            if ((associationName = context.reader.GetAttribute(associationNameAttr)) == null)
             {
-                this.associationName = "";
+                associationName = "";
             }
+
             while (xMLTagReader.FindNextStartTag())
             {
-                if (xMLTagReader.TagIs(PositionAssociation.SourcePositionTag))
+                if (xMLTagReader.TagIs(SourcePositionTag))
                 {
-                    XMLTagReader xMLTagReader2 = context.NewTagReader(PositionAssociation.SourcePositionTag);
+                    XMLTagReader xMLTagReader2 = context.NewTagReader(SourcePositionTag);
                     while (xMLTagReader2.FindNextStartTag())
                     {
                         if (xMLTagReader2.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                         {
-                            this._sourcePosition = new DisplayablePosition(context, ContinuousCoordinateSystem.theInstance);
-                            this._imagePosition = new DisplayablePosition(this._sourcePosition.pinPosition);
+                            _sourcePosition =
+                                new DisplayablePosition(context, ContinuousCoordinateSystem.theInstance);
+                            _imagePosition = new DisplayablePosition(_sourcePosition.pinPosition);
                         }
                     }
                 }
                 else
                 {
-                    if (xMLTagReader.TagIs(PositionAssociation.GlobalPositionTag))
+                    if (xMLTagReader.TagIs(GlobalPositionTag))
                     {
-                        XMLTagReader xMLTagReader3 = context.NewTagReader(PositionAssociation.GlobalPositionTag);
+                        XMLTagReader xMLTagReader3 = context.NewTagReader(GlobalPositionTag);
                         while (xMLTagReader3.FindNextStartTag())
                         {
                             if (xMLTagReader3.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                             {
-                                this._globalPosition = new DisplayablePosition(context, MercatorCoordinateSystem.theInstance);
+                                _globalPosition =
+                                    new DisplayablePosition(context, MercatorCoordinateSystem.theInstance);
                             }
                         }
                     }
                 }
             }
-            if (this._sourcePosition == null || this._globalPosition == null)
+
+            if (_sourcePosition == null || _globalPosition == null)
             {
-                throw new Exception(string.Format("Pin {0} does not have a source and/or global position defined", this.associationName));
+                throw new Exception(string.Format("Pin {0} does not have a source and/or global position defined",
+                    associationName));
             }
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this._sourcePosition.pinPosition.AccumulateRobustHash(hash);
-            this._globalPosition.pinPosition.AccumulateRobustHash(hash);
+            _sourcePosition.pinPosition.AccumulateRobustHash(hash);
+            _globalPosition.pinPosition.AccumulateRobustHash(hash);
         }
     }
 }

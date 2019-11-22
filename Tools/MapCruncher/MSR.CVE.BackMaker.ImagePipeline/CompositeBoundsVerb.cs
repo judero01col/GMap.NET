@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class CompositeBoundsVerb : Verb
@@ -23,17 +24,23 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         i++;
                         continue;
                     }
-                    result = new PresentFailureCode(new Exception("Unexpected result of child computation in CompositeBoundsVerb"));
+
+                    result = new PresentFailureCode(
+                        new Exception("Unexpected result of child computation in CompositeBoundsVerb"));
                 }
+
                 return result;
             }
+
             if (mapRectangle == null)
             {
                 return new PresentFailureCode("No valid sourcemaps in input.");
             }
+
             RenderRegion renderRegion = new RenderRegion(mapRectangle, new DirtyEvent());
             return new BoundsPresent(renderRegion);
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("CompositeBoundsVerb");

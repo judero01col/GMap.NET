@@ -1,5 +1,6 @@
-using MSR.CVE.BackMaker.MCDebug;
 using System;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class AsyncRef : Present, IDisposable, QueueRequestIfc, RequestInterestIfc, IEvictable
@@ -13,28 +14,34 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private int localInterest;
         private string debugAnnotation;
         private bool debugDisposed;
-        private static ResourceCounter asyncRefsHoldingInterestResourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRefsHoldingInterest-count", -1);
+
+        private static ResourceCounter asyncRefsHoldingInterestResourceCounter =
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRefsHoldingInterest-count", -1);
+
         public Present present
         {
             get
             {
-                return this.resource.present;
+                return resource.present;
             }
         }
+
         public IFuture future
         {
             get
             {
-                return this.resource.future;
+                return resource.future;
             }
         }
+
         internal AsyncRecord asyncRecord
         {
             get
             {
-                return this.resource;
+                return resource;
             }
         }
+
         public AsyncRef(AsyncRecord resource, string debugAnnotation)
         {
             this.resource = resource;
@@ -42,57 +49,68 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation, -1).crement(1);
             resource.AddRef();
         }
+
         public void Dispose()
         {
-            D.Assert(!this.debugDisposed);
-            this.SetInterest(0);
-            this.resource.DropRef();
-            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + this.debugAnnotation, -1).crement(-1);
-            this.debugDisposed = true;
+            D.Assert(!debugDisposed);
+            SetInterest(0);
+            resource.DropRef();
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation, -1).crement(-1);
+            debugDisposed = true;
         }
+
         public Present Duplicate(string refCredit)
         {
-            return new AsyncRef(this.resource, refCredit);
+            return new AsyncRef(resource, refCredit);
         }
+
         public void SetInterest(int newInterest)
         {
-            int num = (this.localInterest > 524291) ? 1 : 0;
-            int num2 = (newInterest > 524291) ? 1 : 0;
-            AsyncRef.asyncRefsHoldingInterestResourceCounter.crement(num2 - num);
-            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + this.debugAnnotation + "-withInterest", -1).crement(num2 - num);
-            int crement = newInterest - this.localInterest;
-            this.resource.ChangePriority(crement);
-            this.localInterest = newInterest;
+            int num = localInterest > 524291 ? 1 : 0;
+            int num2 = newInterest > 524291 ? 1 : 0;
+            asyncRefsHoldingInterestResourceCounter.crement(num2 - num);
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation + "-withInterest", -1)
+                .crement(num2 - num);
+            int crement = newInterest - localInterest;
+            resource.ChangePriority(crement);
+            localInterest = newInterest;
         }
+
         public void AddCallback(AsyncRecord.CompleteCallback callback)
         {
-            this.resource.AddCallback(callback);
+            resource.AddCallback(callback);
         }
+
         public override string ToString()
         {
-            return this.asyncRecord.ToString();
+            return asyncRecord.ToString();
         }
+
         public int GetInterest()
         {
-            return this.asyncRecord.GetPriority();
+            return asyncRecord.GetPriority();
         }
+
         public void DoWork()
         {
-            this.asyncRecord.DoWork();
-            this.Dispose();
+            asyncRecord.DoWork();
+            Dispose();
         }
+
         public void DeQueued()
         {
-            this.asyncRecord.DeQueued();
-            this.Dispose();
+            asyncRecord.DeQueued();
+            Dispose();
         }
+
         internal void ProcessSynchronously()
         {
-            this.asyncRecord.ProcessSynchronously();
+            asyncRecord.ProcessSynchronously();
         }
+
         public bool EvictMeNow()
         {
-            return this.present is IEvictable && ((IEvictable)this.present).EvictMeNow();
+            return present is IEvictable && ((IEvictable)present).EvictMeNow();
         }
     }
 }

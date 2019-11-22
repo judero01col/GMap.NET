@@ -16,23 +16,23 @@ namespace Demo.WindowsForms.CustomMarkers
       //[NonSerialized]
       //public Pen Pen = new Pen(Brushes.Blue, 5);
 
-      static readonly Point[] Arrow = new Point[] { new Point(-7, 7), new Point(0, -22), new Point(7, 7), new Point(0, 2) };
+      static readonly Point[] Arrow = new[] { new Point(-7, 7), new Point(0, -22), new Point(7, 7), new Point(0, 2) };
 
       public float Bearing = 0;
-      private float scale = 1;
+      private float _scale = 1;
 
       public float Scale
       {
          get
          {
-            return scale;
+            return _scale;
          }
          set
          {
-            scale = value;
+            _scale = value;
 
-            Size = new System.Drawing.Size((int)(14*scale), (int)(14*scale));
-            Offset = new System.Drawing.Point(-Size.Width / 2, (int)(-Size.Height / 1.4));
+            Size = new Size((int)(14*_scale), (int)(14*_scale));
+            Offset = new Point(-Size.Width / 2, (int)(-Size.Height / 1.4));
          }
       } 
 

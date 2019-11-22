@@ -1,58 +1,65 @@
 using System;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class AsyncRecord
     {
         public delegate void CompleteCallback(AsyncRef asyncRef);
+
         private AsyncScheduler scheduler;
         private IFuture _cacheKeyToEvict;
         private IFuture _future;
         private Present _present;
         private AsyncState asyncState;
         private int queuePriority;
-        private AsyncRecord.CompleteCallback callbackEvent;
+        private CompleteCallback callbackEvent;
         private AsyncRef qtpRef;
         private AsyncRef notificationRef;
         private int refs;
         private bool disposed;
+
         public IFuture cacheKeyToEvict
         {
             get
             {
-                return this._cacheKeyToEvict;
+                return _cacheKeyToEvict;
             }
         }
+
         public IFuture future
         {
             get
             {
-                return this._future;
+                return _future;
             }
         }
+
         public Present present
         {
             get
             {
-                return this._present;
+                return _present;
             }
         }
+
         public AsyncRecord(AsyncScheduler scheduler, IFuture cacheKeyToEvict, IFuture future)
         {
-            this._cacheKeyToEvict = cacheKeyToEvict;
-            this._future = future;
+            _cacheKeyToEvict = cacheKeyToEvict;
+            _future = future;
             this.scheduler = scheduler;
-            this._present = null;
-            this.asyncState = AsyncState.Prequeued;
-            this.queuePriority = 0;
-            this.qtpRef = new AsyncRef(this, "qRef");
+            _present = null;
+            asyncState = AsyncState.Prequeued;
+            queuePriority = 0;
+            qtpRef = new AsyncRef(this, "qRef");
         }
-        public void AddCallback(AsyncRecord.CompleteCallback callback)
+
+        public void AddCallback(CompleteCallback callback)
         {
             Monitor.Enter(this);
             try
             {
-                if (this.present != null)
+                if (present != null)
                 {
                     AsyncRef asyncRef = new AsyncRef(this, "AsyncRecord.AddCallback");
                     callback(asyncRef);
@@ -60,7 +67,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
                 else
                 {
-                    this.callbackEvent = (AsyncRecord.CompleteCallback)Delegate.Combine(this.callbackEvent, callback);
+                    callbackEvent = (CompleteCallback)Delegate.Combine(callbackEvent, callback);
                 }
             }
             finally
@@ -68,50 +75,52 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         public void Dispose()
         {
-            D.Sayf(10, "Disposed({0})", new object[]
-            {
-                this
-            });
-            this._present.Dispose();
+            D.Sayf(10, "Disposed({0})", new object[] {this});
+            _present.Dispose();
         }
+
         public void ChangePriority(int crement)
         {
-            this.queuePriority += crement;
-            if (this.qtpRef != null)
+            queuePriority += crement;
+            if (qtpRef != null)
             {
-                this.scheduler.ChangePriority(this.qtpRef);
+                scheduler.ChangePriority(qtpRef);
             }
         }
+
         public AsyncRef GetQTPRef()
         {
-            return this.qtpRef;
+            return qtpRef;
         }
+
         public void AddRef()
         {
             Monitor.Enter(this);
             try
             {
-                D.Assert(!this.disposed);
-                this.refs++;
+                D.Assert(!disposed);
+                refs++;
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public void DropRef()
         {
             Monitor.Enter(this);
             try
             {
-                D.Assert(!this.disposed);
-                this.refs--;
-                if (this.refs == 0)
+                D.Assert(!disposed);
+                refs--;
+                if (refs == 0)
                 {
-                    this.Dispose();
-                    this.disposed = true;
+                    Dispose();
+                    disposed = true;
                 }
             }
             finally
@@ -119,19 +128,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         internal bool PrepareToQueue()
         {
             Monitor.Enter(this);
             bool result;
             try
             {
-                if (this.asyncState != AsyncState.Prequeued)
+                if (asyncState != AsyncState.Prequeued)
                 {
                     result = false;
                 }
                 else
                 {
-                    this.asyncState = AsyncState.Queued;
+                    asyncState = AsyncState.Queued;
                     result = true;
                 }
             }
@@ -139,77 +149,92 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             return result;
         }
+
         internal int GetPriority()
         {
-            return this.queuePriority;
+            return queuePriority;
         }
+
         internal AsyncScheduler GetScheduler()
         {
-            return this.scheduler;
+            return scheduler;
         }
+
         internal void DoWork()
         {
-            D.Assert(this._present == null);
+            D.Assert(_present == null);
             Present presentValue;
             try
             {
-                presentValue = this._future.Realize("AsyncRecord.DoWork");
+                presentValue = _future.Realize("AsyncRecord.DoWork");
             }
             catch (Exception ex)
             {
                 presentValue = new PresentFailureCode(ex);
             }
-            this.Notify(presentValue);
+
+            Notify(presentValue);
         }
+
         internal void DeQueued()
         {
             D.Say(10, string.Format("DeQueued({0})", this));
-            this.Notify(new RequestCanceledPresent());
+            Notify(new RequestCanceledPresent());
         }
+
         private void Notify(Present presentValue)
         {
             Monitor.Enter(this);
             try
             {
-                D.Assert(this._present == null);
-                this._present = presentValue;
-                this.notificationRef = new AsyncRef(this, "callback");
-                this.qtpRef = null;
+                D.Assert(_present == null);
+                _present = presentValue;
+                notificationRef = new AsyncRef(this, "callback");
+                qtpRef = null;
             }
             finally
             {
                 Monitor.Exit(this);
             }
-            DebugThreadInterrupter.theInstance.AddThread("AsyncRecord.NotifyThread", new ThreadStart(this.NotifyThread), ThreadPriority.Normal);
+
+            DebugThreadInterrupter.theInstance.AddThread("AsyncRecord.NotifyThread",
+                NotifyThread,
+                ThreadPriority.Normal);
         }
+
         private void NotifyThread()
         {
-            this.callbackEvent(this.notificationRef);
-            this.notificationRef.Dispose();
+            callbackEvent(notificationRef);
+            notificationRef.Dispose();
         }
+
         public override string ToString()
         {
-            return "AsyncRecord:" + RobustHashTools.DebugString(this._future);
+            return "AsyncRecord:" + RobustHashTools.DebugString(_future);
         }
+
         internal void ProcessSynchronously()
         {
             Monitor.Enter(this);
             try
             {
-                if (this.asyncState == AsyncState.Queued)
+                if (asyncState == AsyncState.Queued)
                 {
                     return;
                 }
-                D.Assert(this.asyncState == AsyncState.Prequeued);
-                this.asyncState = AsyncState.Queued;
+
+                D.Assert(asyncState == AsyncState.Prequeued);
+                asyncState = AsyncState.Queued;
             }
             finally
             {
                 Monitor.Exit(this);
             }
-            this.DoWork();
+
+            DoWork();
         }
     }
 }

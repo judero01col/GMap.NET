@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Win32;
@@ -15,8 +15,8 @@ namespace BSE.Windows.Forms
 		#region FieldsPrivate
 
 		[ThreadStatic]
-        private static bool m_bIsThemed;
-        private const string m_strRegExpression = @".*\.msstyles$";
+        private static bool _bIsThemed;
+        private const string StrRegExpression = @".*\.msstyles$";
 
 		#endregion
 
@@ -24,7 +24,7 @@ namespace BSE.Windows.Forms
 
         internal static bool IsThemed
         {
-            get { return m_bIsThemed; }
+            get { return _bIsThemed; }
         }
 		#endregion
 
@@ -32,13 +32,13 @@ namespace BSE.Windows.Forms
 
 		static DisplayInformation()
 		{
-			SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(DisplayInformation.OnUserPreferenceChanged);
-			DisplayInformation.SetScheme();
+			SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+			SetScheme();
 		}
 
 		private static void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
 		{
-			DisplayInformation.SetScheme();
+			SetScheme();
 		}
 
 		private static void SetScheme()
@@ -49,12 +49,13 @@ namespace BSE.Windows.Forms
 				{
 					return;
 				}
-				StringBuilder stringBuilder = new StringBuilder(0x200);
+
+				var stringBuilder = new StringBuilder(0x200);
 				int iResult = NativeMethods.GetCurrentThemeName(stringBuilder, stringBuilder.Capacity, null, 0, null, 0);
                 if (iResult == 0)
                 {
-                    Regex regex = new Regex(m_strRegExpression);
-                    m_bIsThemed = regex.IsMatch(Path.GetFileName(stringBuilder.ToString()));
+                    var regex = new Regex(StrRegExpression);
+                    _bIsThemed = regex.IsMatch(Path.GetFileName(stringBuilder.ToString()));
                 }
 			}
 		}

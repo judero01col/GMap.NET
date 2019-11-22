@@ -28,7 +28,7 @@ namespace BSE.Windows.Forms
         /// </summary>
         public PanelStyle PanelStyle
         {
-            get { return this.m_ePanelStyle; }
+            get { return m_ePanelStyle; }
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace BSE.Windows.Forms
         /// <param name="ePanelStyle">the style of the panel.</param>
         public PanelStyleChangeEventArgs(PanelStyle ePanelStyle)
         {
-            this.m_ePanelStyle = ePanelStyle;
+            m_ePanelStyle = ePanelStyle;
         }
 
         #endregion

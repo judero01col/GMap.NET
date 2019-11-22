@@ -1,4 +1,4 @@
-/********************************************************************/
+﻿/********************************************************************/
 /*  Office 2007 Renderer Project                                    */
 /*                                                                  */
 /*  Use the Office2007Renderer class as a custom renderer by        */
@@ -12,11 +12,8 @@
 /********************************************************************/
 
 using System.Drawing;
-using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace BSE.Windows.Forms
 {
@@ -38,16 +35,16 @@ namespace BSE.Windows.Forms
             MarginInset = 2;
             // One time creation of the blend for the status strip gradient brush
             StatusStripBlend = new Blend();
-            StatusStripBlend.Positions = new float[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.8F, 1.0F };
-            StatusStripBlend.Factors = new float[] { 0.3F, 0.4F, 0.5F, 1.0F, 0.8F, 0.7F };
+            StatusStripBlend.Positions = new[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.8F, 1.0F };
+            StatusStripBlend.Factors = new[] { 0.3F, 0.4F, 0.5F, 1.0F, 0.8F, 0.7F };
         }
         /// <summary>
         /// Initialize a new instance of the Office2007Renderer class.
         /// </summary>
 		public Office2007Renderer()
-			: base(new BSE.Windows.Forms.Office2007BlueColorTable())
+			: base(new Office2007BlueColorTable())
 		{
-			this.ColorTable.UseSystemColors = false;
+			ColorTable.UseSystemColors = false;
 		}
         /// <summary>
         /// Initializes a new instance of the Office2007Renderer class.
@@ -68,7 +65,7 @@ namespace BSE.Windows.Forms
         {
 			if (ColorTable.UseSystemColors == false)
 			{
-				ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+				var colorTable = ColorTable as ProfessionalColorTable;
 				if (colorTable != null)
 				{
 					if ((e.Item.Owner.GetType() == typeof(MenuStrip)) && (e.Item.Selected == false) && e.Item.Pressed == false)
@@ -97,7 +94,7 @@ namespace BSE.Windows.Forms
         {
 			if (ColorTable.UseSystemColors == false)
 			{
-				ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+				var colorTable = ColorTable as ProfessionalColorTable;
 				if (colorTable != null)
 				{
 					if ((e.ToolStrip is MenuStrip) && (e.Item.Selected == false) && e.Item.Pressed == false)
@@ -132,7 +129,7 @@ namespace BSE.Windows.Forms
 				if ((e.ToolStripContentPanel.Width > 0) &&
 					(e.ToolStripContentPanel.Height > 0))
 				{
-					using (LinearGradientBrush backBrush = new LinearGradientBrush(e.ToolStripContentPanel.ClientRectangle,
+					using (var backBrush = new LinearGradientBrush(e.ToolStripContentPanel.ClientRectangle,
 																				   ColorTable.ToolStripContentPanelGradientBegin,
 																				   ColorTable.ToolStripContentPanelGradientEnd,
 																				   LinearGradientMode.Vertical))
@@ -160,7 +157,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
         {
-			if (ColorTable.UseSystemColors == true)
+			if (ColorTable.UseSystemColors)
 			{
 				base.OnRenderToolStripBackground(e);
 			}
@@ -170,12 +167,12 @@ namespace BSE.Windows.Forms
 				{
 					// We do not paint the top two pixel lines, so are drawn by the status strip border render method
 					//RectangleF backRectangle = new RectangleF(0, 1.5f, e.ToolStrip.Width, e.ToolStrip.Height - 2);
-					RectangleF backRectangle = new RectangleF(0, 0, e.ToolStrip.Width, e.ToolStrip.Height);
+					var backRectangle = new RectangleF(0, 0, e.ToolStrip.Width, e.ToolStrip.Height);
 
 					// Cannot paint a zero sized area
 					if ((backRectangle.Width > 0) && (backRectangle.Height > 0))
 					{
-						using (LinearGradientBrush backBrush = new LinearGradientBrush(backRectangle,
+						using (var backBrush = new LinearGradientBrush(backRectangle,
 																					   ColorTable.StatusStripGradientBegin,
 																					   ColorTable.StatusStripGradientEnd,
 																					   LinearGradientMode.Vertical))
@@ -197,7 +194,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
         {
-			if (ColorTable.UseSystemColors == true)
+			if (ColorTable.UseSystemColors)
 			{
 				base.OnRenderToolStripBackground(e);
 			}
@@ -207,7 +204,7 @@ namespace BSE.Windows.Forms
 					(e.ToolStrip is ToolStripDropDownMenu))
 				{
 					// Start with the total margin area
-					Rectangle marginRectangle = e.AffectedBounds;
+					var marginRectangle = e.AffectedBounds;
 
 					// Do we need to draw with separator on the opposite edge?
 					bool bIsRightToLeft = (e.ToolStrip.RightToLeft == RightToLeft.Yes);
@@ -226,7 +223,7 @@ namespace BSE.Windows.Forms
 					}
 
 					// Draw the entire margine area in a solid color
-					using (SolidBrush backBrush = new SolidBrush(
+					using (var backBrush = new SolidBrush(
 						ColorTable.ImageMarginGradientBegin))
 						e.Graphics.FillRectangle(backBrush, marginRectangle);
 				}

@@ -21,7 +21,7 @@ namespace Demo.WindowsForms
       MainForm Main;
 
       BackgroundWorker bg = new BackgroundWorker();
-      readonly List<GPoint> tileArea = new List<GPoint>();
+      readonly List<GPoint> _tileArea = new List<GPoint>();
 
       public StaticImage(MainForm main)
       {
@@ -35,9 +35,9 @@ namespace Demo.WindowsForms
 
          bg.WorkerReportsProgress = true;
          bg.WorkerSupportsCancellation = true;
-         bg.DoWork += new DoWorkEventHandler(bg_DoWork);
-         bg.ProgressChanged += new ProgressChangedEventHandler(bg_ProgressChanged);
-         bg.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bg_RunWorkerCompleted);
+         bg.DoWork += bg_DoWork;
+         bg.ProgressChanged += bg_ProgressChanged;
+         bg.RunWorkerCompleted += bg_RunWorkerCompleted;
       }
 
       void bg_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -60,7 +60,7 @@ namespace Demo.WindowsForms
             }
          }
 
-         this.Text = "Static Map maker";
+         Text = "Static Map maker";
          progressBar1.Value = 0;
          button1.Enabled = true;
          numericUpDown1.Enabled = true;
@@ -71,29 +71,29 @@ namespace Demo.WindowsForms
       {
          progressBar1.Value = e.ProgressPercentage;
 
-         GPoint p = (GPoint)e.UserState;
-         this.Text = "Static Map maker: Downloading[" + p + "]: " + tileArea.IndexOf(p) + " of " + tileArea.Count;
+         var p = (GPoint)e.UserState;
+         Text = "Static Map maker: Downloading[" + p + "]: " + _tileArea.IndexOf(p) + " of " + _tileArea.Count;
       }
 
       void bg_DoWork(object sender, DoWorkEventArgs e)
       {
-         MapInfo info = (MapInfo)e.Argument;
+         var info = (MapInfo)e.Argument;
          if(!info.Area.IsEmpty)
          {
             string bigImage = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + Path.DirectorySeparatorChar + "GMap at zoom " + info.Zoom + " - " + info.Type + "-" + DateTime.Now.Ticks + ".jpg";
             e.Result = bigImage;
 
             // current area
-            GPoint topLeftPx = info.Type.Projection.FromLatLngToPixel(info.Area.LocationTopLeft, info.Zoom);
-            GPoint rightButtomPx = info.Type.Projection.FromLatLngToPixel(info.Area.Bottom, info.Area.Right, info.Zoom);
-            GPoint pxDelta = new GPoint(rightButtomPx.X - topLeftPx.X, rightButtomPx.Y - topLeftPx.Y);
-            GMap.NET.GSize maxOfTiles = info.Type.Projection.GetTileMatrixMaxXY(info.Zoom);
+            var topLeftPx = info.Type.Projection.FromLatLngToPixel(info.Area.LocationTopLeft, info.Zoom);
+            var rightButtomPx = info.Type.Projection.FromLatLngToPixel(info.Area.Bottom, info.Area.Right, info.Zoom);
+            var pxDelta = new GPoint(rightButtomPx.X - topLeftPx.X, rightButtomPx.Y - topLeftPx.Y);
+            var maxOfTiles = info.Type.Projection.GetTileMatrixMaxXY(info.Zoom);
 
             int padding = info.MakeWorldFile || info.MakeKmz ? 0 : 22;
             {
-               using(Bitmap bmpDestination = new Bitmap((int)(pxDelta.X + padding * 2), (int)(pxDelta.Y + padding * 2)))
+               using(var bmpDestination = new Bitmap((int)(pxDelta.X + padding * 2), (int)(pxDelta.Y + padding * 2)))
                {
-                  using(Graphics gfx = Graphics.FromImage(bmpDestination))
+                  using(var gfx = Graphics.FromImage(bmpDestination))
                   {
                      gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
                      gfx.SmoothingMode = SmoothingMode.HighQuality;
@@ -101,9 +101,9 @@ namespace Demo.WindowsForms
                      int i = 0;
 
                      // get tiles & combine into one
-                     lock(tileArea)
+                     lock(_tileArea)
                      {
-                        foreach(var p in tileArea)
+                        foreach(var p in _tileArea)
                         {
                            if(bg.CancellationPending)
                            {
@@ -111,7 +111,7 @@ namespace Demo.WindowsForms
                               return;
                            }
 
-                           int pc = (int)(((double)++i / tileArea.Count) * 100);
+                           int pc = (int)(((double)++i / _tileArea.Count) * 100);
                            bg.ReportProgress(pc, p);
 
                            foreach(var tp in info.Type.Overlays)
@@ -146,21 +146,21 @@ namespace Demo.WindowsForms
 
                      // draw routes
                      {
-                        foreach(GMapRoute r in Main.routes.Routes)
+                        foreach(var r in Main.Routes.Routes)
                         {
                            if(r.IsVisible)
                            {
-                              using(GraphicsPath rp = new GraphicsPath())
+                              using(var rp = new GraphicsPath())
                               {
                                  for(int j = 0; j < r.Points.Count; j++)
                                  {
                                     var pr = r.Points[j];
-                                    GPoint px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
+                                    var px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
 
                                     px.Offset(padding, padding);
                                     px.Offset(-topLeftPx.X, -topLeftPx.Y);
 
-                                    GPoint p2 = px;
+                                    var p2 = px;
 
                                     if(j == 0)
                                     {
@@ -168,7 +168,7 @@ namespace Demo.WindowsForms
                                     }
                                     else
                                     {
-                                       System.Drawing.PointF p = rp.GetLastPoint();
+                                       var p = rp.GetLastPoint();
                                        rp.AddLine(p.X, p.Y, p2.X, p2.Y);
                                     }
                                  }
@@ -184,21 +184,21 @@ namespace Demo.WindowsForms
 
                      // draw polygons
                      {
-                        foreach(GMapPolygon r in Main.polygons.Polygons)
+                        foreach(var r in Main.Polygons.Polygons)
                         {
                            if(r.IsVisible)
                            {
-                              using(GraphicsPath rp = new GraphicsPath())
+                              using(var rp = new GraphicsPath())
                               {
                                  for(int j = 0; j < r.Points.Count; j++)
                                  {
                                     var pr = r.Points[j];
-                                    GPoint px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
+                                    var px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
 
                                     px.Offset(padding, padding);
                                     px.Offset(-topLeftPx.X, -topLeftPx.Y);
 
-                                    GPoint p2 = px;
+                                    var p2 = px;
 
                                     if(j == 0)
                                     {
@@ -206,7 +206,7 @@ namespace Demo.WindowsForms
                                     }
                                     else
                                     {
-                                       PointF p = rp.GetLastPoint();
+                                       var p = rp.GetLastPoint();
                                        rp.AddLine(p.X, p.Y, p2.X, p2.Y);
                                     }
                                  }
@@ -226,12 +226,12 @@ namespace Demo.WindowsForms
 
                      // draw markers
                      {
-                        foreach(GMapMarker r in Main.objects.Markers)
+                        foreach(var r in Main.Objects.Markers)
                         {
                            if(r.IsVisible)
                            {
                               var pr = r.Position;
-                              GPoint px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
+                              var px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
 
                               px.Offset(padding, padding);
                               px.Offset(-topLeftPx.X, -topLeftPx.Y);
@@ -246,14 +246,14 @@ namespace Demo.WindowsForms
                         }
 
                         // tooltips above
-                        foreach(GMapMarker m in Main.objects.Markers)
+                        foreach(var m in Main.Objects.Markers)
                         {
                            if(m.IsVisible && m.ToolTip != null && m.IsVisible)
                            {
                               if(!string.IsNullOrEmpty(m.ToolTipText))
                               {
                                  var pr = m.Position;
-                                 GPoint px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
+                                 var px = info.Type.Projection.FromLatLngToPixel(pr.Lat, pr.Lng, info.Zoom);
 
                                  px.Offset(padding, padding);
                                  px.Offset(-topLeftPx.X, -topLeftPx.Y);
@@ -273,34 +273,34 @@ namespace Demo.WindowsForms
                      // draw info
                      if(!info.MakeWorldFile)
                      {
-                        Rectangle rect = new Rectangle();
+                        var rect = new Rectangle();
                         {
                            rect.Location = new Point(padding, padding);
                            rect.Size = new Size((int)pxDelta.X, (int)pxDelta.Y);
                         }
 
-                        using(Font f = new Font(FontFamily.GenericSansSerif, 9, FontStyle.Bold))
+                        using(var f = new Font(FontFamily.GenericSansSerif, 9, FontStyle.Bold))
                         {
                            // draw bounds & coordinates
-                           using(Pen p = new Pen(Brushes.DimGray, 3))
+                           using(var p = new Pen(Brushes.DimGray, 3))
                            {
-                              p.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                              p.DashStyle = DashStyle.DashDot;
 
                               gfx.DrawRectangle(p, rect);
 
                               string topleft = info.Area.LocationTopLeft.ToString();
-                              SizeF s = gfx.MeasureString(topleft, f);
+                              var s = gfx.MeasureString(topleft, f);
 
                               gfx.DrawString(topleft, f, p.Brush, rect.X + s.Height / 2, rect.Y + s.Height / 2);
 
                               string rightBottom = new PointLatLng(info.Area.Bottom, info.Area.Right).ToString();
-                              SizeF s2 = gfx.MeasureString(rightBottom, f);
+                              var s2 = gfx.MeasureString(rightBottom, f);
 
                               gfx.DrawString(rightBottom, f, p.Brush, rect.Right - s2.Width - s2.Height / 2, rect.Bottom - s2.Height - s2.Height / 2);
                            }
 
                            // draw scale
-                           using(Pen p = new Pen(Brushes.Blue, 1))
+                           using(var p = new Pen(Brushes.Blue, 1))
                            {
                               double rez = info.Type.Projection.GetGroundResolution(info.Zoom, info.Area.Bottom);
                               int px100 = (int)(100.0 / rez); // 100 meters
@@ -310,7 +310,7 @@ namespace Demo.WindowsForms
                               gfx.DrawRectangle(p, rect.X + 10, rect.Bottom - 20, px100, 10);
 
                               string leftBottom = "scale: 100m | 1Km";
-                              SizeF s = gfx.MeasureString(leftBottom, f);
+                              var s = gfx.MeasureString(leftBottom, f);
                               gfx.DrawString(leftBottom, f, p.Brush, rect.X + 10, rect.Bottom - s.Height - 20);
                            }
                         }
@@ -334,7 +334,7 @@ namespace Demo.WindowsForms
             if(info.MakeWorldFile)
             {
                string wf = bigImage + "w";
-               using(StreamWriter world = File.CreateText(wf))
+               using(var world = File.CreateText(wf))
                {
                   world.WriteLine("{0:0.000000000000}", (info.Area.WidthLng / pxDelta.X));
                   world.WriteLine("0.0000000");
@@ -348,10 +348,10 @@ namespace Demo.WindowsForms
 
             if(info.MakeKmz)
             {
-               var kmzFile = Path.GetDirectoryName(bigImage) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(bigImage) + ".kmz";
+               string kmzFile = Path.GetDirectoryName(bigImage) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(bigImage) + ".kmz";
                e.Result = kmzFile;
 
-               using(ZipStorer zip = ZipStorer.Create(kmzFile, "GMap.NET"))
+               using(var zip = ZipStorer.Create(kmzFile, "GMap.NET"))
                {
                   zip.AddFile(ZipStorer.Compression.Store, bigImage, "files/map.jpg", "map");
 
@@ -394,12 +394,12 @@ namespace Demo.WindowsForms
          }
       }
 
-      readonly List<PointLatLng> GpxRoute = new List<PointLatLng>();
-      RectLatLng AreaGpx = RectLatLng.Empty;
+      readonly List<PointLatLng> _gpxRoute = new List<PointLatLng>();
+      RectLatLng _areaGpx = RectLatLng.Empty;
 
       private void button1_Click(object sender, EventArgs e)
       {
-         RectLatLng? area = null;
+         RectLatLng? area;
 
          if(checkBoxRoutes.Checked)
          {
@@ -422,11 +422,11 @@ namespace Demo.WindowsForms
 
          if(!bg.IsBusy)
          {
-            lock(tileArea)
+            lock(_tileArea)
             {
-               tileArea.Clear();
-               tileArea.AddRange(Main.MainMap.MapProvider.Projection.GetAreaTileList(area.Value, (int)numericUpDown1.Value, 1));
-               tileArea.TrimExcess();
+               _tileArea.Clear();
+               _tileArea.AddRange(Main.MainMap.MapProvider.Projection.GetAreaTileList(area.Value, (int)numericUpDown1.Value, 1));
+               _tileArea.TrimExcess();
             }
 
             numericUpDown1.Enabled = false;
@@ -455,13 +455,13 @@ namespace Demo.WindowsForms
       public bool MakeWorldFile;
       public bool MakeKmz;
 
-      public MapInfo(RectLatLng Area, int Zoom, GMapProvider Type, bool makeWorldFile, bool MakeKmz)
+      public MapInfo(RectLatLng area, int zoom, GMapProvider type, bool makeWorldFile, bool makeKmz)
       {
-         this.Area = Area;
-         this.Zoom = Zoom;
-         this.Type = Type;
-         this.MakeWorldFile = makeWorldFile;
-         this.MakeKmz = MakeKmz;
+         this.Area = area;
+         this.Zoom = zoom;
+         this.Type = type;
+         MakeWorldFile = makeWorldFile;
+         this.MakeKmz = makeKmz;
       }
    }
 }

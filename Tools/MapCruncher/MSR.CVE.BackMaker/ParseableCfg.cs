@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public interface ParseableCfg
@@ -7,6 +6,7 @@ namespace MSR.CVE.BackMaker
         {
             get;
         }
+
         void ParseFrom(string str);
     }
 }

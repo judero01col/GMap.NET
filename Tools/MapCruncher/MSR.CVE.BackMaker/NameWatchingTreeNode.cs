@@ -1,42 +1,46 @@
-using System;
 using System.Threading;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     internal class NameWatchingTreeNode : TreeNode
     {
         public NameWatchingTreeNode(HasDisplayNameIfc tag)
         {
-            this.Init(tag);
+            Init(tag);
         }
+
         public NameWatchingTreeNode(HasDisplayNameIfc tag, TreeNode[] children) : base(null, children)
         {
-            this.Init(tag);
+            Init(tag);
         }
+
         private void Init(HasDisplayNameIfc tag)
         {
-            base.Tag = tag;
-            this.UpdateName();
+            Tag = tag;
+            UpdateName();
             if (tag is SourceMap)
             {
-                ((SourceMap)tag).readyToLockChangedEvent.Add(new DirtyListener(this.UpdateNameListener));
+                ((SourceMap)tag).readyToLockChangedEvent.Add(UpdateNameListener);
             }
         }
+
         public void Dispose()
         {
-            if (base.Tag is SourceMap)
+            if (Tag is SourceMap)
             {
-                ((SourceMap)base.Tag).readyToLockChangedEvent.Remove(new DirtyListener(this.UpdateNameListener));
+                ((SourceMap)Tag).readyToLockChangedEvent.Remove(UpdateNameListener);
             }
         }
+
         private void UpdateNameListener()
         {
             Monitor.Enter(this);
             try
             {
-                if (base.TreeView != null)
+                if (TreeView != null)
                 {
-                    base.TreeView.Invoke(new DirtyListener(this.UpdateName));
+                    TreeView.Invoke(new DirtyListener(UpdateName));
                 }
             }
             finally
@@ -44,14 +48,16 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
+
         private void UpdateName()
         {
-            string text = ((HasDisplayNameIfc)base.Tag).GetDisplayName();
-            if (base.Tag is SourceMap && !((SourceMap)base.Tag).ReadyToLock())
+            string text = ((HasDisplayNameIfc)Tag).GetDisplayName();
+            if (Tag is SourceMap && !((SourceMap)Tag).ReadyToLock())
             {
                 text += " (!)";
             }
-            base.Text = text;
+
+            Text = text;
         }
     }
 }

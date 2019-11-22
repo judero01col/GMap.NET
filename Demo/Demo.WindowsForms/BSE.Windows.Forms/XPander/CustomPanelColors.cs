@@ -19,11 +19,11 @@ namespace BSE.Windows.Forms
     public class CustomPanelColors : CustomColors
     {
         #region FieldsPrivate
-        private Color m_captionSelectedGradientBegin = System.Windows.Forms.ProfessionalColors.ButtonSelectedGradientBegin;
-        private Color m_captionSelectedGradientEnd = System.Windows.Forms.ProfessionalColors.ButtonSelectedGradientEnd;
-        private Color m_collapsedCaptionText = SystemColors.ControlText;
-        private Color m_contentGradientBegin = System.Windows.Forms.ProfessionalColors.ToolStripContentPanelGradientBegin;
-        private Color m_contentGradientEnd = System.Windows.Forms.ProfessionalColors.ToolStripContentPanelGradientEnd;
+        private Color _captionSelectedGradientBegin = System.Windows.Forms.ProfessionalColors.ButtonSelectedGradientBegin;
+        private Color _captionSelectedGradientEnd = System.Windows.Forms.ProfessionalColors.ButtonSelectedGradientEnd;
+        private Color _collapsedCaptionText = SystemColors.ControlText;
+        private Color _contentGradientBegin = System.Windows.Forms.ProfessionalColors.ToolStripContentPanelGradientBegin;
+        private Color _contentGradientEnd = System.Windows.Forms.ProfessionalColors.ToolStripContentPanelGradientEnd;
         #endregion
 
         #region Properties
@@ -33,12 +33,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the hover icon in the captionbar on the Panel.")]
         public virtual Color CaptionSelectedGradientBegin
         {
-            get { return this.m_captionSelectedGradientBegin; }
+            get { return _captionSelectedGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientBegin) == false)
+                if (value.Equals(_captionSelectedGradientBegin) == false)
                 {
-                    this.m_captionSelectedGradientBegin = value;
+                    _captionSelectedGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -49,12 +49,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the hover icon in the captionbar on the Panel.")]
         public virtual Color CaptionSelectedGradientEnd
         {
-            get { return this.m_captionSelectedGradientEnd; }
+            get { return _captionSelectedGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientEnd) == false)
+                if (value.Equals(_captionSelectedGradientEnd) == false)
                 {
-                    this.m_captionSelectedGradientEnd = value;
+                    _captionSelectedGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -65,12 +65,12 @@ namespace BSE.Windows.Forms
         [Description("The text color of a Panel when it's collapsed.")]
         public virtual Color CollapsedCaptionText
         {
-            get { return this.m_collapsedCaptionText; }
+            get { return _collapsedCaptionText; }
             set
             {
-                if (value.Equals(this.m_collapsedCaptionText) == false)
+                if (value.Equals(_collapsedCaptionText) == false)
                 {
-                    this.m_collapsedCaptionText = value;
+                    _collapsedCaptionText = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -81,12 +81,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient used in the Panel.")]
         public virtual Color ContentGradientBegin
         {
-            get { return this.m_contentGradientBegin; }
+            get { return _contentGradientBegin; }
             set
             {
-                if (value.Equals(this.m_contentGradientBegin) == false)
+                if (value.Equals(_contentGradientBegin) == false)
                 {
-                    this.m_contentGradientBegin = value;
+                    _contentGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -97,12 +97,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used in the Panel.")]
         public virtual Color ContentGradientEnd
         {
-            get { return this.m_contentGradientEnd; }
+            get { return _contentGradientEnd; }
             set
             {
-                if (value.Equals(this.m_contentGradientEnd) == false)
+                if (value.Equals(_contentGradientEnd) == false)
                 {
-                    this.m_contentGradientEnd = value;
+                    _contentGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }

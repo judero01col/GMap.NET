@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class ViewState_XML
@@ -8,10 +8,12 @@ namespace MSR.CVE.BackMaker
         private const string XMLAttributeName = "Value";
         private const string XMLAttributeValue_Slaved = "Locked";
         private const string XMLAttributeValue_Unslaved = "Unlocked";
+
         public static string GetXMLTag()
         {
             return "ViewState";
         }
+
         public static void WriteXML(ViewState viewState, XmlTextWriter writer)
         {
             string value;
@@ -24,10 +26,12 @@ namespace MSR.CVE.BackMaker
                 D.Assert(viewState == ViewState.Unslaved);
                 value = "Unlocked";
             }
+
             writer.WriteStartElement("ViewState");
             writer.WriteAttributeString("Value", value);
             writer.WriteEndElement();
         }
+
         public static ViewState ReadXML(MashupParseContext context)
         {
             string requiredAttribute = context.GetRequiredAttribute("Value");
@@ -35,6 +39,7 @@ namespace MSR.CVE.BackMaker
             {
                 return ViewState.Slaved;
             }
+
             D.Assert(requiredAttribute == "Unlocked");
             return ViewState.Unslaved;
         }

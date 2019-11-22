@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class MapDrawingOption
@@ -7,41 +8,46 @@ namespace MSR.CVE.BackMaker
         private bool enabled;
         private InvalidatableViewIfc map;
         private ToolStripMenuItem menuItem;
+
         public bool Enabled
         {
             get
             {
-                return this.enabled;
+                return enabled;
             }
             set
             {
-                this.enabled = value;
-                this.map.InvalidateView();
+                enabled = value;
+                map.InvalidateView();
             }
         }
+
         public MapDrawingOption(InvalidatableViewIfc map, ToolStripMenuItem menuItem, bool default_value)
         {
             this.map = map;
             this.menuItem = menuItem;
-            this.enabled = default_value;
+            enabled = default_value;
             if (this.menuItem != null)
             {
-                this.menuItem.Checked = this.enabled;
-                this.menuItem.Click += new EventHandler(this.menuItem_Click);
+                this.menuItem.Checked = enabled;
+                this.menuItem.Click += menuItem_Click;
             }
         }
+
         public void SetInvalidatableView(InvalidatableViewIfc map)
         {
             this.map = map;
         }
+
         public static bool IsEnabled(MapDrawingOption mdo)
         {
             return mdo != null && mdo.Enabled;
         }
+
         private void menuItem_Click(object sender, EventArgs e)
         {
-            this.enabled = (this.menuItem.Checked = !this.enabled);
-            this.map.InvalidateView();
+            enabled = menuItem.Checked = !enabled;
+            map.InvalidateView();
         }
     }
 }

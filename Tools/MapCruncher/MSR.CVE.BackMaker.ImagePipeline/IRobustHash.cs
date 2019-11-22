@@ -1,5 +1,5 @@
-using System;
 using System.Drawing;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public interface IRobustHash

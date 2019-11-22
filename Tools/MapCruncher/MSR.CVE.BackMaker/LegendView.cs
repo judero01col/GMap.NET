@@ -1,6 +1,6 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Globalization;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class LegendView : IMapView, ICurrentView
@@ -12,47 +12,52 @@ namespace MSR.CVE.BackMaker
         private static string previewAttr = "ShowingPreview";
         private static string sourceMapViewTag = "SourceMapPosition";
         private static string referenceMapViewTag = "ReferenceMapPosition";
+
         public Legend legend
         {
             get
             {
-                return this._legend;
+                return _legend;
             }
         }
+
         public bool showingPreview
         {
             get
             {
-                return this._showingPreview;
+                return _showingPreview;
             }
         }
+
         public object GetViewedObject()
         {
-            return this.legend;
+            return legend;
         }
+
         public LegendView(Legend legend, bool showingPreview, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
-            this._legend = legend;
-            this._showingPreview = showingPreview;
+            _legend = legend;
+            _showingPreview = showingPreview;
             this.sourceMapView = sourceMapView;
             this.referenceMapView = referenceMapView;
         }
+
         public LegendView(Legend legend, MashupParseContext context)
         {
-            this._legend = legend;
+            _legend = legend;
             object obj = null;
-            XMLTagReader xMLTagReader = context.NewTagReader(LegendView.GetXMLTag());
-            this._showingPreview = context.GetRequiredAttributeBoolean(LegendView.previewAttr);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            _showingPreview = context.GetRequiredAttributeBoolean(previewAttr);
             while (xMLTagReader.FindNextStartTag())
             {
-                if (xMLTagReader.TagIs(LegendView.sourceMapViewTag))
+                if (xMLTagReader.TagIs(sourceMapViewTag))
                 {
-                    XMLTagReader xMLTagReader2 = context.NewTagReader(LegendView.sourceMapViewTag);
+                    XMLTagReader xMLTagReader2 = context.NewTagReader(sourceMapViewTag);
                     while (xMLTagReader2.FindNextStartTag())
                     {
                         if (xMLTagReader2.TagIs(LatLonZoom.GetXMLTag()))
                         {
-                            this.sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
+                            sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
                             context.AssertUnique(obj);
                             obj = new object();
                         }
@@ -60,46 +65,52 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    if (xMLTagReader.TagIs(LegendView.referenceMapViewTag))
+                    if (xMLTagReader.TagIs(referenceMapViewTag))
                     {
-                        context.AssertUnique(this.referenceMapView);
-                        XMLTagReader xMLTagReader3 = context.NewTagReader(LegendView.referenceMapViewTag);
+                        context.AssertUnique(referenceMapView);
+                        XMLTagReader xMLTagReader3 = context.NewTagReader(referenceMapViewTag);
                         while (xMLTagReader3.FindNextStartTag())
                         {
                             if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
                             {
-                                this.referenceMapView = new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
+                                referenceMapView =
+                                    new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
                             }
                         }
                     }
                 }
             }
-            context.AssertPresent(obj, LegendView.sourceMapViewTag);
-            context.AssertPresent(this.referenceMapView, LegendView.referenceMapViewTag);
+
+            context.AssertPresent(obj, sourceMapViewTag);
+            context.AssertPresent(referenceMapView, referenceMapViewTag);
         }
+
         public static string GetXMLTag()
         {
             return "LegendView";
         }
+
         public void WriteXML(MashupWriteContext wc)
         {
-            wc.writer.WriteStartElement(LegendView.GetXMLTag());
-            wc.writer.WriteAttributeString(LegendView.previewAttr, this._showingPreview.ToString(CultureInfo.InvariantCulture));
-            wc.writer.WriteStartElement(LegendView.sourceMapViewTag);
-            this.sourceMapView.WriteXML(wc.writer);
+            wc.writer.WriteStartElement(GetXMLTag());
+            wc.writer.WriteAttributeString(previewAttr, _showingPreview.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteStartElement(sourceMapViewTag);
+            sourceMapView.WriteXML(wc.writer);
             wc.writer.WriteEndElement();
-            wc.writer.WriteStartElement(LegendView.referenceMapViewTag);
-            this.referenceMapView.WriteXML(wc.writer);
+            wc.writer.WriteStartElement(referenceMapViewTag);
+            referenceMapView.WriteXML(wc.writer);
             wc.writer.WriteEndElement();
             wc.writer.WriteEndElement();
         }
+
         public MapPosition GetReferenceMapView()
         {
-            return this.referenceMapView;
+            return referenceMapView;
         }
+
         public LatLonZoom GetSourceMapView()
         {
-            return this.sourceMapView;
+            return sourceMapView;
         }
     }
 }

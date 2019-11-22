@@ -1,4 +1,3 @@
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class GDIBigLockedImage : IDisposable
@@ -16,27 +17,35 @@ namespace MSR.CVE.BackMaker
             SomeOfEach,
             EntirelyOpaque
         }
+
         private Image gdiImage;
         private bool sizeKnown;
         private Size size;
         private Graphics gdiGraphics;
         private string sourceLabel;
-        private static ResourceCounter allImageCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBigLockedImage", 10);
-        private static Dictionary<string, ResourceCounter> fineGrainedImageCounter = new Dictionary<string, ResourceCounter>();
+
+        private static ResourceCounter allImageCounter =
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBigLockedImage", 10);
+
+        private static Dictionary<string, ResourceCounter> fineGrainedImageCounter =
+            new Dictionary<string, ResourceCounter>();
+
         public int Height
         {
             get
             {
-                return this.Size.Height;
+                return Size.Height;
             }
         }
+
         public int Width
         {
             get
             {
-                return this.Size.Width;
+                return Size.Width;
             }
         }
+
         public ImageFormat RawFormat
         {
             get
@@ -45,137 +54,136 @@ namespace MSR.CVE.BackMaker
                 ImageFormat rawFormat;
                 try
                 {
-                    rawFormat = this.gdiImage.RawFormat;
+                    rawFormat = gdiImage.RawFormat;
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
+
                 return rawFormat;
             }
         }
+
         public Size Size
         {
             get
             {
-                if (!this.sizeKnown)
+                if (!sizeKnown)
                 {
                     Monitor.Enter(this);
                     try
                     {
-                        this.size = this.gdiImage.Size;
-                        this.sizeKnown = true;
+                        size = gdiImage.Size;
+                        sizeKnown = true;
                     }
                     finally
                     {
                         Monitor.Exit(this);
                     }
                 }
-                return this.size;
+
+                return size;
             }
         }
+
         public GDIBigLockedImage(Size size, string sourceLabel)
         {
-            this.gdiImage = new Bitmap(size.Width, size.Height);
-            FIBR.Announce("GDIBigLockedImage.GDIBigLockedImage", new object[]
-            {
-                MakeObjectID.Maker.make(this),
-                size
-            });
+            gdiImage = new Bitmap(size.Width, size.Height);
+            FIBR.Announce("GDIBigLockedImage.GDIBigLockedImage", new object[] {MakeObjectID.Maker.make(this), size});
             this.sourceLabel = sourceLabel;
-            this.CrementCounter(1);
+            CrementCounter(1);
         }
+
         private void CrementCounter(int crement)
         {
-            GDIBigLockedImage.allImageCounter.crement(crement);
-            D.Assert(this.sourceLabel != null);
-            if (!GDIBigLockedImage.fineGrainedImageCounter.ContainsKey(this.sourceLabel))
+            allImageCounter.crement(crement);
+            D.Assert(sourceLabel != null);
+            if (!fineGrainedImageCounter.ContainsKey(sourceLabel))
             {
-                GDIBigLockedImage.fineGrainedImageCounter[this.sourceLabel] = DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBLI-" + this.sourceLabel, 10);
+                fineGrainedImageCounter[sourceLabel] =
+                    DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBLI-" + sourceLabel, 10);
             }
-            GDIBigLockedImage.fineGrainedImageCounter[this.sourceLabel].crement(crement);
+
+            fineGrainedImageCounter[sourceLabel].crement(crement);
         }
+
         public GDIBigLockedImage(Bitmap bitmap)
         {
-            this.gdiImage = bitmap;
-            this.sourceLabel = "bitmapCtor";
-            this.CrementCounter(1);
+            gdiImage = bitmap;
+            sourceLabel = "bitmapCtor";
+            CrementCounter(1);
         }
+
         private GDIBigLockedImage(string sourceLabel)
         {
             this.sourceLabel = sourceLabel;
-            this.CrementCounter(1);
+            CrementCounter(1);
         }
+
         public static GDIBigLockedImage FromStream(Stream instream)
         {
             GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage("FromStream");
             gDIBigLockedImage.gdiImage = Image.FromStream(instream);
-            FIBR.Announce("GDIBigLockedImage.FromStream", new object[]
-            {
-                MakeObjectID.Maker.make(gDIBigLockedImage)
-            });
+            FIBR.Announce("GDIBigLockedImage.FromStream", new object[] {MakeObjectID.Maker.make(gDIBigLockedImage)});
             return gDIBigLockedImage;
         }
+
         public static GDIBigLockedImage FromFile(string filename)
         {
             GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage("FromFile");
             gDIBigLockedImage.gdiImage = Image.FromFile(filename);
-            FIBR.Announce("GDIBigLockedImage.FromFile", new object[]
-            {
-                MakeObjectID.Maker.make(gDIBigLockedImage),
-                filename
-            });
+            FIBR.Announce("GDIBigLockedImage.FromFile",
+                new object[] {MakeObjectID.Maker.make(gDIBigLockedImage), filename});
             return gDIBigLockedImage;
         }
+
         internal void CopyPixels()
         {
             Monitor.Enter(this);
             try
             {
-                this.DisposeGraphics();
-                Image image = new Bitmap(this.Size.Width, this.Size.Height);
+                DisposeGraphics();
+                Image image = new Bitmap(Size.Width, Size.Height);
                 Graphics graphics = Graphics.FromImage(image);
-                graphics.DrawImage(this.gdiImage, 0, 0, this.Size.Width, this.Size.Height);
+                graphics.DrawImage(gdiImage, 0, 0, Size.Width, Size.Height);
                 graphics.Dispose();
-                this.gdiImage.Dispose();
-                this.gdiImage = image;
+                gdiImage.Dispose();
+                gdiImage = image;
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public void Dispose()
         {
             Monitor.Enter(this);
             try
             {
-                if (this.gdiGraphics != null)
+                if (gdiGraphics != null)
                 {
-                    this.gdiGraphics.Dispose();
-                    FIBR.Announce("GDIBigLockedImage.Dispose(graphics)", new object[]
-                    {
-                        MakeObjectID.Maker.make(this)
-                    });
+                    gdiGraphics.Dispose();
+                    FIBR.Announce("GDIBigLockedImage.Dispose(graphics)", new object[] {MakeObjectID.Maker.make(this)});
                 }
-                FIBR.Announce("GDIBigLockedImage.Dispose(image)", new object[]
-                {
-                    MakeObjectID.Maker.make(this)
-                });
-                this.gdiImage.Dispose();
-                this.CrementCounter(-1);
+
+                FIBR.Announce("GDIBigLockedImage.Dispose(image)", new object[] {MakeObjectID.Maker.make(this)});
+                gdiImage.Dispose();
+                CrementCounter(-1);
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public void DrawImageOntoThis(GDIBigLockedImage gDISImage, RectangleF destRect, RectangleF srcRect)
         {
             Monitor.Enter(this);
             try
             {
-                Graphics gDIGraphics = this.GetGDIGraphics();
+                Graphics gDIGraphics = GetGDIGraphics();
                 Monitor.Enter(gDISImage);
                 try
                 {
@@ -185,124 +193,115 @@ namespace MSR.CVE.BackMaker
                 {
                     Monitor.Exit(gDISImage);
                 }
-                this.gdiGraphics.Dispose();
-                this.gdiGraphics = null;
-                FIBR.Announce("GDIBigLockedImage.DrawImageOntoThis", new object[]
-                {
-                    MakeObjectID.Maker.make(this),
-                    MakeObjectID.Maker.make(gDISImage),
-                    destRect,
-                    srcRect
-                });
+
+                gdiGraphics.Dispose();
+                gdiGraphics = null;
+                FIBR.Announce("GDIBigLockedImage.DrawImageOntoThis",
+                    new object[]
+                    {
+                        MakeObjectID.Maker.make(this), MakeObjectID.Maker.make(gDISImage), destRect, srcRect
+                    });
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         private Graphics GetGDIGraphics()
         {
-            if (this.gdiGraphics == null)
+            if (gdiGraphics == null)
             {
                 Monitor.Enter(this);
                 try
                 {
-                    this.gdiGraphics = Graphics.FromImage(this.gdiImage);
-                    FIBR.Announce("GDIBigLockedImage.GetGDIGraphics", new object[]
-                    {
-                        MakeObjectID.Maker.make(this)
-                    });
+                    gdiGraphics = Graphics.FromImage(gdiImage);
+                    FIBR.Announce("GDIBigLockedImage.GetGDIGraphics", new object[] {MakeObjectID.Maker.make(this)});
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             }
-            return this.gdiGraphics;
+
+            return gdiGraphics;
         }
+
         public void Save(Stream outputStream, ImageFormat imageFormat)
         {
             Monitor.Enter(this);
             try
             {
-                this.gdiImage.Save(outputStream, imageFormat);
-                FIBR.Announce("GDIBigLockedImage.Save", new object[]
-                {
-                    MakeObjectID.Maker.make(this),
-                    "stream"
-                });
+                gdiImage.Save(outputStream, imageFormat);
+                FIBR.Announce("GDIBigLockedImage.Save", new object[] {MakeObjectID.Maker.make(this), "stream"});
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public void Save(string outputFilename)
         {
             Monitor.Enter(this);
             try
             {
-                this.gdiImage.Save(outputFilename);
-                FIBR.Announce("GDIBigLockedImage.Save", new object[]
-                {
-                    MakeObjectID.Maker.make(this),
-                    outputFilename
-                });
+                gdiImage.Save(outputFilename);
+                FIBR.Announce("GDIBigLockedImage.Save", new object[] {MakeObjectID.Maker.make(this), outputFilename});
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public Graphics IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheGraphics()
         {
-            return this.GetGDIGraphics();
+            return GetGDIGraphics();
         }
+
         public Image IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage()
         {
-            return this.gdiImage;
+            return gdiImage;
         }
+
         public void SetInterpolationMode(InterpolationMode interpolationMode)
         {
             Monitor.Enter(this);
             try
             {
-                this.GetGDIGraphics().InterpolationMode = interpolationMode;
+                GetGDIGraphics().InterpolationMode = interpolationMode;
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         public void SetClip(Region clipRegion)
         {
             Monitor.Enter(this);
             try
             {
-                this.GetGDIGraphics().Clip = clipRegion;
-                FIBR.Announce("GDIBigLockedImage.SetClip", new object[]
-                {
-                    MakeObjectID.Maker.make(this)
-                });
+                GetGDIGraphics().Clip = clipRegion;
+                FIBR.Announce("GDIBigLockedImage.SetClip", new object[] {MakeObjectID.Maker.make(this)});
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         internal void DisposeGraphics()
         {
             Monitor.Enter(this);
             try
             {
-                if (this.gdiGraphics != null)
+                if (gdiGraphics != null)
                 {
-                    this.gdiGraphics.Dispose();
-                    this.gdiGraphics = null;
-                    FIBR.Announce("GDIBigLockedImage.DisposeGraphics", new object[]
-                    {
-                        MakeObjectID.Maker.make(this)
-                    });
+                    gdiGraphics.Dispose();
+                    gdiGraphics = null;
+                    FIBR.Announce("GDIBigLockedImage.DisposeGraphics", new object[] {MakeObjectID.Maker.make(this)});
                 }
             }
             finally
@@ -310,13 +309,16 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
-        public unsafe GDIBigLockedImage.Transparentness GetTransparentness()
+
+        public unsafe Transparentness GetTransparentness()
         {
             Transparentness entirelyTransparent;
             lock (this)
             {
-                Bitmap bitmap = (Bitmap)this.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-                BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                Bitmap bitmap = (Bitmap)IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
+                BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                    ImageLockMode.ReadWrite,
+                    PixelFormat.Format32bppArgb);
                 bool flag = false;
                 bool condition = false;
                 try
@@ -326,7 +328,7 @@ namespace MSR.CVE.BackMaker
                     {
                         for (int j = 0; j < bitmapdata.Width; j++)
                         {
-                            PixelStruct* structPtr2 = (structPtr + ((i * bitmapdata.Stride) / sizeof(PixelStruct))) + j;
+                            PixelStruct* structPtr2 = structPtr + i * bitmapdata.Stride / sizeof(PixelStruct) + j;
                             if (structPtr2->a != 0)
                             {
                                 flag = true;
@@ -335,17 +337,20 @@ namespace MSR.CVE.BackMaker
                             {
                                 condition = true;
                             }
+
                             if (flag && condition)
                             {
                                 return Transparentness.SomeOfEach;
                             }
                         }
                     }
+
                     if (flag)
                     {
                         D.Assert(!condition);
                         return Transparentness.EntirelyOpaque;
                     }
+
                     D.Assert(condition);
                     entirelyTransparent = Transparentness.EntirelyTransparent;
                 }
@@ -354,6 +359,7 @@ namespace MSR.CVE.BackMaker
                     bitmap.UnlockBits(bitmapdata);
                 }
             }
+
             return entirelyTransparent;
         }
     }

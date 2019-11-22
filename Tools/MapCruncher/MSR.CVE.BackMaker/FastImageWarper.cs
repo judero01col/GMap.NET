@@ -2,12 +2,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Threading;
+
 namespace MSR.CVE.BackMaker
 {
     internal class FastImageWarper
     {
-        public unsafe static void doWarp(GDIBigLockedImage destImage, GDIBigLockedImage sourceImage, IPointTransformer[] pointTransformers, InterpolationMode mode)
+        public static unsafe void doWarp(GDIBigLockedImage destImage, GDIBigLockedImage sourceImage,
+            IPointTransformer[] pointTransformers, InterpolationMode mode)
         {
             Bitmap bitmap;
             BitmapData data;
@@ -19,13 +20,19 @@ namespace MSR.CVE.BackMaker
             lock (destImage)
             {
                 bitmap = (Bitmap)destImage.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-                data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+                data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                    ImageLockMode.WriteOnly,
+                    PixelFormat.Format32bppArgb);
             }
+
             lock (sourceImage)
             {
                 bitmap2 = (Bitmap)sourceImage.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-                data2 = bitmap2.LockBits(new Rectangle(0, 0, bitmap2.Width, bitmap2.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                data2 = bitmap2.LockBits(new Rectangle(0, 0, bitmap2.Width, bitmap2.Height),
+                    ImageLockMode.ReadOnly,
+                    PixelFormat.Format32bppArgb);
             }
+
             PixelStruct* structPtr = (PixelStruct*)data.Scan0;
             int width = data.Width;
             int height = data.Height;
@@ -38,7 +45,7 @@ namespace MSR.CVE.BackMaker
             for (int i = 0; i < height; i++)
             {
                 int num13 = 0;
-                for (PixelStruct* structPtr2 = structPtr + (((height - 1) - i) * num9); num13 < width; structPtr2++)
+                for (PixelStruct* structPtr2 = structPtr + (height - 1 - i) * num9; num13 < width; structPtr2++)
                 {
                     int x;
                     int num2;
@@ -51,13 +58,14 @@ namespace MSR.CVE.BackMaker
                         td.x = td2.x;
                         td.y = td2.y;
                     }
+
                     if (mode == InterpolationMode.NearestNeighbor)
                     {
                         x = (int)td.x;
-                        num2 = num15 - ((int)td.y);
-                        if (((x >= 0) && (x < num10)) && ((num2 >= 0) && (num2 < num11)))
+                        num2 = num15 - (int)td.y;
+                        if (x >= 0 && x < num10 && num2 >= 0 && num2 < num11)
                         {
-                            structPtr4 = (structPtr3 + (num2 * num12)) + x;
+                            structPtr4 = structPtr3 + num2 * num12 + x;
                             structPtr2[0] = structPtr4[0];
                         }
                     }
@@ -67,6 +75,7 @@ namespace MSR.CVE.BackMaker
                         {
                             throw new Exception("Unimplemented mode");
                         }
+
                         double num17 = num15 - td.y;
                         int num3 = (int)td.x;
                         int num4 = (int)num17;
@@ -81,24 +90,30 @@ namespace MSR.CVE.BackMaker
                             {
                                 x = num3 + num20;
                                 num2 = num4 + num21;
-                                if (((x >= 0) && (x < num10)) && ((num2 >= 0) && (num2 < num11)))
+                                if (x >= 0 && x < num10 && num2 >= 0 && num2 < num11)
                                 {
-                                    structPtr4 = (structPtr3 + (num2 * num12)) + x;
+                                    structPtr4 = structPtr3 + num2 * num12 + x;
                                     pixel.addWeighted(k * m, structPtr4[0]);
                                 }
+
                                 num21++;
                             }
+
                             num20++;
                         }
+
                         structPtr2[0] = pixel.AsPixel();
                     }
+
                     num13++;
                 }
             }
+
             lock (destImage)
             {
                 bitmap.UnlockBits(data);
             }
+
             lock (sourceImage)
             {
                 bitmap2.UnlockBits(data2);

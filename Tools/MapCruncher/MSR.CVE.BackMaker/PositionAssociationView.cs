@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     public class PositionAssociationView
@@ -9,40 +10,45 @@ namespace MSR.CVE.BackMaker
             source,
             global
         }
+
         private PositionAssociation assoc;
-        private PositionAssociationView.WhichPosition whichPosition;
+        private WhichPosition whichPosition;
+
         public DisplayablePosition position
         {
             get
             {
-                switch (this.whichPosition)
+                switch (whichPosition)
                 {
-                case PositionAssociationView.WhichPosition.image:
-                    return this.assoc.imagePosition;
-                case PositionAssociationView.WhichPosition.source:
-                    return this.assoc.sourcePosition;
-                case PositionAssociationView.WhichPosition.global:
-                    return this.assoc.globalPosition;
-                default:
-                    throw new Exception("booogus.");
+                    case WhichPosition.image:
+                        return assoc.imagePosition;
+                    case WhichPosition.source:
+                        return assoc.sourcePosition;
+                    case WhichPosition.global:
+                        return assoc.globalPosition;
+                    default:
+                        throw new Exception("booogus.");
                 }
             }
         }
+
         public string associationName
         {
             get
             {
-                return this.assoc.associationName;
+                return assoc.associationName;
             }
         }
+
         public int pinId
         {
             get
             {
-                return this.assoc.pinId;
+                return assoc.pinId;
             }
         }
-        public PositionAssociationView(PositionAssociation assoc, PositionAssociationView.WhichPosition whichPosition)
+
+        public PositionAssociationView(PositionAssociation assoc, WhichPosition whichPosition)
         {
             this.assoc = assoc;
             this.whichPosition = whichPosition;

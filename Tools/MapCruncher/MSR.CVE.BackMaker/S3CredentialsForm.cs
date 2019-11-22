@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class S3CredentialsForm : Form
@@ -13,88 +13,94 @@ namespace MSR.CVE.BackMaker
         private TextBox s3AccessKeyId;
         private Button saveButton;
         private Button cancelButton;
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
-            this.label2 = new Label();
-            this.label5 = new Label();
-            this.s3SecretAccessKey = new TextBox();
-            this.s3AccessKeyId = new TextBox();
-            this.saveButton = new Button();
-            this.cancelButton = new Button();
-            base.SuspendLayout();
-            this.label2.AutoSize = true;
-            this.label2.Location = new Point(9, 55);
-            this.label2.Name = "label2";
-            this.label2.Size = new Size(97, 13);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Secret Access Key";
-            this.label5.AutoSize = true;
-            this.label5.Location = new Point(9, 6);
-            this.label5.Name = "label5";
-            this.label5.Size = new Size(77, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Access Key ID";
-            this.s3SecretAccessKey.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            this.s3SecretAccessKey.Location = new Point(12, 71);
-            this.s3SecretAccessKey.Name = "s3SecretAccessKey";
-            this.s3SecretAccessKey.Size = new Size(355, 20);
-            this.s3SecretAccessKey.TabIndex = 15;
-            this.s3AccessKeyId.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            this.s3AccessKeyId.Location = new Point(12, 22);
-            this.s3AccessKeyId.Name = "s3AccessKeyId";
-            this.s3AccessKeyId.Size = new Size(355, 20);
-            this.s3AccessKeyId.TabIndex = 14;
-            this.saveButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-            this.saveButton.DialogResult = DialogResult.Yes;
-            this.saveButton.Location = new Point(292, 123);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new Size(75, 23);
-            this.saveButton.TabIndex = 18;
-            this.saveButton.Text = "Save";
-            this.saveButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
-            this.cancelButton.DialogResult = DialogResult.Cancel;
-            this.cancelButton.Location = new Point(211, 123);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new Size(75, 23);
-            this.cancelButton.TabIndex = 18;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            base.AutoScaleDimensions = new SizeF(6f, 13f);
-            base.AutoScaleMode = AutoScaleMode.Font;
-            base.ClientSize = new Size(379, 158);
-            base.Controls.Add(this.cancelButton);
-            base.Controls.Add(this.saveButton);
-            base.Controls.Add(this.label2);
-            base.Controls.Add(this.label5);
-            base.Controls.Add(this.s3SecretAccessKey);
-            base.Controls.Add(this.s3AccessKeyId);
-            base.Name = "S3CredentialsForm";
-            this.Text = "S3CredentialsForm";
-            base.ResumeLayout(false);
-            base.PerformLayout();
+            label2 = new Label();
+            label5 = new Label();
+            s3SecretAccessKey = new TextBox();
+            s3AccessKeyId = new TextBox();
+            saveButton = new Button();
+            cancelButton = new Button();
+            SuspendLayout();
+            label2.AutoSize = true;
+            label2.Location = new Point(9, 55);
+            label2.Name = "label2";
+            label2.Size = new Size(97, 13);
+            label2.TabIndex = 17;
+            label2.Text = "Secret Access Key";
+            label5.AutoSize = true;
+            label5.Location = new Point(9, 6);
+            label5.Name = "label5";
+            label5.Size = new Size(77, 13);
+            label5.TabIndex = 16;
+            label5.Text = "Access Key ID";
+            s3SecretAccessKey.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            s3SecretAccessKey.Location = new Point(12, 71);
+            s3SecretAccessKey.Name = "s3SecretAccessKey";
+            s3SecretAccessKey.Size = new Size(355, 20);
+            s3SecretAccessKey.TabIndex = 15;
+            s3AccessKeyId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            s3AccessKeyId.Location = new Point(12, 22);
+            s3AccessKeyId.Name = "s3AccessKeyId";
+            s3AccessKeyId.Size = new Size(355, 20);
+            s3AccessKeyId.TabIndex = 14;
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            saveButton.DialogResult = DialogResult.Yes;
+            saveButton.Location = new Point(292, 123);
+            saveButton.Name = "saveButton";
+            saveButton.Size = new Size(75, 23);
+            saveButton.TabIndex = 18;
+            saveButton.Text = "Save";
+            saveButton.UseVisualStyleBackColor = true;
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelButton.DialogResult = DialogResult.Cancel;
+            cancelButton.Location = new Point(211, 123);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(75, 23);
+            cancelButton.TabIndex = 18;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
+            AutoScaleDimensions = new SizeF(6f, 13f);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(379, 158);
+            Controls.Add(cancelButton);
+            Controls.Add(saveButton);
+            Controls.Add(label2);
+            Controls.Add(label5);
+            Controls.Add(s3SecretAccessKey);
+            Controls.Add(s3AccessKeyId);
+            Name = "S3CredentialsForm";
+            Text = "S3CredentialsForm";
+            ResumeLayout(false);
+            PerformLayout();
         }
+
         public S3CredentialsForm()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         internal void Initialize(S3Credentials s3c)
         {
-            this.s3AccessKeyId.Text = s3c.accessKeyId;
-            this.s3SecretAccessKey.Text = s3c.secretAccessKey;
+            s3AccessKeyId.Text = s3c.accessKeyId;
+            s3SecretAccessKey.Text = s3c.secretAccessKey;
         }
+
         internal void LoadResult(S3Credentials s3c)
         {
-            s3c.accessKeyId = this.s3AccessKeyId.Text;
-            s3c.secretAccessKey = this.s3SecretAccessKey.Text;
+            s3c.accessKeyId = s3AccessKeyId.Text;
+            s3c.secretAccessKey = s3SecretAccessKey.Text;
         }
     }
 }

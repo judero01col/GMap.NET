@@ -1,4 +1,5 @@
 using System;
+
 namespace Jama
 {
     [Serializable]
@@ -7,87 +8,100 @@ namespace Jama
         private double[][] L;
         private int n;
         private bool isspd;
+
         public virtual bool SPD
         {
             get
             {
-                return this.isspd;
+                return isspd;
             }
         }
+
         public CholeskyDecomposition(JamaMatrix Arg)
         {
             double[][] array = Arg.Array;
-            this.n = Arg.RowDimension;
-            this.L = new double[this.n][];
-            for (int i = 0; i < this.n; i++)
+            n = Arg.RowDimension;
+            L = new double[n][];
+            for (int i = 0; i < n; i++)
             {
-                this.L[i] = new double[this.n];
+                L[i] = new double[n];
             }
-            this.isspd = (Arg.ColumnDimension == this.n);
-            for (int j = 0; j < this.n; j++)
+
+            isspd = Arg.ColumnDimension == n;
+            for (int j = 0; j < n; j++)
             {
-                double[] array2 = this.L[j];
+                double[] array2 = L[j];
                 double num = 0.0;
                 for (int k = 0; k < j; k++)
                 {
-                    double[] array3 = this.L[k];
+                    double[] array3 = L[k];
                     double num2 = 0.0;
                     for (int i = 0; i < k; i++)
                     {
                         num2 += array3[i] * array2[i];
                     }
-                    num2 = (array2[k] = (array[j][k] - num2) / this.L[k][k]);
+
+                    num2 = array2[k] = (array[j][k] - num2) / L[k][k];
                     num += num2 * num2;
-                    this.isspd &= (array[k][j] == array[j][k]);
+                    isspd &= array[k][j] == array[j][k];
                 }
+
                 num = array[j][j] - num;
-                this.isspd &= (num > 0.0);
-                this.L[j][j] = Math.Sqrt(Math.Max(num, 0.0));
-                for (int k = j + 1; k < this.n; k++)
+                isspd &= num > 0.0;
+                L[j][j] = Math.Sqrt(Math.Max(num, 0.0));
+                for (int k = j + 1; k < n; k++)
                 {
-                    this.L[j][k] = 0.0;
+                    L[j][k] = 0.0;
                 }
             }
         }
+
         public virtual JamaMatrix getL()
         {
-            return new JamaMatrix(this.L, this.n, this.n);
+            return new JamaMatrix(L, n, n);
         }
+
         public virtual JamaMatrix solve(JamaMatrix B)
         {
-            if (B.RowDimension != this.n)
+            if (B.RowDimension != n)
             {
                 throw new ArgumentException("Matrix row dimensions must agree.");
             }
-            if (!this.isspd)
+
+            if (!isspd)
             {
                 throw new SystemException("Matrix is not symmetric positive definite.");
             }
+
             double[][] arrayCopy = B.ArrayCopy;
             int columnDimension = B.ColumnDimension;
-            for (int i = 0; i < this.n; i++)
+            for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < columnDimension; j++)
                 {
                     for (int k = 0; k < i; k++)
                     {
-                        arrayCopy[i][j] -= arrayCopy[k][j] * this.L[i][k];
+                        arrayCopy[i][j] -= arrayCopy[k][j] * L[i][k];
                     }
-                    arrayCopy[i][j] /= this.L[i][i];
+
+                    arrayCopy[i][j] /= L[i][i];
                 }
             }
-            for (int i = this.n - 1; i >= 0; i--)
+
+            for (int i = n - 1; i >= 0; i--)
             {
                 for (int j = 0; j < columnDimension; j++)
                 {
-                    for (int k = i + 1; k < this.n; k++)
+                    for (int k = i + 1; k < n; k++)
                     {
-                        arrayCopy[i][j] -= arrayCopy[k][j] * this.L[k][i];
+                        arrayCopy[i][j] -= arrayCopy[k][j] * L[k][i];
                     }
-                    arrayCopy[i][j] /= this.L[i][i];
+
+                    arrayCopy[i][j] /= L[i][i];
                 }
             }
-            return new JamaMatrix(arrayCopy, this.n, columnDimension);
+
+            return new JamaMatrix(arrayCopy, n, columnDimension);
         }
     }
 }

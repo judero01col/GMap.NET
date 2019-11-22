@@ -1,23 +1,24 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class HeapBool
     {
         private bool b;
+
         public bool value
         {
             get
             {
-                return this.b;
+                return b;
             }
             set
             {
-                this.b = value;
+                b = value;
             }
         }
+
         public HeapBool(bool initialValue)
         {
-            this.b = initialValue;
+            b = initialValue;
         }
     }
 }

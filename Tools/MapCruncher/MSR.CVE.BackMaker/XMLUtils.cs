@@ -1,7 +1,7 @@
-using System;
 using System.Drawing;
 using System.Globalization;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class XMLUtils
@@ -9,6 +9,7 @@ namespace MSR.CVE.BackMaker
         public const string sizeTag = "Size";
         private const string widthAttr = "Width";
         private const string heightAttr = "Height";
+
         public static Size ReadSize(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("Size");
@@ -16,6 +17,7 @@ namespace MSR.CVE.BackMaker
             xMLTagReader.SkipAllSubTags();
             return result;
         }
+
         public static void WriteSize(Size size, XmlTextWriter writer)
         {
             writer.WriteStartElement("Size");
@@ -23,12 +25,14 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString("Height", size.Height.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
         }
+
         public static void WriteStringXml(XmlTextWriter writer, string TagName, string value)
         {
             writer.WriteStartElement(TagName);
             writer.WriteString(value);
             writer.WriteEndElement();
         }
+
         public static string ReadStringXml(MashupParseContext context, string TagName)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(TagName);

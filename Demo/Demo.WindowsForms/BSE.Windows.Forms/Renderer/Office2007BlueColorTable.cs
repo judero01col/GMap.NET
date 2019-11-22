@@ -1,16 +1,15 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace BSE.Windows.Forms
 {
     /// <summary>
     /// Provides colors used for Microsoft Office 2007 blue display elements.
     /// </summary>
-    public class Office2007BlueColorTable : BSE.Windows.Forms.OfficeColorTable
+    public class Office2007BlueColorTable : OfficeColorTable
 	{
 		#region FieldsPrivate
-        private PanelColors m_panelColorTable;
+        private PanelColors _panelColorTable;
         #endregion
 
 		#region Properties
@@ -21,11 +20,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if (this.m_panelColorTable == null)
+                if (_panelColorTable == null)
                 {
-                    this.m_panelColorTable = new PanelColorsOffice2007Blue();
+                    _panelColorTable = new PanelColorsOffice2007Blue();
                 }
-                return this.m_panelColorTable;
+                return _panelColorTable;
             }
         }
 		#endregion
@@ -35,7 +34,7 @@ namespace BSE.Windows.Forms
         /// Unitializes a color dictionary with defined colors
         /// </summary>
         /// <param name="rgbTable">Dictionary with defined colors</param>
-        protected override void InitColors(Dictionary<ProfessionalColorTable.KnownColors, Color> rgbTable)
+        protected override void InitColors(Dictionary<KnownColors, Color> rgbTable)
         {
             rgbTable[KnownColors.ButtonPressedBorder] = Color.FromArgb(255, 189, 105);
             rgbTable[KnownColors.ButtonPressedGradientBegin] = Color.FromArgb(248, 181, 106);

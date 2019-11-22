@@ -1,38 +1,46 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     public class DirtyEvent
     {
         private DirtyListener eventList;
+
         public DirtyEvent()
         {
         }
+
         public DirtyEvent(DirtyEvent parentEvent)
         {
-            this.Add(parentEvent);
+            Add(parentEvent);
         }
+
         public void SetDirty()
         {
-            if (this.eventList != null)
+            if (eventList != null)
             {
-                this.eventList();
+                eventList();
             }
         }
+
         public void Add(DirtyListener listener)
         {
-            this.eventList = (DirtyListener)Delegate.Combine(this.eventList, listener);
+            eventList = (DirtyListener)Delegate.Combine(eventList, listener);
         }
+
         public void Add(DirtyEvent listener)
         {
-            this.Add(new DirtyListener(listener.SetDirty));
+            Add(listener.SetDirty);
         }
+
         public void Remove(DirtyListener listener)
         {
-            this.eventList = (DirtyListener)Delegate.Remove(this.eventList, listener);
+            eventList = (DirtyListener)Delegate.Remove(eventList, listener);
         }
+
         public void Remove(DirtyEvent listener)
         {
-            this.Remove(new DirtyListener(listener.SetDirty));
+            Remove(listener.SetDirty);
         }
     }
 }

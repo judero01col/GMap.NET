@@ -42,7 +42,7 @@ namespace BSE.Windows.Forms
         /// Initialize a color Dictionary with defined colors
         /// </summary>
         /// <param name="rgbTable">Dictionary with defined colors</param>
-        protected override void InitColors(Dictionary<PanelColors.KnownColors, Color> rgbTable)
+        protected override void InitColors(Dictionary<KnownColors, Color> rgbTable)
         {
             base.InitColors(rgbTable);
             rgbTable[KnownColors.BorderColor] = Color.FromArgb(76, 83, 92);

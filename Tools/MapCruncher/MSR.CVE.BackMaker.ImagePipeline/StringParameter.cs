@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class StringParameter : ImmutableParameter<string>
@@ -6,9 +5,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public StringParameter(string value) : base(value)
         {
         }
+
         public override void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(base.value);
+            hash.Accumulate(value);
         }
     }
 }

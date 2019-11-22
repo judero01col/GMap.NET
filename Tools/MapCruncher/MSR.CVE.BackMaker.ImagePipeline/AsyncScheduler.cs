@@ -1,21 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class AsyncScheduler : IDisposable
     {
         private MemoryCache asyncRecordCache;
         private QueuedTileProvider qtp;
+
         public AsyncScheduler(int numWorkerThreads, string debugName)
         {
-            this.asyncRecordCache = new AsyncRecordCache(debugName + "-Coalesce", false);
-            this.qtp = new QueuedTileProvider(numWorkerThreads, debugName);
+            asyncRecordCache = new AsyncRecordCache(debugName + "-Coalesce", false);
+            qtp = new QueuedTileProvider(numWorkerThreads, debugName);
         }
+
         public void Dispose()
         {
-            this.qtp.Dispose();
+            qtp.Dispose();
         }
+
         internal void Activate(LinkedList<AsyncRef> refs)
         {
             Monitor.Enter(this);
@@ -26,36 +30,38 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     if (current.asyncRecord.PrepareToQueue())
                     {
-                        current.asyncRecord.AddCallback(new AsyncRecord.CompleteCallback(this.EvictFromCache));
+                        current.asyncRecord.AddCallback(EvictFromCache);
                         list.Add(current.asyncRecord.GetQTPRef());
                     }
                 }
-                this.qtp.enqueueTileRequests(list.ToArray());
-                D.Sayf(10, "PriQueue: {0}", new object[]
-                {
-                    this.qtp
-                });
+
+                qtp.enqueueTileRequests(list.ToArray());
+                D.Sayf(10, "PriQueue: {0}", new object[] {qtp});
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         internal MemoryCache GetCache()
         {
-            return this.asyncRecordCache;
+            return asyncRecordCache;
         }
+
         internal void EvictFromCache(AsyncRef aref)
         {
-            this.asyncRecordCache.Evict(aref.asyncRecord.cacheKeyToEvict);
+            asyncRecordCache.Evict(aref.asyncRecord.cacheKeyToEvict);
         }
+
         internal void ChangePriority(AsyncRef asyncRef)
         {
-            this.qtp.ChangePriority(asyncRef);
+            qtp.ChangePriority(asyncRef);
         }
+
         public void Clear()
         {
-            this.qtp.Clear();
+            qtp.Clear();
         }
     }
 }

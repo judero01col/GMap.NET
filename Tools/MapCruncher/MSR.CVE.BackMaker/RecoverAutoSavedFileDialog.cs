@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class RecoverAutoSavedFileDialog : Form
@@ -13,10 +14,12 @@ namespace MSR.CVE.BackMaker
         private Button deleteBackupButton;
         private Button cancelButton;
         private NotifyIcon notifyIcon1;
+
         public RecoverAutoSavedFileDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
         public void Initialize(string filename)
         {
             List<string> list = new List<string>();
@@ -25,89 +28,95 @@ namespace MSR.CVE.BackMaker
             list.Add("    open it as a new mashup,");
             list.Add("    delete it and continue opening the original file, or");
             list.Add("    cancel the open operation.");
-            this.message.Lines = list.ToArray();
-            this.message.SelectionStart = 0;
-            this.message.SelectionLength = 0;
+            message.Lines = list.ToArray();
+            message.SelectionStart = 0;
+            message.SelectionLength = 0;
         }
+
         private void openAsNewButton_Click(object sender, EventArgs e)
         {
-            base.DialogResult = DialogResult.Yes;
-            base.Close();
+            DialogResult = DialogResult.Yes;
+            Close();
         }
+
         private void deleteBackupButton_Click(object sender, EventArgs e)
         {
-            base.DialogResult = DialogResult.Ignore;
-            base.Close();
+            DialogResult = DialogResult.Ignore;
+            Close();
         }
+
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            base.DialogResult = DialogResult.Cancel;
-            base.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
-            this.components = new Container();
-            this.message = new TextBox();
-            this.openAsNewButton = new Button();
-            this.deleteBackupButton = new Button();
-            this.cancelButton = new Button();
-            this.notifyIcon1 = new NotifyIcon(this.components);
-            base.SuspendLayout();
-            this.message.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
-            this.message.BorderStyle = BorderStyle.None;
-            this.message.Font = new Font("Microsoft Sans Serif", 9f, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.message.Location = new Point(8, 7);
-            this.message.Multiline = true;
-            this.message.Name = "message";
-            this.message.ReadOnly = true;
-            this.message.Size = new Size(376, 173);
-            this.message.TabIndex = 0;
-            this.message.Text = "Example text";
-            this.openAsNewButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
-            this.openAsNewButton.Location = new Point(20, 218);
-            this.openAsNewButton.Name = "openAsNewButton";
-            this.openAsNewButton.Size = new Size(130, 29);
-            this.openAsNewButton.TabIndex = 1;
-            this.openAsNewButton.Text = "Open Backup as New";
-            this.openAsNewButton.UseVisualStyleBackColor = true;
-            this.openAsNewButton.Click += new EventHandler(this.openAsNewButton_Click);
-            this.deleteBackupButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
-            this.deleteBackupButton.Location = new Point(156, 218);
-            this.deleteBackupButton.Name = "deleteBackupButton";
-            this.deleteBackupButton.Size = new Size(107, 29);
-            this.deleteBackupButton.TabIndex = 1;
-            this.deleteBackupButton.Text = "Delete Backup";
-            this.deleteBackupButton.UseVisualStyleBackColor = true;
-            this.deleteBackupButton.Click += new EventHandler(this.deleteBackupButton_Click);
-            this.cancelButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
-            this.cancelButton.Location = new Point(269, 218);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new Size(107, 29);
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new EventHandler(this.cancelButton_Click);
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            base.AutoScaleDimensions = new SizeF(6f, 13f);
-            base.AutoScaleMode = AutoScaleMode.Font;
-            base.ClientSize = new Size(391, 266);
-            base.Controls.Add(this.cancelButton);
-            base.Controls.Add(this.deleteBackupButton);
-            base.Controls.Add(this.openAsNewButton);
-            base.Controls.Add(this.message);
-            base.Name = "RecoverAutoSavedFileDialog";
-            this.Text = "Recover automatically-saved backup file";
-            base.ResumeLayout(false);
-            base.PerformLayout();
+            components = new Container();
+            message = new TextBox();
+            openAsNewButton = new Button();
+            deleteBackupButton = new Button();
+            cancelButton = new Button();
+            notifyIcon1 = new NotifyIcon(components);
+            SuspendLayout();
+            message.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            message.BorderStyle = BorderStyle.None;
+            message.Font = new Font("Microsoft Sans Serif", 9f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            message.Location = new Point(8, 7);
+            message.Multiline = true;
+            message.Name = "message";
+            message.ReadOnly = true;
+            message.Size = new Size(376, 173);
+            message.TabIndex = 0;
+            message.Text = "Example text";
+            openAsNewButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            openAsNewButton.Location = new Point(20, 218);
+            openAsNewButton.Name = "openAsNewButton";
+            openAsNewButton.Size = new Size(130, 29);
+            openAsNewButton.TabIndex = 1;
+            openAsNewButton.Text = "Open Backup as New";
+            openAsNewButton.UseVisualStyleBackColor = true;
+            openAsNewButton.Click += openAsNewButton_Click;
+            deleteBackupButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            deleteBackupButton.Location = new Point(156, 218);
+            deleteBackupButton.Name = "deleteBackupButton";
+            deleteBackupButton.Size = new Size(107, 29);
+            deleteBackupButton.TabIndex = 1;
+            deleteBackupButton.Text = "Delete Backup";
+            deleteBackupButton.UseVisualStyleBackColor = true;
+            deleteBackupButton.Click += deleteBackupButton_Click;
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            cancelButton.Location = new Point(269, 218);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(107, 29);
+            cancelButton.TabIndex = 1;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
+            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Visible = true;
+            AutoScaleDimensions = new SizeF(6f, 13f);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(391, 266);
+            Controls.Add(cancelButton);
+            Controls.Add(deleteBackupButton);
+            Controls.Add(openAsNewButton);
+            Controls.Add(message);
+            Name = "RecoverAutoSavedFileDialog";
+            Text = "Recover automatically-saved backup file";
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

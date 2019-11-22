@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class MashupWriteContext
@@ -8,30 +8,35 @@ namespace MSR.CVE.BackMaker
         private XmlTextWriter _writer;
         private Dictionary<object, string> identityMap = new Dictionary<object, string>();
         private int nextId;
+
         public XmlTextWriter writer
         {
             get
             {
-                return this._writer;
+                return _writer;
             }
         }
+
         public MashupWriteContext(XmlTextWriter writer)
         {
-            this._writer = writer;
+            _writer = writer;
         }
+
         public void WriteIdentityAttr(object target)
         {
-            this.writer.WriteAttributeString("id", this.GetIdentity(target));
+            writer.WriteAttributeString("id", GetIdentity(target));
         }
+
         public string GetIdentity(object target)
         {
-            if (this.identityMap.ContainsKey(target))
+            if (identityMap.ContainsKey(target))
             {
-                return this.identityMap[target];
+                return identityMap[target];
             }
-            string text = this.nextId.ToString();
-            this.nextId++;
-            this.identityMap[target] = text;
+
+            string text = nextId.ToString();
+            nextId++;
+            identityMap[target] = text;
             return text;
         }
     }

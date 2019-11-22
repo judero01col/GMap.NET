@@ -1,32 +1,35 @@
-using MSR.CVE.BackMaker;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker;
+
 namespace BackMaker
 {
     public class ProgramInstance
     {
-        public const int badArgs = 1;
-        private const int badConfiguration = 2;
-        private RemoteFoxitServer remoteFoxitServer;
-        private bool renderOnLaunch;
-        private string startDocumentPath;
-        private static int applicationResultCode;
+        public const int BadArgs = 1;
+        private const int BadConfiguration = 2;
+        private RemoteFoxitServer _remoteFoxitServer;
+        private bool _renderOnLaunch;
+        private string _startDocumentPath;
+        private static int _applicationResultCode;
+
         private void ParseArgs(string[] argsArray)
         {
-            List<string> list = new List<string>(argsArray);
+            var list = new List<string>(argsArray);
             while (list.Count > 0)
             {
                 if (list[0] == "-?" || list[0] == "/?" || list[0] == "--help" || list[0] == "-h")
                 {
                     throw new UsageException();
                 }
+
                 if (list[0][0] == '-')
                 {
                     if (list[0] == "-render")
                     {
-                        this.renderOnLaunch = true;
+                        _renderOnLaunch = true;
                         list.RemoveAt(0);
                     }
                     else
@@ -35,18 +38,20 @@ namespace BackMaker
                         {
                             throw new Exception(string.Format("Unrecognized flag {0}", list[0]));
                         }
-                        this.remoteFoxitServer = new RemoteFoxitServer();
+
+                        _remoteFoxitServer = new RemoteFoxitServer();
                         list.RemoveAt(0);
-                        this.remoteFoxitServer.ConsumeArgs(list);
+                        _remoteFoxitServer.ConsumeArgs(list);
                     }
                 }
                 else
                 {
-                    this.startDocumentPath = list[0];
+                    _startDocumentPath = list[0];
                     list.RemoveAt(0);
                 }
             }
         }
+
         public int Main(string[] args)
         {
             Thread.CurrentThread.Name = "Main";
@@ -54,22 +59,24 @@ namespace BackMaker
             MainAppForm mainAppForm = null;
             try
             {
-                this.ParseArgs(args);
+                ParseArgs(args);
                 try
                 {
                     BuildConfig.Initialize();
                     if (BuildConfig.theConfig.buildConfiguration == "Broken")
                     {
-                        throw new ConfigurationException("MapCruncher configuration is broken. Please reinstall MapCruncher.");
+                        throw new ConfigurationException(
+                            "MapCruncher configuration is broken. Please reinstall MapCruncher.");
                     }
 
-                    if (this.remoteFoxitServer != null)
+                    if (_remoteFoxitServer != null)
                     {
-                        int result = this.remoteFoxitServer.Run();
+                        int result = _remoteFoxitServer.Run();
                         return result;
                     }
+
                     Application.EnableVisualStyles();
-                    mainAppForm = new MainAppForm(this.startDocumentPath, this.renderOnLaunch);
+                    mainAppForm = new MainAppForm(_startDocumentPath, _renderOnLaunch);
                     mainAppForm.StartUpApplication();
                 }
                 catch (ConfigurationException ex)
@@ -79,6 +86,7 @@ namespace BackMaker
                     int result = 2;
                     return result;
                 }
+
                 Application.Run(mainAppForm);
             }
             finally
@@ -89,11 +97,13 @@ namespace BackMaker
                     mainAppForm.UndoConstruction();
                 }
             }
-            return ProgramInstance.applicationResultCode;
+
+            return _applicationResultCode;
         }
+
         public static void SetApplicationResultCode(int rc)
         {
-            ProgramInstance.applicationResultCode = rc;
+            _applicationResultCode = rc;
         }
     }
 }

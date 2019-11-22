@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class UIPositionManager : PositionUpdateIfc
@@ -10,93 +9,108 @@ namespace MSR.CVE.BackMaker
         private MapPosition _smPos;
         private MapPosition _vePos;
         private MapPosition slavedPos;
+
         public UIPositionManager(ViewerControl smViewer, ViewerControl veViewer)
         {
-            this._smPos = new MapPosition(this);
-            this._vePos = new MapPosition(this);
-            smViewer.Initialize(new MapPositionDelegate(this.GetSMPos), "Source Map Position");
-            veViewer.Initialize(new MapPositionDelegate(this.GetVEPos), "Virtual Earth Position");
-            this.smUpdate = smViewer;
-            this.veUpdate = veViewer;
-            this.slaved = false;
+            _smPos = new MapPosition(this);
+            _vePos = new MapPosition(this);
+            smViewer.Initialize(GetSMPos, "Source Map Position");
+            veViewer.Initialize(GetVEPos, "Virtual Earth Position");
+            smUpdate = smViewer;
+            veUpdate = veViewer;
+            slaved = false;
         }
+
         public void SetPositionMemory(PositionMemoryIfc positionMemory)
         {
             this.positionMemory = positionMemory;
         }
+
         public MapPosition GetSMPos()
         {
-            if (this.slaved)
+            if (slaved)
             {
-                return this.slavedPos;
+                return slavedPos;
             }
-            return this._smPos;
+
+            return _smPos;
         }
+
         public MapPosition GetVEPos()
         {
-            if (this.slaved)
+            if (slaved)
             {
-                return this.slavedPos;
+                return slavedPos;
             }
-            return this._vePos;
+
+            return _vePos;
         }
+
         private void UpdatePositions()
         {
-            this.smUpdate.PositionUpdated(this.GetSMPos().llz);
-            this.veUpdate.PositionUpdated(this.GetVEPos().llz);
+            smUpdate.PositionUpdated(GetSMPos().llz);
+            veUpdate.PositionUpdated(GetVEPos().llz);
         }
+
         public void switchSlaved()
         {
-            this.slaved = true;
-            if (this._vePos != null)
+            slaved = true;
+            if (_vePos != null)
             {
-                this.slavedPos = new MapPosition(this._vePos, this);
+                slavedPos = new MapPosition(_vePos, this);
             }
             else
             {
-                this.slavedPos = new MapPosition(this);
+                slavedPos = new MapPosition(this);
             }
-            this._smPos = null;
-            this._vePos = null;
-            this.UpdatePositions();
+
+            _smPos = null;
+            _vePos = null;
+            UpdatePositions();
         }
+
         public void switchFree()
         {
-            this.slaved = false;
+            slaved = false;
             MapPosition prototype;
-            if (this.slavedPos != null)
+            if (slavedPos != null)
             {
-                prototype = this.slavedPos;
+                prototype = slavedPos;
             }
             else
             {
                 prototype = new MapPosition(null);
             }
-            this._vePos = new MapPosition(prototype, this);
-            this._smPos = new MapPosition(prototype, this);
-            this.slavedPos = null;
-            this.UpdatePositions();
+
+            _vePos = new MapPosition(prototype, this);
+            _smPos = new MapPosition(prototype, this);
+            slavedPos = null;
+            UpdatePositions();
         }
+
         public void PositionUpdated(LatLonZoom llz)
         {
-            this.PositionUpdated();
+            PositionUpdated();
         }
+
         public void ForceInteractiveUpdate()
         {
-            this.smUpdate.ForceInteractiveUpdate();
-            this.veUpdate.ForceInteractiveUpdate();
+            smUpdate.ForceInteractiveUpdate();
+            veUpdate.ForceInteractiveUpdate();
         }
+
         internal void PositionUpdated()
         {
-            this.UpdatePositions();
-            if (this.positionMemory != null)
+            UpdatePositions();
+            if (positionMemory != null)
             {
-                if (this.slaved)
+                if (slaved)
                 {
-                    this.positionMemory.NotePositionLocked(this.GetVEPos());
+                    positionMemory.NotePositionLocked(GetVEPos());
                     return;
                 }
-                this.positionMemory.NotePositionUnlocked(this.GetSMPos().llz, this.GetVEPos());
+
+                positionMemory.NotePositionUnlocked(GetSMPos().llz, GetVEPos());
             }
         }
     }

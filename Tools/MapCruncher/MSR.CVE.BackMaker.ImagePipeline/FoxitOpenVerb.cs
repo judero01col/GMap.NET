@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class FoxitOpenVerb : Verb
@@ -17,12 +18,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 result = new PresentFailureCode(ex);
             }
+
             return result;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FoxitOpenVerb");
         }
+
         public string GetRendererName()
         {
             return "FoxIt";

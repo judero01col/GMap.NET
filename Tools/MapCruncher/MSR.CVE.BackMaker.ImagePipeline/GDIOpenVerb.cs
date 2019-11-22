@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class GDIOpenVerb : Verb
@@ -18,16 +19,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 result = new PresentFailureCode(ex);
             }
+
             return result;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("GDIOpenVerb");
         }
+
         public string GetRendererName()
         {
             return "GDI";
         }
+
         public string GetRendererCredit()
         {
             return null;

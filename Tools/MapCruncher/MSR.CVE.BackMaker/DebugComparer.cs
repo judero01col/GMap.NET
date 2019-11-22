@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+
 namespace MSR.CVE.BackMaker
 {
     public class DebugComparer<T> : IEqualityComparer<T>
@@ -8,6 +8,7 @@ namespace MSR.CVE.BackMaker
         {
             return x.Equals(y);
         }
+
         public int GetHashCode(T obj)
         {
             return obj.GetHashCode();

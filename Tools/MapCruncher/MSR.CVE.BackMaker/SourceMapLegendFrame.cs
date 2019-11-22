@@ -4,11 +4,13 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     internal class SourceMapLegendFrame
     {
         public delegate ThumbnailRecord ThumbnailDelegate();
+
         private const string filenameAttr = "Filename";
         private const string urlAttr = "URL";
         private const string widthAttr = "Width";
@@ -19,93 +21,116 @@ namespace MSR.CVE.BackMaker
         private string displayName;
         private SourceMapInfo sourceMapInfo;
         private List<LegendRecord> legendRecords;
-        private SourceMapLegendFrame.ThumbnailDelegate thumbnailDelegate;
+        private ThumbnailDelegate thumbnailDelegate;
+
         public Size size
         {
             get
             {
-                if (this.useLoadedSize)
+                if (useLoadedSize)
                 {
-                    return this.loadedSize;
+                    return loadedSize;
                 }
+
                 Size result = new Size(250, 50);
-                foreach (LegendRecord current in this.legendRecords)
+                foreach (LegendRecord current in legendRecords)
                 {
                     result.Width = Math.Max(result.Width, current.imageDimensions.Width);
                     result.Height += current.imageDimensions.Height;
                 }
-                ThumbnailRecord thumbnailRecord = this.thumbnailDelegate();
+
+                ThumbnailRecord thumbnailRecord = thumbnailDelegate();
                 if (thumbnailRecord != null)
                 {
                     result.Width = Math.Max(result.Width, thumbnailRecord.size.Width);
                     result.Height += thumbnailRecord.size.Height;
                 }
+
                 return result;
             }
         }
-        public SourceMapLegendFrame(Layer layer, SourceMap sourceMap, List<LegendRecord> legendRecords, SourceMapLegendFrame.ThumbnailDelegate thumbnailDelegate)
+
+        public SourceMapLegendFrame(Layer layer, SourceMap sourceMap, List<LegendRecord> legendRecords,
+            ThumbnailDelegate thumbnailDelegate)
         {
-            this.filename = RenderState.ForceValidFilename(string.Format("SourceMap_{0}_{1}.html", layer.displayName, sourceMap.displayName));
-            this.displayName = sourceMap.displayName;
-            this.sourceMapInfo = sourceMap.sourceMapInfo;
+            filename = RenderState.ForceValidFilename(string.Format("SourceMap_{0}_{1}.html",
+                layer.displayName,
+                sourceMap.displayName));
+            displayName = sourceMap.displayName;
+            sourceMapInfo = sourceMap.sourceMapInfo;
             this.legendRecords = legendRecords;
             this.thumbnailDelegate = thumbnailDelegate;
         }
+
         internal static string GetXMLTag()
         {
             return "SourceMapLegendFrame";
         }
+
         public SourceMapLegendFrame(MashupParseContext context)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(SourceMapLegendFrame.GetXMLTag());
-            this.filename = context.GetRequiredAttribute("Filename");
-            this.loadedSize.Width = context.GetRequiredAttributeInt("Width");
-            this.loadedSize.Height = context.GetRequiredAttributeInt("Height");
-            this.useLoadedSize = true;
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            filename = context.GetRequiredAttribute("Filename");
+            loadedSize.Width = context.GetRequiredAttributeInt("Width");
+            loadedSize.Height = context.GetRequiredAttributeInt("Height");
+            useLoadedSize = true;
             xMLTagReader.SkipAllSubTags();
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(SourceMapLegendFrame.GetXMLTag());
-            writer.WriteAttributeString("Filename", this.filename);
-            writer.WriteAttributeString("URL", this.GetURL());
-            writer.WriteAttributeString("Width", this.size.Width.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("Height", this.size.Height.ToString(CultureInfo.InvariantCulture));
+            writer.WriteStartElement(GetXMLTag());
+            writer.WriteAttributeString("Filename", filename);
+            writer.WriteAttributeString("URL", GetURL());
+            writer.WriteAttributeString("Width", size.Width.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Height", size.Height.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
         }
+
         private string GetURL()
         {
-            return string.Format("{0}/{1}", "legends", this.filename);
+            return string.Format("{0}/{1}", "legends", filename);
         }
+
         public void WriteSourceMapLegendFrame(RenderOutputMethod renderOutput)
         {
-            Stream stream = renderOutput.MakeChildMethod("legends").CreateFile(this.filename, "text/html");
+            Stream stream = renderOutput.MakeChildMethod("legends").CreateFile(filename, "text/html");
             StreamWriter streamWriter = new StreamWriter(stream);
             streamWriter.WriteLine("<html>");
-            streamWriter.WriteLine(string.Format("<head><title>{0}</title></head>", this.displayName));
+            streamWriter.WriteLine(string.Format("<head><title>{0}</title></head>", displayName));
             streamWriter.WriteLine("<body>");
-            streamWriter.WriteLine(string.Format("<h3>{0}</h3>", this.displayName));
-            ThumbnailRecord thumbnailRecord = this.thumbnailDelegate();
+            streamWriter.WriteLine(string.Format("<h3>{0}</h3>", displayName));
+            ThumbnailRecord thumbnailRecord = thumbnailDelegate();
             if (thumbnailRecord != null)
             {
                 streamWriter.WriteLine(thumbnailRecord.WriteImgTag("../"));
             }
-            if (this.sourceMapInfo.mapFileURL != "")
+
+            if (sourceMapInfo.mapFileURL != "")
             {
-                streamWriter.WriteLine(string.Format("<br>Map URL: <a href=\"{0}\">{0}</a>", this.sourceMapInfo.mapFileURL));
+                streamWriter.WriteLine(string.Format("<br>Map URL: <a href=\"{0}\">{0}</a>",
+                    sourceMapInfo.mapFileURL));
             }
-            if (this.sourceMapInfo.mapHomePage != "")
+
+            if (sourceMapInfo.mapHomePage != "")
             {
-                streamWriter.WriteLine(string.Format("<br>Map Home Page: <a href=\"{0}\">{0}</a>", this.sourceMapInfo.mapHomePage));
+                streamWriter.WriteLine(string.Format("<br>Map Home Page: <a href=\"{0}\">{0}</a>",
+                    sourceMapInfo.mapHomePage));
             }
-            if (this.sourceMapInfo.mapDescription != "")
+
+            if (sourceMapInfo.mapDescription != "")
             {
-                streamWriter.WriteLine(string.Format("<p>{0}</p>", this.sourceMapInfo.mapDescription));
+                streamWriter.WriteLine(string.Format("<p>{0}</p>", sourceMapInfo.mapDescription));
             }
-            foreach (LegendRecord current in this.legendRecords)
+
+            foreach (LegendRecord current in legendRecords)
             {
-                streamWriter.WriteLine(string.Format("<br><img src=\"{0}\" width=\"{1}\" height=\"{2}\">", current.urlSuffix, current.imageDimensions.Width, current.imageDimensions.Height));
+                streamWriter.WriteLine(string.Format("<br><img src=\"{0}\" width=\"{1}\" height=\"{2}\">",
+                    current.urlSuffix,
+                    current.imageDimensions.Width,
+                    current.imageDimensions.Height));
             }
+
             streamWriter.WriteLine("</body>");
             streamWriter.WriteLine("</html>");
             streamWriter.Close();

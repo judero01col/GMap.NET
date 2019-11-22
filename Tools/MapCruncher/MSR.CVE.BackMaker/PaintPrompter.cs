@@ -1,41 +1,52 @@
-using MSR.CVE.BackMaker.MCDebug;
-using System;
 using System.Threading;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     internal class PaintPrompter
     {
         private delegate void UpdateDelegate();
+
         private Control paintee;
-        private EventWaitHandle prompt = new CountedEventWaitHandle(false, EventResetMode.AutoReset, "PaintPrompter.prompt");
+
+        private EventWaitHandle prompt =
+            new CountedEventWaitHandle(false, EventResetMode.AutoReset, "PaintPrompter.prompt");
+
         private bool exit;
+
         public PaintPrompter(Control paintee)
         {
             this.paintee = paintee;
-            DebugThreadInterrupter.theInstance.AddThread("PaintPrompter", new ThreadStart(this.Run), ThreadPriority.Normal);
+            DebugThreadInterrupter.theInstance.AddThread("PaintPrompter",
+                Run,
+                ThreadPriority.Normal);
         }
+
         public void Dispose()
         {
-            this.exit = true;
-            this.Prompt();
+            exit = true;
+            Prompt();
         }
+
         public void Prompt()
         {
-            this.prompt.Set();
+            prompt.Set();
         }
+
         private void Run()
         {
             while (true)
             {
-                this.prompt.WaitOne();
-                if (this.exit)
+                prompt.WaitOne();
+                if (exit)
                 {
                     break;
                 }
-                this.paintee.Invalidate();
-                PaintPrompter.UpdateDelegate method = new PaintPrompter.UpdateDelegate(this.paintee.Update);
-                this.paintee.Invoke(method);
+
+                paintee.Invalidate();
+                UpdateDelegate method = paintee.Update;
+                paintee.Invoke(method);
             }
         }
     }

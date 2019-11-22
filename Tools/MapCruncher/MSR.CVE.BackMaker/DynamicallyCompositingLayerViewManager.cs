@@ -1,7 +1,7 @@
+using System.Drawing;
 using Jama;
 using MSR.CVE.BackMaker.ImagePipeline;
-using System;
-using System.Drawing;
+
 namespace MSR.CVE.BackMaker
 {
     internal class DynamicallyCompositingLayerViewManager : IViewManager
@@ -9,37 +9,42 @@ namespace MSR.CVE.BackMaker
         private Layer layer;
         private MapTileSourceFactory mapTileSourceFactory;
         private ViewControlIfc viewControl;
-        public DynamicallyCompositingLayerViewManager(Layer layer, MapTileSourceFactory mapTileSourceFactory, ViewControlIfc viewControl)
+
+        public DynamicallyCompositingLayerViewManager(Layer layer, MapTileSourceFactory mapTileSourceFactory,
+            ViewControlIfc viewControl)
         {
             this.layer = layer;
             this.mapTileSourceFactory = mapTileSourceFactory;
             this.viewControl = viewControl;
         }
+
         public void Activate()
         {
-            ViewerControlIfc sMViewerControl = this.viewControl.GetSMViewerControl();
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
-            foreach (SourceMap current in this.layer.GetBackToFront())
+            ViewerControlIfc sMViewerControl = viewControl.GetSMViewerControl();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
+            foreach (SourceMap current in layer.GetBackToFront())
             {
-                IDisplayableSource displayableSource = this.mapTileSourceFactory.CreateDisplayableWarpedSource(current);
+                IDisplayableSource displayableSource = mapTileSourceFactory.CreateDisplayableWarpedSource(current);
                 if (displayableSource != null)
                 {
                     sMViewerControl.AddLayer(displayableSource);
                 }
             }
-            uIPositionManager.SetPositionMemory(this.layer);
-            LayerView layerView = (LayerView)this.layer.lastView;
-            this.viewControl.GetUIPositionManager().switchSlaved();
+
+            uIPositionManager.SetPositionMemory(layer);
+            LayerView layerView = (LayerView)layer.lastView;
+            viewControl.GetUIPositionManager().switchSlaved();
             if (layerView != null)
             {
                 uIPositionManager.GetVEPos().setPosition(layerView.GetReferenceMapView());
                 uIPositionManager.GetVEPos().setStyle(layerView.GetReferenceMapView().style);
                 return;
             }
+
             MapRectangle mapRectangle = null;
             try
             {
-                mapRectangle = this.layer.GetUserBoundingBox(this.mapTileSourceFactory);
+                mapRectangle = layer.GetUserBoundingBox(mapTileSourceFactory);
             }
             catch (CorrespondencesAreSingularException)
             {
@@ -47,36 +52,41 @@ namespace MSR.CVE.BackMaker
             catch (InsufficientCorrespondencesException)
             {
             }
+
             LatLonZoom position;
             if (mapRectangle != null)
             {
                 Size size = new Size(600, 600);
-                position = this.viewControl.GetVEViewerControl().GetCoordinateSystem().GetBestViewContaining(mapRectangle, size);
+                position = viewControl.GetVEViewerControl().GetCoordinateSystem()
+                    .GetBestViewContaining(mapRectangle, size);
             }
             else
             {
-                position = this.viewControl.GetVEViewerControl().GetCoordinateSystem().GetDefaultView();
+                position = viewControl.GetVEViewerControl().GetCoordinateSystem().GetDefaultView();
             }
+
             uIPositionManager.GetVEPos().setPosition(position);
         }
+
         public void Dispose()
         {
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
             uIPositionManager.switchFree();
             uIPositionManager.SetPositionMemory(null);
             uIPositionManager.GetSMPos().setPosition(new LatLonZoom(0.0, 0.0, 0));
-            this.viewControl.GetSMViewerControl().ClearLayers();
-            this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
-            this.viewControl.GetSourceMapInfoPanel().Configure(null);
-            this.viewControl.GetSourceMapInfoPanel().Enabled = false;
-            this.viewControl.GetTransparencyPanel().Configure(null, null);
-            this.viewControl.GetTransparencyPanel().Enabled = false;
-            this.viewControl.setDisplayedRegistration(null);
-            this.viewControl.GetCachePackage().ClearSchedulers();
+            viewControl.GetSMViewerControl().ClearLayers();
+            viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
+            viewControl.GetSourceMapInfoPanel().Configure(null);
+            viewControl.GetSourceMapInfoPanel().Enabled = false;
+            viewControl.GetTransparencyPanel().Configure(null, null);
+            viewControl.GetTransparencyPanel().Enabled = false;
+            viewControl.setDisplayedRegistration(null);
+            viewControl.GetCachePackage().ClearSchedulers();
         }
+
         public object GetViewedObject()
         {
-            return this.layer;
+            return layer;
         }
     }
 }

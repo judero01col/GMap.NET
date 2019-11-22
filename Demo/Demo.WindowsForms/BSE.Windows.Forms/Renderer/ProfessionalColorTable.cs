@@ -1,12 +1,6 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms.VisualStyles;
-using System;
-using Microsoft.Win32;
-using System.IO;
 
 namespace BSE.Windows.Forms
 {
@@ -238,8 +232,8 @@ namespace BSE.Windows.Forms
 
         #region FieldsPrivate
 
-		private Dictionary<KnownColors, Color> m_dictionaryRGBTable;
-        private PanelColors m_panelColorTable;
+		private Dictionary<KnownColors, Color> _dictionaryRGBTable;
+        private PanelColors _panelColorTable;
 
 		#endregion
 
@@ -254,7 +248,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.ButtonPressedBorder);
+                return FromKnownColor(KnownColors.ButtonPressedBorder);
             }
         }
         /// <summary>
@@ -264,7 +258,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.ButtonPressedGradientBegin);
+                return FromKnownColor(KnownColors.ButtonPressedGradientBegin);
             }
         }
         /// <summary>
@@ -274,7 +268,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonPressedGradientEnd);
+				return FromKnownColor(KnownColors.ButtonPressedGradientEnd);
 			}
         }
         /// <summary>
@@ -284,7 +278,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-				return this.FromKnownColor(KnownColors.ButtonPressedGradientMiddle);
+				return FromKnownColor(KnownColors.ButtonPressedGradientMiddle);
             }
         }
         /// <summary>
@@ -294,7 +288,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonSelectedBorder);
+				return FromKnownColor(KnownColors.ButtonSelectedBorder);
 			}
         }
         /// <summary>
@@ -304,7 +298,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonSelectedGradientBegin);
+				return FromKnownColor(KnownColors.ButtonSelectedGradientBegin);
 			}
         }
         /// <summary>
@@ -314,7 +308,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonSelectedGradientEnd);
+				return FromKnownColor(KnownColors.ButtonSelectedGradientEnd);
 			}
         }
         /// <summary>
@@ -324,7 +318,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonSelectedGradientMiddle);
+				return FromKnownColor(KnownColors.ButtonSelectedGradientMiddle);
 			}
         }
 		
@@ -335,7 +329,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ButtonSelectedHighlightBorder);
+				return FromKnownColor(KnownColors.ButtonSelectedHighlightBorder);
 			}
         }
         /// <summary>
@@ -345,7 +339,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.CheckBackground);
+				return FromKnownColor(KnownColors.CheckBackground);
 			}
         }
 		/// <summary>
@@ -355,7 +349,7 @@ namespace BSE.Windows.Forms
 		{
 			get
 			{
-				return this.FromKnownColor(KnownColors.CheckSelectedBackground);
+				return FromKnownColor(KnownColors.CheckSelectedBackground);
 			}
 		}
         /// <summary>
@@ -365,7 +359,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.GripDark);
+				return FromKnownColor(KnownColors.GripDark);
 			}
         }
         /// <summary>
@@ -375,7 +369,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.GripLight);
+				return FromKnownColor(KnownColors.GripLight);
 			}
         }
         /// <summary>
@@ -385,7 +379,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ImageMarginGradientBegin);
+				return FromKnownColor(KnownColors.ImageMarginGradientBegin);
 			}
         }
         /// <summary>
@@ -395,7 +389,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuBorder);
+				return FromKnownColor(KnownColors.MenuBorder);
 			}
         }
         /// <summary>
@@ -405,7 +399,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemBorder);
+				return FromKnownColor(KnownColors.MenuItemBorder);
 			}
         }
         /// <summary>
@@ -415,7 +409,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemPressedGradientBegin);
+				return FromKnownColor(KnownColors.MenuItemPressedGradientBegin);
 			}
         }
         /// <summary>
@@ -425,7 +419,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemPressedGradientEnd);
+				return FromKnownColor(KnownColors.MenuItemPressedGradientEnd);
 			}
         }
         /// <summary>
@@ -435,7 +429,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemPressedGradientMiddle);
+				return FromKnownColor(KnownColors.MenuItemPressedGradientMiddle);
 			}
         }
 		/// <summary>
@@ -445,7 +439,7 @@ namespace BSE.Windows.Forms
 		{
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemSelected);
+				return FromKnownColor(KnownColors.MenuItemSelected);
 			}
 		}
 		/// <summary>
@@ -455,7 +449,7 @@ namespace BSE.Windows.Forms
 		{
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemText);
+				return FromKnownColor(KnownColors.MenuItemText);
 			}
 		}
         /// <summary>
@@ -466,7 +460,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.MenuItemTopLevelSelectedBorder);
+                return FromKnownColor(KnownColors.MenuItemTopLevelSelectedBorder);
             }
         }
         /// <summary>
@@ -477,7 +471,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientBegin);
+                return FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientBegin);
             }
         }
         /// <summary>
@@ -488,7 +482,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientEnd);
+                return FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientEnd);
             }
         }
         /// <summary>
@@ -499,7 +493,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientMiddle);
+                return FromKnownColor(KnownColors.MenuItemTopLevelSelectedGradientMiddle);
             }
         }
         /// <summary>
@@ -509,7 +503,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemSelectedGradientBegin);
+				return FromKnownColor(KnownColors.MenuItemSelectedGradientBegin);
 			}
         }
         /// <summary>
@@ -519,7 +513,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuItemSelectedGradientEnd);
+				return FromKnownColor(KnownColors.MenuItemSelectedGradientEnd);
 			}
         }
         /// <summary>
@@ -529,7 +523,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuStripGradientBegin);
+				return FromKnownColor(KnownColors.MenuStripGradientBegin);
 			}
         }
         /// <summary>
@@ -539,7 +533,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.MenuStripGradientEnd);
+				return FromKnownColor(KnownColors.MenuStripGradientEnd);
 			}
         }
         /// <summary>
@@ -549,7 +543,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-				return this.FromKnownColor(KnownColors.OverflowButtonGradientBegin);
+				return FromKnownColor(KnownColors.OverflowButtonGradientBegin);
             }
         }
         /// <summary>
@@ -559,7 +553,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-				return this.FromKnownColor(KnownColors.OverflowButtonGradientEnd);
+				return FromKnownColor(KnownColors.OverflowButtonGradientEnd);
             }
         }
         /// <summary>
@@ -569,7 +563,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.OverflowButtonGradientMiddle);
+				return FromKnownColor(KnownColors.OverflowButtonGradientMiddle);
 			}
         }
         /// <summary>
@@ -579,7 +573,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.RaftingContainerGradientBegin);
+				return FromKnownColor(KnownColors.RaftingContainerGradientBegin);
 			}
         }
         /// <summary>
@@ -589,7 +583,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.RaftingContainerGradientEnd);
+				return FromKnownColor(KnownColors.RaftingContainerGradientEnd);
 			}
         }
         /// <summary>
@@ -599,7 +593,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.SeparatorDark);
+				return FromKnownColor(KnownColors.SeparatorDark);
 			}
         }
         /// <summary>
@@ -609,7 +603,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.SeparatorLight);
+				return FromKnownColor(KnownColors.SeparatorLight);
 			}
         }
         /// <summary>
@@ -619,7 +613,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.StatusStripGradientBegin);
+				return FromKnownColor(KnownColors.StatusStripGradientBegin);
 			}
         }
         /// <summary>
@@ -629,7 +623,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.StatusStripGradientEnd);
+				return FromKnownColor(KnownColors.StatusStripGradientEnd);
 			}
         }
 		/// <summary>
@@ -639,7 +633,7 @@ namespace BSE.Windows.Forms
 		{
 			get
 			{
-				return this.FromKnownColor(KnownColors.StatusStripText);
+				return FromKnownColor(KnownColors.StatusStripText);
 			}
 		}
         /// <summary>
@@ -649,7 +643,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripBorder);
+				return FromKnownColor(KnownColors.ToolStripBorder);
 			}
         }
         /// <summary>
@@ -659,7 +653,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripContentPanelGradientBegin);
+				return FromKnownColor(KnownColors.ToolStripContentPanelGradientBegin);
 			}
         }
         /// <summary>
@@ -669,7 +663,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripContentPanelGradientEnd);
+				return FromKnownColor(KnownColors.ToolStripContentPanelGradientEnd);
 			}
         }
         /// <summary>
@@ -679,7 +673,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripDropDownBackground);
+				return FromKnownColor(KnownColors.ToolStripDropDownBackground);
 			}
         }
         /// <summary>
@@ -689,7 +683,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripGradientBegin);
+				return FromKnownColor(KnownColors.ToolStripGradientBegin);
 			}
         }
         /// <summary>
@@ -699,7 +693,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripGradientEnd);
+				return FromKnownColor(KnownColors.ToolStripGradientEnd);
 			}
         }
         /// <summary>
@@ -709,7 +703,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripGradientMiddle);
+				return FromKnownColor(KnownColors.ToolStripGradientMiddle);
 			}
         }
         /// <summary>
@@ -719,7 +713,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripPanelGradientBegin);
+				return FromKnownColor(KnownColors.ToolStripPanelGradientBegin);
 			}
         }
         /// <summary>
@@ -729,7 +723,7 @@ namespace BSE.Windows.Forms
         {
 			get
 			{
-				return this.FromKnownColor(KnownColors.ToolStripPanelGradientEnd);
+				return FromKnownColor(KnownColors.ToolStripPanelGradientEnd);
 			}
         }
         /// <summary>
@@ -739,7 +733,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.FromKnownColor(KnownColors.ToolStripText);
+                return FromKnownColor(KnownColors.ToolStripText);
             }
         }
         /// <summary>
@@ -749,11 +743,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if (this.m_panelColorTable == null)
+                if (_panelColorTable == null)
                 {
-                    this.m_panelColorTable = new PanelColors();
+                    _panelColorTable = new PanelColors();
                 }
-                return this.m_panelColorTable;
+                return _panelColorTable;
             }
         }
         /// <summary>
@@ -767,48 +761,42 @@ namespace BSE.Windows.Forms
                 if (value.Equals(base.UseSystemColors) == false)
                 {
                     base.UseSystemColors = value;
-                    if (this.m_dictionaryRGBTable != null)
+                    if (_dictionaryRGBTable != null)
                     {
-                        this.m_dictionaryRGBTable.Clear();
-                        this.m_dictionaryRGBTable = null;
+                        _dictionaryRGBTable.Clear();
+                        _dictionaryRGBTable = null;
                     }
                 }
             }
         }
         internal Color FromKnownColor(KnownColors color)
         {
-			return (Color)this.ColorTable[color];
+			return ColorTable[color];
         }
         
         private Dictionary<KnownColors, Color> ColorTable
         {
 			get
 			{
-				if (this.m_dictionaryRGBTable == null)
+				if (_dictionaryRGBTable == null)
 				{
-					this.m_dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
-					if ((this.UseSystemColors == true) || (ToolStripManager.VisualStylesEnabled == false))
+					_dictionaryRGBTable = new Dictionary<KnownColors, Color>(0xd4);
+					if (UseSystemColors || (ToolStripManager.VisualStylesEnabled == false))
 					{
-						InitBaseColors(this.m_dictionaryRGBTable);
+						InitBaseColors(_dictionaryRGBTable);
 					}
 					else
 					{
-						InitColors(this.m_dictionaryRGBTable);
+						InitColors(_dictionaryRGBTable);
 					}
 				}
-				return this.m_dictionaryRGBTable;
+				return _dictionaryRGBTable;
 			}
         }
 
 		#endregion
 
 		#region MethodsPublic
-		/// <summary>
-        /// Initializes a new instance of the ProfessionalColorTable class.
-        /// </summary>
-        public ProfessionalColorTable()
-        {
-        }
 
         #endregion
 

@@ -53,13 +53,13 @@ namespace Demo.WindowsForms.CustomMarkers
 
       public override void OnRender(Graphics g)
       {
-         int R = (int)((Radius) / Overlay.Control.MapProvider.Projection.GetGroundResolution((int)Overlay.Control.Zoom, Position.Lat)) * 2;
+         int r = (int)((Radius) / Overlay.Control.MapProvider.Projection.GetGroundResolution((int)Overlay.Control.Zoom, Position.Lat)) * 2;
 
          if(IsFilled)
          {
-            g.FillEllipse(Fill, new System.Drawing.Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
+            g.FillEllipse(Fill, new Rectangle(LocalPosition.X - r / 2, LocalPosition.Y - r / 2, r, r));
          }
-         g.DrawEllipse(Stroke, new System.Drawing.Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
+         g.DrawEllipse(Stroke, new Rectangle(LocalPosition.X - r / 2, LocalPosition.Y - r / 2, r, r));
       }
 
       public override void Dispose()

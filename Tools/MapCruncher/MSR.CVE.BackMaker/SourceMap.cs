@@ -1,14 +1,17 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
-    public class SourceMap : IDisposable, HasDisplayNameIfc, ReadyToLockIfc, PositionMemoryIfc, IRobustlyHashable, ExpandedMemoryIfc, LastViewIfc
+    public class SourceMap : IDisposable, HasDisplayNameIfc, ReadyToLockIfc, PositionMemoryIfc, IRobustlyHashable,
+        ExpandedMemoryIfc, LastViewIfc
     {
         public delegate string GetFilenameContext();
+
         private const string SourceMapTag = "SourceMap";
         private const string SourceMapFilenameAttribute = "SourceMapFilename";
         private const string SourceMapDisplayNameAttr = "DisplayName";
@@ -26,7 +29,7 @@ namespace MSR.CVE.BackMaker
         private const string ZoomAttr = "Zoom";
         private GeneralDocumentFuture _documentFuture;
         private string _displayName;
-        private SourceMap.GetFilenameContext filenameContextDelegate;
+        private GetFilenameContext filenameContextDelegate;
         private SourceMapInfo _sourceMapInfo;
         private SourceMapRenderOptions _sourceMapRenderOptions;
         private TransparencyOptions _transparencyOptions;
@@ -41,156 +44,176 @@ namespace MSR.CVE.BackMaker
         public LatLonZoom referenceSnap = LatLonZoom.World();
         public int sourceSnapZoom = 1;
         public int referenceSnapZoom = 1;
+
         public RenderRegion renderRegion
         {
             get
             {
-                return this.latentRegionHolder.renderRegion;
+                return latentRegionHolder.renderRegion;
             }
             set
             {
-                this.latentRegionHolder.renderRegion = value;
+                latentRegionHolder.renderRegion = value;
             }
         }
+
         public bool expanded
         {
             get
             {
-                return this._expanded;
+                return _expanded;
             }
             set
             {
-                this._expanded = value;
+                _expanded = value;
             }
         }
+
         public GeneralDocumentFuture documentFuture
         {
             get
             {
-                return this._documentFuture;
+                return _documentFuture;
             }
         }
+
         public string displayName
         {
             get
             {
-                return this._displayName;
+                return _displayName;
             }
             set
             {
-                this._displayName = value;
-                this.dirtyEvent.SetDirty();
+                _displayName = value;
+                dirtyEvent.SetDirty();
             }
         }
+
         public SourceMapInfo sourceMapInfo
         {
             get
             {
-                return this._sourceMapInfo;
+                return _sourceMapInfo;
             }
         }
+
         public SourceMapRenderOptions sourceMapRenderOptions
         {
             get
             {
-                return this._sourceMapRenderOptions;
+                return _sourceMapRenderOptions;
             }
         }
+
         public TransparencyOptions transparencyOptions
         {
             get
             {
-                return this._transparencyOptions;
+                return _transparencyOptions;
             }
         }
+
         public ICurrentView lastView
         {
             get
             {
-                return this._lastView;
+                return _lastView;
             }
         }
-        public SourceMap(IDocumentFuture documentDescriptor, SourceMap.GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
+
+        public SourceMap(IDocumentFuture documentDescriptor, GetFilenameContext filenameContextDelegate,
+            DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
-            this.readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
-            this._documentFuture = new GeneralDocumentFuture(documentDescriptor);
-            this._displayName = documentDescriptor.GetDefaultDisplayName();
+            dirtyEvent = new DirtyEvent(parentDirty);
+            readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
+            _documentFuture = new GeneralDocumentFuture(documentDescriptor);
+            _displayName = documentDescriptor.GetDefaultDisplayName();
             this.filenameContextDelegate = filenameContextDelegate;
-            this._sourceMapInfo = new SourceMapInfo(this.dirtyEvent);
-            this._sourceMapRenderOptions = new SourceMapRenderOptions(this.dirtyEvent);
-            this._transparencyOptions = new TransparencyOptions(this.dirtyEvent);
-            this.registration = new RegistrationDefinition(this.dirtyEvent);
-            this.registration.dirtyEvent.Add(this.readyToLockChangedEvent);
-            this.latentRegionHolder = new LatentRegionHolder(this.dirtyEvent, this.readyToLockChangedEvent);
-            this.legendList = new LegendList(this, this.dirtyEvent, this.readyToLockChangedEvent);
-            this.renderRegion = null;
+            _sourceMapInfo = new SourceMapInfo(dirtyEvent);
+            _sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
+            _transparencyOptions = new TransparencyOptions(dirtyEvent);
+            registration = new RegistrationDefinition(dirtyEvent);
+            registration.dirtyEvent.Add(readyToLockChangedEvent);
+            latentRegionHolder = new LatentRegionHolder(dirtyEvent, readyToLockChangedEvent);
+            legendList = new LegendList(this, dirtyEvent, readyToLockChangedEvent);
+            renderRegion = null;
         }
+
         public string GetDisplayName()
         {
-            return this.displayName;
+            return displayName;
         }
+
         public void SetDisplayName(string value)
         {
-            this.displayName = value;
+            displayName = value;
         }
+
         public RenderRegion GetUserRegion()
         {
-            return this.renderRegion;
+            return renderRegion;
         }
+
         public void Dispose()
         {
         }
+
         public static string GetXMLTag()
         {
             return "SourceMap";
         }
+
         public void WriteXML(MashupWriteContext wc)
         {
-            XmlTextWriter writer = wc.writer;
+            var writer = wc.writer;
             writer.WriteStartElement("SourceMap");
-            writer.WriteAttributeString("DisplayName", this.displayName);
-            writer.WriteAttributeString("Expanded", this._expanded.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("DisplayName", displayName);
+            writer.WriteAttributeString("Expanded", _expanded.ToString(CultureInfo.InvariantCulture));
             wc.WriteIdentityAttr(this);
-            this._documentFuture.WriteXML(wc, this.filenameContextDelegate());
-            this._sourceMapInfo.WriteXML(writer);
-            this._sourceMapRenderOptions.WriteXML(writer);
-            this._transparencyOptions.WriteXML(writer);
-            if (this._lastView != null)
+            _documentFuture.WriteXML(wc, filenameContextDelegate());
+            _sourceMapInfo.WriteXML(writer);
+            _sourceMapRenderOptions.WriteXML(writer);
+            _transparencyOptions.WriteXML(writer);
+            if (_lastView != null)
             {
-                this._lastView.WriteXML(writer);
+                _lastView.WriteXML(writer);
             }
+
             writer.WriteStartElement("SnapView");
             writer.WriteAttributeString("Context", "Source");
-            this.sourceSnap.WriteXML(writer);
+            sourceSnap.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteStartElement("SnapView");
             writer.WriteAttributeString("Context", "Reference");
-            this.referenceSnap.WriteXML(writer);
+            referenceSnap.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteStartElement("SnapZoom");
             writer.WriteAttributeString("Context", "Source");
-            writer.WriteAttributeString("Zoom", this.sourceSnapZoom.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Zoom", sourceSnapZoom.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
             writer.WriteStartElement("SnapZoom");
             writer.WriteAttributeString("Context", "Reference");
-            writer.WriteAttributeString("Zoom", this.referenceSnapZoom.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("Zoom", referenceSnapZoom.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
-            this.registration.WriteXML(writer);
-            if (this.renderRegion != null)
+            registration.WriteXML(writer);
+            if (renderRegion != null)
             {
-                this.renderRegion.WriteXML(writer);
+                renderRegion.WriteXML(writer);
             }
-            this.legendList.WriteXML(wc);
+
+            legendList.WriteXML(wc);
             writer.WriteEndElement();
         }
-        public SourceMap(MashupParseContext context, SourceMap.GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
+
+        public SourceMap(MashupParseContext context, GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty,
+            DirtyEvent parentReadyToLockEvent)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
-            this.readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
+            dirtyEvent = new DirtyEvent(parentDirty);
+            readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
             this.filenameContextDelegate = filenameContextDelegate;
-            this.latentRegionHolder = new LatentRegionHolder(this.dirtyEvent, this.readyToLockChangedEvent);
-            XMLTagReader xMLTagReader = context.NewTagReader("SourceMap");
+            latentRegionHolder = new LatentRegionHolder(dirtyEvent, readyToLockChangedEvent);
+            var xMLTagReader = context.NewTagReader("SourceMap");
             context.ExpectIdentity(this);
             string attribute = context.reader.GetAttribute("SourceMapFilename");
             if (attribute != null)
@@ -198,9 +221,10 @@ namespace MSR.CVE.BackMaker
                 string path = Path.Combine(filenameContextDelegate(), attribute);
                 int pageNumber = 0;
                 context.GetAttributeInt("PageNumber", ref pageNumber);
-                this._documentFuture = new GeneralDocumentFuture(new FutureDocumentFromFilesystem(path, pageNumber));
+                _documentFuture = new GeneralDocumentFuture(new FutureDocumentFromFilesystem(path, pageNumber));
             }
-            context.GetAttributeBoolean("Expanded", ref this._expanded);
+
+            context.GetAttributeBoolean("Expanded", ref _expanded);
             string attribute2 = context.reader.GetAttribute("DisplayName");
             MapPosition mapPosition = null;
             MapPosition mapPosition2 = null;
@@ -208,34 +232,39 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs(RegistrationDefinition.GetXMLTag()))
                 {
-                    context.AssertUnique(this.registration);
-                    this.registration = new RegistrationDefinition(context, this.dirtyEvent);
+                    context.AssertUnique(registration);
+                    registration = new RegistrationDefinition(context, dirtyEvent);
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(GeneralDocumentFuture.GetXMLTag()))
                     {
-                        context.AssertUnique(this._documentFuture);
-                        this._documentFuture = new GeneralDocumentFuture(context, filenameContextDelegate());
+                        context.AssertUnique(_documentFuture);
+                        _documentFuture = new GeneralDocumentFuture(context, filenameContextDelegate());
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(LocalDocumentDescriptor.GetXMLTag()))
                         {
-                            context.AssertUnique(this._documentFuture);
-                            LocalDocumentDescriptor localDocumentDescriptor = new LocalDocumentDescriptor(context, filenameContextDelegate());
-                            this._documentFuture = new GeneralDocumentFuture(new FutureDocumentFromFilesystem(localDocumentDescriptor.GetFilesystemAbsolutePath(), localDocumentDescriptor.GetPageNumber()));
+                            context.AssertUnique(_documentFuture);
+                            var localDocumentDescriptor =
+                                new LocalDocumentDescriptor(context, filenameContextDelegate());
+                            _documentFuture = new GeneralDocumentFuture(
+                                new FutureDocumentFromFilesystem(localDocumentDescriptor.GetFilesystemAbsolutePath(),
+                                    localDocumentDescriptor.GetPageNumber()));
                         }
                         else
                         {
                             if (xMLTagReader.TagIs("LastSourceMapPosition"))
                             {
-                                XMLTagReader xMLTagReader2 = context.NewTagReader("LastSourceMapPosition");
+                                var xMLTagReader2 = context.NewTagReader("LastSourceMapPosition");
                                 while (xMLTagReader2.FindNextStartTag())
                                 {
                                     if (xMLTagReader2.TagIs(MapPosition.GetXMLTag(context.version)))
                                     {
-                                        mapPosition = new MapPosition(context, null, ContinuousCoordinateSystem.theInstance);
+                                        mapPosition = new MapPosition(context,
+                                            null,
+                                            ContinuousCoordinateSystem.theInstance);
                                     }
                                 }
                             }
@@ -243,12 +272,14 @@ namespace MSR.CVE.BackMaker
                             {
                                 if (xMLTagReader.TagIs("LastVEPosition"))
                                 {
-                                    XMLTagReader xMLTagReader3 = context.NewTagReader("LastVEPosition");
+                                    var xMLTagReader3 = context.NewTagReader("LastVEPosition");
                                     while (xMLTagReader3.FindNextStartTag())
                                     {
                                         if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
                                         {
-                                            mapPosition2 = new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
+                                            mapPosition2 = new MapPosition(context,
+                                                null,
+                                                MercatorCoordinateSystem.theInstance);
                                         }
                                     }
                                 }
@@ -256,53 +287,61 @@ namespace MSR.CVE.BackMaker
                                 {
                                     if (xMLTagReader.TagIs(RenderRegion.GetXMLTag()))
                                     {
-                                        context.AssertUnique(this.renderRegion);
-                                        this.renderRegion = new RenderRegion(context, this.dirtyEvent, ContinuousCoordinateSystem.theInstance);
+                                        context.AssertUnique(renderRegion);
+                                        renderRegion = new RenderRegion(context,
+                                            dirtyEvent,
+                                            ContinuousCoordinateSystem.theInstance);
                                     }
                                     else
                                     {
                                         if (xMLTagReader.TagIs(SourceMapInfo.GetXMLTag()))
                                         {
-                                            context.AssertUnique(this._sourceMapInfo);
-                                            this._sourceMapInfo = new SourceMapInfo(context, this.dirtyEvent);
+                                            context.AssertUnique(_sourceMapInfo);
+                                            _sourceMapInfo = new SourceMapInfo(context, dirtyEvent);
                                         }
                                         else
                                         {
                                             if (xMLTagReader.TagIs(SourceMapRenderOptions.GetXMLTag()))
                                             {
-                                                context.AssertUnique(this._sourceMapRenderOptions);
-                                                this._sourceMapRenderOptions = new SourceMapRenderOptions(context, this.dirtyEvent);
+                                                context.AssertUnique(_sourceMapRenderOptions);
+                                                _sourceMapRenderOptions =
+                                                    new SourceMapRenderOptions(context, dirtyEvent);
                                             }
                                             else
                                             {
                                                 if (xMLTagReader.TagIs(TransparencyOptions.GetXMLTag()))
                                                 {
-                                                    this._transparencyOptions = new TransparencyOptions(context, this.dirtyEvent);
+                                                    _transparencyOptions =
+                                                        new TransparencyOptions(context, dirtyEvent);
                                                 }
                                                 else
                                                 {
                                                     if (xMLTagReader.TagIs(SourceMapRegistrationView.GetXMLTag()))
                                                     {
-                                                        context.AssertUnique(this._lastView);
-                                                        this._lastView = new SourceMapRegistrationView(this, context);
+                                                        context.AssertUnique(_lastView);
+                                                        _lastView = new SourceMapRegistrationView(this, context);
                                                     }
                                                     else
                                                     {
                                                         if (xMLTagReader.TagIs(LegendList.GetXMLTag()))
                                                         {
-                                                            context.AssertUnique(this.legendList);
-                                                            this.legendList = new LegendList(this, context, this.dirtyEvent);
+                                                            context.AssertUnique(legendList);
+                                                            legendList = new LegendList(this,
+                                                                context,
+                                                                dirtyEvent);
                                                         }
                                                         else
                                                         {
                                                             if (xMLTagReader.TagIs("SnapView"))
                                                             {
-                                                                XMLTagReader xMLTagReader4 = context.NewTagReader("SnapView");
-                                                                string requiredAttribute = context.GetRequiredAttribute("Context");
-                                                                LatLonZoom latLonZoom = default(LatLonZoom);
+                                                                var xMLTagReader4 =
+                                                                    context.NewTagReader("SnapView");
+                                                                string requiredAttribute =
+                                                                    context.GetRequiredAttribute("Context");
+                                                                var latLonZoom = default(LatLonZoom);
                                                                 bool flag = false;
                                                                 bool flag2 = true;
-                                                                CoordinateSystemIfc coordSys = null;
+                                                                CoordinateSystemIfc coordSys;
                                                                 if (requiredAttribute == "Source")
                                                                 {
                                                                     coordSys = ContinuousCoordinateSystem.theInstance;
@@ -311,10 +350,15 @@ namespace MSR.CVE.BackMaker
                                                                 {
                                                                     if (!(requiredAttribute == "Reference"))
                                                                     {
-                                                                        throw new InvalidMashupFile(context, string.Format("Invalid {0} value {1}", "Context", requiredAttribute));
+                                                                        throw new InvalidMashupFile(context,
+                                                                            string.Format("Invalid {0} value {1}",
+                                                                                "Context",
+                                                                                requiredAttribute));
                                                                     }
+
                                                                     coordSys = MercatorCoordinateSystem.theInstance;
                                                                 }
+
                                                                 while (xMLTagReader4.FindNextStartTag())
                                                                 {
                                                                     if (xMLTagReader4.TagIs(LatLonZoom.GetXMLTag()))
@@ -323,32 +367,38 @@ namespace MSR.CVE.BackMaker
                                                                         {
                                                                             context.ThrowUnique();
                                                                         }
+
                                                                         try
                                                                         {
-                                                                            latLonZoom = new LatLonZoom(context, coordSys);
+                                                                            latLonZoom = new LatLonZoom(context,
+                                                                                coordSys);
                                                                         }
                                                                         catch (InvalidLLZ)
                                                                         {
                                                                             flag2 = false;
                                                                         }
+
                                                                         flag = true;
                                                                     }
                                                                 }
+
                                                                 if (flag2)
                                                                 {
                                                                     if (!flag)
                                                                     {
-                                                                        context.AssertPresent(null, LatLonZoom.GetXMLTag());
+                                                                        context.AssertPresent(null,
+                                                                            LatLonZoom.GetXMLTag());
                                                                     }
+
                                                                     if (requiredAttribute == "Source")
                                                                     {
-                                                                        this.sourceSnap = latLonZoom;
+                                                                        sourceSnap = latLonZoom;
                                                                     }
                                                                     else
                                                                     {
                                                                         if (requiredAttribute == "Reference")
                                                                         {
-                                                                            this.referenceSnap = latLonZoom;
+                                                                            referenceSnap = latLonZoom;
                                                                         }
                                                                         else
                                                                         {
@@ -362,41 +412,51 @@ namespace MSR.CVE.BackMaker
                                                                 if (xMLTagReader.TagIs("SnapZoom"))
                                                                 {
                                                                     context.NewTagReader("SnapZoom");
-                                                                    string requiredAttribute2 = context.GetRequiredAttribute("Context");
+                                                                    string requiredAttribute2 =
+                                                                        context.GetRequiredAttribute("Context");
                                                                     bool flag3 = false;
                                                                     CoordinateSystemIfc theInstance;
                                                                     if (requiredAttribute2 == "Source")
                                                                     {
-                                                                        theInstance = ContinuousCoordinateSystem.theInstance;
+                                                                        theInstance = ContinuousCoordinateSystem
+                                                                            .theInstance;
                                                                     }
                                                                     else
                                                                     {
                                                                         if (!(requiredAttribute2 == "Reference"))
                                                                         {
-                                                                            throw new InvalidMashupFile(context, string.Format("Invalid {0} value {1}", "Context", requiredAttribute2));
+                                                                            throw new InvalidMashupFile(context,
+                                                                                string.Format("Invalid {0} value {1}",
+                                                                                    "Context",
+                                                                                    requiredAttribute2));
                                                                         }
-                                                                        theInstance = MercatorCoordinateSystem.theInstance;
+
+                                                                        theInstance = MercatorCoordinateSystem
+                                                                            .theInstance;
                                                                     }
+
                                                                     int num = 0;
                                                                     try
                                                                     {
-                                                                        theInstance.GetZoomRange().Parse(context, "Zoom");
+                                                                        theInstance.GetZoomRange()
+                                                                            .Parse(context, "Zoom");
                                                                         flag3 = true;
                                                                     }
                                                                     catch (InvalidMashupFile)
                                                                     {
                                                                     }
+
                                                                     if (flag3)
                                                                     {
                                                                         if (requiredAttribute2 == "Source")
                                                                         {
-                                                                            this.sourceSnapZoom = num;
+                                                                            sourceSnapZoom = num;
                                                                         }
                                                                         else
                                                                         {
                                                                             if (requiredAttribute2 == "Reference")
                                                                             {
-                                                                                this.referenceSnapZoom = num;
+                                                                                referenceSnapZoom = num;
                                                                             }
                                                                         }
                                                                     }
@@ -413,115 +473,133 @@ namespace MSR.CVE.BackMaker
                         }
                     }
                 }
+
                 if (context.version == InlineSourceMapInfoSchema.schema)
                 {
                     if (xMLTagReader.TagIs("MapFileURL"))
                     {
-                        this._sourceMapInfo.mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
+                        _sourceMapInfo.mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
                     }
                     else
                     {
                         if (xMLTagReader.TagIs("MapHomePage"))
                         {
-                            this._sourceMapInfo.mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
+                            _sourceMapInfo.mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
                         }
                         else
                         {
                             if (xMLTagReader.TagIs("MapDescription"))
                             {
-                                this._sourceMapInfo.mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
+                                _sourceMapInfo.mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
                             }
                         }
                     }
                 }
             }
+
             if (attribute2 != null)
             {
-                this._displayName = attribute2;
+                _displayName = attribute2;
             }
             else
             {
-                this._displayName = this._documentFuture.documentFuture.GetDefaultDisplayName();
+                _displayName = _documentFuture.documentFuture.GetDefaultDisplayName();
             }
-            if (this._lastView == null && mapPosition != null && mapPosition2 != null)
+
+            if (_lastView == null && mapPosition != null && mapPosition2 != null)
             {
-                this._lastView = new SourceMapRegistrationView(this, mapPosition.llz, mapPosition2);
+                _lastView = new SourceMapRegistrationView(this, mapPosition.llz, mapPosition2);
             }
-            if (this._documentFuture == null)
+
+            if (_documentFuture == null)
             {
                 throw new Exception("Source Map element missing document descriptor tag");
             }
-            if (this.registration == null)
+
+            if (registration == null)
             {
-                this.registration = new RegistrationDefinition(this.dirtyEvent);
+                registration = new RegistrationDefinition(dirtyEvent);
             }
-            this.registration.dirtyEvent.Add(this.readyToLockChangedEvent);
-            if (this.legendList == null)
+
+            registration.dirtyEvent.Add(readyToLockChangedEvent);
+            if (legendList == null)
             {
-                this.legendList = new LegendList(this, this.dirtyEvent, this.readyToLockChangedEvent);
+                legendList = new LegendList(this, dirtyEvent, readyToLockChangedEvent);
             }
-            if (this._sourceMapInfo == null)
+
+            if (_sourceMapInfo == null)
             {
-                this._sourceMapInfo = new SourceMapInfo(this.dirtyEvent);
+                _sourceMapInfo = new SourceMapInfo(dirtyEvent);
             }
-            if (this._sourceMapRenderOptions == null)
+
+            if (_sourceMapRenderOptions == null)
             {
-                this._sourceMapRenderOptions = new SourceMapRenderOptions(this.dirtyEvent);
+                _sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
             }
-            if (this._transparencyOptions == null)
+
+            if (_transparencyOptions == null)
             {
-                this._transparencyOptions = new TransparencyOptions(this.dirtyEvent);
+                _transparencyOptions = new TransparencyOptions(dirtyEvent);
             }
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this._documentFuture.AccumulateRobustHash(hash);
-            this.AccumulateRobustHash_Common(hash);
-            this._sourceMapRenderOptions.AccumulateRobustHash(hash);
+            _documentFuture.AccumulateRobustHash(hash);
+            AccumulateRobustHash_Common(hash);
+            _sourceMapRenderOptions.AccumulateRobustHash(hash);
         }
+
         public void AccumulateRobustHash_PerTile(CachePackage cachePackage, IRobustHash hash)
         {
             hash.Accumulate("SourceMap:");
-            SourceDocument sourceDocument = this._documentFuture.RealizeSynchronously(cachePackage);
+            var sourceDocument = _documentFuture.RealizeSynchronously(cachePackage);
             sourceDocument.localDocument.AccumulateRobustHash(hash);
-            this.AccumulateRobustHash_Common(hash);
+            AccumulateRobustHash_Common(hash);
         }
+
         private void AccumulateRobustHash_Common(IRobustHash hash)
         {
-            this.registration.AccumulateRobustHash(hash);
-            if (this.renderRegion != null)
+            registration.AccumulateRobustHash(hash);
+            if (renderRegion != null)
             {
-                this.renderRegion.AccumulateRobustHash(hash);
+                renderRegion.AccumulateRobustHash(hash);
             }
             else
             {
                 hash.Accumulate("null-render-region");
             }
-            this._transparencyOptions.AccumulateRobustHash(hash);
+
+            _transparencyOptions.AccumulateRobustHash(hash);
         }
+
         public bool ReadyToLock()
         {
-            return this.registration != null && this.registration.ReadyToLock() && this.renderRegion != null;
+            return registration != null && registration.ReadyToLock() && renderRegion != null;
         }
+
         public void AutoSelectMaxZoom(MapTileSourceFactory mapTileSourceFactory)
         {
-            if (this.sourceMapRenderOptions.maxZoom == -1)
+            if (sourceMapRenderOptions.maxZoom == -1)
             {
-                MapRectangle userBoundingBox = this.GetUserBoundingBox(mapTileSourceFactory);
+                var userBoundingBox = GetUserBoundingBox(mapTileSourceFactory);
                 if (userBoundingBox == null)
                 {
                     return;
                 }
-                Size size = new Size(600, 600);
-                LatLonZoom bestViewContaining = new MercatorCoordinateSystem().GetBestViewContaining(userBoundingBox, size);
-                IntParameter intParameter = (IntParameter)mapTileSourceFactory.CreateUnwarpedSource(this).GetImageDetailPrototype(FutureFeatures.Cached).Curry(new ParamDict(new object[]
-                {
-                    TermName.ImageDetail,
-                    new SizeParameter(size)
-                })).Realize("SourceMap.AutoSelectMaxZoom");
-                this.sourceMapRenderOptions.maxZoom = MercatorCoordinateSystem.theInstance.GetZoomRange().Constrain(bestViewContaining.zoom + intParameter.value + BuildConfig.theConfig.autoMaxZoomOffset);
+
+                var size = new Size(600, 600);
+                var bestViewContaining =
+                    new MercatorCoordinateSystem().GetBestViewContaining(userBoundingBox, size);
+                var intParameter = (IntParameter)mapTileSourceFactory.CreateUnwarpedSource(this)
+                    .GetImageDetailPrototype(FutureFeatures.Cached)
+                    .Curry(new ParamDict(new object[] {TermName.ImageDetail, new SizeParameter(size)}))
+                    .Realize("SourceMap.AutoSelectMaxZoom");
+                sourceMapRenderOptions.maxZoom = MercatorCoordinateSystem.theInstance.GetZoomRange()
+                    .Constrain(bestViewContaining.zoom + intParameter.value + BuildConfig.theConfig.autoMaxZoomOffset);
             }
         }
+
         public MapRectangle GetUserBoundingBox(MapTileSourceFactory mapTileSourceFactory)
         {
             WarpedMapTileSource warpedMapTileSource = null;
@@ -532,30 +610,40 @@ namespace MSR.CVE.BackMaker
             catch (InsufficientCorrespondencesException)
             {
             }
+
             if (warpedMapTileSource == null)
             {
                 return null;
             }
-            Present present = warpedMapTileSource.GetUserBounds(null, FutureFeatures.Cached).Realize("SourceMap.AutoSelectMaxZoom");
+
+            var present = warpedMapTileSource.GetUserBounds(null, FutureFeatures.Cached)
+                .Realize("SourceMap.AutoSelectMaxZoom");
             if (!(present is BoundsPresent))
             {
                 return null;
             }
-            BoundsPresent boundsPresent = (BoundsPresent)present;
-            MapRectangle boundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
-            return boundingBox.ClipTo(CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
+
+            var boundsPresent = (BoundsPresent)present;
+            var boundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
+            return boundingBox.ClipTo(
+                CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
         }
+
         public void NotePositionUnlocked(LatLonZoom sourceMapPosition, MapPosition referenceMapPosition)
         {
-            this._lastView = new SourceMapRegistrationView(this, sourceMapPosition, referenceMapPosition);
+            _lastView = new SourceMapRegistrationView(this, sourceMapPosition, referenceMapPosition);
         }
+
         public void NotePositionLocked(MapPosition referenceMapPosition)
         {
-            this._lastView = new SourceMapRegistrationView(this, referenceMapPosition);
+            _lastView = new SourceMapRegistrationView(this, referenceMapPosition);
         }
+
         public string GetLegendFilename(Legend legend)
         {
-            return RenderState.ForceValidFilename(string.Format("{0}_{1}.png", this.GetDisplayName(), legend.displayName));
+            return RenderState.ForceValidFilename(string.Format("{0}_{1}.png",
+                GetDisplayName(),
+                legend.displayName));
         }
     }
 }

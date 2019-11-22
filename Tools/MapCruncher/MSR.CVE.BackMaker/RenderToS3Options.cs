@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderToS3Options : RenderToOptions
@@ -11,67 +11,74 @@ namespace MSR.CVE.BackMaker
         private static string attr_s3credentialsFilename = "CredentialsFilename";
         private static string attr_s3bucket = "Bucket";
         private static string attr_s3pathPrefix = "PathPrefix";
+
         public string s3credentialsFilename
         {
             get
             {
-                return this._s3credentialsFilename.myValue;
+                return _s3credentialsFilename.myValue;
             }
             set
             {
-                this._s3credentialsFilename.myValue = value;
+                _s3credentialsFilename.myValue = value;
             }
         }
+
         public string s3bucket
         {
             get
             {
-                return this._s3bucket.myValue;
+                return _s3bucket.myValue;
             }
             set
             {
-                this._s3bucket.myValue = value;
+                _s3bucket.myValue = value;
             }
         }
+
         public string s3pathPrefix
         {
             get
             {
-                return this._s3pathPrefix.myValue;
+                return _s3pathPrefix.myValue;
             }
             set
             {
-                this._s3pathPrefix.myValue = value;
+                _s3pathPrefix.myValue = value;
             }
         }
+
         public RenderToS3Options(DirtyEvent parentDirtyEvent)
         {
-            this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
-            this._s3bucket = new DirtyString(parentDirtyEvent);
-            this._s3pathPrefix = new DirtyString(parentDirtyEvent);
+            _s3credentialsFilename = new DirtyString(parentDirtyEvent);
+            _s3bucket = new DirtyString(parentDirtyEvent);
+            _s3pathPrefix = new DirtyString(parentDirtyEvent);
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RenderToS3Options.xmlTag);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3credentialsFilename, this.s3credentialsFilename);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3bucket, this.s3bucket);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3pathPrefix, this.s3pathPrefix);
+            writer.WriteStartElement(xmlTag);
+            writer.WriteAttributeString(attr_s3credentialsFilename, s3credentialsFilename);
+            writer.WriteAttributeString(attr_s3bucket, s3bucket);
+            writer.WriteAttributeString(attr_s3pathPrefix, s3pathPrefix);
             writer.WriteEndElement();
         }
+
         public RenderToS3Options(MashupParseContext context, DirtyEvent parentDirtyEvent)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(RenderToS3Options.xmlTag);
-            this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
-            this.s3credentialsFilename = context.GetRequiredAttribute(RenderToS3Options.attr_s3credentialsFilename);
-            this._s3bucket = new DirtyString(parentDirtyEvent);
-            this.s3bucket = context.GetRequiredAttribute(RenderToS3Options.attr_s3bucket);
-            this._s3pathPrefix = new DirtyString(parentDirtyEvent);
-            this.s3pathPrefix = context.GetRequiredAttribute(RenderToS3Options.attr_s3pathPrefix);
+            XMLTagReader xMLTagReader = context.NewTagReader(xmlTag);
+            _s3credentialsFilename = new DirtyString(parentDirtyEvent);
+            s3credentialsFilename = context.GetRequiredAttribute(attr_s3credentialsFilename);
+            _s3bucket = new DirtyString(parentDirtyEvent);
+            s3bucket = context.GetRequiredAttribute(attr_s3bucket);
+            _s3pathPrefix = new DirtyString(parentDirtyEvent);
+            s3pathPrefix = context.GetRequiredAttribute(attr_s3pathPrefix);
             xMLTagReader.SkipAllSubTags();
         }
+
         public override string ToString()
         {
-            return string.Format("s3:{0}/{1}", this.s3bucket, this.s3pathPrefix);
+            return string.Format("s3:{0}/{1}", s3bucket, s3pathPrefix);
         }
     }
 }

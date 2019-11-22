@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class CompositeImageVerb : Verb
@@ -27,17 +28,21 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                                 result = new PresentFailureCode((PresentFailureCode)present, "CompositeImageVerb");
                                 return result;
                             }
+
                             if (!(present is ImageRef))
                             {
-                                result = new PresentFailureCode(new Exception("Unexpected result of child computation in CompositeImageVerb"));
+                                result = new PresentFailureCode(
+                                    new Exception("Unexpected result of child computation in CompositeImageVerb"));
                                 return result;
                             }
+
                             ImageRef imageRef = (ImageRef)present;
                             GDIBigLockedImage image;
                             Monitor.Enter(image = imageRef.image);
                             try
                             {
-                                graphics.DrawImage(imageRef.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage(), new Rectangle(0, 0, value.Width, value.Height));
+                                graphics.DrawImage(imageRef.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage(),
+                                    new Rectangle(0, 0, value.Width, value.Height));
                             }
                             finally
                             {
@@ -50,6 +55,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     Monitor.Exit(obj);
                 }
+
                 ImageRef imageRef2 = new ImageRef(new ImageRefCounted(gDIBigLockedImage));
                 gDIBigLockedImage = null;
                 result = imageRef2;
@@ -61,8 +67,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     gDIBigLockedImage.Dispose();
                 }
             }
+
             return result;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("CompositeImageVerb");

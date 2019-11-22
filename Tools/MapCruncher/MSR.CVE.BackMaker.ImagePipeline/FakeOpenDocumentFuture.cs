@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal class FakeOpenDocumentFuture : IFuture, IRobustlyHashable, IFuturePrototype
@@ -7,10 +8,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new PresentFailureCode(new Exception("No document here."));
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FakeOpenDocumentFuture");
         }
+
         public IFuture Curry(ParamDict paramDict)
         {
             return this;
