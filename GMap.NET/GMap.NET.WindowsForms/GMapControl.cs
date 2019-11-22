@@ -28,6 +28,9 @@ namespace GMap.NET.WindowsForms
     {
 #if !PocketPC
 
+        /// <summary>
+        ///   occurs when clicked on map.
+        /// </summary>
         public event MapClick OnMapClick;
 
         /// <summary>
@@ -1104,7 +1107,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                 if (IsRotated)
                 {
-                    var p = new[] {new Point(x, y)};
+                    var p = new[] { new Point(x, y) };
                     rotationMatrixInvert.TransformVectors(p);
                     x = p[0].X;
                     y = p[0].Y;
@@ -2129,9 +2132,7 @@ namespace GMap.NET.WindowsForms
 
             if (!Core.IsDragging)
             {
-                OnMapClick?.Invoke(new PointLatLng(FromLocalToLatLng(e.X, e.Y).Lng,
-                        FromLocalToLatLng(e.X, e.Y).Lat),
-                    e);
+                OnMapClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
 
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
@@ -2300,7 +2301,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                var tt = new[] {new Point(x, y)};
+                var tt = new[] { new Point(x, y) };
                 rotationMatrixInvert.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2320,7 +2321,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                var tt = new[] {new Point(x, y)};
+                var tt = new[] { new Point(x, y) };
                 rotationMatrix.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2800,7 +2801,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                var tt = new[] {new Point(x, y)};
+                var tt = new[] { new Point(x, y) };
                 rotationMatrixInvert.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2835,7 +2836,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                var tt = new[] {new Point((int)ret.X, (int)ret.Y)};
+                var tt = new[] { new Point((int)ret.X, (int)ret.Y) };
                 rotationMatrix.TransformPoints(tt);
                 var f = tt[0];
 
