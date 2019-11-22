@@ -1,27 +1,26 @@
-﻿
-namespace GMap.NET
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Net;
-    using System.Text;
-    using System.Threading;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using GMap.NET.CacheProviders;
-    using GMap.NET.Internals;
-    using GMap.NET.MapProviders;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
+using GMap.NET.CacheProviders;
+using GMap.NET.Internals;
+using GMap.NET.MapProviders;
+using System.Reflection;
 
 #if PocketPC
-   using OpenNETCF.ComponentModel;
-   using OpenNETCF.Threading;
-   using Thread=OpenNETCF.Threading.Thread2;
+using OpenNETCF.ComponentModel;
+using OpenNETCF.Threading;
+using Thread = OpenNETCF.Threading.Thread2;
 #endif
 
+namespace GMap.NET
+{
     /// <summary>
     /// maps manager
     /// </summary>
@@ -106,9 +105,9 @@ namespace GMap.NET
         /// <summary>
         /// tile queue to cache
         /// </summary>
-        readonly Queue<CacheQueueItem> tileCacheQueue = new Queue<CacheQueueItem>();
+        private readonly Queue<CacheQueueItem> _tileCacheQueue = new Queue<CacheQueueItem>();
 
-        bool? isRunningOnMono;
+        private bool? _isRunningOnMono;
 
         /// <summary>
         /// return true if running on mono
@@ -118,12 +117,12 @@ namespace GMap.NET
         {
             get
             {
-                if (!isRunningOnMono.HasValue)
+                if (!_isRunningOnMono.HasValue)
                 {
                     try
                     {
-                        isRunningOnMono = (Type.GetType("Mono.Runtime") != null);
-                        return isRunningOnMono.Value;
+                        _isRunningOnMono = (Type.GetType("Mono.Runtime") != null);
+                        return _isRunningOnMono.Value;
                     }
                     catch
                     {
@@ -131,8 +130,9 @@ namespace GMap.NET
                 }
                 else
                 {
-                    return isRunningOnMono.Value;
+                    return _isRunningOnMono.Value;
                 }
+
                 return false;
             }
         }
@@ -140,7 +140,7 @@ namespace GMap.NET
         /// <summary>
         /// cache worker
         /// </summary>
-        Thread CacheEngine;
+        private Thread _cacheEngine;
 
         internal readonly AutoResetEvent WaitForCache = new AutoResetEvent(false);
 
@@ -152,13 +152,14 @@ namespace GMap.NET
                 try
                 {
                     AppDomain d = AppDomain.CurrentDomain;
-                    var AssembliesLoaded = d.GetAssemblies();
+                    var assembliesLoaded = d.GetAssemblies();
 
                     Assembly l = null;
 
-                    foreach (var a in AssembliesLoaded)
+                    foreach (var a in assembliesLoaded)
                     {
-                        if (a.FullName.Contains("GMap.NET.WindowsForms") || a.FullName.Contains("GMap.NET.WindowsPresentation"))
+                        if (a.FullName.Contains("GMap.NET.WindowsForms") ||
+                            a.FullName.Contains("GMap.NET.WindowsPresentation"))
                         {
                             l = a;
                             break;
@@ -196,7 +197,12 @@ namespace GMap.NET
 
                         if (t != null)
                         {
-                            t.InvokeMember("Enable", BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
+                            t.InvokeMember("Enable",
+                                BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Static |
+                                BindingFlags.InvokeMethod,
+                                null,
+                                null,
+                                null);
                         }
                     }
                 }
@@ -211,10 +217,14 @@ namespace GMap.NET
         public GMaps()
         {
             #region singleton check
+
             if (Instance != null)
             {
-                throw (new Exception("You have tried to create a new singleton class where you should have instanced it. Replace your \"new class()\" with \"class.Instance\""));
+                throw (new Exception(
+                        "You have tried to create a new singleton class where you should have instanced it. Replace your \"new class()\" with \"class.Instance\"")
+                    );
             }
+
             #endregion
 
             ServicePointManager.DefaultConnectionLimit = 5;
@@ -252,7 +262,10 @@ namespace GMap.NET
             if (PrimaryCache is SQLitePureImageCache)
             {
                 StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
-                db.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}Data.gmdb", GMapProvider.LanguageStr, Path.DirectorySeparatorChar);
+                db.AppendFormat(CultureInfo.InvariantCulture,
+                    "{0}{1}Data.gmdb",
+                    GMapProvider.LanguageStr,
+                    Path.DirectorySeparatorChar);
 
                 return SQLitePureImageCache.ExportMapDataToDB(db.ToString(), file);
             }
@@ -272,7 +285,10 @@ namespace GMap.NET
             if (PrimaryCache is GMap.NET.CacheProviders.SQLitePureImageCache)
             {
                 StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
-                db.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}Data.gmdb", GMapProvider.LanguageStr, Path.DirectorySeparatorChar);
+                db.AppendFormat(CultureInfo.InvariantCulture,
+                    "{0}{1}Data.gmdb",
+                    GMapProvider.LanguageStr,
+                    Path.DirectorySeparatorChar);
 
                 return SQLitePureImageCache.ExportMapDataToDB(file, db.ToString());
             }
@@ -294,7 +310,10 @@ namespace GMap.NET
                 if (string.IsNullOrEmpty(file))
                 {
                     StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
-                    db.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}Data.gmdb", GMapProvider.LanguageStr, Path.DirectorySeparatorChar);
+                    db.AppendFormat(CultureInfo.InvariantCulture,
+                        "{0}{1}Data.gmdb",
+                        GMapProvider.LanguageStr,
+                        Path.DirectorySeparatorChar);
 
                     return SQLitePureImageCache.VacuumDb(db.ToString());
                 }
@@ -316,39 +335,40 @@ namespace GMap.NET
         /// <param name="task"></param>
         void EnqueueCacheTask(CacheQueueItem task)
         {
-            lock (tileCacheQueue)
+            lock (_tileCacheQueue)
             {
-                if (!tileCacheQueue.Contains(task))
+                if (!_tileCacheQueue.Contains(task))
                 {
                     Debug.WriteLine("EnqueueCacheTask: " + task);
 
-                    tileCacheQueue.Enqueue(task);
+                    _tileCacheQueue.Enqueue(task);
 
-                    if (CacheEngine != null && CacheEngine.IsAlive)
+                    if (_cacheEngine != null && _cacheEngine.IsAlive)
                     {
                         WaitForCache.Set();
                     }
 #if PocketPC
                else if(CacheEngine == null || CacheEngine.State == ThreadState.Stopped || CacheEngine.State == ThreadState.Unstarted)
 #else
-                    else if (CacheEngine == null || CacheEngine.ThreadState == System.Threading.ThreadState.Stopped || CacheEngine.ThreadState == System.Threading.ThreadState.Unstarted)
+                    else if (_cacheEngine == null || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped ||
+                             _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted)
 #endif
                     {
-                        CacheEngine = null;
-                        CacheEngine = new Thread(new ThreadStart(CacheEngineLoop));
-                        CacheEngine.Name = "CacheEngine";
-                        CacheEngine.IsBackground = false;
-                        CacheEngine.Priority = ThreadPriority.Lowest;
+                        _cacheEngine = null;
+                        _cacheEngine = new Thread(new ThreadStart(CacheEngineLoop));
+                        _cacheEngine.Name = "CacheEngine";
+                        _cacheEngine.IsBackground = false;
+                        _cacheEngine.Priority = ThreadPriority.Lowest;
 
-                        abortCacheLoop = false;
-                        CacheEngine.Start();
+                        _abortCacheLoop = false;
+                        _cacheEngine.Start();
                     }
                 }
             }
         }
 
-        volatile bool abortCacheLoop = false;
-        internal volatile bool noMapInstances = false;
+        volatile bool _abortCacheLoop;
+        internal volatile bool NoMapInstances = false;
 
         public TileCacheComplete OnTileCacheComplete;
         public TileCacheStart OnTileCacheStart;
@@ -361,16 +381,16 @@ namespace GMap.NET
         {
             Debug.WriteLine("CancelTileCaching...");
 
-            abortCacheLoop = true;
-            lock (tileCacheQueue)
+            _abortCacheLoop = true;
+            lock (_tileCacheQueue)
             {
-                tileCacheQueue.Clear();
+                _tileCacheQueue.Clear();
                 WaitForCache.Set();
             }
         }
 
-        int readingCache = 0;
-        volatile bool cacheOnIdleRead = true;
+        private int _readingCache;
+        private volatile bool _cacheOnIdleRead = true;
 
         /// <summary>
         /// delays writing tiles to cache while performing reads
@@ -379,15 +399,15 @@ namespace GMap.NET
         {
             get
             {
-                return cacheOnIdleRead;
+                return _cacheOnIdleRead;
             }
             set
             {
-                cacheOnIdleRead = value;
+                _cacheOnIdleRead = value;
             }
         }
 
-        volatile bool boostCacheEngine = false;
+        volatile bool _boostCacheEngine;
 
         /// <summary>
         /// disables delay between saving tiles into database/cache
@@ -396,11 +416,11 @@ namespace GMap.NET
         {
             get
             {
-                return boostCacheEngine;
+                return _boostCacheEngine;
             }
             set
             {
-                boostCacheEngine = value;
+                _boostCacheEngine = value;
             }
         }
 
@@ -421,18 +441,18 @@ namespace GMap.NET
 
             bool startEvent = false;
 
-            while (!abortCacheLoop)
+            while (!_abortCacheLoop)
             {
                 try
                 {
                     CacheQueueItem? task = null;
 
-                    lock (tileCacheQueue)
+                    lock (_tileCacheQueue)
                     {
-                        left = tileCacheQueue.Count;
+                        left = _tileCacheQueue.Count;
                         if (left > 0)
                         {
-                            task = tileCacheQueue.Dequeue();
+                            task = _tileCacheQueue.Dequeue();
                         }
                     }
 
@@ -454,38 +474,49 @@ namespace GMap.NET
                         }
 
                         #region -- save --
+
                         // check if stream wasn't disposed somehow
                         if (task.Value.Img != null)
                         {
-                            Debug.WriteLine("CacheEngine[" + left + "]: storing tile " + task.Value + ", " + task.Value.Img.Length / 1024 + "kB...");
+                            Debug.WriteLine("CacheEngine[" + left + "]: storing tile " + task.Value + ", " +
+                                            task.Value.Img.Length / 1024 + "kB...");
 
                             if ((task.Value.CacheType & CacheUsage.First) == CacheUsage.First && PrimaryCache != null)
                             {
-                                if (cacheOnIdleRead)
+                                if (_cacheOnIdleRead)
                                 {
-                                    while (Interlocked.Decrement(ref readingCache) > 0)
+                                    while (Interlocked.Decrement(ref _readingCache) > 0)
                                     {
                                         Thread.Sleep(1000);
                                     }
                                 }
-                                PrimaryCache.PutImageToCache(task.Value.Img, task.Value.Tile.Type, task.Value.Tile.Pos, task.Value.Tile.Zoom);
+
+                                PrimaryCache.PutImageToCache(task.Value.Img,
+                                    task.Value.Tile.Type,
+                                    task.Value.Tile.Pos,
+                                    task.Value.Tile.Zoom);
                             }
 
-                            if ((task.Value.CacheType & CacheUsage.Second) == CacheUsage.Second && SecondaryCache != null)
+                            if ((task.Value.CacheType & CacheUsage.Second) == CacheUsage.Second &&
+                                SecondaryCache != null)
                             {
-                                if (cacheOnIdleRead)
+                                if (_cacheOnIdleRead)
                                 {
-                                    while (Interlocked.Decrement(ref readingCache) > 0)
+                                    while (Interlocked.Decrement(ref _readingCache) > 0)
                                     {
                                         Thread.Sleep(1000);
                                     }
                                 }
-                                SecondaryCache.PutImageToCache(task.Value.Img, task.Value.Tile.Type, task.Value.Tile.Pos, task.Value.Tile.Zoom);
+
+                                SecondaryCache.PutImageToCache(task.Value.Img,
+                                    task.Value.Tile.Type,
+                                    task.Value.Tile.Pos,
+                                    task.Value.Tile.Zoom);
                             }
 
                             task.Value.Clear();
 
-                            if (!boostCacheEngine)
+                            if (!_boostCacheEngine)
                             {
 #if PocketPC
                         Thread.Sleep(3333);
@@ -498,7 +529,9 @@ namespace GMap.NET
                         {
                             Debug.WriteLine("CacheEngineLoop: skip, tile disposed to early -> " + task.Value);
                         }
+
                         task = null;
+
                         #endregion
                     }
                     else
@@ -513,7 +546,7 @@ namespace GMap.NET
                             }
                         }
 
-                        if (abortCacheLoop || noMapInstances || !WaitForCache.WaitOne(33333, false) || noMapInstances)
+                        if (_abortCacheLoop || NoMapInstances || !WaitForCache.WaitOne(33333, false) || NoMapInstances)
                         {
                             break;
                         }
@@ -530,6 +563,7 @@ namespace GMap.NET
                     Debug.WriteLine("CacheEngineLoop: " + ex.ToString());
                 }
             }
+
             Debug.WriteLine("CacheEngine: stop");
 
             if (!startEvent)
@@ -544,7 +578,7 @@ namespace GMap.NET
         class StringWriterExt : StringWriter
         {
             public StringWriterExt(IFormatProvider info)
-               : base(info)
+                : base(info)
             {
 
             }
@@ -567,6 +601,7 @@ namespace GMap.NET
                 serializer.Serialize(writer, targetInstance);
                 retVal = writer.ToString();
             }
+
             return retVal;
         }
 
@@ -583,6 +618,7 @@ namespace GMap.NET
 
                 xmlReader.Close();
             }
+
             return retVal;
         }
 
@@ -623,6 +659,7 @@ namespace GMap.NET
                         wptType t = new wptType();
                         {
                             #region -- set values --
+
                             t.lat = new decimal(point.Position.Lat);
                             t.lon = new decimal(point.Position.Lng);
 
@@ -669,11 +706,13 @@ namespace GMap.NET
                             {
                                 t.sat = point.SatelliteCount.Value.ToString();
                             }
+
                             #endregion
                         }
                         seg.trkpt[i] = t;
                     }
                 }
+
                 sessions.Clear();
 
 #if !PocketPC
@@ -691,6 +730,7 @@ namespace GMap.NET
                 Debug.WriteLine("ExportGPX: " + ex.ToString());
                 return false;
             }
+
             return true;
         }
 
@@ -724,11 +764,12 @@ namespace GMap.NET
                             if (ret == null)
                             {
 #if DEBUG
-                        Debug.WriteLine("Image disposed in MemoryCache o.O, should never happen ;} " + new RawTile(provider.DbId, pos, zoom));
-                        if(Debugger.IsAttached)
-                        {
-                           Debugger.Break();
-                        }
+                                Debug.WriteLine("Image disposed in MemoryCache o.O, should never happen ;} " +
+                                                new RawTile(provider.DbId, pos, zoom));
+                                if (Debugger.IsAttached)
+                                {
+                                    Debugger.Break();
+                                }
 #endif
                                 m = null;
                             }
@@ -743,9 +784,9 @@ namespace GMap.NET
                         if (PrimaryCache != null)
                         {
                             // hold writer for 5s
-                            if (cacheOnIdleRead)
+                            if (_cacheOnIdleRead)
                             {
-                                Interlocked.Exchange(ref readingCache, 5);
+                                Interlocked.Exchange(ref _readingCache, 5);
                             }
 
                             ret = PrimaryCache.GetImageFromCache(provider.DbId, pos, zoom);
@@ -755,6 +796,7 @@ namespace GMap.NET
                                 {
                                     MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
                                 }
+
                                 return ret;
                             }
                         }
@@ -762,9 +804,9 @@ namespace GMap.NET
                         if (SecondaryCache != null)
                         {
                             // hold writer for 5s
-                            if (cacheOnIdleRead)
+                            if (_cacheOnIdleRead)
                             {
-                                Interlocked.Exchange(ref readingCache, 5);
+                                Interlocked.Exchange(ref _readingCache, 5);
                             }
 
                             ret = SecondaryCache.GetImageFromCache(provider.DbId, pos, zoom);
@@ -774,6 +816,7 @@ namespace GMap.NET
                                 {
                                     MemoryCache.AddTileToMemoryCache(rtile, ret.Data.GetBuffer());
                                 }
+
                                 EnqueueCacheTask(new CacheQueueItem(rtile, ret.Data.GetBuffer(), CacheUsage.First));
                                 return ret;
                             }
@@ -801,7 +844,7 @@ namespace GMap.NET
                     }
                     else
                     {
-                        result = noDataException;
+                        result = _noDataException;
                     }
                 }
             }
@@ -815,10 +858,10 @@ namespace GMap.NET
             return ret;
         }
 
-        readonly Exception noDataException = new Exception("No data in local tile cache...");
+        private readonly Exception _noDataException = new Exception("No data in local tile cache...");
 
 #if !PocketPC
-        TileHttpHost host;
+        private TileHttpHost _host;
 
         /// <summary>
         /// turns on tile host
@@ -826,11 +869,12 @@ namespace GMap.NET
         /// <param name="port"></param>
         public void EnableTileHost(int port)
         {
-            if (host == null)
+            if (_host == null)
             {
-                host = new TileHttpHost();
+                _host = new TileHttpHost();
             }
-            host.Start(port);
+
+            _host.Start(port);
         }
 
         /// <summary>
@@ -839,9 +883,9 @@ namespace GMap.NET
         /// <param name="port"></param>
         public void DisableTileHost()
         {
-            if (host != null)
+            if (_host != null)
             {
-                host.Stop();
+                _host.Stop();
             }
         }
 #endif

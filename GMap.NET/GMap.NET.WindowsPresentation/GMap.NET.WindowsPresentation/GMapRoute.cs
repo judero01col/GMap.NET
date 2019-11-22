@@ -9,10 +9,11 @@ namespace GMap.NET.WindowsPresentation
     using System.Windows.Shapes;
 
     public interface IShapable
-    {        
+    {
         List<PointLatLng> Points
         {
-            get; set;
+            get;
+            set;
         }
 
         Path CreatePath(List<Point> localPath, bool addBlurEffect);
@@ -69,6 +70,7 @@ namespace GMap.NET.WindowsPresentation
                     }
                     myPath.Effect = ef;
                 }
+
                 myPath.Stroke = Brushes.Navy;
                 myPath.StrokeThickness = 5;
                 myPath.StrokeLineJoin = PenLineJoin.Round;

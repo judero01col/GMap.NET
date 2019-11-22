@@ -24,11 +24,11 @@ namespace GMap.NET
       {
          get
          {
-            if(SingletonCreator.exception != null)
+            if(SingletonCreator.Exception != null)
             {
-               throw SingletonCreator.exception;
+               throw SingletonCreator.Exception;
             }
-            return SingletonCreator.instance;
+            return SingletonCreator.Instance;
          }
       }
 
@@ -38,23 +38,24 @@ namespace GMap.NET
          {
             try
             {
-               instance = new T();
+               Instance = new T();
             }
             catch(Exception ex)
             {
                if(ex.InnerException != null)
                {
-                  exception = ex.InnerException;
+                  Exception = ex.InnerException;
                }
                else
                {
-                  exception = ex;
+                  Exception = ex;
                }
-               Trace.WriteLine("Singleton: " + exception);
+               Trace.WriteLine("Singleton: " + Exception);
             }
          }
-         internal static readonly T instance;
-         internal static readonly Exception exception;
+
+         internal static readonly T Instance;
+         internal static readonly Exception Exception;
       }
    }
 }

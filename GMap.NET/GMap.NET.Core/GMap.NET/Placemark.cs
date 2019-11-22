@@ -6,22 +6,10 @@ namespace GMap.NET
    /// </summary>
    public struct Placemark
    {
-      string address;
-
-      /// <summary>
+       /// <summary>
       /// the address
       /// </summary>
-      public string Address
-      {
-         get
-         {
-            return address;
-         }
-         internal set
-         {
-            address = value;
-         }
-      }
+      public string Address { get; internal set; }
 
       /// <summary>
       /// the accuracy of address
@@ -45,7 +33,7 @@ namespace GMap.NET
 
       internal Placemark(string address)
       {
-          this.address = address;
+          this.Address = address;
 
           Accuracy = 0;
           HouseNo = string.Empty;

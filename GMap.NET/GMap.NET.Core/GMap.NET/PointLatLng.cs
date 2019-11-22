@@ -11,16 +11,16 @@ namespace GMap.NET
    public struct PointLatLng
    {
       public static readonly PointLatLng Empty = new PointLatLng();
-      private double lat;
-      private double lng;
+      private double _lat;
+      private double _lng;
 
-      bool NotEmpty;
+      bool _notEmpty;
 
       public PointLatLng(double lat, double lng)
       {
-         this.lat = lat;
-         this.lng = lng;
-         NotEmpty = true;
+         this._lat = lat;
+         this._lng = lng;
+         _notEmpty = true;
       }
 
       /// <summary>
@@ -30,7 +30,7 @@ namespace GMap.NET
       {
          get
          {
-            return !NotEmpty;
+            return !_notEmpty;
          }
       }
 
@@ -38,12 +38,12 @@ namespace GMap.NET
       {
          get
          {
-            return this.lat;
+            return this._lat;
          }
          set
          {
-            this.lat = value;
-            NotEmpty = true;
+            this._lat = value;
+            _notEmpty = true;
          }
       }
 
@@ -51,12 +51,12 @@ namespace GMap.NET
       {
          get
          {
-            return this.lng;
+            return this._lng;
          }
          set
          {
-            this.lng = value;
-            NotEmpty = true;
+            this._lng = value;
+            _notEmpty = true;
          }
       }
 

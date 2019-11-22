@@ -15,13 +15,13 @@ namespace GMap.NET.WindowsPresentation
         {
             Points = new List<PointLatLng>(points);
         }
-        
+
         public override void Clear()
         {
             base.Clear();
             Points.Clear();
         }
-        
+
         /// <summary>
         /// creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
@@ -37,6 +37,7 @@ namespace GMap.NET.WindowsPresentation
                 // Draw a line to the next specified point.
                 ctx.PolyLineTo(localPath, true, true);
             }
+
             // Freeze the geometry (make it unmodifiable)
             // for additional performance benefits.
             geometry.Freeze();
@@ -55,6 +56,7 @@ namespace GMap.NET.WindowsPresentation
                     }
                     myPath.Effect = ef;
                 }
+
                 myPath.Stroke = Brushes.MidnightBlue;
                 myPath.StrokeThickness = 5;
                 myPath.StrokeLineJoin = PenLineJoin.Round;

@@ -1,12 +1,11 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using GMap.NET.MapProviders;
+using System.Reflection;
+
 namespace GMap.NET
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using GMap.NET.MapProviders;
-    using System.Reflection;
-
     /// <summary>
     /// represents route of map
     /// </summary>
@@ -48,7 +47,7 @@ namespace GMap.NET
 
         public int ErrorCode { get; set; }
 
-        public string WarningMessage { get; set; }        
+        public string WarningMessage { get; set; }
 
         /// <summary>
         /// route start point
@@ -93,18 +92,19 @@ namespace GMap.NET
             Name = name;
         }
 
-        public MapRoute(MapRoute Route)
+        public MapRoute(MapRoute route)
         {
-            if (Route != null)
+            if (route != null)
             {
-                FieldInfo[] myObjectFields = Route.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                FieldInfo[] myObjectFields = route.GetType()
+                    .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
                 foreach (FieldInfo fi in myObjectFields)
                 {
-                    fi.SetValue(this, fi.GetValue(Route));
+                    fi.SetValue(this, fi.GetValue(route));
                 }
             }
-        }    
+        }
 
         /// <summary>
         /// route distance (in km)
@@ -126,7 +126,7 @@ namespace GMap.NET
                 return Math.Round(distance, 4);
             }
         }
-        
+
         /// <summary>
         /// Gets the minimum distance (in mts) from the route to a point. Gets null if total points of route are less than 2.
         /// </summary>
@@ -154,7 +154,7 @@ namespace GMap.NET
 
             return null;
         }
-        
+
         /// <summary>
         /// Gets the distance (in mts) between the nearest point of a lineal route (of two points), and a point.
         /// </summary>
@@ -179,8 +179,10 @@ namespace GMap.NET
             double formulaLng = (point.Lat - b) / m;
 
             // Possibles distances: One from the given point.Lat, and other from the point.Lng.
-            double distance1 = GMapProviders.EmptyProvider.Projection.GetDistance(new PointLatLng(point.Lat, formulaLng), point);
-            double distance2 = GMapProviders.EmptyProvider.Projection.GetDistance(new PointLatLng(formulaLat, point.Lng), point);
+            double distance1 =
+                GMapProviders.EmptyProvider.Projection.GetDistance(new PointLatLng(point.Lat, formulaLng), point);
+            double distance2 =
+                GMapProviders.EmptyProvider.Projection.GetDistance(new PointLatLng(formulaLat, point.Lng), point);
 
             // Min of the distances.
             double distance = distance1 <= distance2 ? distance1 : distance2;
@@ -188,7 +190,7 @@ namespace GMap.NET
             // To mts.
             return distance * 1000;
         }
-        
+
         /// <summary>
         /// clears points and sets tag and name to null
         /// </summary>
@@ -200,6 +202,7 @@ namespace GMap.NET
         }
 
 #if !PocketPC
+
         #region ISerializable Members
 
         // Temp store for de-serialization.
@@ -249,6 +252,7 @@ namespace GMap.NET
         }
 
         #endregion
+
 #endif
     }
 }

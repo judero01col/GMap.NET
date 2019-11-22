@@ -1,8 +1,7 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace GMap.NET
 {
-   using System.Collections.Generic;
-
     /// <summary>
     /// geocoding interface
     /// </summary>

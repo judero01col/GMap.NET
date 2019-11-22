@@ -1,26 +1,27 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using static System.Math;
+
 namespace GMap.NET
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// defines projection
     /// </summary>
     public abstract class PureProjection
     {
-        readonly List<Dictionary<PointLatLng, GPoint>> FromLatLngToPixelCache = new List<Dictionary<PointLatLng, GPoint>>(33);
-        readonly List<Dictionary<GPoint, PointLatLng>> FromPixelToLatLngCache = new List<Dictionary<GPoint, PointLatLng>>(33);
+        private readonly List<Dictionary<PointLatLng, GPoint>> _fromLatLngToPixelCache = new List<Dictionary<PointLatLng, GPoint>>(33);
+
+        private readonly List<Dictionary<GPoint, PointLatLng>> _fromPixelToLatLngCache = new List<Dictionary<GPoint, PointLatLng>>(33);
 
         public PureProjection()
         {
-            for (int i = 0; i < FromLatLngToPixelCache.Capacity; i++)
+            for (int i = 0; i < _fromLatLngToPixelCache.Capacity; i++)
             {
-                FromLatLngToPixelCache.Add(new Dictionary<PointLatLng, GPoint>());
-                FromPixelToLatLngCache.Add(new Dictionary<GPoint, PointLatLng>());
+                _fromLatLngToPixelCache.Add(new Dictionary<PointLatLng, GPoint>());
+                _fromPixelToLatLngCache.Add(new Dictionary<GPoint, PointLatLng>());
             }
         }
 
@@ -82,15 +83,15 @@ namespace GMap.NET
             if (useCache)
             {
                 GPoint ret = GPoint.Empty;
-                if (!FromLatLngToPixelCache[zoom].TryGetValue(p, out ret))
+                if (!_fromLatLngToPixelCache[zoom].TryGetValue(p, out ret))
                 {
                     ret = FromLatLngToPixel(p.Lat, p.Lng, zoom);
-                    FromLatLngToPixelCache[zoom].Add(p, ret);
+                    _fromLatLngToPixelCache[zoom].Add(p, ret);
 
                     // for reverse cache
-                    if (!FromPixelToLatLngCache[zoom].ContainsKey(ret))
+                    if (!_fromPixelToLatLngCache[zoom].ContainsKey(ret))
                     {
-                        FromPixelToLatLngCache[zoom].Add(ret, p);
+                        _fromPixelToLatLngCache[zoom].Add(ret, p);
                     }
 
                     Debug.WriteLine("FromLatLngToPixelCache[" + zoom + "] added " + p + " with " + ret);
@@ -119,15 +120,15 @@ namespace GMap.NET
             if (useCache)
             {
                 PointLatLng ret = PointLatLng.Empty;
-                if (!FromPixelToLatLngCache[zoom].TryGetValue(p, out ret))
+                if (!_fromPixelToLatLngCache[zoom].TryGetValue(p, out ret))
                 {
                     ret = FromPixelToLatLng(p.X, p.Y, zoom);
-                    FromPixelToLatLngCache[zoom].Add(p, ret);
+                    _fromPixelToLatLngCache[zoom].Add(p, ret);
 
                     // for reverse cache
-                    if (!FromLatLngToPixelCache[zoom].ContainsKey(ret))
+                    if (!_fromLatLngToPixelCache[zoom].ContainsKey(ret))
                     {
-                        FromLatLngToPixelCache[zoom].Add(ret, p);
+                        _fromLatLngToPixelCache[zoom].Add(ret, p);
                     }
 
                     Debug.WriteLine("FromPixelToLatLngCache[" + zoom + "] added " + p + " with " + ret);
@@ -147,7 +148,7 @@ namespace GMap.NET
         /// <returns></returns>
         public virtual GPoint FromPixelToTileXY(GPoint p)
         {
-            return new GPoint((long)(p.X / TileSize.Width), (long)(p.Y / TileSize.Height));
+            return new GPoint(p.X / TileSize.Width, p.Y / TileSize.Height);
         }
 
         /// <summary>
@@ -243,7 +244,7 @@ namespace GMap.NET
         /// <returns></returns>
         public virtual double GetGroundResolution(int zoom, double latitude)
         {
-            return (Math.Cos(latitude * (Math.PI / 180)) * 2 * Math.PI * Axis) / GetTileMatrixSizePixel(zoom).Width;
+            return (Cos(latitude * (PI / 180)) * 2 * PI * Axis) / GetTileMatrixSizePixel(zoom).Width;
         }
 
         /// <summary>
@@ -260,19 +261,14 @@ namespace GMap.NET
         #region -- math functions --
 
         /// <summary>
-        /// PI
-        /// </summary>
-        protected static readonly double PI = Math.PI;
-
-        /// <summary>
         /// Half of PI
         /// </summary>
-        protected static readonly double HALF_PI = (PI * 0.5);
+        protected static readonly double HALF_PI = PI * 0.5;
 
         /// <summary>
         /// PI * 2
         /// </summary>
-        protected static readonly double TWO_PI = (PI * 2.0);
+        protected static readonly double TWO_PI = PI * 2.0;
 
         /// <summary>
         /// EPSLoN
@@ -282,20 +278,20 @@ namespace GMap.NET
         /// <summary>
         /// MAX_VAL
         /// </summary>
-        protected const double MAX_VAL = 4;
+        protected const double MaxVal = 4;
 
         /// <summary>
         /// MAXLONG
         /// </summary>
-        protected static readonly double MAXLONG = 2147483647;
+        protected static readonly double MaxLong = 0x7FFFFFFF;
 
         /// <summary>
         /// DBLLONG
         /// </summary>
-        protected static readonly double DBLLONG = 4.61168601e18;
+        protected static readonly double DblLong = 4.61168601e18;
 
-        static readonly double R2D = 180 / Math.PI;
-        static readonly double D2R = Math.PI / 180;
+        static readonly double R2D = 180 / PI;
+        static readonly double D2R = PI / 180;
 
         public static double DegreesToRadians(double deg)
         {
@@ -312,10 +308,7 @@ namespace GMap.NET
         ///</summary>
         protected static double Sign(double x)
         {
-            if (x < 0.0)
-                return (-1);
-            else
-                return (1);
+            return x < 0.0 ? -1 : 1;
         }
 
         protected static double AdjustLongitude(double x)
@@ -323,30 +316,30 @@ namespace GMap.NET
             long count = 0;
             while (true)
             {
-                if (Math.Abs(x) <= PI)
+                if (Abs(x) <= PI)
                     break;
                 else
-                   if (((long)Math.Abs(x / Math.PI)) < 2)
+                   if (((long)Abs(x / PI)) < 2)
                     x = x - (Sign(x) * TWO_PI);
                 else
-                      if (((long)Math.Abs(x / TWO_PI)) < MAXLONG)
+                      if (((long)Abs(x / TWO_PI)) < MaxLong)
                 {
                     x = x - (((long)(x / TWO_PI)) * TWO_PI);
                 }
                 else
-                         if (((long)Math.Abs(x / (MAXLONG * TWO_PI))) < MAXLONG)
+                         if (((long)Abs(x / (MaxLong * TWO_PI))) < MaxLong)
                 {
-                    x = x - (((long)(x / (MAXLONG * TWO_PI))) * (TWO_PI * MAXLONG));
+                    x = x - (((long)(x / (MaxLong * TWO_PI))) * (TWO_PI * MaxLong));
                 }
                 else
-                            if (((long)Math.Abs(x / (DBLLONG * TWO_PI))) < MAXLONG)
+                            if (((long)Abs(x / (DblLong * TWO_PI))) < MaxLong)
                 {
-                    x = x - (((long)(x / (DBLLONG * TWO_PI))) * (TWO_PI * DBLLONG));
+                    x = x - (((long)(x / (DblLong * TWO_PI))) * (TWO_PI * DblLong));
                 }
                 else
                     x = x - (Sign(x) * TWO_PI);
                 count++;
-                if (count > MAX_VAL)
+                if (count > MaxVal)
                     break;
             }
             return (x);
@@ -357,8 +350,8 @@ namespace GMap.NET
         /// </summary>
         protected static void SinCos(double val, out double sin, out double cos)
         {
-            sin = Math.Sin(val);
-            cos = Math.Cos(val);
+            sin = Sin(val);
+            cos = Cos(val);
         }
 
         /// <summary>
@@ -393,7 +386,7 @@ namespace GMap.NET
         /// </summary>
         protected static double mlfn(double e0, double e1, double e2, double e3, double phi)
         {
-            return (e0 * phi - e1 * Math.Sin(2.0 * phi) + e2 * Math.Sin(4.0 * phi) - e3 * Math.Sin(6.0 * phi));
+            return (e0 * phi - e1 * Sin(2.0 * phi) + e2 * Sin(4.0 * phi) - e3 * Sin(6.0 * phi));
         }
 
         /// <summary>
@@ -401,9 +394,9 @@ namespace GMap.NET
         /// </summary>
         /// <param name="lon">Longitude in degrees</param>
         /// <returns></returns>
-        protected static long GetUTMzone(double lon)
+        protected static long GetUTMZone(double lon)
         {
-            return ((long)(((lon + 180.0) / 6.0) + 1.0));
+            return (long)((lon + 180.0) / 6.0 + 1.0);
         }
 
         /// <summary>
@@ -415,7 +408,7 @@ namespace GMap.NET
         /// <returns>The clipped value.</returns>
         protected static double Clip(double n, double minValue, double maxValue)
         {
-            return Math.Min(Math.Max(n, minValue), maxValue);
+            return Min(Max(n, minValue), maxValue);
         }
 
         /// <summary>
@@ -427,14 +420,14 @@ namespace GMap.NET
         /// <returns></returns>
         public double GetDistance(PointLatLng p1, PointLatLng p2)
         {
-            double dLat1InRad = p1.Lat * (Math.PI / 180);
-            double dLong1InRad = p1.Lng * (Math.PI / 180);
-            double dLat2InRad = p2.Lat * (Math.PI / 180);
-            double dLong2InRad = p2.Lng * (Math.PI / 180);
+            double dLat1InRad = p1.Lat * (PI / 180);
+            double dLong1InRad = p1.Lng * (PI / 180);
+            double dLat2InRad = p2.Lat * (PI / 180);
+            double dLong2InRad = p2.Lng * (PI / 180);
             double dLongitude = dLong2InRad - dLong1InRad;
             double dLatitude = dLat2InRad - dLat1InRad;
-            double a = Math.Pow(Math.Sin(dLatitude / 2), 2) + Math.Cos(dLat1InRad) * Math.Cos(dLat2InRad) * Math.Pow(Math.Sin(dLongitude / 2), 2);
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double a = Pow(Sin(dLatitude / 2), 2) + Cos(dLat1InRad) * Cos(dLat2InRad) * Pow(Sin(dLongitude / 2), 2);
+            double c = 2 * Atan2(Sqrt(a), Sqrt(1 - a));
             double dDistance = (Axis / 1000.0) * c;
             return dDistance;
         }
@@ -444,7 +437,7 @@ namespace GMap.NET
             double a = (double)(point2.X - point1.X);
             double b = (double)(point2.Y - point1.Y);
 
-            return Math.Sqrt(a * a + b * b);
+            return Sqrt(a * a + b * b);
         }
 
         /// <summary>
@@ -457,33 +450,33 @@ namespace GMap.NET
             var latitude2 = DegreesToRadians(p2.Lat);
             var longitudeDifference = DegreesToRadians(p2.Lng - p1.Lng);
 
-            var y = Math.Sin(longitudeDifference) * Math.Cos(latitude2);
-            var x = Math.Cos(latitude1) * Math.Sin(latitude2) - Math.Sin(latitude1) * Math.Cos(latitude2) * Math.Cos(longitudeDifference);
+            var y = Sin(longitudeDifference) * Cos(latitude2);
+            var x = Cos(latitude1) * Sin(latitude2) - Sin(latitude1) * Cos(latitude2) * Cos(longitudeDifference);
 
-            return (RadiansToDegrees(Math.Atan2(y, x)) + 360) % 360;
+            return (RadiansToDegrees(Atan2(y, x)) + 360) % 360;
         }
 
         /// <summary>
-        /// Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum
+        /// Conversion from cartesian earth-centered coordinates to geodetic coordinates in the given datum
         /// </summary>
-        /// <param name="Lat"></param>
-        /// <param name="Lon"></param>
-        /// <param name="Height">Height above ellipsoid [m]</param>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <param name="Z"></param>
-        public void FromGeodeticToCartesian(double Lat, double Lng, double Height, out double X, out double Y, out double Z)
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <param name="height">Height above ellipsoid [m]</param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public void FromGeodeticToCartesian(double lat, double lng, double height, out double x, out double y, out double z)
         {
-            Lat = (Math.PI / 180) * Lat;
-            Lng = (Math.PI / 180) * Lng;
+            lat = (PI / 180) * lat;
+            lng = (PI / 180) * lng;
 
             double B = Axis * (1.0 - Flattening);
             double ee = 1.0 - (B / Axis) * (B / Axis);
-            double N = (Axis / Math.Sqrt(1.0 - ee * Math.Sin(Lat) * Math.Sin(Lat)));
+            double N = (Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat)));
 
-            X = (N + Height) * Math.Cos(Lat) * Math.Cos(Lng);
-            Y = (N + Height) * Math.Cos(Lat) * Math.Sin(Lng);
-            Z = (N * (B / Axis) * (B / Axis) + Height) * Math.Sin(Lat);
+            x = (N + height) * Cos(lat) * Cos(lng);
+            y = (N + height) * Cos(lat) * Sin(lng);
+            z = (N * (B / Axis) * (B / Axis) + height) * Sin(lat);
         }
 
         /// <summary>
@@ -497,16 +490,16 @@ namespace GMap.NET
         public void FromCartesianTGeodetic(double X, double Y, double Z, out double Lat, out double Lng)
         {
             double E = Flattening * (2.0 - Flattening);
-            Lng = Math.Atan2(Y, X);
+            Lng = Atan2(Y, X);
 
-            double P = Math.Sqrt(X * X + Y * Y);
-            double Theta = Math.Atan2(Z, (P * (1.0 - Flattening)));
-            double st = Math.Sin(Theta);
-            double ct = Math.Cos(Theta);
-            Lat = Math.Atan2(Z + E / (1.0 - Flattening) * Axis * st * st * st, P - E * Axis * ct * ct * ct);
+            double P = Sqrt(X * X + Y * Y);
+            double Theta = Atan2(Z, (P * (1.0 - Flattening)));
+            double st = Sin(Theta);
+            double ct = Cos(Theta);
+            Lat = Atan2(Z + E / (1.0 - Flattening) * Axis * st * st * st, P - E * Axis * ct * ct * ct);
 
-            Lat /= (Math.PI / 180);
-            Lng /= (Math.PI / 180);
+            Lat /= (PI / 180);
+            Lng /= (PI / 180);
         }
 
         public static List<PointLatLng> PolylineDecode(string encodedPath) 
@@ -569,8 +562,8 @@ namespace GMap.NET
 
             foreach (PointLatLng point in path)
             {
-                long lat = Convert.ToInt64(Math.Round(point.Lat * 1e5));
-                long lng = Convert.ToInt64(Math.Round(point.Lng * 1e5));
+                long lat = Convert.ToInt64(Round(point.Lat * 1e5));
+                long lng = Convert.ToInt64(Round(point.Lng * 1e5));
 
                 long dLat = lat - lastLat;
                 long dLng = lng - lastLng;

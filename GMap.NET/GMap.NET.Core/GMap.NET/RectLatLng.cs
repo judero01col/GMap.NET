@@ -10,27 +10,23 @@ namespace GMap.NET
    public struct RectLatLng
    {
       public static readonly RectLatLng Empty;
-      private double lng;
-      private double lat;
-      private double widthLng;
-      private double heightLat;
 
       public RectLatLng(double lat, double lng, double widthLng, double heightLat)
       {
-         this.lng = lng;
-         this.lat = lat;
-         this.widthLng = widthLng;
-         this.heightLat = heightLat;
-         NotEmpty = true;
+         Lng = lng;
+         Lat = lat;
+         WidthLng = widthLng;
+         HeightLat = heightLat;
+         _notEmpty = true;
       }
 
       public RectLatLng(PointLatLng location, SizeLatLng size)
       {
-         this.lng = location.Lng;
-         this.lat = location.Lat;
-         this.widthLng = size.WidthLng;
-         this.heightLat = size.HeightLat;
-         NotEmpty = true;
+         Lng = location.Lng;
+         Lat = location.Lat;
+         WidthLng = size.WidthLng;
+         HeightLat = size.HeightLat;
+         _notEmpty = true;
       }
 
       public static RectLatLng FromLTRB(double leftLng, double topLat, double rightLng, double bottomLat)
@@ -46,8 +42,8 @@ namespace GMap.NET
          }
          set
          {
-            this.Lng = value.Lng;
-            this.Lat = value.Lat;
+            Lng = value.Lng;
+            Lat = value.Lat;
          }
       }
 
@@ -55,7 +51,7 @@ namespace GMap.NET
       {
          get
          {
-            PointLatLng ret = new PointLatLng(this.Lat, this.Lng);
+            var ret = new PointLatLng(this.Lat, this.Lng);
             ret.Offset(HeightLat, WidthLng);
             return ret;
          }
@@ -65,7 +61,7 @@ namespace GMap.NET
       {
          get
          {
-            PointLatLng ret = new PointLatLng(this.Lat, this.Lng);
+            var ret = new PointLatLng(this.Lat, this.Lng);
             ret.Offset(HeightLat / 2, WidthLng / 2);
             return ret;
          }
@@ -79,64 +75,24 @@ namespace GMap.NET
          }
          set
          {
-            this.WidthLng = value.WidthLng;
-            this.HeightLat = value.HeightLat;
+            WidthLng = value.WidthLng;
+            HeightLat = value.HeightLat;
          }
       }
 
-      public double Lng
-      {
-         get
-         {
-            return this.lng;
-         }
-         set
-         {
-            this.lng = value;
-         }
-      }
+      public double Lng { get; set; }
 
-      public double Lat
-      {
-         get
-         {
-            return this.lat;
-         }
-         set
-         {
-            this.lat = value;
-         }
-      }
+      public double Lat { get; set; }
 
-      public double WidthLng
-      {
-         get
-         {
-            return this.widthLng;
-         }
-         set
-         {
-            this.widthLng = value;
-         }
-      }
+      public double WidthLng { get; set; }
 
-      public double HeightLat
-      {
-         get
-         {
-            return this.heightLat;
-         }
-         set
-         {
-            this.heightLat = value;
-         }
-      }
+      public double HeightLat { get; set; }
 
       public double Left
       {
          get
          {
-            return this.Lng;
+            return Lng;
          }
       }
 
@@ -144,7 +100,7 @@ namespace GMap.NET
       {
          get
          {
-            return this.Lat;
+            return Lat;
          }
       }
 
@@ -152,7 +108,7 @@ namespace GMap.NET
       {
          get
          {
-            return (this.Lng + this.WidthLng);
+            return Lng + WidthLng;
          }
       }
 
@@ -160,11 +116,11 @@ namespace GMap.NET
       {
          get
          {
-            return (this.Lat - this.HeightLat);
+            return Lat - HeightLat;
          }
       }
 
-      bool NotEmpty;
+      private bool _notEmpty;
 
       /// <summary>
       /// returns true if coordinates wasn't assigned
@@ -173,7 +129,7 @@ namespace GMap.NET
       {
           get
           {
-              return !NotEmpty;
+              return !_notEmpty;
           }
       }
 
@@ -183,7 +139,8 @@ namespace GMap.NET
          {
             return false;
          }
-         RectLatLng ef = (RectLatLng)obj;
+
+         var ef = (RectLatLng)obj;
          return ((((ef.Lng == this.Lng) && (ef.Lat == this.Lat)) && (ef.WidthLng == this.WidthLng)) && (ef.HeightLat == this.HeightLat));
       }
 

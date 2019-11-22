@@ -10,25 +10,25 @@ namespace GMap.NET
    {
       public static readonly SizeLatLng Empty;
 
-      private double heightLat;
-      private double widthLng;
+      private double _heightLat;
+      private double _widthLng;
 
       public SizeLatLng(SizeLatLng size)
       {
-         this.widthLng = size.widthLng;
-         this.heightLat = size.heightLat;
+         this._widthLng = size._widthLng;
+         this._heightLat = size._heightLat;
       }
 
       public SizeLatLng(PointLatLng pt)
       {
-         this.heightLat = pt.Lat;
-         this.widthLng = pt.Lng;
+         this._heightLat = pt.Lat;
+         this._widthLng = pt.Lng;
       }
 
       public SizeLatLng(double heightLat, double widthLng)
       {
-         this.heightLat = heightLat;
-         this.widthLng = widthLng;
+         this._heightLat = heightLat;
+         this._widthLng = widthLng;
       }
 
       public static SizeLatLng operator+(SizeLatLng sz1, SizeLatLng sz2)
@@ -60,7 +60,7 @@ namespace GMap.NET
       {
          get
          {
-            return ((this.widthLng == 0d) && (this.heightLat == 0d));
+            return ((this._widthLng == 0d) && (this._heightLat == 0d));
          }
       }
 
@@ -68,11 +68,11 @@ namespace GMap.NET
       {
          get
          {
-            return this.widthLng;
+            return this._widthLng;
          }
          set
          {
-            this.widthLng = value;
+            this._widthLng = value;
          }
       }
 
@@ -80,11 +80,11 @@ namespace GMap.NET
       {
          get
          {
-            return this.heightLat;
+            return this._heightLat;
          }
          set
          {
-            this.heightLat = value;
+            this._heightLat = value;
          }
       }
 
@@ -124,7 +124,7 @@ namespace GMap.NET
 
       public override string ToString()
       {
-         return ("{WidthLng=" + this.widthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" + this.heightLat.ToString(CultureInfo.CurrentCulture) + "}");
+         return ("{WidthLng=" + this._widthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" + this._heightLat.ToString(CultureInfo.CurrentCulture) + "}");
       }
 
       static SizeLatLng()

@@ -1,121 +1,107 @@
+﻿using System.Globalization;
 
 namespace GMap.NET
 {
-   using System.Globalization;
+    /// <summary>
+    /// the size
+    /// </summary>
+    public struct GSize
+    {
+        public static readonly GSize Empty = new GSize();
 
-   /// <summary>
-   /// the size
-   /// </summary>
-   public struct GSize
-   {
-      public static readonly GSize Empty = new GSize();
+        public GSize(GPoint pt)
+        {
+            Width = pt.X;
+            Height = pt.Y;
+        }
 
-      private long width;
-      private long height;
+        public GSize(long width, long height)
+        {
+            Width = width;
+            Height = height;
+        }
 
-      public GSize(GPoint pt)
-      {
-         width = pt.X;
-         height = pt.Y;
-      }
+        public static GSize operator +(GSize sz1, GSize sz2)
+        {
+            return Add(sz1, sz2);
+        }
 
-      public GSize(long width, long height)
-      {
-         this.width = width;
-         this.height = height;
-      }
+        public static GSize operator -(GSize sz1, GSize sz2)
+        {
+            return Subtract(sz1, sz2);
+        }
 
-      public static GSize operator +(GSize sz1, GSize sz2)
-      {
-         return Add(sz1, sz2);
-      }
+        public static bool operator ==(GSize sz1, GSize sz2)
+        {
+            return sz1.Width == sz2.Width && sz1.Height == sz2.Height;
+        }
 
-      public static GSize operator -(GSize sz1, GSize sz2)
-      {
-         return Subtract(sz1, sz2);
-      }
+        public static bool operator !=(GSize sz1, GSize sz2)
+        {
+            return !(sz1 == sz2);
+        }
 
-      public static bool operator ==(GSize sz1, GSize sz2)
-      {
-         return sz1.Width == sz2.Width && sz1.Height == sz2.Height;
-      }
+        public static explicit operator GPoint(GSize size)
+        {
+            return new GPoint(size.Width, size.Height);
+        }
 
-      public static bool operator !=(GSize sz1, GSize sz2)
-      {
-         return !(sz1 == sz2);
-      }
+        public bool IsEmpty
+        {
+            get
+            {
+                return Width == 0 && Height == 0;
+            }
+        }
 
-      public static explicit operator GPoint(GSize size)
-      {
-         return new GPoint(size.Width, size.Height);
-      }
+        public long Width
+        {
+            get;
+            set;
+        }
 
-      public bool IsEmpty
-      {
-         get
-         {
-            return width == 0 && height == 0;
-         }
-      }
+        public long Height
+        {
+            get;
+            set;
+        }
 
-      public long Width
-      {
-         get
-         {
-            return width;
-         }
-         set
-         {
-            width = value;
-         }
-      }
+        public static GSize Add(GSize sz1, GSize sz2)
+        {
+            return new GSize(sz1.Width + sz2.Width, sz1.Height + sz2.Height);
+        }
 
-      public long Height
-      {
-         get
-         {
-            return height;
-         }
-         set
-         {
-            height = value;
-         }
-      }
+        public static GSize Subtract(GSize sz1, GSize sz2)
+        {
+            return new GSize(sz1.Width - sz2.Width, sz1.Height - sz2.Height);
+        }
 
-      public static GSize Add(GSize sz1, GSize sz2)
-      {
-         return new GSize(sz1.Width + sz2.Width, sz1.Height + sz2.Height);
-      }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is GSize))
+                return false;
 
-      public static GSize Subtract(GSize sz1, GSize sz2)
-      {
-         return new GSize(sz1.Width - sz2.Width, sz1.Height - sz2.Height);
-      }
+            GSize comp = (GSize)obj;
+            // Note value types can't have derived classes, so we don't need to
+            //
+            return (comp.Width == this.Width) &&
+                   (comp.Height == this.Height);
+        }
 
-      public override bool Equals(object obj)
-      {
-         if(!(obj is GSize))
-            return false;
+        public override int GetHashCode()
+        {
+            if (this.IsEmpty)
+            {
+                return 0;
+            }
 
-         GSize comp = (GSize)obj;
-         // Note value types can't have derived classes, so we don't need to
-         //
-         return (comp.width == this.width) &&
-                   (comp.height == this.height);
-      }
+            return (Width.GetHashCode() ^ Height.GetHashCode());
+        }
 
-      public override int GetHashCode()
-      {
-         if(this.IsEmpty)
-         {
-            return 0;
-         }
-         return (Width.GetHashCode() ^ Height.GetHashCode());
-      }
-
-      public override string ToString()
-      {
-         return "{Width=" + width.ToString(CultureInfo.CurrentCulture) + ", Height=" + height.ToString(CultureInfo.CurrentCulture) + "}";
-      }
-   }
+        public override string ToString()
+        {
+            return "{Width=" + Width.ToString(CultureInfo.CurrentCulture) + ", Height=" +
+                   Height.ToString(CultureInfo.CurrentCulture) + "}";
+        }
+    }
 }
