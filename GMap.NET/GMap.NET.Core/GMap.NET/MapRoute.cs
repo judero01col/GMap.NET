@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.Serialization;
 using GMap.NET.MapProviders;
-using System.Reflection;
 
 namespace GMap.NET
 {
     /// <summary>
-    /// represents route of map
+    ///     represents route of map
     /// </summary>
     [Serializable]
 #if !PocketPC
@@ -17,29 +17,29 @@ namespace GMap.NET
 #endif
     {
         /// <summary>
-        /// points of route
+        ///     points of route
         /// </summary>
         public readonly List<PointLatLng> Points = new List<PointLatLng>();
 
         /// <summary>
-        /// route info
+        ///     route info
         /// </summary>
         public string Name;
 
         /// <summary>
-        /// custom object
+        ///     custom object
         /// </summary>
         public object Tag;
 
         /// <summary>
-        /// time of route
+        ///     time of route
         /// </summary>
         public string Duration;
 
         public List<string> Instructions = new List<string>();
 
         /// <summary>
-        /// Status of Route
+        ///     Status of Route
         /// </summary>
         public RouteStatusCode Status { get; set; }
 
@@ -50,7 +50,7 @@ namespace GMap.NET
         public string WarningMessage { get; set; }
 
         /// <summary>
-        /// route start point
+        ///     route start point
         /// </summary>
         public PointLatLng? From
         {
@@ -66,7 +66,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// route end point
+        ///     route end point
         /// </summary>
         public PointLatLng? To
         {
@@ -107,7 +107,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// route distance (in km)
+        ///     route distance (in km)
         /// </summary>
         public double Distance
         {
@@ -128,7 +128,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Gets the minimum distance (in mts) from the route to a point. Gets null if total points of route are less than 2.
+        ///     Gets the minimum distance (in mts) from the route to a point. Gets null if total points of route are less than 2.
         /// </summary>
         /// <param name="point">Point to calculate distance.</param>
         /// <returns>Distance in meters.</returns>
@@ -156,7 +156,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Gets the distance (in mts) between the nearest point of a lineal route (of two points), and a point.
+        ///     Gets the distance (in mts) between the nearest point of a lineal route (of two points), and a point.
         /// </summary>
         /// <param name="start">Start point of lineal route.</param>
         /// <param name="to">End point of lineal route.</param>
@@ -192,7 +192,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// clears points and sets tag and name to null
+        ///     clears points and sets tag and name to null
         /// </summary>
         public void Clear()
         {
@@ -209,12 +209,16 @@ namespace GMap.NET
         private PointLatLng[] deserializedPoints;
 
         /// <summary>
-        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        ///     Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the
+        ///     target object.
         /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
-        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">
+        ///     The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this
+        ///     serialization.
+        /// </param>
         /// <exception cref="T:System.Security.SecurityException">
-        /// The caller does not have the required permission.
+        ///     The caller does not have the required permission.
         /// </exception>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -224,7 +228,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapRoute"/> class.
+        ///     Initializes a new instance of the <see cref="MapRoute" /> class.
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
@@ -241,9 +245,12 @@ namespace GMap.NET
         #region IDeserializationCallback Members
 
         /// <summary>
-        /// Runs when the entire object graph has been de-serialized.
+        ///     Runs when the entire object graph has been de-serialized.
         /// </summary>
-        /// <param name="sender">The object that initiated the callback. The functionality for this parameter is not currently implemented.</param>
+        /// <param name="sender">
+        ///     The object that initiated the callback. The functionality for this parameter is not currently
+        ///     implemented.
+        /// </param>
         public virtual void OnDeserialization(object sender)
         {
             // Accounts for the de-serialization being breadth first rather than depth first.

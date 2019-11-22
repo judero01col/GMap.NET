@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using static System.Math;
 
 namespace GMap.NET
 {
     /// <summary>
-    /// defines projection
+    ///     defines projection
     /// </summary>
     public abstract class PureProjection
     {
-        private readonly List<Dictionary<PointLatLng, GPoint>> _fromLatLngToPixelCache = new List<Dictionary<PointLatLng, GPoint>>(33);
+        private readonly List<Dictionary<PointLatLng, GPoint>> _fromLatLngToPixelCache =
+            new List<Dictionary<PointLatLng, GPoint>>(33);
 
-        private readonly List<Dictionary<GPoint, PointLatLng>> _fromPixelToLatLngCache = new List<Dictionary<GPoint, PointLatLng>>(33);
+        private readonly List<Dictionary<GPoint, PointLatLng>> _fromPixelToLatLngCache =
+            new List<Dictionary<GPoint, PointLatLng>>(33);
 
         public PureProjection()
         {
@@ -26,7 +27,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// size of tile
+        ///     size of tile
         /// </summary>
         public abstract GSize TileSize
         {
@@ -34,7 +35,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Semi-major axis of ellipsoid, in meters
+        ///     Semi-major axis of ellipsoid, in meters
         /// </summary>
         public abstract double Axis
         {
@@ -42,7 +43,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Flattening of ellipsoid
+        ///     Flattening of ellipsoid
         /// </summary>
         public abstract double Flattening
         {
@@ -50,7 +51,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// get pixel coordinates from lat/lng
+        ///     get pixel coordinates from lat/lng
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
@@ -59,7 +60,7 @@ namespace GMap.NET
         public abstract GPoint FromLatLngToPixel(double lat, double lng, int zoom);
 
         /// <summary>
-        /// gets lat/lng coordinates from pixel coordinates
+        ///     gets lat/lng coordinates from pixel coordinates
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -73,7 +74,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// get pixel coordinates from lat/lng
+        ///     get pixel coordinates from lat/lng
         /// </summary>
         /// <param name="p"></param>
         /// <param name="zoom"></param>
@@ -96,6 +97,7 @@ namespace GMap.NET
 
                     Debug.WriteLine("FromLatLngToPixelCache[" + zoom + "] added " + p + " with " + ret);
                 }
+
                 return ret;
             }
             else
@@ -110,7 +112,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// gets lat/lng coordinates from pixel coordinates
+        ///     gets lat/lng coordinates from pixel coordinates
         /// </summary>
         /// <param name="p"></param>
         /// <param name="zoom"></param>
@@ -133,6 +135,7 @@ namespace GMap.NET
 
                     Debug.WriteLine("FromPixelToLatLngCache[" + zoom + "] added " + p + " with " + ret);
                 }
+
                 return ret;
             }
             else
@@ -142,7 +145,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// gets tile coorddinate from pixel coordinates
+        ///     gets tile coorddinate from pixel coordinates
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
@@ -152,31 +155,31 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// gets pixel coordinate from tile coordinate
+        ///     gets pixel coordinate from tile coordinate
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
         public virtual GPoint FromTileXYToPixel(GPoint p)
         {
-            return new GPoint((p.X * TileSize.Width), (p.Y * TileSize.Height));
+            return new GPoint(p.X * TileSize.Width, p.Y * TileSize.Height);
         }
 
         /// <summary>
-        /// min. tile in tiles at custom zoom level
+        ///     min. tile in tiles at custom zoom level
         /// </summary>
         /// <param name="zoom"></param>
         /// <returns></returns>
         public abstract GSize GetTileMatrixMinXY(int zoom);
 
         /// <summary>
-        /// max. tile in tiles at custom zoom level
+        ///     max. tile in tiles at custom zoom level
         /// </summary>
         /// <param name="zoom"></param>
         /// <returns></returns>
         public abstract GSize GetTileMatrixMaxXY(int zoom);
 
         /// <summary>
-        /// gets matrix size in tiles
+        ///     gets matrix size in tiles
         /// </summary>
         /// <param name="zoom"></param>
         /// <returns></returns>
@@ -189,18 +192,18 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// tile matrix size in pixels at custom zoom level
+        ///     tile matrix size in pixels at custom zoom level
         /// </summary>
         /// <param name="zoom"></param>
         /// <returns></returns>
         public long GetTileMatrixItemCount(int zoom)
         {
             GSize s = GetTileMatrixSizeXY(zoom);
-            return (s.Width * s.Height);
+            return s.Width * s.Height;
         }
 
         /// <summary>
-        /// gets matrix size in pixels
+        ///     gets matrix size in pixels
         /// </summary>
         /// <param name="zoom"></param>
         /// <returns></returns>
@@ -211,7 +214,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// gets all tiles in rect at specific zoom
+        ///     gets all tiles in rect at specific zoom
         /// </summary>
         public List<GPoint> GetAreaTileList(RectLatLng rect, int zoom, int padding)
         {
@@ -220,9 +223,9 @@ namespace GMap.NET
             GPoint topLeft = FromPixelToTileXY(FromLatLngToPixel(rect.LocationTopLeft, zoom));
             GPoint rightBottom = FromPixelToTileXY(FromLatLngToPixel(rect.LocationRightBottom, zoom));
 
-            for (long x = (topLeft.X - padding); x <= (rightBottom.X + padding); x++)
+            for (long x = topLeft.X - padding; x <= rightBottom.X + padding; x++)
             {
-                for (long y = (topLeft.Y - padding); y <= (rightBottom.Y + padding); y++)
+                for (long y = topLeft.Y - padding; y <= rightBottom.Y + padding; y++)
                 {
                     GPoint p = new GPoint(x, y);
                     if (!ret.Contains(p) && p.X >= 0 && p.Y >= 0)
@@ -236,19 +239,20 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// The ground resolution indicates the distance (in meters) on the ground that’s represented by a single pixel in the map.
-        /// For example, at a ground resolution of 10 meters/pixel, each pixel represents a ground distance of 10 meters.
+        ///     The ground resolution indicates the distance (in meters) on the ground that’s represented by a single pixel in the
+        ///     map.
+        ///     For example, at a ground resolution of 10 meters/pixel, each pixel represents a ground distance of 10 meters.
         /// </summary>
         /// <param name="zoom"></param>
         /// <param name="latitude"></param>
         /// <returns></returns>
         public virtual double GetGroundResolution(int zoom, double latitude)
         {
-            return (Cos(latitude * (PI / 180)) * 2 * PI * Axis) / GetTileMatrixSizePixel(zoom).Width;
+            return Cos(latitude * (PI / 180)) * 2 * PI * Axis / GetTileMatrixSizePixel(zoom).Width;
         }
 
         /// <summary>
-        /// gets boundaries
+        ///     gets boundaries
         /// </summary>
         public virtual RectLatLng Bounds
         {
@@ -261,32 +265,32 @@ namespace GMap.NET
         #region -- math functions --
 
         /// <summary>
-        /// Half of PI
+        ///     Half of PI
         /// </summary>
         protected static readonly double HALF_PI = PI * 0.5;
 
         /// <summary>
-        /// PI * 2
+        ///     PI * 2
         /// </summary>
         protected static readonly double TWO_PI = PI * 2.0;
 
         /// <summary>
-        /// EPSLoN
+        ///     EPSLoN
         /// </summary>
         protected static readonly double EPSLoN = 1.0e-10;
 
         /// <summary>
-        /// MAX_VAL
+        ///     MAX_VAL
         /// </summary>
         protected const double MaxVal = 4;
 
         /// <summary>
-        /// MAXLONG
+        ///     MAXLONG
         /// </summary>
         protected static readonly double MaxLong = 0x7FFFFFFF;
 
         /// <summary>
-        /// DBLLONG
+        ///     DBLLONG
         /// </summary>
         protected static readonly double DblLong = 4.61168601e18;
 
@@ -295,17 +299,17 @@ namespace GMap.NET
 
         public static double DegreesToRadians(double deg)
         {
-            return (D2R * deg);
+            return D2R * deg;
         }
 
         public static double RadiansToDegrees(double rad)
         {
-            return (R2D * rad);
+            return R2D * rad;
         }
 
-        ///<summary>
-        /// return the sign of an argument 
-        ///</summary>
+        /// <summary>
+        ///     return the sign of an argument
+        /// </summary>
         protected static double Sign(double x)
         {
             return x < 0.0 ? -1 : 1;
@@ -318,35 +322,33 @@ namespace GMap.NET
             {
                 if (Abs(x) <= PI)
                     break;
-                else
-                   if (((long)Abs(x / PI)) < 2)
-                    x = x - (Sign(x) * TWO_PI);
-                else
-                      if (((long)Abs(x / TWO_PI)) < MaxLong)
+                else if ((long)Abs(x / PI) < 2)
+                    x = x - Sign(x) * TWO_PI;
+                else if ((long)Abs(x / TWO_PI) < MaxLong)
                 {
-                    x = x - (((long)(x / TWO_PI)) * TWO_PI);
+                    x = x - (long)(x / TWO_PI) * TWO_PI;
+                }
+                else if ((long)Abs(x / (MaxLong * TWO_PI)) < MaxLong)
+                {
+                    x = x - (long)(x / (MaxLong * TWO_PI)) * (TWO_PI * MaxLong);
+                }
+                else if ((long)Abs(x / (DblLong * TWO_PI)) < MaxLong)
+                {
+                    x = x - (long)(x / (DblLong * TWO_PI)) * (TWO_PI * DblLong);
                 }
                 else
-                         if (((long)Abs(x / (MaxLong * TWO_PI))) < MaxLong)
-                {
-                    x = x - (((long)(x / (MaxLong * TWO_PI))) * (TWO_PI * MaxLong));
-                }
-                else
-                            if (((long)Abs(x / (DblLong * TWO_PI))) < MaxLong)
-                {
-                    x = x - (((long)(x / (DblLong * TWO_PI))) * (TWO_PI * DblLong));
-                }
-                else
-                    x = x - (Sign(x) * TWO_PI);
+                    x = x - Sign(x) * TWO_PI;
+
                 count++;
                 if (count > MaxVal)
                     break;
             }
-            return (x);
+
+            return x;
         }
 
         /// <summary>
-        /// calculates the sine and cosine
+        ///     calculates the sine and cosine
         /// </summary>
         protected static void SinCos(double val, out double sin, out double cos)
         {
@@ -355,42 +357,42 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// computes the constants e0, e1, e2, and e3 which are used
-        /// in a series for calculating the distance along a meridian.
+        ///     computes the constants e0, e1, e2, and e3 which are used
+        ///     in a series for calculating the distance along a meridian.
         /// </summary>
         /// <param name="x">represents the eccentricity squared</param>
         /// <returns></returns>
         protected static double e0fn(double x)
         {
-            return (1.0 - 0.25 * x * (1.0 + x / 16.0 * (3.0 + 1.25 * x)));
+            return 1.0 - 0.25 * x * (1.0 + x / 16.0 * (3.0 + 1.25 * x));
         }
 
         protected static double e1fn(double x)
         {
-            return (0.375 * x * (1.0 + 0.25 * x * (1.0 + 0.46875 * x)));
+            return 0.375 * x * (1.0 + 0.25 * x * (1.0 + 0.46875 * x));
         }
 
         protected static double e2fn(double x)
         {
-            return (0.05859375 * x * x * (1.0 + 0.75 * x));
+            return 0.05859375 * x * x * (1.0 + 0.75 * x);
         }
 
         protected static double e3fn(double x)
         {
-            return (x * x * x * (35.0 / 3072.0));
+            return x * x * x * (35.0 / 3072.0);
         }
 
         /// <summary>
-        /// computes the value of M which is the distance along a meridian
-        /// from the Equator to latitude phi.
+        ///     computes the value of M which is the distance along a meridian
+        ///     from the Equator to latitude phi.
         /// </summary>
         protected static double mlfn(double e0, double e1, double e2, double e3, double phi)
         {
-            return (e0 * phi - e1 * Sin(2.0 * phi) + e2 * Sin(4.0 * phi) - e3 * Sin(6.0 * phi));
+            return e0 * phi - e1 * Sin(2.0 * phi) + e2 * Sin(4.0 * phi) - e3 * Sin(6.0 * phi);
         }
 
         /// <summary>
-        /// calculates UTM zone number
+        ///     calculates UTM zone number
         /// </summary>
         /// <param name="lon">Longitude in degrees</param>
         /// <returns></returns>
@@ -400,7 +402,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Clips a number to the specified minimum and maximum values.
+        ///     Clips a number to the specified minimum and maximum values.
         /// </summary>
         /// <param name="n">The number to clip.</param>
         /// <param name="minValue">Minimum allowable value.</param>
@@ -412,8 +414,8 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// distance (in km) between two points specified by latitude/longitude
-        /// The Haversine formula, http://www.movable-type.co.uk/scripts/latlong.html
+        ///     distance (in km) between two points specified by latitude/longitude
+        ///     The Haversine formula, http://www.movable-type.co.uk/scripts/latlong.html
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="p2"></param>
@@ -428,7 +430,7 @@ namespace GMap.NET
             double dLatitude = dLat2InRad - dLat1InRad;
             double a = Pow(Sin(dLatitude / 2), 2) + Cos(dLat1InRad) * Cos(dLat2InRad) * Pow(Sin(dLongitude / 2), 2);
             double c = 2 * Atan2(Sqrt(a), Sqrt(1 - a));
-            double dDistance = (Axis / 1000.0) * c;
+            double dDistance = Axis / 1000.0 * c;
             return dDistance;
         }
 
@@ -441,7 +443,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Accepts two coordinates in degrees.
+        ///     Accepts two coordinates in degrees.
         /// </summary>
         /// <returns>A double value in degrees. From 0 to 360.</returns>
         public double GetBearing(PointLatLng p1, PointLatLng p2)
@@ -457,7 +459,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Conversion from cartesian earth-centered coordinates to geodetic coordinates in the given datum
+        ///     Conversion from cartesian earth-centered coordinates to geodetic coordinates in the given datum
         /// </summary>
         /// <param name="lat"></param>
         /// <param name="lng"></param>
@@ -465,14 +467,15 @@ namespace GMap.NET
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public void FromGeodeticToCartesian(double lat, double lng, double height, out double x, out double y, out double z)
+        public void FromGeodeticToCartesian(double lat, double lng, double height, out double x, out double y,
+            out double z)
         {
-            lat = (PI / 180) * lat;
-            lng = (PI / 180) * lng;
+            lat = PI / 180 * lat;
+            lng = PI / 180 * lng;
 
             double B = Axis * (1.0 - Flattening);
-            double ee = 1.0 - (B / Axis) * (B / Axis);
-            double N = (Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat)));
+            double ee = 1.0 - B / Axis * (B / Axis);
+            double N = Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat));
 
             x = (N + height) * Cos(lat) * Cos(lng);
             y = (N + height) * Cos(lat) * Sin(lng);
@@ -480,7 +483,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum
+        ///     Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum
         /// </summary>
         /// <param name="X"></param>
         /// <param name="Y"></param>
@@ -493,16 +496,16 @@ namespace GMap.NET
             Lng = Atan2(Y, X);
 
             double P = Sqrt(X * X + Y * Y);
-            double Theta = Atan2(Z, (P * (1.0 - Flattening)));
+            double Theta = Atan2(Z, P * (1.0 - Flattening));
             double st = Sin(Theta);
             double ct = Cos(Theta);
             Lat = Atan2(Z + E / (1.0 - Flattening) * Axis * st * st * st, P - E * Axis * ct * ct * ct);
 
-            Lat /= (PI / 180);
-            Lng /= (PI / 180);
+            Lat /= PI / 180;
+            Lng /= PI / 180;
         }
 
-        public static List<PointLatLng> PolylineDecode(string encodedPath) 
+        public static List<PointLatLng> PolylineDecode(string encodedPath)
         {
             List<PointLatLng> path = new List<PointLatLng>();
 
@@ -525,7 +528,7 @@ namespace GMap.NET
                     shift += 5;
                 } while (b >= 0x1f && index < len);
 
-                lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+                lat += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
 
                 result = 1;
                 shift = 0;
@@ -539,7 +542,7 @@ namespace GMap.NET
                         shift += 5;
                     } while (b >= 0x1f && index < len);
 
-                    lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+                    lng += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
                 }
 
                 path.Add(new PointLatLng(lat * 1e-5, lng * 1e-5));
@@ -550,9 +553,9 @@ namespace GMap.NET
 
         public static void PolylineDecode(List<PointLatLng> path, string encodedPath)
         {
-            path.AddRange((PolylineDecode(encodedPath)));
+            path.AddRange(PolylineDecode(encodedPath));
         }
-        
+
         public static String PolylineEncode(List<PointLatLng> path)
         {
             long lastLat = 0;
@@ -574,7 +577,7 @@ namespace GMap.NET
                 lastLat = lat;
                 lastLng = lng;
             }
-         
+
             return result.ToString();
         }
 

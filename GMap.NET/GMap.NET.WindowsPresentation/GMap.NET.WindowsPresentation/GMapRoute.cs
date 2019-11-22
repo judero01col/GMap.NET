@@ -1,13 +1,11 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
+
 namespace GMap.NET.WindowsPresentation
 {
-    using System;
-    using System.Windows;
-    using System.Collections.Generic;
-    using System.Windows.Media;
-    using System.Windows.Media.Effects;
-    using System.Windows.Shapes;
-
     public interface IShapable
     {
         List<PointLatLng> Points
@@ -35,7 +33,7 @@ namespace GMap.NET.WindowsPresentation
         }
 
         /// <summary>
-        /// creates path from list of points, for performance set addBlurEffect to false
+        ///     creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
         /// <param name="pl"></param>
         /// <returns></returns>

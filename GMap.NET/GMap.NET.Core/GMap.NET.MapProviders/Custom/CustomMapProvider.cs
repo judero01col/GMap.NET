@@ -1,14 +1,8 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Xml;
-    using GMap.NET.Internals;
-    using GMap.NET.Projections;
-
     public class CustomMapProvider : GMapProvider
     {
         public static readonly CustomMapProvider Instance;
@@ -26,6 +20,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("BEAB409B-6ED0-443F-B8E3-E6CC6F019F66");
+
         public override Guid Id
         {
             get
@@ -35,6 +30,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "CustomMapProvider";
+
         public override string Name
         {
             get
@@ -44,13 +40,14 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
 
                 return overlays;
@@ -87,8 +84,10 @@ namespace GMap.NET.MapProviders
             url = url.Replace("{x}", "{2}");
             url = url.Replace("{y}", "{3}");
 
-            string letter = string.IsNullOrEmpty(CustomServerLetters) ? "" : CustomServerLetters[GetServerNum(pos, 3)].ToString();
+            string letter = string.IsNullOrEmpty(CustomServerLetters)
+                ? ""
+                : CustomServerLetters[GetServerNum(pos, 3)].ToString();
             return string.Format(url, letter, zoom, pos.X, pos.Y);
-        }        
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿    
-namespace GMap.NET.CacheProviders
+﻿namespace GMap.NET.CacheProviders
 {
 #if !SQLite
    using System;
@@ -30,7 +29,8 @@ namespace GMap.NET.CacheProviders
          set
          {
             cache = value; 
-            gtileCache = Path.Combine(cache, "TileDBv3") + Path.DirectorySeparatorChar + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
+            gtileCache =
+ Path.Combine(cache, "TileDBv3") + Path.DirectorySeparatorChar + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
          }
       }
 
@@ -65,7 +65,8 @@ namespace GMap.NET.CacheProviders
 
                if(!File.Exists(gtileCache + "Data.sdf"))
                {
-                  using(System.Data.SqlServerCe.SqlCeEngine engine = new System.Data.SqlServerCe.SqlCeEngine(connectionString))
+                  using(System.Data.SqlServerCe.SqlCeEngine engine =
+ new System.Data.SqlServerCe.SqlCeEngine(connectionString))
                   {
                      engine.CreateDatabase();
                   }
@@ -110,14 +111,16 @@ namespace GMap.NET.CacheProviders
                this.cnSet = new SqlConnection(connectionString);
                this.cnSet.Open();
 
-               this.cmdFetch = new SqlCommand("SELECT [Tile] FROM [GMapNETcache] WITH (NOLOCK) WHERE [X]=@x AND [Y]=@y AND [Zoom]=@zoom AND [Type]=@type", cnGet);
+               this.cmdFetch =
+ new SqlCommand("SELECT [Tile] FROM [GMapNETcache] WITH (NOLOCK) WHERE [X]=@x AND [Y]=@y AND [Zoom]=@zoom AND [Type]=@type", cnGet);
                this.cmdFetch.Parameters.Add("@x", System.Data.SqlDbType.Int);
                this.cmdFetch.Parameters.Add("@y", System.Data.SqlDbType.Int);
                this.cmdFetch.Parameters.Add("@zoom", System.Data.SqlDbType.Int);
                this.cmdFetch.Parameters.Add("@type", System.Data.SqlDbType.Int);
                this.cmdFetch.Prepare();
 
-               this.cmdInsert = new SqlCommand("INSERT INTO [GMapNETcache] ( [X], [Y], [Zoom], [Type], [Tile] ) VALUES ( @x, @y, @zoom, @type, @tile )", cnSet);
+               this.cmdInsert =
+ new SqlCommand("INSERT INTO [GMapNETcache] ( [X], [Y], [Zoom], [Type], [Tile] ) VALUES ( @x, @y, @zoom, @type, @tile )", cnSet);
                this.cmdInsert.Parameters.Add("@x", System.Data.SqlDbType.Int);
                this.cmdInsert.Parameters.Add("@y", System.Data.SqlDbType.Int);
                this.cmdInsert.Parameters.Add("@zoom", System.Data.SqlDbType.Int);

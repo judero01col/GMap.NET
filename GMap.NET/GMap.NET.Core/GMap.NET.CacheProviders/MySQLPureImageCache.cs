@@ -1,5 +1,4 @@
-﻿
-namespace GMap.NET.CacheProviders
+﻿namespace GMap.NET.CacheProviders
 {
 #if MySQL
    using System;
@@ -99,14 +98,16 @@ namespace GMap.NET.CacheProviders
                      }
                   }
 
-                  this.cmdFetch = new MySqlCommand("SELECT Tile FROM `gmapnetcache` WHERE Type=@type AND Zoom=@zoom AND X=@x AND Y=@y", cnGet);
+                  this.cmdFetch =
+ new MySqlCommand("SELECT Tile FROM `gmapnetcache` WHERE Type=@type AND Zoom=@zoom AND X=@x AND Y=@y", cnGet);
                   this.cmdFetch.Parameters.Add("@type", MySqlDbType.Int32);
                   this.cmdFetch.Parameters.Add("@zoom", MySqlDbType.Int32);
                   this.cmdFetch.Parameters.Add("@x", MySqlDbType.Int32);
                   this.cmdFetch.Parameters.Add("@y", MySqlDbType.Int32);
                   this.cmdFetch.Prepare();
 
-                  this.cmdInsert = new MySqlCommand("INSERT INTO `gmapnetcache` ( Type, Zoom, X, Y, Tile ) VALUES ( @type, @zoom, @x, @y, @tile )", cnSet);
+                  this.cmdInsert =
+ new MySqlCommand("INSERT INTO `gmapnetcache` ( Type, Zoom, X, Y, Tile ) VALUES ( @type, @zoom, @x, @y, @tile )", cnSet);
                   this.cmdInsert.Parameters.Add("@type", MySqlDbType.Int32);
                   this.cmdInsert.Parameters.Add("@zoom", MySqlDbType.Int32);
                   this.cmdInsert.Parameters.Add("@x", MySqlDbType.Int32);

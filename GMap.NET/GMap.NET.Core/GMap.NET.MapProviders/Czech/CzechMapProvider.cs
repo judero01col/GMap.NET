@@ -1,9 +1,8 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-    using GMap.NET.Projections;
-
     public abstract class CzechMapProviderBase : GMapProvider
     {
         public CzechMapProviderBase()
@@ -13,6 +12,7 @@ namespace GMap.NET.MapProviders
         }
 
         #region GMapProvider Members
+
         public override Guid Id
         {
             get
@@ -38,14 +38,16 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
+
                 return overlays;
             }
         }
@@ -54,11 +56,12 @@ namespace GMap.NET.MapProviders
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
 
     /// <summary>
-    /// CzechMap provider, http://www.mapy.cz/
+    ///     CzechMap provider, http://www.mapy.cz/
     /// </summary>
     public class CzechMapProvider : CzechMapProviderBase
     {
@@ -76,6 +79,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("13AB92EF-8C3B-4FAC-B2CD-2594C05F8BFC");
+
         public override Guid Id
         {
             get
@@ -85,6 +89,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "CzechMap";
+
         public override string Name
         {
             get

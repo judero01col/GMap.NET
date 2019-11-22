@@ -1,22 +1,23 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-    using GMap.NET.Projections;
-
     public abstract class HereMapProviderBase : GMapProvider
     {
         public HereMapProviderBase()
         {
             MaxZoom = null;
             RefererUrl = "http://wego.here.com/";
-            Copyright = string.Format("©{0} Here - Map data ©{0} NAVTEQ, Imagery ©{0} DigitalGlobe", DateTime.Today.Year);
+            Copyright = string.Format("©{0} Here - Map data ©{0} NAVTEQ, Imagery ©{0} DigitalGlobe",
+                DateTime.Today.Year);
         }
 
         public string AppId = string.Empty;
         public string AppCode = string.Empty;
 
         #region GMapProvider Members
+
         public override Guid Id
         {
             get
@@ -42,14 +43,16 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
+
                 return overlays;
             }
         }
@@ -58,13 +61,14 @@ namespace GMap.NET.MapProviders
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
         protected static readonly string UrlServerLetters = "1234";
     }
 
     /// <summary>
-    /// OviMap provider
+    ///     OviMap provider
     /// </summary>
     public class HereMapProvider : HereMapProviderBase
     {
@@ -82,6 +86,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("30DC2083-AC4D-4471-A232-D8A67AC9373A");
+
         public override Guid Id
         {
             get
@@ -91,6 +96,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "HereMap";
+
         public override string Name
         {
             get
@@ -112,7 +118,8 @@ namespace GMap.NET.MapProviders
         {
             return string.Format(UrlFormat, UrlServerLetters[GetServerNum(pos, 4)], zoom, pos.X, pos.Y, AppId, AppCode);
         }
-        
-        static readonly string UrlFormat = "http://{0}.traffic.maps.cit.api.here.com/maptile/2.1/traffictile/newest/normal.day/{1}/{2}/{3}/256/png8?app_id={4}&app_code={5}";
+
+        static readonly string UrlFormat =
+            "http://{0}.traffic.maps.cit.api.here.com/maptile/2.1/traffictile/newest/normal.day/{1}/{2}/{3}/256/png8?app_id={4}&app_code={5}";
     }
 }

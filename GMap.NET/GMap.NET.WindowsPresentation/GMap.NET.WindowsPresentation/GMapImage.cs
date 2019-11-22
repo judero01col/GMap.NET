@@ -1,19 +1,13 @@
-﻿
+﻿using System.Diagnostics;
+using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using GMap.NET.MapProviders;
+
 namespace GMap.NET.WindowsPresentation
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using GMap.NET.Internals;
-    using GMap.NET.MapProviders;
-
     /// <summary>
-    /// image abstraction
+    ///     image abstraction
     /// </summary>
     public class GMapImage : PureImage
     {
@@ -35,7 +29,7 @@ namespace GMap.NET.WindowsPresentation
     }
 
     /// <summary>
-    /// image abstraction proxy
+    ///     image abstraction proxy
     /// </summary>
     public class GMapImageProxy : PureImageProxy
     {

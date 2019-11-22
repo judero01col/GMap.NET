@@ -1,12 +1,11 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Shapes;
+
 namespace GMap.NET.WindowsPresentation
 {
-    using System.Collections.Generic;
-    using System.Windows;
-    using System.Windows.Media;
-    using System.Windows.Media.Effects;
-    using System.Windows.Shapes;
-
     public class GMapPolygon : GMapMarker, IShapable
     {
         public List<PointLatLng> Points { get; set; }
@@ -23,7 +22,7 @@ namespace GMap.NET.WindowsPresentation
         }
 
         /// <summary>
-        /// creates path from list of points, for performance set addBlurEffect to false
+        ///     creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
         /// <param name="pl"></param>
         /// <returns></returns>

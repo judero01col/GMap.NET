@@ -1,13 +1,11 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+
 namespace GMap.NET.Internals
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading;
-
     /// <summary>
-    /// represent tile
+    ///     represent tile
     /// </summary>
     public struct Tile : IDisposable
     {
@@ -114,6 +112,7 @@ namespace GMap.NET.Internals
                     overlays[i].Dispose();
                     overlays[i] = null;
                 }
+
                 overlays = null;
             }
         }

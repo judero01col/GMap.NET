@@ -1,18 +1,12 @@
-﻿
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
+
 namespace GMap.NET.WindowsPresentation
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Controls;
-    using GMap.NET;
-    using System.Windows.Media;
-    using System.Diagnostics;
-    using System.Windows.Shapes;
-    using System;
-
     /// <summary>
-    /// GMap.NET marker
+    ///     GMap.NET marker
     /// </summary>
     public class GMapMarker : INotifyPropertyChanged
     {
@@ -38,7 +32,7 @@ namespace GMap.NET.WindowsPresentation
         static readonly PropertyChangedEventArgs Shape_PropertyChangedEventArgs = new PropertyChangedEventArgs("Shape");
 
         /// <summary>
-        /// marker visual
+        ///     marker visual
         /// </summary>
         public UIElement Shape
         {
@@ -61,7 +55,7 @@ namespace GMap.NET.WindowsPresentation
         private PointLatLng _position;
 
         /// <summary>
-        /// coordinate of marker
+        ///     coordinate of marker
         /// </summary>
         public PointLatLng Position
         {
@@ -82,7 +76,7 @@ namespace GMap.NET.WindowsPresentation
         GMapControl _map;
 
         /// <summary>
-        /// the map of this marker
+        ///     the map of this marker
         /// </summary>
         public GMapControl Map
         {
@@ -108,16 +102,16 @@ namespace GMap.NET.WindowsPresentation
         }
 
         /// <summary>
-        /// custom object
+        ///     custom object
         /// </summary>
         public object Tag;
 
-        System.Windows.Point _offset;
+        Point _offset;
 
         /// <summary>
-        /// offset of marker
+        ///     offset of marker
         /// </summary>
-        public System.Windows.Point Offset
+        public Point Offset
         {
             get
             {
@@ -139,7 +133,7 @@ namespace GMap.NET.WindowsPresentation
             new PropertyChangedEventArgs("LocalPositionX");
 
         /// <summary>
-        /// local X position of marker
+        ///     local X position of marker
         /// </summary>
         public int LocalPositionX
         {
@@ -163,7 +157,7 @@ namespace GMap.NET.WindowsPresentation
             new PropertyChangedEventArgs("LocalPositionY");
 
         /// <summary>
-        /// local Y position of marker
+        ///     local Y position of marker
         /// </summary>
         public int LocalPositionY
         {
@@ -187,7 +181,7 @@ namespace GMap.NET.WindowsPresentation
             new PropertyChangedEventArgs("ZIndex");
 
         /// <summary>
-        /// the index of Z, render order
+        ///     the index of Z, render order
         /// </summary>
         public int ZIndex
         {
@@ -215,11 +209,11 @@ namespace GMap.NET.WindowsPresentation
         }
 
         /// <summary>
-        /// calls Dispose on shape if it implements IDisposable, sets shape to null and clears route
+        ///     calls Dispose on shape if it implements IDisposable, sets shape to null and clears route
         /// </summary>
         public virtual void Clear()
         {
-            var s = (Shape as IDisposable);
+            var s = Shape as IDisposable;
             if (s != null)
             {
                 s.Dispose();
@@ -230,7 +224,7 @@ namespace GMap.NET.WindowsPresentation
         }
 
         /// <summary>
-        /// updates marker position, internal access usualy
+        ///     updates marker position, internal access usualy
         /// </summary>
         void UpdateLocalPosition()
         {
@@ -239,14 +233,14 @@ namespace GMap.NET.WindowsPresentation
                 GPoint p = Map.FromLatLngToLocal(Position);
                 p.Offset(-(long)Map.MapTranslateTransform.X, -(long)Map.MapTranslateTransform.Y);
 
-                LocalPositionX = (int)(p.X + (long)(Offset.X));
-                LocalPositionY = (int)(p.Y + (long)(Offset.Y));
+                LocalPositionX = (int)(p.X + (long)Offset.X);
+                LocalPositionY = (int)(p.Y + (long)Offset.Y);
             }
         }
 
         /// <summary>
-        /// forces to update local marker  position
-        /// dot not call it if you don't really need to ;}
+        ///     forces to update local marker  position
+        ///     dot not call it if you don't really need to ;}
         /// </summary>
         /// <param name="m"></param>
         internal void ForceUpdateLocalPosition(GMapControl m)

@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+
 namespace GMap.NET.Internals
 {
     /// <summary>
-    /// tile load task
+    ///     tile load task
     /// </summary>
     internal struct LoadTask : IEquatable<LoadTask>
     {
@@ -29,7 +29,7 @@ namespace GMap.NET.Internals
 
         public bool Equals(LoadTask other)
         {
-            return (Zoom == other.Zoom && Pos == other.Pos);
+            return Zoom == other.Zoom && Pos == other.Pos;
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Xml;
@@ -11,7 +12,6 @@ using System.Xml.Serialization;
 using GMap.NET.CacheProviders;
 using GMap.NET.Internals;
 using GMap.NET.MapProviders;
-using System.Reflection;
 
 #if PocketPC
 using OpenNETCF.ComponentModel;
@@ -22,47 +22,47 @@ using Thread = OpenNETCF.Threading.Thread2;
 namespace GMap.NET
 {
     /// <summary>
-    /// maps manager
+    ///     maps manager
     /// </summary>
     public class GMaps : Singleton<GMaps>
     {
         /// <summary>
-        /// tile access mode
+        ///     tile access mode
         /// </summary>
         public AccessMode Mode = AccessMode.ServerAndCache;
 
         /// <summary>
-        /// is map ussing cache for routing
+        ///     is map ussing cache for routing
         /// </summary>
         public bool UseRouteCache = true;
 
         /// <summary>
-        /// is map using cache for geocoder
+        ///     is map using cache for geocoder
         /// </summary>
         public bool UseGeocoderCache = true;
 
         /// <summary>
-        /// is map using cache for directions
+        ///     is map using cache for directions
         /// </summary>
         public bool UseDirectionsCache = true;
 
         /// <summary>
-        /// is map using cache for placemarks
+        ///     is map using cache for placemarks
         /// </summary>
         public bool UsePlacemarkCache = true;
 
         /// <summary>
-        /// is map ussing cache for other url
+        ///     is map ussing cache for other url
         /// </summary>
         public bool UseUrlCache = true;
 
         /// <summary>
-        /// is map using memory cache for tiles
+        ///     is map using memory cache for tiles
         /// </summary>
         public bool UseMemoryCache = true;
 
         /// <summary>
-        /// primary cache provider, by default: ultra fast SQLite!
+        ///     primary cache provider, by default: ultra fast SQLite!
         /// </summary>
         public PureImageCache PrimaryCache
         {
@@ -77,8 +77,8 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// secondary cache provider, by default: none,
-        /// use it if you have server in your local network
+        ///     secondary cache provider, by default: none,
+        ///     use it if you have server in your local network
         /// </summary>
         public PureImageCache SecondaryCache
         {
@@ -93,24 +93,24 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// MemoryCache provider
+        ///     MemoryCache provider
         /// </summary>
         public readonly MemoryCache MemoryCache = new MemoryCache();
 
         /// <summary>
-        /// load tiles in random sequence
+        ///     load tiles in random sequence
         /// </summary>
         public bool ShuffleTilesOnLoad = false;
 
         /// <summary>
-        /// tile queue to cache
+        ///     tile queue to cache
         /// </summary>
         private readonly Queue<CacheQueueItem> _tileCacheQueue = new Queue<CacheQueueItem>();
 
         private bool? _isRunningOnMono;
 
         /// <summary>
-        /// return true if running on mono
+        ///     return true if running on mono
         /// </summary>
         /// <returns></returns>
         public bool IsRunningOnMono
@@ -121,7 +121,7 @@ namespace GMap.NET
                 {
                     try
                     {
-                        _isRunningOnMono = (Type.GetType("Mono.Runtime") != null);
+                        _isRunningOnMono = Type.GetType("Mono.Runtime") != null;
                         return _isRunningOnMono.Value;
                     }
                     catch
@@ -138,7 +138,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// cache worker
+        ///     cache worker
         /// </summary>
         private Thread _cacheEngine;
 
@@ -220,9 +220,8 @@ namespace GMap.NET
 
             if (Instance != null)
             {
-                throw (new Exception(
-                        "You have tried to create a new singleton class where you should have instanced it. Replace your \"new class()\" with \"class.Instance\"")
-                    );
+                throw new Exception(
+                    "You have tried to create a new singleton class where you should have instanced it. Replace your \"new class()\" with \"class.Instance\"");
             }
 
             #endregion
@@ -232,8 +231,8 @@ namespace GMap.NET
 
 #if !PocketPC
         /// <summary>
-        /// triggers dynamic sqlite loading, 
-        /// call this before you use sqlite for other reasons than caching maps
+        ///     triggers dynamic sqlite loading,
+        ///     call this before you use sqlite for other reasons than caching maps
         /// </summary>
         public void SQLitePing()
         {
@@ -250,9 +249,9 @@ namespace GMap.NET
 #if !PocketPC
 
         /// <summary>
-        /// exports current map cache to GMDB file
-        /// if file exsist only new records will be added
-        /// otherwise file will be created and all data exported
+        ///     exports current map cache to GMDB file
+        ///     if file exsist only new records will be added
+        ///     otherwise file will be created and all data exported
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
@@ -274,15 +273,15 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// imports GMDB file to current map cache
-        /// only new records will be added
+        ///     imports GMDB file to current map cache
+        ///     only new records will be added
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
         public bool ImportFromGMDB(string file)
         {
 #if SQLite
-            if (PrimaryCache is GMap.NET.CacheProviders.SQLitePureImageCache)
+            if (PrimaryCache is SQLitePureImageCache)
             {
                 StringBuilder db = new StringBuilder((PrimaryCache as SQLitePureImageCache).GtileCache);
                 db.AppendFormat(CultureInfo.InvariantCulture,
@@ -299,13 +298,13 @@ namespace GMap.NET
 #if SQLite
 
         /// <summary>
-        /// optimizes map database, *.gmdb
+        ///     optimizes map database, *.gmdb
         /// </summary>
         /// <param name="file">database file name or null to optimize current user db</param>
         /// <returns></returns>
         public bool OptimizeMapDb(string file)
         {
-            if (PrimaryCache is GMap.NET.CacheProviders.SQLitePureImageCache)
+            if (PrimaryCache is SQLitePureImageCache)
             {
                 if (string.IsNullOrEmpty(file))
                 {
@@ -330,7 +329,7 @@ namespace GMap.NET
 #endif
 
         /// <summary>
-        /// enqueueens tile to cache
+        ///     enqueueens tile to cache
         /// </summary>
         /// <param name="task"></param>
         void EnqueueCacheTask(CacheQueueItem task)
@@ -375,7 +374,7 @@ namespace GMap.NET
         public TileCacheProgress OnTileCacheProgress;
 
         /// <summary>
-        /// immediately stops background tile caching, call it if you want fast exit the process
+        ///     immediately stops background tile caching, call it if you want fast exit the process
         /// </summary>
         public void CancelTileCaching()
         {
@@ -393,7 +392,7 @@ namespace GMap.NET
         private volatile bool _cacheOnIdleRead = true;
 
         /// <summary>
-        /// delays writing tiles to cache while performing reads
+        ///     delays writing tiles to cache while performing reads
         /// </summary>
         public bool CacheOnIdleRead
         {
@@ -410,7 +409,7 @@ namespace GMap.NET
         volatile bool _boostCacheEngine;
 
         /// <summary>
-        /// disables delay between saving tiles into database/cache
+        ///     disables delay between saving tiles into database/cache
         /// </summary>
         public bool BoostCacheEngine
         {
@@ -425,7 +424,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// live for cache ;}
+        ///     live for cache ;}
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -580,7 +579,6 @@ namespace GMap.NET
             public StringWriterExt(IFormatProvider info)
                 : base(info)
             {
-
             }
 
             public override Encoding Encoding
@@ -623,7 +621,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// exports gps data to gpx file
+        ///     exports gps data to gpx file
         /// </summary>
         /// <param name="log">gps data</param>
         /// <param name="gpxFile">file to export</param>
@@ -668,7 +666,7 @@ namespace GMap.NET
 
                             if (point.FixType != FixType.Unknown)
                             {
-                                t.fix = (point.FixType == FixType.XyD ? fixType.Item2d : fixType.Item3d);
+                                t.fix = point.FixType == FixType.XyD ? fixType.Item2d : fixType.Item3d;
                                 t.fixSpecified = true;
                             }
 
@@ -737,7 +735,7 @@ namespace GMap.NET
         #endregion
 
         /// <summary>
-        /// gets image from tile server
+        ///     gets image from tile server
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="pos"></param>
@@ -864,7 +862,7 @@ namespace GMap.NET
         private TileHttpHost _host;
 
         /// <summary>
-        /// turns on tile host
+        ///     turns on tile host
         /// </summary>
         /// <param name="port"></param>
         public void EnableTileHost(int port)
@@ -878,7 +876,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// turns off tile host
+        ///     turns off tile host
         /// </summary>
         /// <param name="port"></param>
         public void DisableTileHost()

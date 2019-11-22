@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using Org.Mentalis.Network.ProxySocket;
 
 namespace GMap.NET.Internals
 {
-    using System;
-    using System.Collections.Specialized;
-    using System.IO;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
-    using Org.Mentalis.Network.ProxySocket; // http://www.mentalis.org/soft/class.qpx?id=9
+    // http://www.mentalis.org/soft/class.qpx?id=9
 
     /// <summary>
-    /// http://ditrans.blogspot.com/2009/03/making-witty-work-with-socks-proxy.html
+    ///     http://ditrans.blogspot.com/2009/03/making-witty-work-with-socks-proxy.html
     /// </summary>
     internal class SocksHttpWebRequest : WebRequest
     {
@@ -28,7 +26,16 @@ namespace GMap.NET.Internals
 
         // darn MS for making everything internal (yeah, I'm talking about you, System.net.KnownHttpVerb)
         static readonly StringCollection validHttpVerbs =
-            new StringCollection { "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "OPTIONS" };
+            new StringCollection
+            {
+                "GET",
+                "HEAD",
+                "POST",
+                "PUT",
+                "DELETE",
+                "TRACE",
+                "OPTIONS"
+            };
 
         #endregion
 
@@ -49,6 +56,7 @@ namespace GMap.NET.Internals
             {
                 throw new InvalidOperationException("Proxy property cannot be null.");
             }
+
             if (String.IsNullOrEmpty(Method))
             {
                 throw new InvalidOperationException("Method has not been set.");
@@ -58,6 +66,7 @@ namespace GMap.NET.Internals
             {
                 return _response;
             }
+
             _response = InternalGetResponse();
             RequestSubmitted = true;
             return _response;
@@ -85,14 +94,17 @@ namespace GMap.NET.Internals
                 {
                     _requestHeaders = new WebHeaderCollection();
                 }
+
                 return _requestHeaders;
             }
             set
             {
                 if (RequestSubmitted)
                 {
-                    throw new InvalidOperationException("This operation cannot be performed after the request has been submitted.");
+                    throw new InvalidOperationException(
+                        "This operation cannot be performed after the request has been submitted.");
                 }
+
                 _requestHeaders = value;
             }
         }
@@ -117,7 +129,8 @@ namespace GMap.NET.Internals
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("value", string.Format("'{0}' is not a known HTTP verb.", value));
+                    throw new ArgumentOutOfRangeException("value",
+                        string.Format("'{0}' is not a known HTTP verb.", value));
                 }
             }
         }
@@ -138,7 +151,8 @@ namespace GMap.NET.Internals
         {
             if (RequestSubmitted)
             {
-                throw new InvalidOperationException("This operation cannot be performed after the request has been submitted.");
+                throw new InvalidOperationException(
+                    "This operation cannot be performed after the request has been submitted.");
             }
 
             if (_requestContentBuffer == null)
@@ -153,6 +167,7 @@ namespace GMap.NET.Internals
             {
                 Array.Resize(ref _requestContentBuffer, (int)ContentLength);
             }
+
             return new MemoryStream(_requestContentBuffer);
         }
 
@@ -174,7 +189,8 @@ namespace GMap.NET.Internals
         {
             if (RequestSubmitted)
             {
-                throw new InvalidOperationException("This operation cannot be performed after the request has been submitted.");
+                throw new InvalidOperationException(
+                    "This operation cannot be performed after the request has been submitted.");
             }
 
             var message = new StringBuilder();
@@ -191,6 +207,7 @@ namespace GMap.NET.Internals
             {
                 message.AppendFormat("Content-Type: {0}\r\n", ContentType);
             }
+
             if (ContentLength > 0)
             {
                 message.AppendFormat("Content-Length: {0}\r\n", ContentLength);
@@ -219,7 +236,8 @@ namespace GMap.NET.Internals
             MemoryStream data = null;
             string header = string.Empty;
 
-            using (var _socksConnection = new ProxySocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            using (var _socksConnection =
+                new ProxySocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 var proxyUri = Proxy.GetProxy(RequestUri);
                 var ipAddress = GetProxyIpAddress(proxyUri);
@@ -270,6 +288,7 @@ namespace GMap.NET.Internals
                         {
                             data = new MemoryStream();
                         }
+
                         data.Write(buffer, 0, bytesReceived);
                     }
                 }
@@ -295,9 +314,11 @@ namespace GMap.NET.Internals
                 catch (Exception e)
                 {
                     throw new InvalidOperationException(
-                        string.Format("Unable to resolve proxy hostname '{0}' to a valid IP address.", proxyUri.Host), e);
+                        string.Format("Unable to resolve proxy hostname '{0}' to a valid IP address.", proxyUri.Host),
+                        e);
                 }
             }
+
             return ipAddress;
         }
 
@@ -313,17 +334,16 @@ namespace GMap.NET.Internals
                 {
                     _requestMessage = BuildHttpRequestMessage();
                 }
+
                 return _requestMessage;
             }
         }
 
         #endregion
-
     }
 
     internal class SocksHttpWebResponse : WebResponse
     {
-
         #region Member Variables
 
         WebHeaderCollection _httpResponseHeaders;
@@ -349,12 +369,12 @@ namespace GMap.NET.Internals
         {
             this.data = data;
 
-            var headerValues = headers.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var headerValues = headers.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
 
             // ignore the first line in the header since it is the HTTP response code
             for (int i = 1; i < headerValues.Length; i++)
             {
-                var headerEntry = headerValues[i].Split(new[] { ':' });
+                var headerEntry = headerValues[i].Split(new[] {':'});
                 Headers.Add(headerEntry[0], headerEntry[1]);
 
                 switch (headerEntry[0])
@@ -363,17 +383,17 @@ namespace GMap.NET.Internals
                     {
                         ContentType = headerEntry[1];
                     }
-                    break;
+                        break;
 
                     case "Content-Length":
                     {
                         long r = 0;
-                        if(long.TryParse(headerEntry[1], out r))
+                        if (long.TryParse(headerEntry[1], out r))
                         {
-                          ContentLength = r;
+                            ContentLength = r;
                         }
                     }
-                    break;
+                        break;
                 }
             }
         }
@@ -393,6 +413,7 @@ namespace GMap.NET.Internals
             {
                 data.Close();
             }
+
             /* the base implementation throws an exception */
         }
 
@@ -404,6 +425,7 @@ namespace GMap.NET.Internals
                 {
                     _httpResponseHeaders = new WebHeaderCollection();
                 }
+
                 return _httpResponseHeaders;
             }
         }

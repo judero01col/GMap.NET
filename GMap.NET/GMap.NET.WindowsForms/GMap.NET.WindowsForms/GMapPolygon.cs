@@ -1,18 +1,16 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Runtime.Serialization;
+using System.Windows.Forms;
+
 namespace GMap.NET.WindowsForms
 {
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.Runtime.Serialization;
-    using GMap.NET;
-    using System.Windows.Forms;
-    using System;
-
     /// <summary>
-    /// GMap.NET polygon
+    ///     GMap.NET polygon
     /// </summary>
-    [System.Serializable]
+    [Serializable]
 #if !PocketPC
     public class GMapPolygon : MapRoute, ISerializable, IDeserializationCallback, IDisposable
 #else
@@ -22,7 +20,7 @@ namespace GMap.NET.WindowsForms
         private bool visible = true;
 
         /// <summary>
-        /// is polygon visible
+        ///     is polygon visible
         /// </summary>
         public bool IsVisible
         {
@@ -65,14 +63,14 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// can receive input
+        ///     can receive input
         /// </summary>
         public bool IsHitTestVisible = false;
 
         private bool isMouseOver = false;
 
         /// <summary>
-        /// is mouse over
+        ///     is mouse over
         /// </summary>
         public bool IsMouseOver
         {
@@ -87,6 +85,7 @@ namespace GMap.NET.WindowsForms
         }
 
         GMapOverlay overlay;
+
         public GMapOverlay Overlay
         {
             get
@@ -101,7 +100,7 @@ namespace GMap.NET.WindowsForms
 
 #if !PocketPC
         /// <summary>
-        /// Indicates whether the specified point is contained within this System.Drawing.Drawing2D.GraphicsPath
+        ///     Indicates whether the specified point is contained within this System.Drawing.Drawing2D.GraphicsPath
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -199,10 +198,9 @@ namespace GMap.NET.WindowsForms
 #endif
 
         /// <summary>
-        /// specifies how the outline is painted
+        ///     specifies how the outline is painted
         /// </summary>
-        [NonSerialized]
-        public Pen Stroke = DefaultStroke;
+        [NonSerialized] public Pen Stroke = DefaultStroke;
 
 #if !PocketPC
         public static readonly Brush DefaultFill = new SolidBrush(Color.FromArgb(155, Color.AliceBlue));
@@ -211,10 +209,9 @@ namespace GMap.NET.WindowsForms
 #endif
 
         /// <summary>
-        /// background color
+        ///     background color
         /// </summary>
-        [NonSerialized]
-        public Brush Fill = DefaultFill;
+        [NonSerialized] public Brush Fill = DefaultFill;
 
         public readonly List<GPoint> LocalPoints = new List<GPoint>();
 
@@ -227,14 +224,14 @@ namespace GMap.NET.WindowsForms
         }
 
         public GMapPolygon(List<PointLatLng> points, string name)
-           : base(points, name)
+            : base(points, name)
         {
             LocalPoints.Capacity = Points.Count;
         }
 
         /// <summary>
-        /// checks if point is inside the polygon,
-        /// info.: http://greatmaps.codeplex.com/discussions/279437#post700449
+        ///     checks if point is inside the polygon,
+        ///     info.: http://greatmaps.codeplex.com/discussions/279437#post700449
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
@@ -261,21 +258,28 @@ namespace GMap.NET.WindowsForms
                         result = !result;
                     }
                 }
+
                 j = i;
             }
+
             return result;
         }
 
 #if !PocketPC
+
         #region ISerializable Members
 
         /// <summary>
-        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        ///     Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the
+        ///     target object.
         /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
-        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">
+        ///     The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this
+        ///     serialization.
+        /// </param>
         /// <exception cref="T:System.Security.SecurityException">
-        /// The caller does not have the required permission.
+        ///     The caller does not have the required permission.
         /// </exception>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -289,12 +293,12 @@ namespace GMap.NET.WindowsForms
         private GPoint[] deserializedLocalPoints;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapRoute"/> class.
+        ///     Initializes a new instance of the <see cref="MapRoute" /> class.
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected GMapPolygon(SerializationInfo info, StreamingContext context)
-           : base(info, context)
+            : base(info, context)
         {
             this.deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
             this.IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
@@ -305,9 +309,12 @@ namespace GMap.NET.WindowsForms
         #region IDeserializationCallback Members
 
         /// <summary>
-        /// Runs when the entire object graph has been de-serialized.
+        ///     Runs when the entire object graph has been de-serialized.
         /// </summary>
-        /// <param name="sender">The object that initiated the callback. The functionality for this parameter is not currently implemented.</param>
+        /// <param name="sender">
+        ///     The object that initiated the callback. The functionality for this parameter is not currently
+        ///     implemented.
+        /// </param>
         public override void OnDeserialization(object sender)
         {
             base.OnDeserialization(sender);
@@ -318,6 +325,7 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
+
 #endif
 
         #region IDisposable Members
@@ -347,7 +355,10 @@ namespace GMap.NET.WindowsForms
     }
 
     public delegate void PolygonClick(GMapPolygon item, MouseEventArgs e);
+
     public delegate void PolygonDoubleClick(GMapPolygon item, MouseEventArgs e);
+
     public delegate void PolygonEnter(GMapPolygon item);
+
     public delegate void PolygonLeave(GMapPolygon item);
 }

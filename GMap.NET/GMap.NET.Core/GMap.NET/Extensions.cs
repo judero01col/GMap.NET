@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace GMap.NET
 {
     public static class Extensions
     {
         /// <summary>
-        /// Retrieves a value from the SerializationInfo of the given type.
+        ///     Retrieves a value from the SerializationInfo of the given type.
         /// </summary>
         /// <typeparam name="T">The Type that we are attempting to de-serialize.</typeparam>
         /// <param name="info">The SerializationInfo.</param>
@@ -28,7 +28,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Retrieves a value from the SerializationInfo of the given type.
+        ///     Retrieves a value from the SerializationInfo of the given type.
         /// </summary>
         /// <typeparam name="T">The Type that we are attempting to de-serialize.</typeparam>
         /// <param name="info">The SerializationInfo.</param>
@@ -47,7 +47,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Retrieves a value from the SerializationInfo of the given type for structs.
+        ///     Retrieves a value from the SerializationInfo of the given type for structs.
         /// </summary>
         /// <typeparam name="T">The Type that we are attempting to de-serialize.</typeparam>
         /// <param name="info">The SerializationInfo.</param>
@@ -68,7 +68,7 @@ namespace GMap.NET
         }
 
         /// <summary>
-        /// Retrieves a value from the SerializationInfo of the given type for structs.
+        ///     Retrieves a value from the SerializationInfo of the given type for structs.
         /// </summary>
         /// <typeparam name="T">The Type that we are attempting to de-serialize.</typeparam>
         /// <param name="info">The SerializationInfo.</param>

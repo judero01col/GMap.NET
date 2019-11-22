@@ -1,8 +1,5 @@
-﻿
-namespace GMap.NET.MapProviders
+﻿namespace GMap.NET.MapProviders
 {
-   using System;   
-
 #if OpenStreetMapSurfer
    /// <summary>
    /// OpenStreetMapSurfer provider
@@ -73,6 +70,6 @@ namespace GMap.NET.MapProviders
       }
 
       static readonly string UrlFormat = "http://tiles1.mapsurfer.net/tms_r.ashx?x={0}&y={1}&z={2}";
-   } 
+   }
 #endif
 }

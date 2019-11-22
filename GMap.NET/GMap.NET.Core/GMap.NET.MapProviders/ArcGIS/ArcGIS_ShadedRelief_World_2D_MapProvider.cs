@@ -1,60 +1,62 @@
-﻿
+﻿using System;
+
 namespace GMap.NET.MapProviders
 {
-   using System;
+    /// <summary>
+    ///     ArcGIS_ShadedRelief_World_2D_Map provider, http://server.arcgisonline.com
+    /// </summary>
+    public class ArcGIS_ShadedRelief_World_2D_MapProvider : ArcGISMapPlateCarreeProviderBase
+    {
+        public static readonly ArcGIS_ShadedRelief_World_2D_MapProvider Instance;
 
-   /// <summary>
-   /// ArcGIS_ShadedRelief_World_2D_Map provider, http://server.arcgisonline.com
-   /// </summary>
-   public class ArcGIS_ShadedRelief_World_2D_MapProvider : ArcGISMapPlateCarreeProviderBase
-   {
-      public static readonly ArcGIS_ShadedRelief_World_2D_MapProvider Instance;
+        ArcGIS_ShadedRelief_World_2D_MapProvider()
+        {
+        }
 
-      ArcGIS_ShadedRelief_World_2D_MapProvider()
-      {
-      }
+        static ArcGIS_ShadedRelief_World_2D_MapProvider()
+        {
+            Instance = new ArcGIS_ShadedRelief_World_2D_MapProvider();
+        }
 
-      static ArcGIS_ShadedRelief_World_2D_MapProvider()
-      {
-         Instance = new ArcGIS_ShadedRelief_World_2D_MapProvider();
-      }
+        #region GMapProvider Members
 
-      #region GMapProvider Members
+        readonly Guid id = new Guid("A8995FA4-D9D8-415B-87D0-51A7E53A90D4");
 
-      readonly Guid id = new Guid("A8995FA4-D9D8-415B-87D0-51A7E53A90D4");
-      public override Guid Id
-      {
-         get
-         {
-            return id;
-         }
-      }
+        public override Guid Id
+        {
+            get
+            {
+                return id;
+            }
+        }
 
-      readonly string name = "ArcGIS_ShadedRelief_World_2D_Map";
-      public override string Name
-      {
-         get
-         {
-            return name;
-         }
-      }
+        readonly string name = "ArcGIS_ShadedRelief_World_2D_Map";
 
-      public override PureImage GetTileImage(GPoint pos, int zoom)
-      {
-         string url = MakeTileImageUrl(pos, zoom, LanguageStr);
+        public override string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-         return GetTileImageUsingHttp(url);
-      }
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 
-      #endregion
+            return GetTileImageUsingHttp(url);
+        }
 
-      string MakeTileImageUrl(GPoint pos, int zoom, string language)
-      {
-         // http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer/tile/1/0/1.jpg
+        #endregion
 
-         return string.Format(UrlFormat, zoom, pos.Y, pos.X);
-      }
+        string MakeTileImageUrl(GPoint pos, int zoom, string language)
+        {
+            // http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer/tile/1/0/1.jpg
 
-      static readonly string UrlFormat = "http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer/tile/{0}/{1}/{2}";
-   }
+            return string.Format(UrlFormat, zoom, pos.Y, pos.X);
+        }
+
+        static readonly string UrlFormat =
+            "http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_ShadedRelief_World_2D/MapServer/tile/{0}/{1}/{2}";
+    }
 }

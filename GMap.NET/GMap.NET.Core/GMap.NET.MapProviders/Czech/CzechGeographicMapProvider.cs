@@ -1,9 +1,9 @@
-﻿namespace GMap.NET.MapProviders
-{
-    using System;
+﻿using System;
 
+namespace GMap.NET.MapProviders
+{
     /// <summary>
-    /// CzechTuristMap provider, http://www.mapy.cz/
+    ///     CzechTuristMap provider, http://www.mapy.cz/
     /// </summary>
     public class CzechGeographicMapProvider : CzechMapProviderBase
     {
@@ -21,6 +21,7 @@
         #region GMapProvider Members
 
         readonly Guid id = new Guid("50EC9FCC-E4D7-4F53-8700-2D1DB73A1D48");
+
         public override Guid Id
         {
             get
@@ -30,6 +31,7 @@
         }
 
         readonly string name = "CzechGeographicMap";
+
         public override string Name
         {
             get

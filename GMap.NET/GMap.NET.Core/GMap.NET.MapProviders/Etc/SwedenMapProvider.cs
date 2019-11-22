@@ -1,118 +1,124 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-   using System;
-   using GMap.NET.Projections;
+    public abstract class SwedenMapProviderBase : GMapProvider
+    {
+        public SwedenMapProviderBase()
+        {
+            RefererUrl = "https://kso.etjanster.lantmateriet.se/?lang=en";
+            Copyright = string.Format("©{0} Lantmäteriet", DateTime.Today.Year);
+            MaxZoom = 11;
+            //Area = new RectLatLng(58.0794870805093, 20.3286067123543, 7.90883164336887, 2.506129113082);
+        }
 
-   public abstract class SwedenMapProviderBase : GMapProvider
-   {
-      public SwedenMapProviderBase()
-      {
-         RefererUrl = "https://kso.etjanster.lantmateriet.se/?lang=en";
-         Copyright = string.Format("©{0} Lantmäteriet", DateTime.Today.Year);
-         MaxZoom = 11;
-         //Area = new RectLatLng(58.0794870805093, 20.3286067123543, 7.90883164336887, 2.506129113082);
-      }
+        #region GMapProvider Members
 
-      #region GMapProvider Members
-      public override Guid Id
-      {
-         get
-         {
-            throw new NotImplementedException();
-         }
-      }
-
-      public override string Name
-      {
-         get
-         {
-            throw new NotImplementedException();
-         }
-      }
-
-      public override PureProjection Projection
-      {
-         get
-         {
-            return SWEREF99_TMProjection.Instance;
-         }
-      }
-
-      GMapProvider[] overlays;
-      public override GMapProvider[] Overlays
-      {
-         get
-         {
-            if(overlays == null)
+        public override Guid Id
+        {
+            get
             {
-               overlays = new GMapProvider[] { this };
+                throw new NotImplementedException();
             }
-            return overlays;
-         }
-      }
+        }
 
-      public override PureImage GetTileImage(GPoint pos, int zoom)
-      {
-         throw new NotImplementedException();
-      }
-      #endregion
-   }
+        public override string Name
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override PureProjection Projection
+        {
+            get
+            {
+                return SWEREF99_TMProjection.Instance;
+            }
+        }
+
+        GMapProvider[] overlays;
+
+        public override GMapProvider[] Overlays
+        {
+            get
+            {
+                if (overlays == null)
+                {
+                    overlays = new GMapProvider[] {this};
+                }
+
+                return overlays;
+            }
+        }
+
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
 
     /// <summary>
-    /// SwedenMap provider, https://kso.etjanster.lantmateriet.se/?lang=en#
+    ///     SwedenMap provider, https://kso.etjanster.lantmateriet.se/?lang=en#
     /// </summary>
     public class SwedenMapProvider : SwedenMapProviderBase
     {
-      public static readonly SwedenMapProvider Instance;
+        public static readonly SwedenMapProvider Instance;
 
-      SwedenMapProvider()
-      {
-      }
+        SwedenMapProvider()
+        {
+        }
 
-      static SwedenMapProvider()
-      {
-         Instance = new SwedenMapProvider();
-      }
+        static SwedenMapProvider()
+        {
+            Instance = new SwedenMapProvider();
+        }
 
-      #region GMapProvider Members
+        #region GMapProvider Members
 
-      readonly Guid id = new Guid("40890A96-6E82-4FA7-90A3-73D66B974F63");
-      public override Guid Id
-      {
-         get
-         {
-            return id;
-         }
-      }
+        readonly Guid id = new Guid("40890A96-6E82-4FA7-90A3-73D66B974F63");
 
-      readonly string name = "SwedenMap";
-      public override string Name
-      {
-         get
-         {
-            return name;
-         }
-      }
+        public override Guid Id
+        {
+            get
+            {
+                return id;
+            }
+        }
 
-      public override PureImage GetTileImage(GPoint pos, int zoom)
-      {
-         string url = MakeTileImageUrl(pos, zoom, LanguageStr);
+        readonly string name = "SwedenMap";
 
-         return GetTileImageUsingHttp(url);
-      }
+        public override string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-      #endregion
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 
-      string MakeTileImageUrl(GPoint pos, int zoom, string language)
-      {
+            return GetTileImageUsingHttp(url);
+        }
+
+        #endregion
+
+        string MakeTileImageUrl(GPoint pos, int zoom, string language)
+        {
             // https://kso.etjanster.lantmateriet.se/karta/topowebb/v1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX=2&TILEROW=6&TILECOL=7&FORMAT=image%2Fpng
 
             return string.Format(UrlFormat, zoom, pos.Y, pos.X);
-      }
+        }
 
-      private static readonly string UrlFormat = "https://kso.etjanster.lantmateriet.se/karta/topowebb/v1.1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX={0}&TILEROW={1}&TILECOL={2}&FORMAT=image%2Fpng";
-   }
+        private static readonly string UrlFormat =
+            "https://kso.etjanster.lantmateriet.se/karta/topowebb/v1.1/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=topowebb&STYLE=default&TILEMATRIXSET=3006&TILEMATRIX={0}&TILEROW={1}&TILECOL={2}&FORMAT=image%2Fpng";
+    }
 }
 
 /*

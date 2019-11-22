@@ -1,60 +1,61 @@
-﻿
+﻿using System;
+
 namespace GMap.NET.MapProviders
 {
-   using System;
+    /// <summary>
+    ///     CzechSatelliteMap provider, http://www.mapy.cz/
+    /// </summary>
+    public class CzechSatelliteMapProvider : CzechMapProviderBase
+    {
+        public static readonly CzechSatelliteMapProvider Instance;
 
-   /// <summary>
-   /// CzechSatelliteMap provider, http://www.mapy.cz/
-   /// </summary>
-   public class CzechSatelliteMapProvider : CzechMapProviderBase
-   {
-      public static readonly CzechSatelliteMapProvider Instance;
+        CzechSatelliteMapProvider()
+        {
+        }
 
-      CzechSatelliteMapProvider()
-      {
-      }
+        static CzechSatelliteMapProvider()
+        {
+            Instance = new CzechSatelliteMapProvider();
+        }
 
-      static CzechSatelliteMapProvider()
-      {
-         Instance = new CzechSatelliteMapProvider();
-      }
+        #region GMapProvider Members
 
-      #region GMapProvider Members
+        readonly Guid id = new Guid("30F433DB-BBF5-463D-9AB5-76383483B605");
 
-      readonly Guid id = new Guid("30F433DB-BBF5-463D-9AB5-76383483B605");
-      public override Guid Id
-      {
-         get
-         {
-            return id;
-         }
-      }
+        public override Guid Id
+        {
+            get
+            {
+                return id;
+            }
+        }
 
-      readonly string name = "CzechSatelliteMap";
-      public override string Name
-      {
-         get
-         {
-            return name;
-         }
-      }
+        readonly string name = "CzechSatelliteMap";
 
-      public override PureImage GetTileImage(GPoint pos, int zoom)
-      {
-         string url = MakeTileImageUrl(pos, zoom, LanguageStr);
+        public override string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-         return GetTileImageUsingHttp(url);
-      }
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 
-      #endregion
+            return GetTileImageUsingHttp(url);
+        }
 
-      string MakeTileImageUrl(GPoint pos, int zoom, string language)
-      {
-         // http://m3.mapserver.mapy.cz/ophoto-m/14-8802-5528
+        #endregion
 
-         return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
-      }
+        string MakeTileImageUrl(GPoint pos, int zoom, string language)
+        {
+            // http://m3.mapserver.mapy.cz/ophoto-m/14-8802-5528
 
-      static readonly string UrlFormat = "http://m{0}.mapserver.mapy.cz/ophoto-m/{1}-{2}-{3}";
-   }
+            return string.Format(UrlFormat, GetServerNum(pos, 3) + 1, zoom, pos.X, pos.Y);
+        }
+
+        static readonly string UrlFormat = "http://m{0}.mapserver.mapy.cz/ophoto-m/{1}-{2}-{3}";
+    }
 }

@@ -1,14 +1,13 @@
-﻿
+﻿using System;
+using System.Drawing;
+using System.Runtime.Serialization;
+using System.Windows.Forms;
+using GMap.NET.WindowsForms.ToolTips;
+
 namespace GMap.NET.WindowsForms
 {
-    using System;
-    using System.Drawing;
-    using System.Runtime.Serialization;
-    using System.Windows.Forms;
-    using GMap.NET.WindowsForms.ToolTips;
-
     /// <summary>
-    /// GMap.NET marker
+    ///     GMap.NET marker
     /// </summary>
     [Serializable]
 #if !PocketPC
@@ -26,6 +25,7 @@ namespace GMap.NET.WindowsForms
       }
 #endif
         GMapOverlay overlay;
+
         public GMapOverlay Overlay
         {
             get
@@ -39,6 +39,7 @@ namespace GMap.NET.WindowsForms
         }
 
         private PointLatLng position;
+
         public PointLatLng Position
         {
             get
@@ -65,6 +66,7 @@ namespace GMap.NET.WindowsForms
         public object Tag;
 
         Point offset;
+
         public Point Offset
         {
             get
@@ -91,7 +93,7 @@ namespace GMap.NET.WindowsForms
         Rectangle area;
 
         /// <summary>
-        /// marker position in local coordinates, internal only, do not set it manualy
+        ///     marker position in local coordinates, internal only, do not set it manualy
         /// </summary>
         public Point LocalPosition
         {
@@ -118,7 +120,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// ToolTip position in local coordinates
+        ///     ToolTip position in local coordinates
         /// </summary>
         public Point ToolTipPosition
         {
@@ -155,6 +157,7 @@ namespace GMap.NET.WindowsForms
         public MarkerTooltipMode ToolTipMode = MarkerTooltipMode.OnMouseOver;
 
         string toolTipText;
+
         public string ToolTipText
         {
             get
@@ -172,6 +175,7 @@ namespace GMap.NET.WindowsForms
                ToolTip = new GMapToolTip(this);
 #endif
                 }
+
                 toolTipText = value;
             }
         }
@@ -179,7 +183,7 @@ namespace GMap.NET.WindowsForms
         private bool visible = true;
 
         /// <summary>
-        /// is marker visible
+        ///     is marker visible
         /// </summary>
         public bool IsVisible
         {
@@ -222,19 +226,19 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// if true, marker will be rendered even if it's outside current view
+        ///     if true, marker will be rendered even if it's outside current view
         /// </summary>
         public bool DisableRegionCheck = false;
 
         /// <summary>
-        /// can maker receive input
+        ///     can maker receive input
         /// </summary>
         public bool IsHitTestVisible = true;
 
         private bool isMouseOver = false;
 
         /// <summary>
-        /// is mouse over marker
+        ///     is mouse over marker
         /// </summary>
         public bool IsMouseOver
         {
@@ -266,15 +270,20 @@ namespace GMap.NET.WindowsForms
 #endif
 
 #if !PocketPC
+
         #region ISerializable Members
 
         /// <summary>
-        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object.
+        ///     Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the
+        ///     target object.
         /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
-        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization.</param>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">
+        ///     The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this
+        ///     serialization.
+        /// </param>
         /// <exception cref="T:System.Security.SecurityException">
-        /// The caller does not have the required permission.
+        ///     The caller does not have the required permission.
         /// </exception>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -291,7 +300,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GMapMarker"/> class.
+        ///     Initializes a new instance of the <see cref="GMapMarker" /> class.
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
@@ -305,7 +314,8 @@ namespace GMap.NET.WindowsForms
             this.ToolTip = Extensions.GetValue<GMapToolTip>(info, "ToolTip", null);
             if (this.ToolTip != null) this.ToolTip.Marker = this;
 
-            this.ToolTipMode = Extensions.GetStruct<MarkerTooltipMode>(info, "ToolTipMode", MarkerTooltipMode.OnMouseOver);
+            this.ToolTipMode =
+                Extensions.GetStruct<MarkerTooltipMode>(info, "ToolTipMode", MarkerTooltipMode.OnMouseOver);
             this.ToolTipText = info.GetString("ToolTipText");
             this.IsVisible = info.GetBoolean("Visible");
             this.DisableRegionCheck = info.GetBoolean("DisableregionCheck");
@@ -313,6 +323,7 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
+
 #endif
 
         #region IDisposable Members
@@ -340,12 +351,15 @@ namespace GMap.NET.WindowsForms
     }
 
     public delegate void MarkerClick(GMapMarker item, MouseEventArgs e);
+
     public delegate void MarkerDoubleClick(GMapMarker item, MouseEventArgs e);
+
     public delegate void MarkerEnter(GMapMarker item);
+
     public delegate void MarkerLeave(GMapMarker item);
 
     /// <summary>
-    /// modeof tooltip
+    ///     modeof tooltip
     /// </summary>
     public enum MarkerTooltipMode
     {

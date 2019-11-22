@@ -4,7 +4,7 @@ using System.Globalization;
 namespace GMap.NET
 {
     /// <summary>
-    /// the rect
+    ///     the rect
     /// </summary>
     public struct GRect
     {
@@ -180,10 +180,10 @@ namespace GMap.NET
 
         public bool Contains(GRect rect)
         {
-            return (this.X <= rect.X) &&
-                   ((rect.X + rect.Width) <= (this.X + this.Width)) &&
-                   (this.Y <= rect.Y) &&
-                   ((rect.Y + rect.Height) <= (this.Y + this.Height));
+            return this.X <= rect.X &&
+                   rect.X + rect.Width <= this.X + this.Width &&
+                   this.Y <= rect.Y &&
+                   rect.Y + rect.Height <= this.Y + this.Height;
         }
 
         public override int GetHashCode()
@@ -193,7 +193,7 @@ namespace GMap.NET
                 return 0;
             }
 
-            return (int)(((this.X ^ ((this.Y << 13) | (this.Y >> 0x13))) ^ ((this.Width << 0x1a) | (this.Width >> 6))) ^
+            return (int)(this.X ^ ((this.Y << 13) | (this.Y >> 0x13)) ^ ((this.Width << 0x1a) | (this.Width >> 6)) ^
                          ((this.Height << 7) | (this.Height >> 0x19)));
         }
 
@@ -219,7 +219,7 @@ namespace GMap.NET
 
         public void Intersect(GRect rect)
         {
-            GRect result = GRect.Intersect(rect, this);
+            GRect result = Intersect(rect, this);
 
             this.X = result.X;
             this.Y = result.Y;
@@ -237,7 +237,6 @@ namespace GMap.NET
             if (x2 >= x1
                 && y2 >= y1)
             {
-
                 return new GRect(x1, y1, x2 - x1, y2 - y1);
             }
 
@@ -247,9 +246,9 @@ namespace GMap.NET
         public bool IntersectsWith(GRect rect)
         {
             return rect.X < X + Width &&
-                   X < (rect.X + rect.Width) &&
-                   rect.Y < (Y + Height) &&
-                   Y < (rect.Y + rect.Height);
+                   X < rect.X + rect.Width &&
+                   rect.Y < Y + Height &&
+                   Y < rect.Y + rect.Height;
         }
 
         public static GRect Union(GRect a, GRect b)

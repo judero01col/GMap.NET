@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 using GMap.NET.MapProviders;
 
 namespace GMap.NET.Internals
@@ -71,7 +70,7 @@ namespace GMap.NET.Internals
                 while (listen)
                 {
                     try
-                    {   
+                    {
                         if (!server.Pending())
                         {
                             Thread.Sleep(111);
@@ -97,61 +96,63 @@ namespace GMap.NET.Internals
 
         void ProcessRequest(object p)
         {
-          try
-          {
-            using(TcpClient c = p as TcpClient)
+            try
             {
-                using(var s = c.GetStream())
+                using (TcpClient c = p as TcpClient)
                 {
-                    using(StreamReader r = new StreamReader(s, Encoding.UTF8))
-                    {              
-                        var request = r.ReadLine();                          
-
-                        if(!string.IsNullOrEmpty(request) && request.StartsWith("GET"))
+                    using (var s = c.GetStream())
+                    {
+                        using (StreamReader r = new StreamReader(s, Encoding.UTF8))
                         {
-                            //Debug.WriteLine("TileHttpHost: " + request);
+                            var request = r.ReadLine();
 
-                            // http://localhost:88/88888/5/15/11
-                            // GET /8888888888/5/15/11 HTTP/1.1
-
-                            var rq = request.Split(' ');
-                            if(rq.Length >= 2)
+                            if (!string.IsNullOrEmpty(request) && request.StartsWith("GET"))
                             {
-                                var ids = rq[1].Split(new char[]{'/'}, StringSplitOptions.RemoveEmptyEntries);
-                                if(ids.Length == 4)
-                                {
-                                    int dbId = int.Parse(ids[0]);
-                                    int zoom = int.Parse(ids[1]);
-                                    int x = int.Parse(ids[2]);
-                                    int y = int.Parse(ids[3]);
+                                //Debug.WriteLine("TileHttpHost: " + request);
 
-                                    var pr = GMapProviders.TryGetProvider(dbId);
-                                    if(pr != null)
+                                // http://localhost:88/88888/5/15/11
+                                // GET /8888888888/5/15/11 HTTP/1.1
+
+                                var rq = request.Split(' ');
+                                if (rq.Length >= 2)
+                                {
+                                    var ids = rq[1].Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                                    if (ids.Length == 4)
                                     {
-                                        Exception ex;
-                                        var img = GMaps.Instance.GetImageFrom(pr, new GPoint(x, y), zoom, out ex);
-                                        if (img != null)
+                                        int dbId = int.Parse(ids[0]);
+                                        int zoom = int.Parse(ids[1]);
+                                        int x = int.Parse(ids[2]);
+                                        int y = int.Parse(ids[3]);
+
+                                        var pr = GMapProviders.TryGetProvider(dbId);
+                                        if (pr != null)
                                         {
-                                            using (img)
+                                            Exception ex;
+                                            var img = GMaps.Instance.GetImageFrom(pr, new GPoint(x, y), zoom, out ex);
+                                            if (img != null)
                                             {
-                                                s.Write(responseHeaderBytes, 0, responseHeaderBytes.Length);
-                                                img.Data.WriteTo(s);
+                                                using (img)
+                                                {
+                                                    s.Write(responseHeaderBytes, 0, responseHeaderBytes.Length);
+                                                    img.Data.WriteTo(s);
+                                                }
                                             }
                                         }
                                     }
-                                } 
-                            }         
+                                }
+                            }
                         }
                     }
+
+                    c.Close();
                 }
-                c.Close();
             }
-          }
-          catch (Exception ex)
-          {
-              Debug.WriteLine("TileHttpHost, ProcessRequest: " + ex);
-          }
-          //Debug.WriteLine("disconnected");
+            catch (Exception ex)
+            {
+                Debug.WriteLine("TileHttpHost, ProcessRequest: " + ex);
+            }
+
+            //Debug.WriteLine("disconnected");
         }
     }
 }

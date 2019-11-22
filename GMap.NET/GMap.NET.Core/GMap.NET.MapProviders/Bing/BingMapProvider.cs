@@ -1,58 +1,60 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Xml;
+using GMap.NET.Internals;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Xml;
-    using GMap.NET.Internals;
-    using GMap.NET.Projections;
-
     public abstract class BingMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider
     {
         public BingMapProviderBase()
         {
             MaxZoom = null;
             RefererUrl = "http://www.bing.com/maps/";
-            Copyright = string.Format("©{0} Microsoft Corporation, ©{0} NAVTEQ, ©{0} Image courtesy of NASA", DateTime.Today.Year);
+            Copyright = string.Format("©{0} Microsoft Corporation, ©{0} NAVTEQ, ©{0} Image courtesy of NASA",
+                DateTime.Today.Year);
         }
 
         public string Version = "4810";
 
         /// <summary>
-        /// Bing Maps Customer Identification.
-        /// |
-        /// FOR LEGAL AND COMMERCIAL USAGE SET YOUR OWN REGISTERED KEY
-        /// |
-        /// http://msdn.microsoft.com/en-us/library/ff428642.aspx
+        ///     Bing Maps Customer Identification.
+        ///     |
+        ///     FOR LEGAL AND COMMERCIAL USAGE SET YOUR OWN REGISTERED KEY
+        ///     |
+        ///     http://msdn.microsoft.com/en-us/library/ff428642.aspx
         /// </summary>
         public string ClientKey = string.Empty;
 
         internal string SessionId = string.Empty;
 
         /// <summary>
-        /// set true to append SessionId on requesting tiles
+        ///     set true to append SessionId on requesting tiles
         /// </summary>
         public bool ForceSessionIdOnTileAccess = false;
 
         /// <summary>
-        /// set true to avoid using dynamic tile url format
+        ///     set true to avoid using dynamic tile url format
         /// </summary>
         public bool DisableDynamicTileUrlFormat = false;
 
         /// <summary>
-        /// Converts tile XY coordinates into a QuadKey at a specified level of detail.
+        ///     Converts tile XY coordinates into a QuadKey at a specified level of detail.
         /// </summary>
         /// <param name="tileX">Tile X coordinate.</param>
         /// <param name="tileY">Tile Y coordinate.</param>
-        /// <param name="levelOfDetail">Level of detail, from 1 (lowest detail)
-        /// to 23 (highest detail).</param>
-        /// <returns>A string containing the QuadKey.</returns>       
+        /// <param name="levelOfDetail">
+        ///     Level of detail, from 1 (lowest detail)
+        ///     to 23 (highest detail).
+        /// </param>
+        /// <returns>A string containing the QuadKey.</returns>
         internal string TileXYToQuadKey(long tileX, long tileY, int levelOfDetail)
         {
             StringBuilder quadKey = new StringBuilder();
@@ -64,18 +66,21 @@ namespace GMap.NET.MapProviders
                 {
                     digit++;
                 }
+
                 if ((tileY & mask) != 0)
                 {
                     digit++;
                     digit++;
                 }
+
                 quadKey.Append(digit);
             }
+
             return quadKey.ToString();
         }
 
         /// <summary>
-        /// Converts a QuadKey into tile XY coordinates.
+        ///     Converts a QuadKey into tile XY coordinates.
         /// </summary>
         /// <param name="quadKey">QuadKey of the tile.</param>
         /// <param name="tileX">Output parameter receiving the tile X coordinate.</param>
@@ -113,6 +118,7 @@ namespace GMap.NET.MapProviders
         }
 
         #region GMapProvider Members
+
         public override Guid Id
         {
             get
@@ -138,14 +144,16 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
+
                 return overlays;
             }
         }
@@ -154,16 +162,18 @@ namespace GMap.NET.MapProviders
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
         public bool TryCorrectVersion = true;
 
         /// <summary>
-        /// set false to use your own key. 
-        /// FOR LEGAL AND COMMERCIAL USAGE SET YOUR OWN REGISTERED KEY
-        /// http://msdn.microsoft.com/en-us/library/ff428642.aspx
+        ///     set false to use your own key.
+        ///     FOR LEGAL AND COMMERCIAL USAGE SET YOUR OWN REGISTERED KEY
+        ///     http://msdn.microsoft.com/en-us/library/ff428642.aspx
         /// </summary>
         public bool TryGetDefaultKey = true;
+
         static bool init = false;
 
         public override void OnInitialized()
@@ -178,35 +188,47 @@ namespace GMap.NET.MapProviders
                     if (TryGetDefaultKey && string.IsNullOrEmpty(ClientKey))
                     {
                         //old: Vx8dmDflxzT02jJUG8bEjMU07Xr9QWRpPTeRuAZTC1uZFQdDCvK/jUbHKdyHEWj4LvccTPoKofDHtzHsWu/0xuo5u2Y9rj88
-                        key = Stuff.GString("Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88");
+                        key = Stuff.GString(
+                            "Jq7FrGTyaYqcrvv9ugBKv4OVSKnmzpigqZtdvtcDdgZexmOZ2RugOexFSmVzTAhOWiHrdhFoNCoySnNF3MyyIOo5u2Y9rj88");
                     }
 
                     #region -- try get sesion key --
+
                     if (!string.IsNullOrEmpty(key))
                     {
-                        string keyResponse = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("BingLoggingServiceV1" + key, CacheType.UrlCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
+                        string keyResponse = GMaps.Instance.UseUrlCache
+                            ? Cache.Instance.GetContent("BingLoggingServiceV1" + key,
+                                CacheType.UrlCache,
+                                TimeSpan.FromHours(TTLCache))
+                            : string.Empty;
 
                         if (string.IsNullOrEmpty(keyResponse))
                         {
                             // Bing Maps WPF Control
                             // http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&auth={0}&fmt=1&type=3&group=MapControl&name=WPF&version=1.0.0.0&session=00000000-0000-0000-0000-000000000000&mkt=en-US
 
-                            keyResponse = GetContentUsingHttp(string.Format("http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback", key));
+                            keyResponse = GetContentUsingHttp(string.Format(
+                                "http://dev.virtualearth.net/webservices/v1/LoggingService/LoggingService.svc/Log?entry=0&fmt=1&type=3&group=MapControl&name=AJAX&mkt=en-us&auth={0}&jsonp=microsoftMapsNetworkCallback",
+                                key));
 
                             if (!string.IsNullOrEmpty(keyResponse) && keyResponse.Contains("ValidCredentials"))
                             {
                                 if (GMaps.Instance.UseUrlCache)
                                 {
-                                    Cache.Instance.SaveContent("BingLoggingServiceV1" + key, CacheType.UrlCache, keyResponse);
+                                    Cache.Instance.SaveContent("BingLoggingServiceV1" + key,
+                                        CacheType.UrlCache,
+                                        keyResponse);
                                 }
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(keyResponse) && keyResponse.Contains("sessionId") && keyResponse.Contains("ValidCredentials"))
+                        if (!string.IsNullOrEmpty(keyResponse) && keyResponse.Contains("sessionId") &&
+                            keyResponse.Contains("ValidCredentials"))
                         {
                             // microsoftMapsNetworkCallback({"sessionId" : "xxx", "authenticationResultCode" : "ValidCredentials"})
 
-                            SessionId = keyResponse.Split(',')[0].Split(':')[1].Replace("\"", string.Empty).Replace(" ", string.Empty);
+                            SessionId = keyResponse.Split(',')[0].Split(':')[1].Replace("\"", string.Empty)
+                                .Replace(" ", string.Empty);
                             Debug.WriteLine("GMapProviders.BingMap.SessionId: " + SessionId);
                         }
                         else
@@ -214,6 +236,7 @@ namespace GMap.NET.MapProviders
                             Debug.WriteLine("BingLoggingServiceV1: " + keyResponse);
                         }
                     }
+
                     #endregion
 
                     // supporting old road
@@ -221,8 +244,11 @@ namespace GMap.NET.MapProviders
                     if (TryCorrectVersion && DisableDynamicTileUrlFormat)
                     {
                         #region -- get the version --
+
                         string url = @"http://www.bing.com/maps";
-                        string html = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromDays(TTLCache)) : string.Empty;
+                        string html = GMaps.Instance.UseUrlCache
+                            ? Cache.Instance.GetContent(url, CacheType.UrlCache, TimeSpan.FromDays(TTLCache))
+                            : string.Empty;
 
                         if (string.IsNullOrEmpty(html))
                         {
@@ -258,7 +284,8 @@ namespace GMap.NET.MapProviders
                                         GMapProviders.BingHybridMap.Version = ver;
                                         GMapProviders.BingOSMap.Version = ver;
 #if DEBUG
-                                        Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", old: " + old + ", consider updating source");
+                                        Debug.WriteLine("GMapProviders.BingMap.Version: " + ver + ", old: " + old +
+                                                        ", consider updating source");
                                         if (Debugger.IsAttached)
                                         {
                                             Thread.Sleep(5555);
@@ -271,8 +298,10 @@ namespace GMap.NET.MapProviders
                                     }
                                 }
                             }
+
                             #endregion
                         }
+
                         #endregion
                     }
 
@@ -296,6 +325,7 @@ namespace GMap.NET.MapProviders
                     return !tileInfo.Equals("no-tile");
                 }
             }
+
             return pass;
         }
 
@@ -310,9 +340,14 @@ namespace GMap.NET.MapProviders
             {
                 try
                 {
-                    string url = "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + imageryType + "?output=xml&key=" + SessionId;
+                    string url = "http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + imageryType +
+                                 "?output=xml&key=" + SessionId;
 
-                    string r = GMaps.Instance.UseUrlCache ? Cache.Instance.GetContent("GetTileUrl" + imageryType, CacheType.UrlCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
+                    string r = GMaps.Instance.UseUrlCache
+                        ? Cache.Instance.GetContent("GetTileUrl" + imageryType,
+                            CacheType.UrlCache,
+                            TimeSpan.FromHours(TTLCache))
+                        : string.Empty;
                     bool cache = false;
 
                     if (string.IsNullOrEmpty(r))
@@ -371,6 +406,7 @@ namespace GMap.NET.MapProviders
                     Debug.WriteLine("GetTileUrl: Error getting Bing Maps tile URL - " + ex);
                 }
             }
+
             return ret;
         }
 
@@ -382,11 +418,16 @@ namespace GMap.NET.MapProviders
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), zoom, out tooltip, out numLevels, out zoomFactor);
+            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+                zoom,
+                out tooltip,
+                out numLevels,
+                out zoomFactor);
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
             }
+
             return ret;
         }
 
@@ -396,11 +437,16 @@ namespace GMap.NET.MapProviders
             int numLevels;
             int zoomFactor;
             MapRoute ret = null;
-            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode), zoom, out tooltip, out numLevels, out zoomFactor);
+            List<PointLatLng> points = GetRoutePoints(MakeRouteUrl(start, end, LanguageStr, avoidHighways, walkingMode),
+                zoom,
+                out tooltip,
+                out numLevels,
+                out zoomFactor);
             if (points != null)
             {
                 ret = new MapRoute(points, tooltip);
             }
+
             return ret;
         }
 
@@ -409,7 +455,13 @@ namespace GMap.NET.MapProviders
             string addition = avoidHighways ? "&avoid=highways" : string.Empty;
             string mode = walkingMode ? "Walking" : "Driving";
 
-            return string.Format(CultureInfo.InvariantCulture, RouteUrlFormatPointQueries, mode, start, end, addition, SessionId);
+            return string.Format(CultureInfo.InvariantCulture,
+                RouteUrlFormatPointQueries,
+                mode,
+                start,
+                end,
+                addition,
+                SessionId);
         }
 
         string MakeRouteUrl(PointLatLng start, PointLatLng end, string language, bool avoidHighways, bool walkingMode)
@@ -417,10 +469,19 @@ namespace GMap.NET.MapProviders
             string addition = avoidHighways ? "&avoid=highways" : string.Empty;
             string mode = walkingMode ? "Walking" : "Driving";
 
-            return string.Format(CultureInfo.InvariantCulture, RouteUrlFormatPointLatLng, mode, start.Lat, start.Lng, end.Lat, end.Lng, addition, SessionId);
+            return string.Format(CultureInfo.InvariantCulture,
+                RouteUrlFormatPointLatLng,
+                mode,
+                start.Lat,
+                start.Lng,
+                end.Lat,
+                end.Lng,
+                addition,
+                SessionId);
         }
 
-        List<PointLatLng> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel, out int zoomFactor)
+        List<PointLatLng> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel,
+            out int zoomFactor)
         {
             List<PointLatLng> points = null;
             tooltipHtml = string.Empty;
@@ -428,7 +489,9 @@ namespace GMap.NET.MapProviders
             zoomFactor = -1;
             try
             {
-                string route = GMaps.Instance.UseRouteCache ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
+                string route = GMaps.Instance.UseRouteCache
+                    ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache))
+                    : string.Empty;
 
                 if (string.IsNullOrEmpty(route))
                 {
@@ -447,6 +510,7 @@ namespace GMap.NET.MapProviders
                 if (!string.IsNullOrEmpty(route))
                 {
                     #region -- title --
+
                     int tooltipEnd = 0;
                     {
                         int x = route.IndexOf("<RoutePath><Line>") + 17;
@@ -464,9 +528,11 @@ namespace GMap.NET.MapProviders
                             }
                         }
                     }
+
                     #endregion
 
                     #region -- points --
+
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(route);
                     XmlNode xn = doc["Response"];
@@ -474,39 +540,46 @@ namespace GMap.NET.MapProviders
                     switch (statuscode)
                     {
                         case "200":
+                        {
+                            xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"]["RoutePath"]["Line"];
+                            XmlNodeList xnl = xn.ChildNodes;
+                            if (xnl.Count > 0)
                             {
-                                xn = xn["ResourceSets"]["ResourceSet"]["Resources"]["Route"]["RoutePath"]["Line"];
-                                XmlNodeList xnl = xn.ChildNodes;
-                                if (xnl.Count > 0)
+                                points = new List<PointLatLng>();
+                                foreach (XmlNode xno in xnl)
                                 {
-                                    points = new List<PointLatLng>();
-                                    foreach (XmlNode xno in xnl)
-                                    {
-                                        XmlNode latitude = xno["Latitude"];
-                                        XmlNode longitude = xno["Longitude"];
-                                        points.Add(new PointLatLng(double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
-                                                                   double.Parse(longitude.InnerText, CultureInfo.InvariantCulture)));
-                                    }
+                                    XmlNode latitude = xno["Latitude"];
+                                    XmlNode longitude = xno["Longitude"];
+                                    points.Add(new PointLatLng(
+                                        double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
+                                        double.Parse(longitude.InnerText, CultureInfo.InvariantCulture)));
                                 }
-                                break;
                             }
+
+                            break;
+                        }
                         // no status implementation on routes yet although when introduced these are the codes. Exception will be catched.
                         case "400":
                             throw new Exception("Bad Request, The request contained an error.");
                         case "401":
-                            throw new Exception("Unauthorized, Access was denied. You may have entered your credentials incorrectly, or you might not have access to the requested resource or operation.");
+                            throw new Exception(
+                                "Unauthorized, Access was denied. You may have entered your credentials incorrectly, or you might not have access to the requested resource or operation.");
                         case "403":
-                            throw new Exception("Forbidden, The request is for something forbidden. Authorization will not help.");
+                            throw new Exception(
+                                "Forbidden, The request is for something forbidden. Authorization will not help.");
                         case "404":
                             throw new Exception("Not Found, The requested resource was not found.");
                         case "500":
-                            throw new Exception("Internal Server Error, Your request could not be completed because there was a problem with the service.");
+                            throw new Exception(
+                                "Internal Server Error, Your request could not be completed because there was a problem with the service.");
                         case "501":
-                            throw new Exception("Service Unavailable, There's a problem with the service right now. Please try again later.");
+                            throw new Exception(
+                                "Service Unavailable, There's a problem with the service right now. Please try again later.");
                         default:
                             points = null;
                             break; // unknown, for possible future error codes
                     }
+
                     #endregion
                 }
             }
@@ -515,12 +588,16 @@ namespace GMap.NET.MapProviders
                 points = null;
                 Debug.WriteLine("GetRoutePoints: " + ex);
             }
+
             return points;
         }
 
         // example : http://dev.virtualearth.net/REST/V1/Routes/Driving?o=xml&wp.0=44.979035,-93.26493&wp.1=44.943828508257866,-93.09332862496376&optmz=distance&rpo=Points&key=[PROVIDEYOUROWNKEY!!]
-        static readonly string RouteUrlFormatPointLatLng = "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml&wp.0={1},{2}&wp.1={3},{4}{5}&optmz=distance&rpo=Points&key={6}";
-        static readonly string RouteUrlFormatPointQueries = "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml&wp.0={1}&wp.1={2}{3}&optmz=distance&rpo=Points&key={4}";
+        static readonly string RouteUrlFormatPointLatLng =
+            "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml&wp.0={1},{2}&wp.1={3},{4}{5}&optmz=distance&rpo=Points&key={6}";
+
+        static readonly string RouteUrlFormatPointQueries =
+            "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml&wp.0={1}&wp.1={2}{3}&optmz=distance&rpo=Points&key={4}";
 
         #endregion RoutingProvider
 
@@ -583,6 +660,7 @@ namespace GMap.NET.MapProviders
 
                 return true;
             }
+
             return false;
         }
 
@@ -610,7 +688,9 @@ namespace GMap.NET.MapProviders
 
             try
             {
-                string geo = GMaps.Instance.UseGeocoderCache ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache)) : string.Empty;
+                string geo = GMaps.Instance.UseGeocoderCache
+                    ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache))
+                    : string.Empty;
 
                 bool cache = false;
 
@@ -636,32 +716,34 @@ namespace GMap.NET.MapProviders
                         switch (statuscode)
                         {
                             case "200":
+                            {
+                                pointList = new List<PointLatLng>();
+                                xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
+                                XmlNodeList xnl = xn.ChildNodes;
+                                foreach (XmlNode xno in xnl)
                                 {
-                                    pointList = new List<PointLatLng>();
-                                    xn = xn["ResourceSets"]["ResourceSet"]["Resources"];
-                                    XmlNodeList xnl = xn.ChildNodes;
-                                    foreach (XmlNode xno in xnl)
+                                    XmlNode latitude = xno["Point"]["Latitude"];
+                                    XmlNode longitude = xno["Point"]["Longitude"];
+                                    pointList.Add(new PointLatLng(
+                                        Double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
+                                        Double.Parse(longitude.InnerText, CultureInfo.InvariantCulture)));
+                                }
+
+                                if (pointList.Count > 0)
+                                {
+                                    status = GeoCoderStatusCode.OK;
+
+                                    if (cache && GMaps.Instance.UseGeocoderCache)
                                     {
-                                        XmlNode latitude = xno["Point"]["Latitude"];
-                                        XmlNode longitude = xno["Point"]["Longitude"];
-                                        pointList.Add(new PointLatLng(Double.Parse(latitude.InnerText, CultureInfo.InvariantCulture),
-                                                                      Double.Parse(longitude.InnerText, CultureInfo.InvariantCulture)));
+                                        Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
                                     }
 
-                                    if (pointList.Count > 0)
-                                    {
-                                        status = GeoCoderStatusCode.OK;
-
-                                        if (cache && GMaps.Instance.UseGeocoderCache)
-                                        {
-                                            Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
-                                        }
-                                        break;
-                                    }
-
-                                    status = GeoCoderStatusCode.ZERO_RESULTS;
                                     break;
                                 }
+
+                                status = GeoCoderStatusCode.ZERO_RESULTS;
+                                break;
+                            }
 
                             case "400":
                                 status = GeoCoderStatusCode.INVALID_REQUEST;
@@ -704,7 +786,7 @@ namespace GMap.NET.MapProviders
     }
 
     /// <summary>
-    /// BingMapProvider provider
+    ///     BingMapProvider provider
     /// </summary>
     public class BingMapProvider : BingMapProviderBase
     {
@@ -722,6 +804,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("D0CEB371-F10A-4E12-A2C1-DF617D6674A8");
+
         public override Guid Id
         {
             get
@@ -731,6 +814,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "BingMap";
+
         public override string Name
         {
             get
@@ -757,7 +841,8 @@ namespace GMap.NET.MapProviders
                 UrlDynamicFormat = GetTileUrl("Road");
                 if (!string.IsNullOrEmpty(UrlDynamicFormat))
                 {
-                    UrlDynamicFormat = UrlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}").Replace("{culture}", "{2}");
+                    UrlDynamicFormat = UrlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
+                        .Replace("{culture}", "{2}");
                 }
             }
         }
@@ -767,19 +852,25 @@ namespace GMap.NET.MapProviders
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
             string key = TileXYToQuadKey(pos.X, pos.Y, zoom);
-                
+
             if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(UrlDynamicFormat))
             {
                 return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key, language);
             }
 
-            return string.Format(UrlFormat, GetServerNum(pos, 4), key, Version, language, ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
+            return string.Format(UrlFormat,
+                GetServerNum(pos, 4),
+                key,
+                Version,
+                language,
+                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
         }
 
         string UrlDynamicFormat = string.Empty;
 
         // http://ecn.t0.tiles.virtualearth.net/tiles/r120030?g=875&mkt=en-us&lbl=l1&stl=h&shading=hill&n=z
 
-        static readonly string UrlFormat = "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}?g={2}&mkt={3}&lbl=l1&stl=h&shading=hill&n=z{4}";
+        static readonly string UrlFormat =
+            "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}?g={2}&mkt={3}&lbl=l1&stl=h&shading=hill&n=z{4}";
     }
 }

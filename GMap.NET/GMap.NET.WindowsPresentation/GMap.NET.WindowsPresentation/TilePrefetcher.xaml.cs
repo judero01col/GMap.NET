@@ -1,19 +1,17 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
+using GMap.NET.Internals;
+using GMap.NET.MapProviders;
+
 namespace GMap.NET.WindowsPresentation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Windows;
-    using System.Windows.Input;
-    using GMap.NET.Internals;
-    using GMap.NET;
-    using GMap.NET.MapProviders;
-    using System.Threading;
-    using System.Windows.Threading;
-
     /// <summary>
-    /// form helping to prefetch tiles on local db
+    ///     form helping to prefetch tiles on local db
     /// </summary>
     public partial class TilePrefetcher : Window
     {
@@ -25,7 +23,7 @@ namespace GMap.NET.WindowsPresentation
         int all;
         public bool ShowCompleteMessage = false;
         RectLatLng area;
-        GMap.NET.GSize maxOfTiles;
+        GSize maxOfTiles;
 
         public TilePrefetcher()
         {
@@ -216,7 +214,7 @@ namespace GMap.NET.WindowsPresentation
                         if (++retry <= 1) // retry only one
                         {
                             i--;
-                            System.Threading.Thread.Sleep(1111);
+                            Thread.Sleep(1111);
                             continue;
                         }
                         else
@@ -228,7 +226,7 @@ namespace GMap.NET.WindowsPresentation
 
                 _worker.ReportProgress((int)((i + 1) * 100 / all), i + 1);
 
-                System.Threading.Thread.Sleep(sleep);
+                Thread.Sleep(sleep);
             }
 
             e.Result = countOk;

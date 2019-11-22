@@ -1,10 +1,9 @@
-﻿
+﻿using System;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-
     /// <summary>
-    /// OviSatelliteMap provider
+    ///     OviSatelliteMap provider
     /// </summary>
     public class HereSatelliteMapProvider : HereMapProviderBase
     {
@@ -22,6 +21,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("6696CE15-7694-4073-BC48-79EE849F2563");
+
         public override Guid Id
         {
             get
@@ -31,6 +31,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "HereSatelliteMap";
+
         public override string Name
         {
             get
@@ -53,6 +54,7 @@ namespace GMap.NET.MapProviders
             return string.Format(UrlFormat, UrlServerLetters[GetServerNum(pos, 4)], zoom, pos.X, pos.Y, AppId, AppCode);
         }
 
-        static readonly string UrlFormat = "http://{0}.traffic.maps.cit.api.here.com/maptile/2.1/traffictile/newest/satellite.day/{1}/{2}/{3}/256/png8?app_id={4}&app_code={5}";
+        static readonly string UrlFormat =
+            "http://{0}.traffic.maps.cit.api.here.com/maptile/2.1/traffictile/newest/satellite.day/{1}/{2}/{3}/256/png8?app_id={4}&app_code={5}";
     }
 }

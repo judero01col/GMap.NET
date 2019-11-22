@@ -1,31 +1,30 @@
-﻿
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
+using System.IO;
+using System.Windows.Forms;
+using GMap.NET.Internals;
+using GMap.NET.MapProviders;
+using GMap.NET.ObjectModel;
+
 namespace GMap.NET.WindowsForms
 {
-    using System;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Windows.Forms;
-    using NET;
-    using Internals;
-    using ObjectModel;
-    using System.Diagnostics;
-    using System.Drawing.Text;
-    using MapProviders;
-
 #if !PocketPC
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Collections.Generic;
     using Projections;
+
 #else
    using OpenNETCF.ComponentModel;
 #endif
 
     /// <summary>
-    /// GMap.NET control for Windows Forms
-    /// </summary>   
+    ///     GMap.NET control for Windows Forms
+    /// </summary>
     public partial class GMapControl : UserControl, Interface
     {
 #if !PocketPC
@@ -33,84 +32,85 @@ namespace GMap.NET.WindowsForms
         public event MapClick OnMapClick;
 
         /// <summary>
-        /// occurs when clicked on marker
+        ///     occurs when clicked on marker
         /// </summary>
         public event MarkerClick OnMarkerClick;
 
         /// <summary>
-        /// occurs when double clicked on marker
+        ///     occurs when double clicked on marker
         /// </summary>
         public event MarkerDoubleClick OnMarkerDoubleClick;
 
         /// <summary>
-        /// occurs when clicked on polygon
+        ///     occurs when clicked on polygon
         /// </summary>
         public event PolygonClick OnPolygonClick;
 
         /// <summary>
-        /// occurs when double clicked on polygon
+        ///     occurs when double clicked on polygon
         /// </summary>
         public event PolygonDoubleClick OnPolygonDoubleClick;
 
         /// <summary>
-        /// occurs when clicked on route
+        ///     occurs when clicked on route
         /// </summary>
         public event RouteClick OnRouteClick;
 
         /// <summary>
-        /// occurs when double clicked on route
+        ///     occurs when double clicked on route
         /// </summary>
         public event RouteDoubleClick OnRouteDoubleClick;
 
         /// <summary>
-        /// occurs on mouse enters route area
+        ///     occurs on mouse enters route area
         /// </summary>
         public event RouteEnter OnRouteEnter;
 
         /// <summary>
-        /// occurs on mouse leaves route area
+        ///     occurs on mouse leaves route area
         /// </summary>
         public event RouteLeave OnRouteLeave;
 
         /// <summary>
-        /// occurs when mouse selection is changed
-        /// </summary>        
+        ///     occurs when mouse selection is changed
+        /// </summary>
         public event SelectionChange OnSelectionChange;
 #endif
 
         /// <summary>
-        /// occurs on mouse enters marker area
+        ///     occurs on mouse enters marker area
         /// </summary>
         public event MarkerEnter OnMarkerEnter;
 
         /// <summary>
-        /// occurs on mouse leaves marker area
+        ///     occurs on mouse leaves marker area
         /// </summary>
         public event MarkerLeave OnMarkerLeave;
 
         /// <summary>
-        /// occurs on mouse enters Polygon area
+        ///     occurs on mouse enters Polygon area
         /// </summary>
         public event PolygonEnter OnPolygonEnter;
 
         /// <summary>
-        /// occurs on mouse leaves Polygon area
+        ///     occurs on mouse leaves Polygon area
         /// </summary>
         public event PolygonLeave OnPolygonLeave;
 
         /// <summary>
-        /// occurs when an exception is thrown inside the map control
+        ///     occurs when an exception is thrown inside the map control
         /// </summary>
         public event ExceptionThrown OnExceptionThrown;
 
         /// <summary>
-        /// list of overlays, should be thread safe
+        ///     list of overlays, should be thread safe
         /// </summary>
-        public readonly ObservableCollectionThreadSafe<GMapOverlay> Overlays = new ObservableCollectionThreadSafe<GMapOverlay>();
-        
+        public readonly ObservableCollectionThreadSafe<GMapOverlay> Overlays =
+            new ObservableCollectionThreadSafe<GMapOverlay>();
+
         /// <summary>
-        /// max zoom
-        /// </summary>         
+        ///     max zoom
+        /// </summary>
         [Category("GMap.NET")]
         [Description("maximum zoom level of map")]
         public int MaxZoom
@@ -126,8 +126,8 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// min zoom
-        /// </summary>      
+        ///     min zoom
+        /// </summary>
         [Category("GMap.NET")]
         [Description("minimum zoom level of map")]
         public int MinZoom
@@ -143,7 +143,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// map zooming type for mouse wheel
+        ///     map zooming type for mouse wheel
         /// </summary>
         [Category("GMap.NET")]
         [Description("map zooming type for mouse wheel")]
@@ -160,7 +160,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// Import From Kmz
+        ///     Import From Kmz
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
@@ -179,7 +179,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// Export From Kmz
+        ///     Export From Kmz
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
@@ -199,7 +199,7 @@ namespace GMap.NET.WindowsForms
 
 
         /// <summary>
-        /// enable map zoom on mouse wheel
+        ///     enable map zoom on mouse wheel
         /// </summary>
         [Category("GMap.NET")]
         [Description("enable map zoom on mouse wheel")]
@@ -216,12 +216,12 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// text on empty tiles
+        ///     text on empty tiles
         /// </summary>
         public string EmptyTileText = "We are sorry, but we don't\nhave imagery at this zoom\nlevel for this region.";
 
         /// <summary>
-        /// pen for empty tile borders
+        ///     pen for empty tile borders
         /// </summary>
 #if !PocketPC
         public Pen EmptyTileBorders = new Pen(Brushes.White, 1);
@@ -232,10 +232,11 @@ namespace GMap.NET.WindowsForms
         public bool ShowCenter = true;
 
         /// <summary>
-        /// pen for scale info
+        ///     pen for scale info
         /// </summary>
 #if !PocketPC
         public Pen ScalePen = new Pen(Color.Black, 3);
+
         public Pen ScalePenBorder = new Pen(Color.WhiteSmoke, 6);
         public Pen CenterPen = new Pen(Brushes.Red, 1);
 #else
@@ -245,7 +246,7 @@ namespace GMap.NET.WindowsForms
 
 #if !PocketPC
         /// <summary>
-        /// area selection pen
+        ///     area selection pen
         /// </summary>
         public Pen SelectionPen = new Pen(Brushes.Blue, 2);
 
@@ -253,7 +254,7 @@ namespace GMap.NET.WindowsForms
         Color selectedAreaFillColor = Color.FromArgb(33, Color.RoyalBlue);
 
         /// <summary>
-        /// background of selected area
+        ///     background of selected area
         /// </summary>
         [Category("GMap.NET")]
         [Description("background color od the selected area")]
@@ -274,6 +275,7 @@ namespace GMap.NET.WindowsForms
                         SelectedAreaFill.Dispose();
                         SelectedAreaFill = null;
                     }
+
                     SelectedAreaFill = new SolidBrush(selectedAreaFillColor);
                 }
             }
@@ -282,7 +284,7 @@ namespace GMap.NET.WindowsForms
         HelperLineOptions helperLineOption = HelperLineOptions.DontShow;
 
         /// <summary>
-        /// draw lines at the mouse pointer position
+        ///     draw lines at the mouse pointer position
         /// </summary>
         [Browsable(false)]
         public HelperLineOptions HelperLineOption
@@ -294,7 +296,7 @@ namespace GMap.NET.WindowsForms
             set
             {
                 helperLineOption = value;
-                renderHelperLine = (helperLineOption == HelperLineOptions.ShowAlways);
+                renderHelperLine = helperLineOption == HelperLineOptions.ShowAlways;
                 if (Core.IsStarted)
                 {
                     Invalidate();
@@ -311,7 +313,7 @@ namespace GMap.NET.WindowsForms
 
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
-                renderHelperLine = (e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt);
+                renderHelperLine = e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt;
                 if (renderHelperLine)
                 {
                     Invalidate();
@@ -325,7 +327,7 @@ namespace GMap.NET.WindowsForms
 
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
-                renderHelperLine = (e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt);
+                renderHelperLine = e.Modifiers == Keys.Shift || e.Modifiers == Keys.Alt;
                 if (!renderHelperLine)
                 {
                     Invalidate();
@@ -338,7 +340,7 @@ namespace GMap.NET.WindowsForms
         Color emptyTileColor = Color.Navy;
 
         /// <summary>
-        /// color of empty tile background
+        ///     color of empty tile background
         /// </summary>
         [Category("GMap.NET")]
         [Description("background color of the empty tile")]
@@ -359,6 +361,7 @@ namespace GMap.NET.WindowsForms
                         EmptytileBrush.Dispose();
                         EmptytileBrush = null;
                     }
+
                     EmptytileBrush = new SolidBrush(emptyTileColor);
                 }
             }
@@ -371,27 +374,27 @@ namespace GMap.NET.WindowsForms
 #endif
 
         /// <summary>
-        /// show map scale info
+        ///     show map scale info
         /// </summary>
         public bool MapScaleInfoEnabled = false;
 
         /// <summary>
-        /// Position of the map scale info
+        ///     Position of the map scale info
         /// </summary>
         public MapScaleInfoPosition MapScaleInfoPosition;
 
         /// <summary>
-        /// enables filling empty tiles using lower level images
+        ///     enables filling empty tiles using lower level images
         /// </summary>
         public bool FillEmptyTiles = true;
 
         /// <summary>
-        /// if true, selects area just by holding mouse and moving
+        ///     if true, selects area just by holding mouse and moving
         /// </summary>
         public bool DisableAltForSelection = false;
 
         /// <summary>
-        /// retry count to get tile 
+        ///     retry count to get tile
         /// </summary>
         [Browsable(false)]
         public int RetryLoadTile
@@ -407,7 +410,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// how many levels of tiles are staying decompresed in memory
+        ///     how many levels of tiles are staying decompresed in memory
         /// </summary>
         [Browsable(false)]
         public int LevelsKeepInMemmory
@@ -424,15 +427,14 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// map dragg button
+        ///     map dragg button
         /// </summary>
-        [Category("GMap.NET")]
-        public MouseButtons DragButton = MouseButtons.Right;
+        [Category("GMap.NET")] public MouseButtons DragButton = MouseButtons.Right;
 
         private bool showTileGridLines = false;
 
         /// <summary>
-        /// shows tile gridlines
+        ///     shows tile gridlines
         /// </summary>
         [Category("GMap.NET")]
         [Description("shows tile gridlines")]
@@ -450,7 +452,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// current selected area in map
+        ///     current selected area in map
         /// </summary>
         private RectLatLng selectedArea;
 
@@ -473,28 +475,29 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// map boundaries
+        ///     map boundaries
         /// </summary>
         public RectLatLng? BoundsOfMap = null;
 
         /// <summary>
-        /// enables integrated DoubleBuffer for running on windows mobile
+        ///     enables integrated DoubleBuffer for running on windows mobile
         /// </summary>
 #if !PocketPC
         public bool ForceDoubleBuffer = false;
+
         readonly bool MobileMode = false;
 #else
       readonly bool ForceDoubleBuffer = true;
 #endif
 
         /// <summary>
-        /// stops immediate marker/route/polygon invalidations;
-        /// call Refresh to perform single refresh and reset invalidation state
+        ///     stops immediate marker/route/polygon invalidations;
+        ///     call Refresh to perform single refresh and reset invalidation state
         /// </summary>
         public bool HoldInvalidation = false;
 
         /// <summary>
-        /// call this to stop HoldInvalidation and perform single forced instant refresh 
+        ///     call this to stop HoldInvalidation and perform single forced instant refresh
         /// </summary>
         public override void Refresh()
         {
@@ -510,7 +513,7 @@ namespace GMap.NET.WindowsForms
 
 #if !DESIGN
         /// <summary>
-        /// enque built-in thread safe invalidation
+        ///     enque built-in thread safe invalidation
         /// </summary>
         public new void Invalidate()
         {
@@ -534,7 +537,7 @@ namespace GMap.NET.WindowsForms
             set
             {
                 _GrayScale = value;
-                ColorMatrix = (value == true ? ColorMatrixs.GrayScale : null);
+                ColorMatrix = value == true ? ColorMatrixs.GrayScale : null;
             }
         }
 
@@ -550,7 +553,7 @@ namespace GMap.NET.WindowsForms
             set
             {
                 _Negative = value;
-                ColorMatrix = (value == true ? ColorMatrixs.Negative : null);
+                ColorMatrix = value == true ? ColorMatrixs.Negative : null;
             }
         }
 
@@ -580,7 +583,7 @@ namespace GMap.NET.WindowsForms
 #endif
 
         // internal stuff
-        internal readonly Core Core = new Core();
+        internal readonly Internals.Core Core = new Internals.Core();
 
         internal readonly Font CopyrightFont = new Font(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
 #if !PocketPC
@@ -600,7 +603,7 @@ namespace GMap.NET.WindowsForms
 
 #if !DESIGN
         /// <summary>
-        /// construct
+        ///     construct
         /// </summary>
         public GMapControl()
         {
@@ -684,7 +687,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// update objects when map is draged/zoomed
+        ///     update objects when map is draged/zoomed
         /// </summary>
         internal void ForceUpdateOverlays()
         {
@@ -707,7 +710,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// updates markers local position
+        ///     updates markers local position
         /// </summary>
         /// <param name="marker"></param>
         public void UpdateMarkerLocalPosition(GMapMarker marker)
@@ -720,12 +723,12 @@ namespace GMap.NET.WindowsForms
                     p.OffsetNegative(Core.renderOffset);
                 }
 #endif
-                marker.LocalPosition = new System.Drawing.Point((int)(p.X + marker.Offset.X), (int)(p.Y + marker.Offset.Y));
+                marker.LocalPosition = new Point((int)(p.X + marker.Offset.X), (int)(p.Y + marker.Offset.Y));
             }
         }
 
         /// <summary>
-        /// updates routes local position
+        ///     updates routes local position
         /// </summary>
         /// <param name="route"></param>
         public void UpdateRouteLocalPosition(GMapRoute route)
@@ -750,7 +753,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// updates polygons local position
+        ///     updates polygons local position
         /// </summary>
         /// <param name="polygon"></param>
         public void UpdatePolygonLocalPosition(GMapPolygon polygon)
@@ -774,7 +777,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// sets zoom to max to fit rect
+        ///     sets zoom to max to fit rect
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
@@ -789,7 +792,7 @@ namespace GMap.NET.WindowsForms
                 int maxZoom = Core.GetMaxZoomToFitRect(rect);
                 if (maxZoom > 0)
                 {
-                    PointLatLng center = new PointLatLng(rect.Lat - (rect.HeightLat / 2), rect.Lng + (rect.WidthLng / 2));
+                    PointLatLng center = new PointLatLng(rect.Lat - rect.HeightLat / 2, rect.Lng + rect.WidthLng / 2);
                     Position = center;
 
                     if (maxZoom > MaxZoom)
@@ -813,7 +816,7 @@ namespace GMap.NET.WindowsForms
         bool lazyEvents = true;
 
         /// <summary>
-        /// sets to max zoom to fit all markers and centers them in map
+        ///     sets to max zoom to fit all markers and centers them in map
         /// </summary>
         /// <param name="overlayId">overlay id or null to check all</param>
         /// <returns></returns>
@@ -829,7 +832,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// zooms and centers all route
+        ///     zooms and centers all route
         /// </summary>
         /// <param name="overlayId">overlay id or null to check all</param>
         /// <returns></returns>
@@ -845,7 +848,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// zooms and centers route 
+        ///     zooms and centers route
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
@@ -861,7 +864,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets rectangle with all objects inside
+        ///     gets rectangle with all objects inside
         /// </summary>
         /// <param name="overlayId">overlay id or null to check all except zoomInsignificant</param>
         /// <returns></returns>
@@ -876,7 +879,7 @@ namespace GMap.NET.WindowsForms
 
             foreach (GMapOverlay o in Overlays)
             {
-                if ((overlayId == null && o.IsZoomSignificant) || o.Id == overlayId)
+                if (overlayId == null && o.IsZoomSignificant || o.Id == overlayId)
                 {
                     if (o.IsVisibile && o.Markers.Count > 0)
                     {
@@ -913,7 +916,8 @@ namespace GMap.NET.WindowsForms
                 }
             }
 
-            if (left != double.MaxValue && right != double.MinValue && top != double.MinValue && bottom != double.MaxValue)
+            if (left != double.MaxValue && right != double.MinValue && top != double.MinValue &&
+                bottom != double.MaxValue)
             {
                 ret = RectLatLng.FromLTRB(left, top, right, bottom);
             }
@@ -922,7 +926,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets rectangle with all objects inside
+        ///     gets rectangle with all objects inside
         /// </summary>
         /// <param name="overlayId">overlay id or null to check all except zoomInsignificant</param>
         /// <returns></returns>
@@ -937,7 +941,7 @@ namespace GMap.NET.WindowsForms
 
             foreach (GMapOverlay o in Overlays)
             {
-                if ((overlayId == null && o.IsZoomSignificant) || o.Id == overlayId)
+                if (overlayId == null && o.IsZoomSignificant || o.Id == overlayId)
                 {
                     if (o.IsVisibile && o.Routes.Count > 0)
                     {
@@ -977,7 +981,8 @@ namespace GMap.NET.WindowsForms
                 }
             }
 
-            if (left != double.MaxValue && right != double.MinValue && top != double.MinValue && bottom != double.MaxValue)
+            if (left != double.MaxValue && right != double.MinValue && top != double.MinValue &&
+                bottom != double.MaxValue)
             {
                 ret = RectLatLng.FromLTRB(left, top, right, bottom);
             }
@@ -986,7 +991,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets rect of route
+        ///     gets rect of route
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
@@ -1027,13 +1032,15 @@ namespace GMap.NET.WindowsForms
                         bottom = p.Lat;
                     }
                 }
+
                 ret = RectLatLng.FromLTRB(left, top, right, bottom);
             }
+
             return ret;
         }
 
         /// <summary>
-        /// gets image of the current view
+        ///     gets image of the current view
         /// </summary>
         /// <returns></returns>
         public Image ToImage()
@@ -1057,7 +1064,7 @@ namespace GMap.NET.WindowsForms
 
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    using (var frame = (backBuffer.Clone() as Bitmap))
+                    using (var frame = backBuffer.Clone() as Bitmap)
                     {
                         frame.Save(ms, ImageFormat.Png);
                     }
@@ -1082,11 +1089,12 @@ namespace GMap.NET.WindowsForms
                     ClearBackBuffer();
                 }
             }
+
             return ret;
         }
 
         /// <summary>
-        /// offset position in pixels
+        ///     offset position in pixels
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -1097,7 +1105,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                 if (IsRotated)
                 {
-                    System.Drawing.Point[] p = new System.Drawing.Point[] { new System.Drawing.Point(x, y) };
+                    Point[] p = new Point[] {new Point(x, y)};
                     rotationMatrixInvert.TransformVectors(p);
                     x = (int)p[0].X;
                     y = (int)p[0].Y;
@@ -1110,7 +1118,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// Obtains the orientation between two points expressed in degrees
+        ///     Obtains the orientation between two points expressed in degrees
         /// </summary>
         /// <param name="StartPoint"></param>
         /// <param name="EndPoint"></param>
@@ -1131,14 +1139,14 @@ namespace GMap.NET.WindowsForms
                 if (dLong > 0.0)
                     dLong = -(2.0 * Math.PI - dLong);
                 else
-                    dLong = (2.0 * Math.PI + dLong);
+                    dLong = 2.0 * Math.PI + dLong;
             }
 
             return Math.Round((degrees(Math.Atan2(dLong, dPhi)) + 360.0) % 360.0, 2);
         }
 
         /// <summary>
-        /// check if a given point is within the given point based map boundary
+        ///     check if a given point is within the given point based map boundary
         /// </summary>
         /// <param name="points"></param>
         /// <param name="lat"></param>
@@ -1159,6 +1167,7 @@ namespace GMap.NET.WindowsForms
         {
             return n * (Math.PI / 180);
         }
+
         double degrees(double n)
         {
             return n * (180 / Math.PI);
@@ -1167,7 +1176,7 @@ namespace GMap.NET.WindowsForms
         #region UserControl Events
 
 #if !PocketPC
-        public readonly static bool IsDesignerHosted = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        public static readonly bool IsDesignerHosted = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -1289,6 +1298,7 @@ namespace GMap.NET.WindowsForms
                 {
                     o.Dispose();
                 }
+
                 Overlays.Clear();
 
                 ScaleFont.Dispose();
@@ -1306,6 +1316,7 @@ namespace GMap.NET.WindowsForms
 #endif
                 ClearBackBuffer();
             }
+
             base.Dispose(disposing);
         }
 
@@ -1356,6 +1367,7 @@ namespace GMap.NET.WindowsForms
             if (MapRenderTransform.HasValue)
             {
                 #region -- scale --
+
                 if (!MobileMode)
                 {
                     var center = new GPoint(Width / 2, Height / 2);
@@ -1377,7 +1389,9 @@ namespace GMap.NET.WindowsForms
                     DrawMap(g);
                     g.ResetTransform();
                 }
+
                 OnPaintOverlays(g);
+
                 #endregion
             }
             else
@@ -1455,6 +1469,7 @@ namespace GMap.NET.WindowsForms
                             Core.tileRect.Offset(Core.renderOffset);
 #endif
                         }
+
                         Core.tileRect.OffsetNegative(Core.compensationOffset);
 
                         //if(Core.currentRegion.IntersectsWith(Core.tileRect) || IsRotated)
@@ -1478,11 +1493,25 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                                                 if (!MapRenderTransform.HasValue && !IsRotated)
                                                 {
-                                                    g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height);
+                                                    g.DrawImage(img.Img,
+                                                        Core.tileRect.X,
+                                                        Core.tileRect.Y,
+                                                        Core.tileRect.Width,
+                                                        Core.tileRect.Height);
                                                 }
                                                 else
                                                 {
-                                                    g.DrawImage(img.Img, new Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height), 0, 0, Core.tileRect.Width, Core.tileRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                                    g.DrawImage(img.Img,
+                                                        new Rectangle((int)Core.tileRect.X,
+                                                            (int)Core.tileRect.Y,
+                                                            (int)Core.tileRect.Width,
+                                                            (int)Core.tileRect.Height),
+                                                        0,
+                                                        0,
+                                                        Core.tileRect.Width,
+                                                        Core.tileRect.Height,
+                                                        GraphicsUnit.Pixel,
+                                                        TileFlipXYAttributes);
                                                 }
 #else
                                                 g.DrawImage(img.Img, (int) Core.tileRect.X, (int) Core.tileRect.Y);
@@ -1492,10 +1521,24 @@ namespace GMap.NET.WindowsForms
                                             else
                                             {
                                                 // TODO: move calculations to loader thread
-                                                System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(img.Xoff * (img.Img.Width / img.Ix)), (float)(img.Yoff * (img.Img.Height / img.Ix)), (img.Img.Width / img.Ix), (img.Img.Height / img.Ix));
-                                                System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                                RectangleF srcRect = new RectangleF(
+                                                    (float)(img.Xoff * (img.Img.Width / img.Ix)),
+                                                    (float)(img.Yoff * (img.Img.Height / img.Ix)),
+                                                    img.Img.Width / img.Ix,
+                                                    img.Img.Height / img.Ix);
+                                                Rectangle dst = new Rectangle((int)Core.tileRect.X,
+                                                    (int)Core.tileRect.Y,
+                                                    (int)Core.tileRect.Width,
+                                                    (int)Core.tileRect.Height);
 
-                                                g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                                g.DrawImage(img.Img,
+                                                    dst,
+                                                    srcRect.X,
+                                                    srcRect.Y,
+                                                    srcRect.Width,
+                                                    srcRect.Height,
+                                                    GraphicsUnit.Pixel,
+                                                    TileFlipXYAttributes);
                                             }
 #endif
                                         }
@@ -1506,20 +1549,23 @@ namespace GMap.NET.WindowsForms
                             else if (FillEmptyTiles && MapProvider.Projection is MercatorProjection)
                             {
                                 #region -- fill empty lines --
+
                                 int zoomOffset = 1;
                                 Tile parentTile = Tile.Empty;
                                 long Ix = 0;
 
-                                while (!parentTile.NotEmpty && zoomOffset < Core.Zoom && zoomOffset <= LevelsKeepInMemmory)
+                                while (!parentTile.NotEmpty && zoomOffset < Core.Zoom &&
+                                       zoomOffset <= LevelsKeepInMemmory)
                                 {
                                     Ix = (long)Math.Pow(2, zoomOffset);
-                                    parentTile = Core.Matrix.GetTileWithNoLock(Core.Zoom - zoomOffset++, new GPoint((int)(tilePoint.PosXY.X / Ix), (int)(tilePoint.PosXY.Y / Ix)));
+                                    parentTile = Core.Matrix.GetTileWithNoLock(Core.Zoom - zoomOffset++,
+                                        new GPoint((int)(tilePoint.PosXY.X / Ix), (int)(tilePoint.PosXY.Y / Ix)));
                                 }
 
                                 if (parentTile.NotEmpty)
                                 {
-                                    long Xoff = Math.Abs(tilePoint.PosXY.X - (parentTile.Pos.X * Ix));
-                                    long Yoff = Math.Abs(tilePoint.PosXY.Y - (parentTile.Pos.Y * Ix));
+                                    long Xoff = Math.Abs(tilePoint.PosXY.X - parentTile.Pos.X * Ix);
+                                    long Yoff = Math.Abs(tilePoint.PosXY.Y - parentTile.Pos.Y * Ix);
 
                                     // render tile 
                                     {
@@ -1530,15 +1576,30 @@ namespace GMap.NET.WindowsForms
                                                 if (!found)
                                                     found = true;
 
-                                                System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(Xoff * (img.Img.Width / Ix)), (float)(Yoff * (img.Img.Height / Ix)), (img.Img.Width / Ix), (img.Img.Height / Ix));
-                                                System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                                RectangleF srcRect = new RectangleF(
+                                                    (float)(Xoff * (img.Img.Width / Ix)),
+                                                    (float)(Yoff * (img.Img.Height / Ix)),
+                                                    img.Img.Width / Ix,
+                                                    img.Img.Height / Ix);
+                                                Rectangle dst = new Rectangle((int)Core.tileRect.X,
+                                                    (int)Core.tileRect.Y,
+                                                    (int)Core.tileRect.Width,
+                                                    (int)Core.tileRect.Height);
 
-                                                g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                                g.DrawImage(img.Img,
+                                                    dst,
+                                                    srcRect.X,
+                                                    srcRect.Y,
+                                                    srcRect.Width,
+                                                    srcRect.Height,
+                                                    GraphicsUnit.Pixel,
+                                                    TileFlipXYAttributes);
                                                 g.FillRectangle(SelectedAreaFill, dst);
                                             }
                                         }
                                     }
                                 }
+
                                 #endregion
                             }
 #endif
@@ -1552,11 +1613,28 @@ namespace GMap.NET.WindowsForms
                                     {
                                         var ex = Core.FailedLoads[lt];
 #if !PocketPC
-                                        g.FillRectangle(EmptytileBrush, new RectangleF(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height));
+                                        g.FillRectangle(EmptytileBrush,
+                                            new RectangleF(Core.tileRect.X,
+                                                Core.tileRect.Y,
+                                                Core.tileRect.Width,
+                                                Core.tileRect.Height));
 
-                                        g.DrawString("Exception: " + ex.Message, MissingDataFont, Brushes.Red, new RectangleF(Core.tileRect.X + 11, Core.tileRect.Y + 11, Core.tileRect.Width - 11, Core.tileRect.Height - 11));
+                                        g.DrawString("Exception: " + ex.Message,
+                                            MissingDataFont,
+                                            Brushes.Red,
+                                            new RectangleF(Core.tileRect.X + 11,
+                                                Core.tileRect.Y + 11,
+                                                Core.tileRect.Width - 11,
+                                                Core.tileRect.Height - 11));
 
-                                        g.DrawString(EmptyTileText, MissingDataFont, Brushes.Blue, new RectangleF(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height), CenterFormat);
+                                        g.DrawString(EmptyTileText,
+                                            MissingDataFont,
+                                            Brushes.Blue,
+                                            new RectangleF(Core.tileRect.X,
+                                                Core.tileRect.Y,
+                                                Core.tileRect.Width,
+                                                Core.tileRect.Height),
+                                            CenterFormat);
 
 #else
                               g.FillRectangle(EmptytileBrush, new System.Drawing.Rectangle((int) Core.tileRect.X, (int) Core.tileRect.Y, (int) Core.tileRect.Width, (int) Core.tileRect.Height));
@@ -1566,17 +1644,34 @@ namespace GMap.NET.WindowsForms
                               g.DrawString(EmptyTileText, MissingDataFont, TileGridMissingTextBrush, new RectangleF(Core.tileRect.X, Core.tileRect.Y + Core.tileRect.Width / 2 + (ShowTileGridLines ? 11 : -22), Core.tileRect.Width, Core.tileRect.Height), BottomFormat);
 #endif
 
-                                        g.DrawRectangle(EmptyTileBorders, (int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                        g.DrawRectangle(EmptyTileBorders,
+                                            (int)Core.tileRect.X,
+                                            (int)Core.tileRect.Y,
+                                            (int)Core.tileRect.Width,
+                                            (int)Core.tileRect.Height);
                                     }
                                 }
                             }
 
                             if (ShowTileGridLines)
                             {
-                                g.DrawRectangle(EmptyTileBorders, (int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                g.DrawRectangle(EmptyTileBorders,
+                                    (int)Core.tileRect.X,
+                                    (int)Core.tileRect.Y,
+                                    (int)Core.tileRect.Width,
+                                    (int)Core.tileRect.Height);
                                 {
 #if !PocketPC
-                                    g.DrawString((tilePoint.PosXY == Core.centerTileXYLocation ? "CENTER: " : "TILE: ") + tilePoint, MissingDataFont, Brushes.Red, new RectangleF(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height), CenterFormat);
+                                    g.DrawString(
+                                        (tilePoint.PosXY == Core.centerTileXYLocation ? "CENTER: " : "TILE: ") +
+                                        tilePoint,
+                                        MissingDataFont,
+                                        Brushes.Red,
+                                        new RectangleF(Core.tileRect.X,
+                                            Core.tileRect.Y,
+                                            Core.tileRect.Width,
+                                            Core.tileRect.Height),
+                                        CenterFormat);
 #else
                                     g.DrawString((tilePoint.PosXY == Core.centerTileXYLocation ? "" : "TILE: ") + tilePoint, MissingDataFont, TileGridLinesTextBrush, new RectangleF(Core.tileRect.X, Core.tileRect.Y, Core.tileRect.Width, Core.tileRect.Height), CenterFormat);
 #endif
@@ -1594,7 +1689,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// override, to render something more
+        ///     override, to render something more
         /// </summary>
         /// <param name="g"></param>
         protected virtual void OnPaintOverlays(Graphics g)
@@ -1660,7 +1755,7 @@ namespace GMap.NET.WindowsForms
 
                 if (renderHelperLine)
                 {
-                    var p = PointToClient(Form.MousePosition);
+                    var p = PointToClient(MousePosition);
 
                     g.DrawLine(HelperLinePen, p.X, 0, p.X, Height);
                     g.DrawLine(HelperLinePen, 0, p.Y, Width, p.Y);
@@ -1677,7 +1772,11 @@ namespace GMap.NET.WindowsForms
                 if (!string.IsNullOrEmpty(Core.provider.Copyright))
                 {
 #if !PocketPC
-                    g.DrawString(Core.provider.Copyright, CopyrightFont, Brushes.Navy, 3, Height - CopyrightFont.Height - 5);
+                    g.DrawString(Core.provider.Copyright,
+                        CopyrightFont,
+                        Brushes.Navy,
+                        3,
+                        Height - CopyrightFont.Height - 5);
 #else
             g.DrawString(Core.provider.Copyright, CopyrightFont, CopyrightBrush, 3, Height - CopyrightFont.Size - 15);
 #endif
@@ -1698,22 +1797,27 @@ namespace GMap.NET.WindowsForms
                     {
                         DrawScale(g, top, left + Core.pxRes5000km, bottom, left, "5000 km");
                     }
+
                     if (Width > Core.pxRes1000km)
                     {
                         DrawScale(g, top, left + Core.pxRes1000km, bottom, left, "1000 km");
                     }
+
                     if (Width > Core.pxRes100km && Zoom > 2)
                     {
                         DrawScale(g, top, left + Core.pxRes100km, bottom, left, "100 km");
                     }
+
                     if (Width > Core.pxRes10km && Zoom > 5)
                     {
                         DrawScale(g, top, left + Core.pxRes10km, bottom, left, "10 km");
                     }
+
                     if (Width > Core.pxRes1000m && Zoom >= 10)
                     {
                         DrawScale(g, top, left + Core.pxRes1000m, bottom, left, "1000 m");
                     }
+
                     if (Width > Core.pxRes100m && Zoom > 11)
                     {
                         DrawScale(g, top, left + Core.pxRes100m, bottom, left, "100 m");
@@ -1750,7 +1854,7 @@ namespace GMap.NET.WindowsForms
         readonly Matrix rotationMatrixInvert = new Matrix();
 
         /// <summary>
-        /// updates rotation matrix
+        ///     updates rotation matrix
         /// </summary>
         void UpdateRotationMatrix()
         {
@@ -1765,8 +1869,8 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// returs true if map bearing is not zero
-        /// </summary>    
+        ///     returs true if map bearing is not zero
+        /// </summary>
         [Browsable(false)]
         public bool IsRotated
         {
@@ -1777,7 +1881,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// bearing for rotation of the map
+        ///     bearing for rotation of the map
         /// </summary>
         [Category("GMap.NET")]
         public float Bearing
@@ -1834,7 +1938,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
 
         /// <summary>
-        /// shrinks map area, useful just for testing
+        ///     shrinks map area, useful just for testing
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -1919,6 +2023,7 @@ namespace GMap.NET.WindowsForms
                 backBuffer.Dispose();
                 backBuffer = null;
             }
+
             if (gxOff != null)
             {
                 gxOff.Dispose();
@@ -1927,6 +2032,7 @@ namespace GMap.NET.WindowsForms
         }
 
         bool isSelected = false;
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -1976,6 +2082,7 @@ namespace GMap.NET.WindowsForms
                     cursorBefore = null;
 #endif
                 }
+
                 Core.EndDrag();
 
                 if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
@@ -1998,7 +2105,7 @@ namespace GMap.NET.WindowsForms
                 {
                     bool zoomtofit = false;
 
-                    if (!SelectedArea.IsEmpty && Form.ModifierKeys == Keys.Shift)
+                    if (!SelectedArea.IsEmpty && ModifierKeys == Keys.Shift)
                     {
                         zoomtofit = SetZoomToFitRect(SelectedArea);
                     }
@@ -2023,7 +2130,9 @@ namespace GMap.NET.WindowsForms
 
             if (!Core.IsDragging)
             {
-                OnMapClick?.Invoke(new PointLatLng(this.FromLocalToLatLng(e.X, e.Y).Lng, this.FromLocalToLatLng(e.X, e.Y).Lat), e);
+                OnMapClick?.Invoke(new PointLatLng(this.FromLocalToLatLng(e.X, e.Y).Lng,
+                        this.FromLocalToLatLng(e.X, e.Y).Lat),
+                    e);
 
                 for (int i = Overlays.Count - 1; i >= 0; i--)
                 {
@@ -2156,6 +2265,7 @@ namespace GMap.NET.WindowsForms
                                     OnRouteDoubleClick?.Invoke(m, e);
                                     break;
                                 }
+
                                 #endregion
                             }
                         }
@@ -2171,6 +2281,7 @@ namespace GMap.NET.WindowsForms
                                     OnPolygonDoubleClick?.Invoke(m, e);
                                     break;
                                 }
+
                                 #endregion
                             }
                         }
@@ -2182,7 +2293,7 @@ namespace GMap.NET.WindowsForms
 #endif
 #if !PocketPC
         /// <summary>
-        /// apply transformation if in rotation mode
+        ///     apply transformation if in rotation mode
         /// </summary>
         GPoint ApplyRotationInversion(int x, int y)
         {
@@ -2190,7 +2301,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                System.Drawing.Point[] tt = new System.Drawing.Point[] { new System.Drawing.Point(x, y) };
+                Point[] tt = new Point[] {new Point(x, y)};
                 rotationMatrixInvert.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2202,7 +2313,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// apply transformation if in rotation mode
+        ///     apply transformation if in rotation mode
         /// </summary>
         GPoint ApplyRotation(int x, int y)
         {
@@ -2210,7 +2321,7 @@ namespace GMap.NET.WindowsForms
 
             if (IsRotated)
             {
-                System.Drawing.Point[] tt = new System.Drawing.Point[] { new System.Drawing.Point(x, y) };
+                Point[] tt = new Point[] {new Point(x, y)};
                 rotationMatrix.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2225,8 +2336,8 @@ namespace GMap.NET.WindowsForms
 #endif
 
         /// <summary>
-        /// Gets the width and height of a rectangle centered on the point the mouse
-        /// button was pressed, within which a drag operation will not begin.
+        ///     Gets the width and height of a rectangle centered on the point the mouse
+        ///     button was pressed, within which a drag operation will not begin.
         /// </summary>
 #if !PocketPC
         public Size DragSize = SystemInformation.DragSize;
@@ -2245,7 +2356,8 @@ namespace GMap.NET.WindowsForms
 #else
                 GPoint p = ApplyRotationInversion(e.X, e.Y);
 #endif
-                if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= DragSize.Width || Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= DragSize.Height)
+                if (Math.Abs(p.X - Core.mouseDown.X) * 2 >= DragSize.Width ||
+                    Math.Abs(p.Y - Core.mouseDown.Y) * 2 >= DragSize.Height)
                 {
                     Core.BeginDrag(Core.mouseDown);
                 }
@@ -2290,7 +2402,8 @@ namespace GMap.NET.WindowsForms
             else
             {
 #if !PocketPC
-                if (isSelected && !selectionStart.IsEmpty && (Form.ModifierKeys == Keys.Alt || Form.ModifierKeys == Keys.Shift || DisableAltForSelection))
+                if (isSelected && !selectionStart.IsEmpty &&
+                    (ModifierKeys == Keys.Alt || ModifierKeys == Keys.Shift || DisableAltForSelection))
                 {
                     selectionEnd = FromLocalToLatLng(e.X, e.Y);
                     {
@@ -2307,7 +2420,7 @@ namespace GMap.NET.WindowsForms
                 }
                 else
 #endif
-                    if (Core.mouseDown.IsEmpty)
+                if (Core.mouseDown.IsEmpty)
                 {
                     for (int i = Overlays.Count - 1; i >= 0; i--)
                     {
@@ -2353,6 +2466,7 @@ namespace GMap.NET.WindowsForms
 
                                         Invalidate();
                                     }
+
                                     #endregion
                                 }
                             }
@@ -2400,6 +2514,7 @@ namespace GMap.NET.WindowsForms
                                             Invalidate();
                                         }
                                     }
+
                                     #endregion
                                 }
                             }
@@ -2410,6 +2525,7 @@ namespace GMap.NET.WindowsForms
                                 if (m.IsVisible && m.IsHitTestVisible)
                                 {
                                     #region -- check --
+
 #if !PocketPC
                                     GPoint rp = new GPoint(e.X, e.Y);
 
@@ -2450,6 +2566,7 @@ namespace GMap.NET.WindowsForms
                                             Invalidate();
                                         }
                                     }
+
                                     #endregion
                                 }
                             }
@@ -2489,7 +2606,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// prevents focusing map if mouse enters it's area
+        ///     prevents focusing map if mouse enters it's area
         /// </summary>
         public bool DisableFocusOnMouseEnter = false;
 
@@ -2501,6 +2618,7 @@ namespace GMap.NET.WindowsForms
             {
                 Focus();
             }
+
             mouseIn = true;
         }
 
@@ -2513,12 +2631,12 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// reverses MouseWheel zooming direction
+        ///     reverses MouseWheel zooming direction
         /// </summary>
         public bool InvertedMouseWheelZooming = false;
 
         /// <summary>
-        /// lets you zoom by MouseWheel even when pointer is in area of marker
+        ///     lets you zoom by MouseWheel even when pointer is in area of marker
         /// </summary>
         public bool IgnoreMarkerOnMouseWheel = false;
 
@@ -2526,7 +2644,8 @@ namespace GMap.NET.WindowsForms
         {
             base.OnMouseWheel(e);
 
-            if (MouseWheelZoomEnabled && mouseIn && (!IsMouseOverMarker || IgnoreMarkerOnMouseWheel) && !Core.IsDragging)
+            if (MouseWheelZoomEnabled && mouseIn && (!IsMouseOverMarker || IgnoreMarkerOnMouseWheel) &&
+                !Core.IsDragging)
             {
                 if (Core.mouseLastZoom.X != e.X && Core.mouseLastZoom.Y != e.Y)
                 {
@@ -2552,7 +2671,7 @@ namespace GMap.NET.WindowsForms
                 {
                     if (!GMaps.Instance.IsRunningOnMono)
                     {
-                        System.Drawing.Point p = PointToScreen(new System.Drawing.Point(Width / 2, Height / 2));
+                        Point p = PointToScreen(new Point(Width / 2, Height / 2));
                         Stuff.SetCursorPos((int)p.X, (int)p.Y);
                     }
                 }
@@ -2563,22 +2682,22 @@ namespace GMap.NET.WindowsForms
                 {
                     if (!InvertedMouseWheelZooming)
                     {
-                        Zoom = ((int)Zoom) + 1;
+                        Zoom = (int)Zoom + 1;
                     }
                     else
                     {
-                        Zoom = ((int)(Zoom + 0.99)) - 1;
+                        Zoom = (int)(Zoom + 0.99) - 1;
                     }
                 }
                 else if (e.Delta < 0)
                 {
                     if (!InvertedMouseWheelZooming)
                     {
-                        Zoom = ((int)(Zoom + 0.99)) - 1;
+                        Zoom = (int)(Zoom + 0.99) - 1;
                     }
                     else
                     {
-                        Zoom = ((int)Zoom) + 1;
+                        Zoom = (int)Zoom + 1;
                     }
                 }
 
@@ -2586,12 +2705,13 @@ namespace GMap.NET.WindowsForms
             }
         }
 #endif
+
         #endregion
 
         #region IGControl Members
 
         /// <summary>
-        /// Call it to empty tile cache & reload tiles
+        ///     Call it to empty tile cache & reload tiles
         /// </summary>
         public void ReloadMap()
         {
@@ -2599,7 +2719,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// set current position using keywords
+        ///     set current position using keywords
         /// </summary>
         /// <param name="keys"></param>
         /// <returns>true if successfull</returns>
@@ -2623,7 +2743,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// get current position using keywords
+        ///     get current position using keywords
         /// </summary>
         /// <param name="keys"></param>
         /// <param name="point"></param>
@@ -2650,7 +2770,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets world coordinate from local control coordinate 
+        ///     gets world coordinate from local control coordinate
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -2675,13 +2795,13 @@ namespace GMap.NET.WindowsForms
 
                 //
 
-                x = (int)(Core.renderOffset.X + ((x - Core.renderOffset.X) / MapRenderTransform.Value));
-                y = (int)(Core.renderOffset.Y + ((y - Core.renderOffset.Y) / MapRenderTransform.Value));
+                x = (int)(Core.renderOffset.X + (x - Core.renderOffset.X) / MapRenderTransform.Value);
+                y = (int)(Core.renderOffset.Y + (y - Core.renderOffset.Y) / MapRenderTransform.Value);
             }
 
             if (IsRotated)
             {
-                System.Drawing.Point[] tt = new System.Drawing.Point[] { new System.Drawing.Point(x, y) };
+                Point[] tt = new Point[] {new Point(x, y)};
                 rotationMatrixInvert.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2699,7 +2819,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets local coordinate from world coordinate
+        ///     gets local coordinate from world coordinate
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -2710,13 +2830,13 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
             if (MapRenderTransform.HasValue)
             {
-                ret.X = (int)(Core.renderOffset.X + ((Core.renderOffset.X - ret.X) * -MapRenderTransform.Value));
-                ret.Y = (int)(Core.renderOffset.Y + ((Core.renderOffset.Y - ret.Y) * -MapRenderTransform.Value));
+                ret.X = (int)(Core.renderOffset.X + (Core.renderOffset.X - ret.X) * -MapRenderTransform.Value);
+                ret.Y = (int)(Core.renderOffset.Y + (Core.renderOffset.Y - ret.Y) * -MapRenderTransform.Value);
             }
 
             if (IsRotated)
             {
-                System.Drawing.Point[] tt = new Point[] { new Point((int)ret.X, (int)ret.Y) };
+                Point[] tt = new Point[] {new Point((int)ret.X, (int)ret.Y)};
                 rotationMatrix.TransformPoints(tt);
                 var f = tt[0];
 
@@ -2737,7 +2857,7 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
 
         /// <summary>
-        /// shows map db export dialog
+        ///     shows map db export dialog
         /// </summary>
         /// <returns></returns>
         public bool ShowExportDialog()
@@ -2776,7 +2896,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// shows map dbimport dialog
+        ///     shows map dbimport dialog
         /// </summary>
         /// <returns></returns>
         public bool ShowImportDialog()
@@ -2832,7 +2952,8 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        [Category("GMap.NET"), DefaultValue(0)]
+        [Category("GMap.NET")]
+        [DefaultValue(0)]
         public double Zoom
         {
             get
@@ -2888,7 +3009,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// map zoom level
+        ///     map zoom level
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -2916,7 +3037,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// current map center position
+        ///     current map center position
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -2938,7 +3059,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// current position in pixel coordinates
+        ///     current position in pixel coordinates
         /// </summary>
         [Browsable(false)]
         public GPoint PositionPixel
@@ -2950,7 +3071,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// location of cache
+        ///     location of cache
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -2975,7 +3096,7 @@ namespace GMap.NET.WindowsForms
         bool isDragging = false;
 
         /// <summary>
-        /// is user dragging map
+        ///     is user dragging map
         /// </summary>
         [Browsable(false)]
         public bool IsDragging
@@ -2990,7 +3111,7 @@ namespace GMap.NET.WindowsForms
         internal int overObjectCount = 0;
 
         /// <summary>
-        /// is mouse over marker
+        ///     is mouse over marker
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -3010,7 +3131,7 @@ namespace GMap.NET.WindowsForms
         bool isMouseOverRoute;
 
         /// <summary>
-        /// is mouse over route
+        ///     is mouse over route
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -3030,7 +3151,7 @@ namespace GMap.NET.WindowsForms
         bool isMouseOverPolygon;
 
         /// <summary>
-        /// is mouse over polygon
+        ///     is mouse over polygon
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -3048,7 +3169,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets current map view top/left coordinate, width in Lng, height in Lat
+        ///     gets current map view top/left coordinate, width in Lng, height in Lat
         /// </summary>
         [Browsable(false)]
         public RectLatLng ViewArea
@@ -3067,10 +3188,11 @@ namespace GMap.NET.WindowsForms
 
                     return RectLatLng.FromLTRB(p.Lng, p.Lat, p2.Lng, p2.Lat);
                 }
+
                 return RectLatLng.Empty;
 #else
                 return Core.ViewArea;
-#endif               
+#endif
             }
         }
 
@@ -3093,7 +3215,8 @@ namespace GMap.NET.WindowsForms
 
                     if (viewarea != RectLatLng.Empty)
                     {
-                        Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2, viewarea.Lng + viewarea.WidthLng / 2);
+                        Position = new PointLatLng(viewarea.Lat - viewarea.HeightLat / 2,
+                            viewarea.Lng + viewarea.WidthLng / 2);
                     }
                     else
                     {
@@ -3134,7 +3257,8 @@ namespace GMap.NET.WindowsForms
                 RoutingProvider dp = MapProvider as RoutingProvider;
 
                 if (dp == null)
-                    dp = GMapProviders.OpenStreetMap as RoutingProvider; // use OpenStreetMap if provider does not implement routing
+                    dp = GMapProviders
+                        .OpenStreetMap as RoutingProvider; // use OpenStreetMap if provider does not implement routing
 
                 return dp;
             }
@@ -3149,7 +3273,9 @@ namespace GMap.NET.WindowsForms
                 DirectionsProvider dp = MapProvider as DirectionsProvider;
 
                 if (dp == null)
-                    dp = GMapProviders.OpenStreetMap as DirectionsProvider; // use OpenStreetMap if provider does not implement routing
+                    dp = GMapProviders
+                            .OpenStreetMap as
+                        DirectionsProvider; // use OpenStreetMap if provider does not implement routing
 
                 return dp;
             }
@@ -3164,7 +3290,8 @@ namespace GMap.NET.WindowsForms
                 GeocodingProvider dp = MapProvider as GeocodingProvider;
 
                 if (dp == null)
-                    dp = GMapProviders.OpenStreetMap as GeocodingProvider; // use OpenStreetMap if provider does not implement routing
+                    dp = GMapProviders
+                        .OpenStreetMap as GeocodingProvider; // use OpenStreetMap if provider does not implement routing
 
                 return dp;
             }
@@ -3179,14 +3306,15 @@ namespace GMap.NET.WindowsForms
                 RoadsProvider dp = MapProvider as RoadsProvider;
 
                 if (dp == null)
-                    dp = GMapProviders.GoogleMap as RoadsProvider; // use GoogleMap if provider does not implement routing
+                    dp = GMapProviders
+                        .GoogleMap as RoadsProvider; // use GoogleMap if provider does not implement routing
 
                 return dp;
             }
         }
 
         /// <summary>
-        /// is routes enabled
+        ///     is routes enabled
         /// </summary>
         [Category("GMap.NET")]
         public bool RoutesEnabled
@@ -3202,7 +3330,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// is polygons enabled
+        ///     is polygons enabled
         /// </summary>
         [Category("GMap.NET")]
         public bool PolygonsEnabled
@@ -3218,7 +3346,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// is markers enabled
+        ///     is markers enabled
         /// </summary>
         [Category("GMap.NET")]
         public bool MarkersEnabled
@@ -3234,7 +3362,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// can user drag map
+        ///     can user drag map
         /// </summary>
         [Category("GMap.NET")]
         public bool CanDragMap
@@ -3250,7 +3378,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// map render mode
+        ///     map render mode
         /// </summary>
         [Browsable(false)]
         public RenderMode RenderMode
@@ -3266,7 +3394,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// gets map manager
+        ///     gets map manager
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -3283,7 +3411,7 @@ namespace GMap.NET.WindowsForms
         #region IGControl event Members
 
         /// <summary>
-        /// occurs when current position is changed
+        ///     occurs when current position is changed
         /// </summary>
         public event PositionChanged OnPositionChanged
         {
@@ -3298,7 +3426,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occurs when tile set load is complete
+        ///     occurs when tile set load is complete
         /// </summary>
         public event TileLoadComplete OnTileLoadComplete
         {
@@ -3313,7 +3441,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occurs when tile set is starting to load
+        ///     occurs when tile set is starting to load
         /// </summary>
         public event TileLoadStart OnTileLoadStart
         {
@@ -3328,7 +3456,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occurs on map drag
+        ///     occurs on map drag
         /// </summary>
         public event MapDrag OnMapDrag
         {
@@ -3343,7 +3471,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occurs on map zoom changed
+        ///     occurs on map zoom changed
         /// </summary>
         public event MapZoomChanged OnMapZoomChanged
         {
@@ -3358,7 +3486,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occures on map type changed
+        ///     occures on map type changed
         /// </summary>
         public event MapTypeChanged OnMapTypeChanged
         {
@@ -3373,7 +3501,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// occurs on empty tile displayed
+        ///     occurs on empty tile displayed
         /// </summary>
         public event EmptyTileError OnEmptyTileError
         {
@@ -3386,15 +3514,17 @@ namespace GMap.NET.WindowsForms
                 Core.OnEmptyTileError -= value;
             }
         }
+
         #endregion
 
 #if !PocketPC
+
         #region Serialization
 
         static readonly BinaryFormatter BinaryFormatter = new BinaryFormatter();
 
         /// <summary>
-        /// Serializes the overlays.
+        ///     Serializes the overlays.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void SerializeOverlays(Stream stream)
@@ -3413,7 +3543,7 @@ namespace GMap.NET.WindowsForms
         }
 
         /// <summary>
-        /// De-serializes the overlays.
+        ///     De-serializes the overlays.
         /// </summary>
         /// <param name="stream">The stream.</param>
         public void DeserializeOverlays(Stream stream)
@@ -3437,20 +3567,21 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
+
 #endif
     }
 
     public enum ScaleModes
     {
         /// <summary>
-        /// no scaling
+        ///     no scaling
         /// </summary>
         Integer,
 
 #if !PocketPC
         /// <summary>
-        /// scales to fractional level, CURRENT VERSION DOESN'T HANDLE OBJECT POSITIONS CORRECLTY, 
-        /// http://greatmaps.codeplex.com/workitem/16046
+        ///     scales to fractional level, CURRENT VERSION DOESN'T HANDLE OBJECT POSITIONS CORRECLTY,
+        ///     http://greatmaps.codeplex.com/workitem/16046
         /// </summary>
         Fractional,
 #endif

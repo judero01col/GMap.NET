@@ -1,9 +1,8 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-    using GMap.NET.Projections;
-
     public class LithuaniaTOP50 : GMapProvider
     {
         public static readonly LithuaniaTOP50 Instance;
@@ -21,6 +20,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         Guid id = new Guid("2920B1AF-6D57-4895-9A21-D5837CBF1049");
+
         public override Guid Id
         {
             get
@@ -46,14 +46,16 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
+
                 return overlays;
             }
         }
@@ -62,6 +64,7 @@ namespace GMap.NET.MapProviders
         {
             return null;
         }
+
         #endregion
     }
 }

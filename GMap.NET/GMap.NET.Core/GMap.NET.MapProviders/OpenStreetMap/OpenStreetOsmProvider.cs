@@ -1,8 +1,5 @@
-﻿
-namespace GMap.NET.MapProviders
+﻿namespace GMap.NET.MapProviders
 {
-   using System;
-
 #if OpenStreetOsm
    /// <summary>
    /// OpenStreetOsm provider
@@ -75,6 +72,6 @@ namespace GMap.NET.MapProviders
       }
 
       static readonly string UrlFormat = "http://{0}.tah.openstreetmap.org/Tiles/tile/{1}/{2}/{3}.png";
-   } 
+   }
 #endif
 }

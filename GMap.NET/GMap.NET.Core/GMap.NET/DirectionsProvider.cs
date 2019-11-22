@@ -3,7 +3,7 @@
 namespace GMap.NET
 {
     /// <summary>
-    /// directions interface
+    ///     directions interface
     /// </summary>
     public interface DirectionsProvider
     {
@@ -14,7 +14,7 @@ namespace GMap.NET
             bool avoidTolls, bool walkingMode, bool sensor, bool metric);
 
         /// <summary>
-        /// service may provide more than one route alternative in the response
+        ///     service may provide more than one route alternative in the response
         /// </summary>
         /// <param name="status"></param>
         /// <param name="start"></param>
@@ -29,7 +29,7 @@ namespace GMap.NET
             bool avoidHighways, bool avoidTolls, bool walkingMode, bool sensor, bool metric);
 
         /// <summary>
-        /// service may provide more than one route alternative in the response
+        ///     service may provide more than one route alternative in the response
         /// </summary>
         /// <param name="status"></param>
         /// <param name="start"></param>

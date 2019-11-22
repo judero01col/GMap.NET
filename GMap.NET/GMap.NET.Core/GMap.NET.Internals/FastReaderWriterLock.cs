@@ -1,20 +1,21 @@
-﻿#if !MONO && !PocketPC
+﻿using System;
+
+#if !MONO && !PocketPC
 #define UseFastResourceLock
 #endif
 
 namespace GMap.NET.Internals
 {
-    using System;
-    using System.Threading;
 #if !MONO
     using System.Runtime.InteropServices;
+
 #endif
 
     /// <summary>
-    /// custom ReaderWriterLock
-    /// in Vista and later uses integrated Slim Reader/Writer (SRW) Lock
-    /// http://msdn.microsoft.com/en-us/library/aa904937(VS.85).aspx
-    /// http://msdn.microsoft.com/en-us/magazine/cc163405.aspx#S2
+    ///     custom ReaderWriterLock
+    ///     in Vista and later uses integrated Slim Reader/Writer (SRW) Lock
+    ///     http://msdn.microsoft.com/en-us/library/aa904937(VS.85).aspx
+    ///     http://msdn.microsoft.com/en-us/magazine/cc163405.aspx#S2
     /// </summary>
     public sealed class FastReaderWriterLock : IDisposable
     {
@@ -24,12 +25,16 @@ namespace GMap.NET.Internals
             // Methods
             [DllImport("Kernel32", ExactSpelling = true)]
             internal static extern void AcquireSRWLockExclusive(ref IntPtr srw);
+
             [DllImport("Kernel32", ExactSpelling = true)]
             internal static extern void AcquireSRWLockShared(ref IntPtr srw);
+
             [DllImport("Kernel32", ExactSpelling = true)]
             internal static extern void InitializeSRWLock(out IntPtr srw);
+
             [DllImport("Kernel32", ExactSpelling = true)]
             internal static extern void ReleaseSRWLockExclusive(ref IntPtr srw);
+
             [DllImport("Kernel32", ExactSpelling = true)]
             internal static extern void ReleaseSRWLockShared(ref IntPtr srw);
         }
@@ -68,7 +73,10 @@ namespace GMap.NET.Internals
         FastResourceLock pLock;
 #endif
 
-      static readonly bool UseNativeSRWLock = Stuff.IsRunningOnVistaOrLater() && IntPtr.Size == 4; // works only in 32-bit mode, any ideas on native 64-bit support? 
+        static readonly bool
+            UseNativeSRWLock =
+                Stuff.IsRunningOnVistaOrLater() &&
+                IntPtr.Size == 4; // works only in 32-bit mode, any ideas on native 64-bit support? 
 
 #endif
 
@@ -88,7 +96,7 @@ namespace GMap.NET.Internals
 #endif
             {
 #if UseFastResourceLock
-            pLock.AcquireShared();
+                pLock.AcquireShared();
 #else
             Thread.BeginCriticalRegion();
 
@@ -136,17 +144,17 @@ namespace GMap.NET.Internals
         {
             try
             {
-                #if !MONO && !PocketPC
+#if !MONO && !PocketPC
                 if (UseNativeSRWLock)
                 {
                     NativeMethods.AcquireSRWLockExclusive(ref LockSRW);
                 }
                 else
-                #endif
+#endif
                 {
-                #if UseFastResourceLock
+#if UseFastResourceLock
                     pLock.AcquireExclusive();
-                #else
+#else
                     Thread.BeginCriticalRegion();
 
                     while(Interlocked.CompareExchange(ref busy, 1, 0) != 0)
@@ -158,7 +166,7 @@ namespace GMap.NET.Internals
                     {
                        Thread.Sleep(1);
                     }
-                #endif
+#endif
                 }
             }
             catch (Exception ex) { }
@@ -168,20 +176,20 @@ namespace GMap.NET.Internals
         {
             try
             {
-                #if !MONO && !PocketPC
+#if !MONO && !PocketPC
                 if (UseNativeSRWLock)
                 {
                     NativeMethods.ReleaseSRWLockExclusive(ref LockSRW);
                 }
                 else
-                #endif
+#endif
                 {
-                #if UseFastResourceLock
+#if UseFastResourceLock
                     pLock.ReleaseExclusive();
-                #else
+#else
                     Interlocked.Exchange(ref busy, 0);
                     Thread.EndCriticalRegion();
-                #endif
+#endif
                 }
             }
             catch (Exception ex) { }

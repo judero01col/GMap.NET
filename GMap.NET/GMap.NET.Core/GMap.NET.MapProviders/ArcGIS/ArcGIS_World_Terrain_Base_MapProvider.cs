@@ -1,60 +1,62 @@
-﻿
+﻿using System;
+
 namespace GMap.NET.MapProviders
 {
-   using System;
+    /// <summary>
+    ///     ArcGIS_World_Terrain_Base_Map provider, http://server.arcgisonline.com
+    /// </summary>
+    public class ArcGIS_World_Terrain_Base_MapProvider : ArcGISMapMercatorProviderBase
+    {
+        public static readonly ArcGIS_World_Terrain_Base_MapProvider Instance;
 
-   /// <summary>
-   /// ArcGIS_World_Terrain_Base_Map provider, http://server.arcgisonline.com
-   /// </summary>
-   public class ArcGIS_World_Terrain_Base_MapProvider : ArcGISMapMercatorProviderBase
-   {
-      public static readonly ArcGIS_World_Terrain_Base_MapProvider Instance;
+        ArcGIS_World_Terrain_Base_MapProvider()
+        {
+        }
 
-      ArcGIS_World_Terrain_Base_MapProvider()
-      {
-      }
+        static ArcGIS_World_Terrain_Base_MapProvider()
+        {
+            Instance = new ArcGIS_World_Terrain_Base_MapProvider();
+        }
 
-      static ArcGIS_World_Terrain_Base_MapProvider()
-      {
-         Instance = new ArcGIS_World_Terrain_Base_MapProvider();
-      }
+        #region GMapProvider Members
 
-      #region GMapProvider Members
+        readonly Guid id = new Guid("927F175B-5200-4D95-A99B-1C87C93099DA");
 
-      readonly Guid id = new Guid("927F175B-5200-4D95-A99B-1C87C93099DA");
-      public override Guid Id
-      {
-         get
-         {
-            return id;
-         }
-      }
+        public override Guid Id
+        {
+            get
+            {
+                return id;
+            }
+        }
 
-      readonly string name = "ArcGIS_World_Terrain_Base_Map";
-      public override string Name
-      {
-         get
-         {
-            return name;
-         }
-      }
+        readonly string name = "ArcGIS_World_Terrain_Base_Map";
 
-      public override PureImage GetTileImage(GPoint pos, int zoom)
-      {
-         string url = MakeTileImageUrl(pos, zoom, LanguageStr);
+        public override string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-         return GetTileImageUsingHttp(url);
-      }
+        public override PureImage GetTileImage(GPoint pos, int zoom)
+        {
+            string url = MakeTileImageUrl(pos, zoom, LanguageStr);
 
-      #endregion
+            return GetTileImageUsingHttp(url);
+        }
 
-      string MakeTileImageUrl(GPoint pos, int zoom, string language)
-      {
-         // http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/0/0/0jpg
+        #endregion
 
-         return string.Format(UrlFormat, zoom, pos.Y, pos.X);
-      }
+        string MakeTileImageUrl(GPoint pos, int zoom, string language)
+        {
+            // http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/0/0/0jpg
 
-      static readonly string UrlFormat = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{0}/{1}/{2}";
-   }
+            return string.Format(UrlFormat, zoom, pos.Y, pos.X);
+        }
+
+        static readonly string UrlFormat =
+            "http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{0}/{1}/{2}";
+    }
 }

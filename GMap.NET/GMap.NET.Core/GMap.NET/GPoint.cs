@@ -1,11 +1,11 @@
-﻿using System.Globalization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace GMap.NET
 {
     /// <summary>
-    /// the point ;}
+    ///     the point ;}
     /// </summary>
     [Serializable]
     public struct GPoint

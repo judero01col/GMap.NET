@@ -3,7 +3,7 @@
 namespace GMap.NET
 {
     /// <summary>
-    /// geocoding interface
+    ///     geocoding interface
     /// </summary>
     public interface GeocodingProvider
     {

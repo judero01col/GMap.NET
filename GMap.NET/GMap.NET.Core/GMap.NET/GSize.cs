@@ -3,7 +3,7 @@
 namespace GMap.NET
 {
     /// <summary>
-    /// the size
+    ///     the size
     /// </summary>
     public struct GSize
     {
@@ -84,8 +84,8 @@ namespace GMap.NET
             GSize comp = (GSize)obj;
             // Note value types can't have derived classes, so we don't need to
             //
-            return (comp.Width == this.Width) &&
-                   (comp.Height == this.Height);
+            return comp.Width == this.Width &&
+                   comp.Height == this.Height;
         }
 
         public override int GetHashCode()
@@ -95,7 +95,7 @@ namespace GMap.NET
                 return 0;
             }
 
-            return (Width.GetHashCode() ^ Height.GetHashCode());
+            return Width.GetHashCode() ^ Height.GetHashCode();
         }
 
         public override string ToString()

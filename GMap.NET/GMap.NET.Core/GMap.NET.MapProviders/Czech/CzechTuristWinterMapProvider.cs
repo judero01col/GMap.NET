@@ -1,10 +1,9 @@
-﻿
+﻿using System;
+
 namespace GMap.NET.MapProviders
 {
-    using System;
-
     /// <summary>
-    /// CzechTuristMap provider, http://www.mapy.cz/
+    ///     CzechTuristMap provider, http://www.mapy.cz/
     /// </summary>
     public class CzechTuristWinterMapProvider : CzechMapProviderBase
     {
@@ -22,6 +21,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("F7B7FC9E-BDC2-4A9D-A1D3-A6BEC8FE0EB2");
+
         public override Guid Id
         {
             get
@@ -31,6 +31,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "CzechTuristWinterMap";
+
         public override string Name
         {
             get

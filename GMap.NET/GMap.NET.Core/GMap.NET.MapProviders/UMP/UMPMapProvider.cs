@@ -1,22 +1,18 @@
-﻿
+﻿using System;
+using GMap.NET.Projections;
+
 namespace GMap.NET.MapProviders
 {
-    using GMap.NET.Projections;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Xml;
-
     /// <summary>
-    /// UMP-pcPL map Provider
-    /// http://ump.waw.pl/en/index.html
-    /// 
-    /// UMP-pcPL – is a free map dedicated for Garmin GPS devices, developed by users.You can find a plenty of such maps(others than ours) which cover different areas of the world on Mapcenter and Mapcenter2,
-    /// or using search service.
-    /// UMP-pcPL covers "almost whole" Poland, and therefore we call it "pcPL" (prawie cała PL). Almost – because we have not finished nor completed it yet, and the map is continuously growing.
-    /// Other countries are also included
-    /// Added by Lukasz Knap
+    ///     UMP-pcPL map Provider
+    ///     http://ump.waw.pl/en/index.html
+    ///     UMP-pcPL – is a free map dedicated for Garmin GPS devices, developed by users.You can find a plenty of such
+    ///     maps(others than ours) which cover different areas of the world on Mapcenter and Mapcenter2,
+    ///     or using search service.
+    ///     UMP-pcPL covers "almost whole" Poland, and therefore we call it "pcPL" (prawie cała PL). Almost – because we have
+    ///     not finished nor completed it yet, and the map is continuously growing.
+    ///     Other countries are also included
+    ///     Added by Lukasz Knap
     /// </summary>
     public class UMPMapProvider : GMapProvider
     {
@@ -36,6 +32,7 @@ namespace GMap.NET.MapProviders
         #region GMapProvider Members
 
         readonly Guid id = new Guid("E36E311E-256A-4639-9AF7-FEB7BDEA6ABE");
+
         public override Guid Id
         {
             get
@@ -45,6 +42,7 @@ namespace GMap.NET.MapProviders
         }
 
         readonly string name = "UMP";
+
         public override string Name
         {
             get
@@ -62,14 +60,16 @@ namespace GMap.NET.MapProviders
         }
 
         GMapProvider[] overlays;
+
         public override GMapProvider[] Overlays
         {
             get
             {
                 if (overlays == null)
                 {
-                    overlays = new GMapProvider[] { this };
+                    overlays = new GMapProvider[] {this};
                 }
+
                 return overlays;
             }
         }

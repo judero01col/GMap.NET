@@ -1,9 +1,9 @@
-﻿namespace GMap.NET.MapProviders
-{
-    using System;
+﻿using System;
 
+namespace GMap.NET.MapProviders
+{
     /// <summary>
-    /// BingOSMapProvider provider
+    ///     BingOSMapProvider provider
     /// </summary>
     public class BingOSMapProvider : BingMapProviderBase
     {
@@ -31,6 +31,7 @@
         }
 
         readonly string name = "BingOSMap";
+
         public override string Name
         {
             get
@@ -73,13 +74,19 @@
                 return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key);
             }
 
-            return string.Format(UrlFormat, GetServerNum(pos, 4), key, Version, language, ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
+            return string.Format(UrlFormat,
+                GetServerNum(pos, 4),
+                key,
+                Version,
+                language,
+                ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
         }
 
         string UrlDynamicFormat = string.Empty;
 
         // http://ecn.t1.tiles.virtualearth.net/tiles/r12030003131321231.jpeg?g=875&mkt=en-us&n=z&productSet=mmOS
 
-        static readonly string UrlFormat = "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}.jpeg?g={2}&mkt={3}&n=z{4}&productSet=mmOS";
+        static readonly string UrlFormat =
+            "http://ecn.t{0}.tiles.virtualearth.net/tiles/r{1}.jpeg?g={2}&mkt={3}&n=z{4}&productSet=mmOS";
     }
 }

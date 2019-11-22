@@ -1,5 +1,4 @@
-﻿
-namespace GMap.NET.CacheProviders
+﻿namespace GMap.NET.CacheProviders
 {
 #if PostgreSQL
    using System;
@@ -122,14 +121,16 @@ namespace GMap.NET.CacheProviders
                      }
                   }
 
-                  this.cmdFetch = new NpgsqlCommand("SELECT \"Tile\" FROM \"GMapNETcache\" WHERE \"X\"=@x AND \"Y\"=@y AND \"Zoom\"=@zoom AND \"Type\"=@type", cnGet);
+                  this.cmdFetch =
+ new NpgsqlCommand("SELECT \"Tile\" FROM \"GMapNETcache\" WHERE \"X\"=@x AND \"Y\"=@y AND \"Zoom\"=@zoom AND \"Type\"=@type", cnGet);
                   this.cmdFetch.Parameters.Add("@x", NpgsqlDbType.Integer);
                   this.cmdFetch.Parameters.Add("@y", NpgsqlDbType.Integer);
                   this.cmdFetch.Parameters.Add("@zoom", NpgsqlDbType.Integer);
                   this.cmdFetch.Parameters.Add("@type", NpgsqlDbType.Integer);
                   this.cmdFetch.Prepare();
 
-                  this.cmdInsert = new NpgsqlCommand("INSERT INTO \"GMapNETcache\" ( \"X\", \"Y\", \"Zoom\", \"Type\", \"Tile\" ) VALUES ( @x, @y, @zoom, @type, @tile )", cnSet);
+                  this.cmdInsert =
+ new NpgsqlCommand("INSERT INTO \"GMapNETcache\" ( \"X\", \"Y\", \"Zoom\", \"Type\", \"Tile\" ) VALUES ( @x, @y, @zoom, @type, @tile )", cnSet);
                   this.cmdInsert.Parameters.Add("@x", NpgsqlDbType.Integer);
                   this.cmdInsert.Parameters.Add("@y", NpgsqlDbType.Integer);
                   this.cmdInsert.Parameters.Add("@zoom", NpgsqlDbType.Integer);

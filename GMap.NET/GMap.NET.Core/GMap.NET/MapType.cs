@@ -3,8 +3,8 @@
 namespace GMap.NET
 {
     /// <summary>
-    /// types of great maps, legacy, not used anymore,
-    /// left for old ids                                          
+    ///     types of great maps, legacy, not used anymore,
+    ///     left for old ids
     /// </summary>
     public enum MapType
     {
