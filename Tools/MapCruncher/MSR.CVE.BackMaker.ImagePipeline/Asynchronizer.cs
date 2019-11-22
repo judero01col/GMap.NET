@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            return MakeFuture(this.scheduler, this.innerPrototype.Curry(paramDict));
+            return MakeFuture(scheduler, innerPrototype.Curry(paramDict));
         }
 
         public static IFuture MakeFuture(AsyncScheduler scheduler, IFuture innerFuture)

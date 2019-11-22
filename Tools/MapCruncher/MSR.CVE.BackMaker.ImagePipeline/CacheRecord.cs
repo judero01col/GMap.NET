@@ -21,40 +21,40 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._present;
+                return _present;
             }
             set
             {
-                int num = this._present != null ? 1 : 0;
+                int num = _present != null ? 1 : 0;
                 int num2 = value != null ? 1 : 0;
                 cacheRecordsCompletedResourceCounter.crement(num2 - num);
-                this._present = value;
+                _present = value;
             }
         }
 
         public CacheRecord(IFuture future)
         {
             this.future = future;
-            this.wait = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "CacheRecord.Wait");
-            this.refs = 1;
+            wait = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "CacheRecord.Wait");
+            refs = 1;
             cacheRecordsExtant.crement(1);
         }
 
         public void Dispose()
         {
-            if (this.present != null)
+            if (present != null)
             {
-                this.present.Dispose();
-                this.present = null;
+                present.Dispose();
+                present = null;
             }
 
             Monitor.Enter(this);
             try
             {
-                if (this.wait != null)
+                if (wait != null)
                 {
-                    this.wait.Close();
-                    this.wait = null;
+                    wait.Close();
+                    wait = null;
                 }
             }
             finally
@@ -69,20 +69,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             try
             {
-                this.present = this.future.Realize("CacheRecord.Process");
+                present = future.Realize("CacheRecord.Process");
             }
             catch (Exception ex)
             {
-                this.present = new PresentFailureCode(ex);
+                present = new PresentFailureCode(ex);
             }
 
-            D.Assert(this.present != null);
+            D.Assert(present != null);
             Monitor.Enter(this);
             try
             {
-                this.wait.Set();
-                this.wait.Close();
-                this.wait = null;
+                wait.Set();
+                wait.Close();
+                wait = null;
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             WaitHandle waitHandle;
             try
             {
-                waitHandle = this.wait;
+                waitHandle = wait;
             }
             finally
             {
@@ -108,22 +108,22 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 waitHandle.WaitOne();
             }
 
-            return this.Duplicate(refCredit);
+            return Duplicate(refCredit);
         }
 
         public Present Duplicate(string refCredit)
         {
-            return this.present.Duplicate(refCredit);
+            return present.Duplicate(refCredit);
         }
 
         internal IFuture GetFuture()
         {
-            return this.future;
+            return future;
         }
 
         public override string ToString()
         {
-            if (this.present != null)
+            if (present != null)
             {
                 return "CacheRecord(present)";
             }
@@ -136,7 +136,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.refs++;
+                refs++;
             }
             finally
             {
@@ -150,8 +150,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             bool flag;
             try
             {
-                this.refs--;
-                flag = this.refs == 0;
+                refs--;
+                flag = refs == 0;
             }
             finally
             {
@@ -160,7 +160,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
             if (flag)
             {
-                this.Dispose();
+                Dispose();
             }
         }
     }

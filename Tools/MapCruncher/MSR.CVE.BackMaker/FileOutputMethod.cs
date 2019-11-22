@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker
 
         public Stream CreateFile(string relativePath, string contentType)
         {
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.Delete(path);
             return new FileStream(path, FileMode.Create);
@@ -22,39 +22,39 @@ namespace MSR.CVE.BackMaker
 
         public Stream ReadFile(string relativePath)
         {
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             return new FileStream(path, FileMode.Open, FileAccess.Read);
         }
 
         public Uri GetUri(string relativePath)
         {
-            return new UriBuilder("file", "", 0, Path.Combine(this.basePath, relativePath)).Uri;
+            return new UriBuilder("file", "", 0, Path.Combine(basePath, relativePath)).Uri;
         }
 
         public string GetPath(string relativePath)
         {
-            return Path.Combine(this.basePath, relativePath.Replace('/', '\\'));
+            return Path.Combine(basePath, relativePath.Replace('/', '\\'));
         }
 
         internal void CreateDirectory()
         {
-            Directory.CreateDirectory(this.basePath);
+            Directory.CreateDirectory(basePath);
         }
 
         public bool KnowFileExists(string relativePath)
         {
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             return File.Exists(path);
         }
 
         public RenderOutputMethod MakeChildMethod(string subdir)
         {
-            return new FileOutputMethod(Path.Combine(this.basePath, subdir));
+            return new FileOutputMethod(Path.Combine(basePath, subdir));
         }
 
         public FileIdentification GetFileIdentification(string relativePath)
         {
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             return GetFileIdentificationStatic(path);
         }
 
@@ -84,13 +84,13 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                Directory.Delete(this.GetPath(""), true);
+                Directory.Delete(GetPath(""), true);
             }
             catch (DirectoryNotFoundException)
             {
             }
 
-            this.CreateDirectory();
+            CreateDirectory();
         }
     }
 }

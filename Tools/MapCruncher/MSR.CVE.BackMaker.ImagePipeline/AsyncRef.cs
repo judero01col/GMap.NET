@@ -22,7 +22,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.resource.present;
+                return resource.present;
             }
         }
 
@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.resource.future;
+                return resource.future;
             }
         }
 
@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.resource;
+                return resource;
             }
         }
 
@@ -52,65 +52,65 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Dispose()
         {
-            D.Assert(!this.debugDisposed);
-            this.SetInterest(0);
-            this.resource.DropRef();
-            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + this.debugAnnotation, -1).crement(-1);
-            this.debugDisposed = true;
+            D.Assert(!debugDisposed);
+            SetInterest(0);
+            resource.DropRef();
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation, -1).crement(-1);
+            debugDisposed = true;
         }
 
         public Present Duplicate(string refCredit)
         {
-            return new AsyncRef(this.resource, refCredit);
+            return new AsyncRef(resource, refCredit);
         }
 
         public void SetInterest(int newInterest)
         {
-            int num = this.localInterest > 524291 ? 1 : 0;
+            int num = localInterest > 524291 ? 1 : 0;
             int num2 = newInterest > 524291 ? 1 : 0;
             asyncRefsHoldingInterestResourceCounter.crement(num2 - num);
-            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + this.debugAnnotation + "-withInterest", -1)
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation + "-withInterest", -1)
                 .crement(num2 - num);
-            int crement = newInterest - this.localInterest;
-            this.resource.ChangePriority(crement);
-            this.localInterest = newInterest;
+            int crement = newInterest - localInterest;
+            resource.ChangePriority(crement);
+            localInterest = newInterest;
         }
 
         public void AddCallback(AsyncRecord.CompleteCallback callback)
         {
-            this.resource.AddCallback(callback);
+            resource.AddCallback(callback);
         }
 
         public override string ToString()
         {
-            return this.asyncRecord.ToString();
+            return asyncRecord.ToString();
         }
 
         public int GetInterest()
         {
-            return this.asyncRecord.GetPriority();
+            return asyncRecord.GetPriority();
         }
 
         public void DoWork()
         {
-            this.asyncRecord.DoWork();
-            this.Dispose();
+            asyncRecord.DoWork();
+            Dispose();
         }
 
         public void DeQueued()
         {
-            this.asyncRecord.DeQueued();
-            this.Dispose();
+            asyncRecord.DeQueued();
+            Dispose();
         }
 
         internal void ProcessSynchronously()
         {
-            this.asyncRecord.ProcessSynchronously();
+            asyncRecord.ProcessSynchronously();
         }
 
         public bool EvictMeNow()
         {
-            return this.present is IEvictable && ((IEvictable)this.present).EvictMeNow();
+            return present is IEvictable && ((IEvictable)present).EvictMeNow();
         }
     }
 }

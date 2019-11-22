@@ -14,8 +14,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public MemoryCache(string debugName) : base(debugName)
         {
-            this.clockQueue = new LinkedList<CacheRecord>();
-            this.interestingStuffResourceCounter =
+            clockQueue = new LinkedList<CacheRecord>();
+            interestingStuffResourceCounter =
                 DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + debugName + "-interestingStuff", -1);
         }
 
@@ -33,7 +33,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (recordIsNew)
             {
-                this.clockQueue.AddLast(record);
+                clockQueue.AddLast(record);
             }
 
             ((ClockCacheRecord)record).touched = true;
@@ -51,38 +51,38 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.cache.Count >= this.nextCleanMark)
+                if (cache.Count >= nextCleanMark)
                 {
                     bool flag = false;
                     int num3 = 0;
-                    for (int i = 0; i < this.clockQueue.Count; i++)
+                    for (int i = 0; i < clockQueue.Count; i++)
                     {
-                        if (this.cache.Count < this.paramCacheMinSize)
+                        if (cache.Count < paramCacheMinSize)
                         {
                             flag = true;
                             break;
                         }
 
-                        ClockCacheRecord clockCacheRecord = (ClockCacheRecord)this.clockQueue.First.Value;
-                        this.clockQueue.RemoveFirst();
+                        ClockCacheRecord clockCacheRecord = (ClockCacheRecord)clockQueue.First.Value;
+                        clockQueue.RemoveFirst();
                         num++;
                         bool flag2 = clockCacheRecord.present is RequestInterestIfc &&
                                      ((RequestInterestIfc)clockCacheRecord.present).GetInterest() > 524291;
                         if (flag2)
                         {
                             num3++;
-                            this.clockQueue.AddLast(clockCacheRecord);
+                            clockQueue.AddLast(clockCacheRecord);
                         }
                         else
                         {
                             if (clockCacheRecord.touched)
                             {
                                 clockCacheRecord.touched = false;
-                                this.clockQueue.AddLast(clockCacheRecord);
+                                clockQueue.AddLast(clockCacheRecord);
                             }
                             else
                             {
-                                this.Remove(clockCacheRecord, RemoveExpectation.Unknown);
+                                Remove(clockCacheRecord, RemoveExpectation.Unknown);
                                 num2++;
                             }
                         }
@@ -91,20 +91,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     if (!flag)
                     {
                         int num4 = num3 * 2 + 64;
-                        if (num4 > this.paramCacheMinSize)
+                        if (num4 > paramCacheMinSize)
                         {
-                            this.paramCacheMinSize = num4;
+                            paramCacheMinSize = num4;
                             D.Sayf(0,
                                 "Grew cache {0} to paramCacheMinSize={1}; cache now {2}; clock now {3}",
                                 new object[]
                                 {
-                                    this.hashName, this.paramCacheMinSize, this.cache.Count, this.clockQueue.Count
+                                    hashName, paramCacheMinSize, cache.Count, clockQueue.Count
                                 });
                         }
                     }
 
-                    this.interestingStuffResourceCounter.SetValue(num3);
-                    this.nextCleanMark = this.cache.Count + (this.paramCacheMinSize >> 2);
+                    interestingStuffResourceCounter.SetValue(num3);
+                    nextCleanMark = cache.Count + (paramCacheMinSize >> 2);
                     D.Sayf(10, "MemoryCache Cleaner: removed {0}/{1}", new object[] {num2, num});
                 }
             }

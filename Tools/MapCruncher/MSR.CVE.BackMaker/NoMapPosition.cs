@@ -6,7 +6,7 @@ namespace MSR.CVE.BackMaker
 
         public MapPosition NoMapPositionDelegate()
         {
-            return this.p;
+            return p;
         }
     }
 }

@@ -16,16 +16,16 @@ namespace GMap.NET
     public partial class TilePrefetcher : Form
     {
         BackgroundWorker worker = new BackgroundWorker();
-        List<GPoint> list;
-        int zoom;
-        GMapProvider provider;
-        int sleep;
-        int all;
+        List<GPoint> _list;
+        int _zoom;
+        GMapProvider _provider;
+        int _sleep;
+        int _all;
         public bool ShowCompleteMessage = false;
-        RectLatLng area;
-        GSize maxOfTiles;
+        RectLatLng _area;
+        GSize _maxOfTiles;
         public GMapOverlay Overlay;
-        int retry;
+        int _retry;
         public bool Shuffle = true;
 
         public TilePrefetcher()
@@ -43,13 +43,13 @@ namespace GMap.NET
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
         }
 
-        readonly AutoResetEvent done = new AutoResetEvent(true);
+        readonly AutoResetEvent _done = new AutoResetEvent(true);
 
         void OnTileCacheComplete()
         {
             if (!IsDisposed)
             {
-                done.Set();
+                _done.Set();
 
                 MethodInvoker m = delegate
                 {
@@ -63,7 +63,7 @@ namespace GMap.NET
         {
             if (!IsDisposed)
             {
-                done.Reset();
+                _done.Reset();
 
                 MethodInvoker m = delegate
                 {
@@ -89,14 +89,14 @@ namespace GMap.NET
         {
             if (!worker.IsBusy)
             {
-                this.label1.Text = "...";
-                this.progressBarDownload.Value = 0;
+                label1.Text = "...";
+                progressBarDownload.Value = 0;
 
-                this.area = area;
-                this.zoom = zoom;
-                this.provider = provider;
-                this.sleep = sleep;
-                this.retry = retry;
+                _area = area;
+                _zoom = zoom;
+                _provider = provider;
+                _sleep = sleep;
+                _retry = retry;
 
                 GMaps.Instance.UseMemoryCache = false;
                 GMaps.Instance.CacheOnIdleRead = false;
@@ -109,7 +109,7 @@ namespace GMap.NET
 
                 worker.RunWorkerAsync();
 
-                this.ShowDialog();
+                ShowDialog();
             }
         }
 
@@ -119,7 +119,7 @@ namespace GMap.NET
             GMaps.Instance.OnTileCacheStart -= new TileCacheStart(OnTileCacheStart);
             GMaps.Instance.OnTileCacheProgress -= new TileCacheProgress(OnTileCacheProgress);
 
-            done.Set();
+            _done.Set();
 
             if (worker.IsBusy)
             {
@@ -128,7 +128,7 @@ namespace GMap.NET
 
             GMaps.Instance.CancelTileCaching();
 
-            done.Close();
+            _done.Close();
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -137,15 +137,15 @@ namespace GMap.NET
             {
                 if (!e.Cancelled)
                 {
-                    MessageBox.Show(this, "Prefetch Complete! => " + ((int)e.Result).ToString() + " of " + all);
+                    MessageBox.Show(this, "Prefetch Complete! => " + ((int)e.Result).ToString() + " of " + _all);
                 }
                 else
                 {
-                    MessageBox.Show(this, "Prefetch Canceled! => " + ((int)e.Result).ToString() + " of " + all);
+                    MessageBox.Show(this, "Prefetch Canceled! => " + ((int)e.Result).ToString() + " of " + _all);
                 }
             }
 
-            list.Clear();
+            _list.Clear();
 
             GMaps.Instance.UseMemoryCache = true;
             GMaps.Instance.CacheOnIdleRead = true;
@@ -153,12 +153,12 @@ namespace GMap.NET
 
             worker.Dispose();
 
-            this.Close();
+            Close();
         }
 
         bool CacheTiles(int zoom, GPoint p)
         {
-            foreach (var pr in provider.Overlays)
+            foreach (var pr in _provider.Overlays)
             {
                 Exception ex;
                 PureImage img;
@@ -166,7 +166,7 @@ namespace GMap.NET
                 // tile number inversion(BottomLeft -> TopLeft)
                 if (pr.InvertedAxisY)
                 {
-                    img = GMaps.Instance.GetImageFrom(pr, new GPoint(p.X, maxOfTiles.Height - p.Y), zoom, out ex);
+                    img = GMaps.Instance.GetImageFrom(pr, new GPoint(p.X, _maxOfTiles.Height - p.Y), zoom, out ex);
                 }
                 else // ok
                 {
@@ -191,22 +191,22 @@ namespace GMap.NET
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (list != null)
+            if (_list != null)
             {
-                list.Clear();
-                list = null;
+                _list.Clear();
+                _list = null;
             }
 
-            list = provider.Projection.GetAreaTileList(area, zoom, 0);
-            maxOfTiles = provider.Projection.GetTileMatrixMaxXY(zoom);
-            all = list.Count;
+            _list = _provider.Projection.GetAreaTileList(_area, _zoom, 0);
+            _maxOfTiles = _provider.Projection.GetTileMatrixMaxXY(_zoom);
+            _all = _list.Count;
 
             int countOk = 0;
             int retryCount = 0;
 
             if (Shuffle)
             {
-                Stuff.Shuffle<GPoint>(list);
+                Stuff.Shuffle<GPoint>(_list);
             }
 
             lock (this)
@@ -214,14 +214,14 @@ namespace GMap.NET
                 CachedTiles.Clear();
             }
 
-            for (int i = 0; i < all; i++)
+            for (int i = 0; i < _all; i++)
             {
                 if (worker.CancellationPending)
                     break;
 
-                GPoint p = list[i];
+                GPoint p = _list[i];
                 {
-                    if (CacheTiles(zoom, p))
+                    if (CacheTiles(_zoom, p))
                     {
                         if (Overlay != null)
                         {
@@ -236,7 +236,7 @@ namespace GMap.NET
                     }
                     else
                     {
-                        if (++retryCount <= retry) // retry only one
+                        if (++retryCount <= _retry) // retry only one
                         {
                             i--;
                             Thread.Sleep(1111);
@@ -249,11 +249,11 @@ namespace GMap.NET
                     }
                 }
 
-                worker.ReportProgress((int)((i + 1) * 100 / all), i + 1);
+                worker.ReportProgress((int)((i + 1) * 100 / _all), i + 1);
 
-                if (sleep > 0)
+                if (_sleep > 0)
                 {
-                    Thread.Sleep(sleep);
+                    Thread.Sleep(_sleep);
                 }
             }
 
@@ -261,15 +261,15 @@ namespace GMap.NET
 
             if (!IsDisposed)
             {
-                done.WaitOne();
+                _done.WaitOne();
             }
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.label1.Text = "Fetching tile at zoom (" + zoom + "): " + ((int)e.UserState).ToString() + " of " + all +
+            label1.Text = "Fetching tile at zoom (" + _zoom + "): " + ((int)e.UserState).ToString() + " of " + _all +
                                ", complete: " + e.ProgressPercentage.ToString() + "%";
-            this.progressBarDownload.Value = e.ProgressPercentage;
+            progressBarDownload.Value = e.ProgressPercentage;
 
             if (Overlay != null)
             {
@@ -286,9 +286,9 @@ namespace GMap.NET
                 if (l.HasValue)
                 {
                     var px = Overlay.Control.MapProvider.Projection.FromTileXYToPixel(l.Value);
-                    var p = Overlay.Control.MapProvider.Projection.FromPixelToLatLng(px, zoom);
+                    var p = Overlay.Control.MapProvider.Projection.FromPixelToLatLng(px, _zoom);
 
-                    var r1 = Overlay.Control.MapProvider.Projection.GetGroundResolution(zoom, p.Lat);
+                    var r1 = Overlay.Control.MapProvider.Projection.GetGroundResolution(_zoom, p.Lat);
                     var r2 = Overlay.Control.MapProvider.Projection.GetGroundResolution((int)Overlay.Control.Zoom,
                         p.Lat);
                     var sizeDiff = r2 / r1;
@@ -304,13 +304,13 @@ namespace GMap.NET
         {
             if (e.KeyCode == Keys.Escape)
             {
-                this.Close();
+                Close();
             }
         }
 
         private void Prefetch_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Stop();
+            Stop();
         }
     }
 

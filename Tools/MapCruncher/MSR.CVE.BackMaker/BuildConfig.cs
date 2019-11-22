@@ -35,11 +35,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._editionName.value;
+                return _editionName.value;
             }
             set
             {
-                this._editionName.value = value;
+                _editionName.value = value;
             }
         }
 
@@ -47,11 +47,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._debugModeEnabled.value;
+                return _debugModeEnabled.value;
             }
             set
             {
-                this._debugModeEnabled.value = value;
+                _debugModeEnabled.value = value;
             }
         }
 
@@ -59,11 +59,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._forceAffineControlVisible.value;
+                return _forceAffineControlVisible.value;
             }
             set
             {
-                this._forceAffineControlVisible.value = value;
+                _forceAffineControlVisible.value = value;
             }
         }
 
@@ -71,11 +71,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._enableS3.value;
+                return _enableS3.value;
             }
             set
             {
-                this._enableS3.value = value;
+                _enableS3.value = value;
             }
         }
 
@@ -83,11 +83,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._autoMaxZoomOffset.value;
+                return _autoMaxZoomOffset.value;
             }
             set
             {
-                this._autoMaxZoomOffset.value = value;
+                _autoMaxZoomOffset.value = value;
             }
         }
 
@@ -95,11 +95,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._usingManifests.value;
+                return _usingManifests.value;
             }
             set
             {
-                this._usingManifests.value = value;
+                _usingManifests.value = value;
             }
         }
 
@@ -107,11 +107,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._debugRefs.value;
+                return _debugRefs.value;
             }
             set
             {
-                this._debugRefs.value = value;
+                _debugRefs.value = value;
             }
         }
 
@@ -119,11 +119,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._logInteractiveRenders.value;
+                return _logInteractiveRenders.value;
             }
             set
             {
-                this._logInteractiveRenders.value = value;
+                _logInteractiveRenders.value = value;
             }
         }
 
@@ -131,11 +131,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._allFilesOption.value;
+                return _allFilesOption.value;
             }
             set
             {
-                this._allFilesOption.value = value;
+                _allFilesOption.value = value;
             }
         }
 
@@ -143,11 +143,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._suppressFoxitMessages.value;
+                return _suppressFoxitMessages.value;
             }
             set
             {
-                this._suppressFoxitMessages.value = value;
+                _suppressFoxitMessages.value = value;
             }
         }
 
@@ -155,11 +155,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._enableSnapFeatures.value;
+                return _enableSnapFeatures.value;
             }
             set
             {
-                this._enableSnapFeatures.value = value;
+                _enableSnapFeatures.value = value;
             }
         }
 
@@ -167,11 +167,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._veFormatUpdateURL.value;
+                return _veFormatUpdateURL.value;
             }
             set
             {
-                this._veFormatUpdateURL.value = value;
+                _veFormatUpdateURL.value = value;
             }
         }
 
@@ -179,11 +179,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._injectTemporaryTileFailures.value;
+                return _injectTemporaryTileFailures.value;
             }
             set
             {
-                this._injectTemporaryTileFailures.value = value;
+                _injectTemporaryTileFailures.value = value;
             }
         }
 
@@ -191,11 +191,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._debugLevel.value;
+                return _debugLevel.value;
             }
             set
             {
-                this._debugLevel.value = value;
+                _debugLevel.value = value;
             }
         }
 
@@ -203,11 +203,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._mapControl.value;
+                return _mapControl.value;
             }
             set
             {
-                this._mapControl.value = value;
+                _mapControl.value = value;
             }
         }
 
@@ -215,11 +215,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._hostHome.value;
+                return _hostHome.value;
             }
             set
             {
-                this._hostHome.value = value;
+                _hostHome.value = value;
             }
         }
 
@@ -227,11 +227,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._mapCruncherHomeSite.value;
+                return _mapCruncherHomeSite.value;
             }
             set
             {
-                this._mapCruncherHomeSite.value = value;
+                _mapCruncherHomeSite.value = value;
             }
         }
 
@@ -239,28 +239,28 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (this._configurationDict == null)
+                if (_configurationDict == null)
                 {
-                    this._configurationDict = new Dictionary<string, ParseableCfg>();
-                    this.AddCfg(this._editionName);
-                    this.AddCfg(this._debugModeEnabled);
-                    this.AddCfg(this._forceAffineControlVisible);
-                    this.AddCfg(this._enableS3);
-                    this.AddCfg(this._autoMaxZoomOffset);
-                    this.AddCfg(this._usingManifests);
-                    this.AddCfg(this._debugRefs);
-                    this.AddCfg(this._logInteractiveRenders);
-                    this.AddCfg(this._allFilesOption);
-                    this.AddCfg(this._suppressFoxitMessages);
-                    this.AddCfg(this._enableSnapFeatures);
-                    this.AddCfg(this._veFormatUpdateURL);
-                    this.AddCfg(this._injectTemporaryTileFailures);
-                    this.AddCfg(this._debugLevel);
-                    this.AddCfg(this._hostHome);
-                    this.AddCfg(this._mapCruncherHomeSite);
+                    _configurationDict = new Dictionary<string, ParseableCfg>();
+                    AddCfg(_editionName);
+                    AddCfg(_debugModeEnabled);
+                    AddCfg(_forceAffineControlVisible);
+                    AddCfg(_enableS3);
+                    AddCfg(_autoMaxZoomOffset);
+                    AddCfg(_usingManifests);
+                    AddCfg(_debugRefs);
+                    AddCfg(_logInteractiveRenders);
+                    AddCfg(_allFilesOption);
+                    AddCfg(_suppressFoxitMessages);
+                    AddCfg(_enableSnapFeatures);
+                    AddCfg(_veFormatUpdateURL);
+                    AddCfg(_injectTemporaryTileFailures);
+                    AddCfg(_debugLevel);
+                    AddCfg(_hostHome);
+                    AddCfg(_mapCruncherHomeSite);
                 }
 
-                return this._configurationDict;
+                return _configurationDict;
             }
         }
 
@@ -392,7 +392,7 @@ namespace MSR.CVE.BackMaker
 
         private void AddCfg(ParseableCfg cfg)
         {
-            this._configurationDict[cfg.name] = cfg;
+            _configurationDict[cfg.name] = cfg;
         }
     }
 }

@@ -54,9 +54,7 @@ namespace GMap.NET.MapProviders
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            string sec1 = string.Empty;
-            string sec2 = string.Empty;
-            GetSecureWords(pos, out sec1, out sec2);
+            GetSecureWords(pos, out string sec1, out string sec2);
 
             return string.Format(UrlFormat,
                 UrlFormatServer,

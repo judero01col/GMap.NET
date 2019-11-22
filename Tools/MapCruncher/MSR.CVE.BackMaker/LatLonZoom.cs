@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._latlon;
+                return _latlon;
             }
         }
 
@@ -23,7 +23,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._zoom;
+                return _zoom;
             }
         }
 
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._latlon.lat;
+                return _latlon.lat;
             }
         }
 
@@ -39,20 +39,20 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._latlon.lon;
+                return _latlon.lon;
             }
         }
 
         public LatLonZoom(double lat, double lon, int zoom)
         {
-            this._latlon = new LatLon(lat, lon);
-            this._zoom = zoom;
+            _latlon = new LatLon(lat, lon);
+            _zoom = zoom;
         }
 
         public LatLonZoom(LatLon latlon, int zoom)
         {
-            this._latlon = latlon;
-            this._zoom = zoom;
+            _latlon = latlon;
+            _zoom = zoom;
         }
 
         public override bool Equals(object o)
@@ -68,7 +68,7 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return this._latlon.GetHashCode() ^ this._zoom.GetHashCode();
+            return _latlon.GetHashCode() ^ _zoom.GetHashCode();
         }
 
         public static bool operator ==(LatLonZoom llz1, LatLonZoom llz2)
@@ -83,7 +83,7 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return string.Format("{0} {1}Z", this._latlon, this._zoom);
+            return string.Format("{0} {1}Z", _latlon, _zoom);
         }
 
         public static string GetXMLTag()
@@ -94,15 +94,15 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlWriter writer)
         {
             writer.WriteStartElement("LatLonZoom");
-            writer.WriteAttributeString("zoom", this._zoom.ToString(CultureInfo.InvariantCulture));
-            this._latlon.WriteXML(writer);
+            writer.WriteAttributeString("zoom", _zoom.ToString(CultureInfo.InvariantCulture));
+            _latlon.WriteXML(writer);
             writer.WriteEndElement();
         }
 
         public void WriteXMLToAttributes(XmlWriter writer)
         {
-            this._latlon.WriteXMLToAttributes(writer);
-            writer.WriteAttributeString("zoom", this._zoom.ToString(CultureInfo.InvariantCulture));
+            _latlon.WriteXMLToAttributes(writer);
+            writer.WriteAttributeString("zoom", _zoom.ToString(CultureInfo.InvariantCulture));
         }
 
         public LatLonZoom(MashupParseContext context, CoordinateSystemIfc coordSys)
@@ -117,7 +117,7 @@ namespace MSR.CVE.BackMaker
 
                 try
                 {
-                    this._zoom = coordSys.GetZoomRange()
+                    _zoom = coordSys.GetZoomRange()
                         .ParseAllowUndefinedZoom(context, "zoom", context.reader.GetAttribute("zoom"));
                 }
                 catch (InvalidMashupFile invalidMashupFile)
@@ -126,12 +126,12 @@ namespace MSR.CVE.BackMaker
                 }
 
                 bool flag = false;
-                this._latlon = default(LatLon);
+                _latlon = default(LatLon);
                 while (xMLTagReader.FindNextStartTag())
                 {
                     if (xMLTagReader.TagIs(LatLon.GetXMLTag()))
                     {
-                        this._latlon = new LatLon(context, coordSys);
+                        _latlon = new LatLon(context, coordSys);
                         flag = true;
                     }
                 }
@@ -167,8 +167,8 @@ namespace MSR.CVE.BackMaker
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this.latlon.AccumulateRobustHash(hash);
-            hash.Accumulate(this.zoom);
+            latlon.AccumulateRobustHash(hash);
+            hash.Accumulate(zoom);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace GMap.NET.WindowsForms.Markers
             }
         }
 
-        Bitmap BitmapShadow;
+        Bitmap _bitmapShadow;
 
         static Bitmap arrowshadow;
         static Bitmap msmarker_shadow;
@@ -82,7 +82,7 @@ namespace GMap.NET.WindowsForms.Markers
         public GMarkerGoogle(PointLatLng p, GMarkerGoogleType type)
             : base(p)
         {
-            this.Type = type;
+            Type = type;
 
             if (type != GMarkerGoogleType.none)
             {
@@ -106,7 +106,7 @@ namespace GMap.NET.WindowsForms.Markers
                         arrowshadow = Properties.Resources.arrowshadow;
                     }
 
-                    BitmapShadow = arrowshadow;
+                    _bitmapShadow = arrowshadow;
                 }
                     break;
 
@@ -134,7 +134,7 @@ namespace GMap.NET.WindowsForms.Markers
                         msmarker_shadow = Properties.Resources.msmarker_shadow;
                     }
 
-                    BitmapShadow = msmarker_shadow;
+                    _bitmapShadow = msmarker_shadow;
                 }
                     break;
 
@@ -156,7 +156,7 @@ namespace GMap.NET.WindowsForms.Markers
                         shadow_small = Properties.Resources.shadow_small;
                     }
 
-                    BitmapShadow = shadow_small;
+                    _bitmapShadow = shadow_small;
                 }
                     break;
 
@@ -170,7 +170,7 @@ namespace GMap.NET.WindowsForms.Markers
                         msmarker_shadow = Properties.Resources.msmarker_shadow;
                     }
 
-                    BitmapShadow = msmarker_shadow;
+                    _bitmapShadow = msmarker_shadow;
                 }
                     break;
 
@@ -189,7 +189,7 @@ namespace GMap.NET.WindowsForms.Markers
                         pushpin_shadow = Properties.Resources.pushpin_shadow;
                     }
 
-                    BitmapShadow = pushpin_shadow;
+                    _bitmapShadow = pushpin_shadow;
                 }
                     break;
             }
@@ -199,24 +199,24 @@ namespace GMap.NET.WindowsForms.Markers
         ///     marker using manual bitmap, NonSerialized
         /// </summary>
         /// <param name="p"></param>
-        /// <param name="Bitmap"></param>
-        public GMarkerGoogle(PointLatLng p, Bitmap Bitmap)
+        /// <param name="bitmap"></param>
+        public GMarkerGoogle(PointLatLng p, Bitmap bitmap)
             : base(p)
         {
-            this.Bitmap = Bitmap;
-            Size = new Size(Bitmap.Width, Bitmap.Height);
+            Bitmap = bitmap;
+            Size = new Size(bitmap.Width, bitmap.Height);
             Offset = new Point(-Size.Width / 2, -Size.Height);
         }
 
-        static readonly Dictionary<string, Bitmap> iconCache = new Dictionary<string, Bitmap>();
+        static readonly Dictionary<string, Bitmap> IconCache = new Dictionary<string, Bitmap>();
 
         internal static Bitmap GetIcon(string name)
         {
             Bitmap ret;
-            if (!iconCache.TryGetValue(name, out ret))
+            if (!IconCache.TryGetValue(name, out ret))
             {
                 ret = Properties.Resources.ResourceManager.GetObject(name, Properties.Resources.Culture) as Bitmap;
-                iconCache.Add(name, ret);
+                IconCache.Add(name, ret);
             }
 
             return ret;
@@ -227,13 +227,13 @@ namespace GMap.NET.WindowsForms.Markers
 #if !PocketPC
             lock (Bitmap)
             {
-                if (BitmapShadow != null)
+                if (_bitmapShadow != null)
                 {
-                    g.DrawImage(BitmapShadow,
+                    g.DrawImage(_bitmapShadow,
                         LocalPosition.X,
                         LocalPosition.Y,
-                        BitmapShadow.Width,
-                        BitmapShadow.Height);
+                        _bitmapShadow.Width,
+                        _bitmapShadow.Height);
                 }
 
                 g.DrawImage(Bitmap, LocalPosition.X, LocalPosition.Y, Size.Width, Size.Height);
@@ -253,7 +253,7 @@ namespace GMap.NET.WindowsForms.Markers
         {
             if (Bitmap != null)
             {
-                if (!iconCache.ContainsValue(Bitmap))
+                if (!IconCache.ContainsValue(Bitmap))
                 {
                     Bitmap.Dispose();
                     Bitmap = null;
@@ -269,7 +269,7 @@ namespace GMap.NET.WindowsForms.Markers
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("type", this.Type);
+            info.AddValue("type", Type);
             //info.AddValue("Bearing", this.Bearing);
 
             base.GetObjectData(info, context);
@@ -278,7 +278,7 @@ namespace GMap.NET.WindowsForms.Markers
         protected GMarkerGoogle(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            this.Type = Extensions.GetStruct<GMarkerGoogleType>(info, "type", GMarkerGoogleType.none);
+            Type = Extensions.GetStruct<GMarkerGoogleType>(info, "type", GMarkerGoogleType.none);
             //this.Bearing = Extensions.GetStruct<float>(info, "Bearing", null);
         }
 

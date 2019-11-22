@@ -15,17 +15,17 @@ namespace GMap.NET.WindowsForms
    public class GMapToolTip: IDisposable
 #endif
     {
-        GMapMarker marker;
+        GMapMarker _marker;
 
         public GMapMarker Marker
         {
             get
             {
-                return marker;
+                return _marker;
             }
             internal set
             {
-                marker = value;
+                _marker = value;
             }
         }
 
@@ -104,8 +104,8 @@ namespace GMap.NET.WindowsForms
 
         public GMapToolTip(GMapMarker marker)
         {
-            this.Marker = marker;
-            this.Offset = new Point(14, -44);
+            Marker = marker;
+            Offset = new Point(14, -44);
         }
 
         public virtual void OnRender(Graphics g)
@@ -145,8 +145,8 @@ namespace GMap.NET.WindowsForms
         /// <param name="context">The context.</param>
         protected GMapToolTip(SerializationInfo info, StreamingContext context)
         {
-            this.Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
-            this.TextPadding = Extensions.GetStruct<Size>(info, "TextPadding", new Size(10, 10));
+            Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
+            TextPadding = Extensions.GetStruct<Size>(info, "TextPadding", new Size(10, 10));
         }
 
         /// <summary>
@@ -163,8 +163,8 @@ namespace GMap.NET.WindowsForms
         /// </exception>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Offset", this.Offset);
-            info.AddValue("TextPadding", this.TextPadding);
+            info.AddValue("Offset", Offset);
+            info.AddValue("TextPadding", TextPadding);
         }
 
         #endregion
@@ -173,13 +173,13 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed;
+        bool _disposed;
 
         public void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                disposed = true;
+                _disposed = true;
             }
         }
 

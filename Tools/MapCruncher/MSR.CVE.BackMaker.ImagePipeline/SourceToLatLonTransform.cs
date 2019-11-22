@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             PointD pointD =
                 MercatorCoordinateSystem.MercatorToLatLon(
-                    this.sourceToMercator.getTransformedPoint(p0, out isApproximate));
+                    sourceToMercator.getTransformedPoint(p0, out isApproximate));
             p1.x = pointD.x;
             p1.y = pointD.y;
         }

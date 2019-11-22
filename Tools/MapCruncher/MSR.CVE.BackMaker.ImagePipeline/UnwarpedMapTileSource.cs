@@ -23,7 +23,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public string GetRendererCredit()
         {
             IFuture accessFuture =
-                this.GetAccessFuture(AccessMethod.RendererCredit, FutureFeatures.Cached, new IFuture[0]);
+                GetAccessFuture(AccessMethod.RendererCredit, FutureFeatures.Cached, new IFuture[0]);
             Present present = accessFuture.Realize("UnwarpedMapTileSource.GetRendererCredit");
             if (present is StringParameter)
             {
@@ -37,7 +37,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             params IFuture[] methodParams)
         {
             IFuture[] array = new IFuture[2 + methodParams.Length];
-            array[0] = this.GetOpenDocumentFuture(openDocFeatures);
+            array[0] = GetOpenDocumentFuture(openDocFeatures);
             array[1] = new ConstantFuture(new IntParameter((int)accessMethod));
             Array.Copy(methodParams, 0, array, 2, methodParams.Length);
             return new ApplyFuture(new ApplyVerbPresent(), array);
@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             params IFuturePrototype[] methodParams)
         {
             IFuturePrototype[] array = new IFuturePrototype[2 + methodParams.Length];
-            array[0] = this.GetOpenDocumentFuture(openDocFeatures);
+            array[0] = GetOpenDocumentFuture(openDocFeatures);
             array[1] = new ConstantFuture(new IntParameter((int)accessMethod));
             Array.Copy(methodParams, 0, array, 2, methodParams.Length);
             return new ApplyPrototype(new ApplyVerbPresent(), array);
@@ -55,16 +55,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public string GetSourceMapDisplayName()
         {
-            return this.sourceMap.displayName;
+            return sourceMap.displayName;
         }
 
         public IFuture GetOpenDocumentFuture(FutureFeatures features)
         {
-            IFuture future = new FetchDocumentFuture(this.localDocumentFuture);
+            IFuture future = new FetchDocumentFuture(localDocumentFuture);
             D.Assert(HasFeature(features, FutureFeatures.MemoryCached));
             if (HasFeature(features, FutureFeatures.MemoryCached))
             {
-                future = new MemCacheFuture(this.cachePackage.openSourceDocumentCache, future);
+                future = new MemCacheFuture(cachePackage.openSourceDocumentCache, future);
             }
 
             D.Assert(!HasFeature(features, FutureFeatures.Async));
@@ -73,22 +73,22 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuturePrototype GetImageDetailPrototype(FutureFeatures features)
         {
-            IFuturePrototype prototype = this.GetAccessPrototype(AccessMethod.ImageDetail,
+            IFuturePrototype prototype = GetAccessPrototype(AccessMethod.ImageDetail,
                 FutureFeatures.Cached,
                 new IFuturePrototype[] {new UnevaluatedTerm(TermName.ImageDetail)});
             if (HasFeature(features, FutureFeatures.MemoryCached))
             {
-                prototype = new MemCachePrototype(this.cachePackage.computeCache, prototype);
+                prototype = new MemCachePrototype(cachePackage.computeCache, prototype);
             }
 
-            return this.AddAsynchrony(prototype, features);
+            return AddAsynchrony(prototype, features);
         }
 
         public IFuture GetImageBounds(FutureFeatures features)
         {
-            IFuture future = this.GetAccessFuture(AccessMethod.FetchBounds, FutureFeatures.Cached, new IFuture[0]);
-            future = new MemCacheFuture(this.cachePackage.boundsCache, future);
-            return this.AddAsynchrony(future, features);
+            IFuture future = GetAccessFuture(AccessMethod.FetchBounds, FutureFeatures.Cached, new IFuture[0]);
+            future = new MemCacheFuture(cachePackage.boundsCache, future);
+            return AddAsynchrony(future, features);
         }
 
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
@@ -97,63 +97,63 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             D.Assert(!HasFeature(features, FutureFeatures.Transparency));
             if (latentRegionHolder == null)
             {
-                latentRegionHolder = this.sourceMap.latentRegionHolder;
+                latentRegionHolder = sourceMap.latentRegionHolder;
             }
 
-            latentRegionHolder.RequestRenderRegion(this.GetImageBounds((FutureFeatures)7));
-            IFuture future = new MemCacheFuture(this.cachePackage.boundsCache,
-                new ApplyFuture(new UserBoundsRefVerb(latentRegionHolder, this.GetImageBounds(FutureFeatures.Cached)),
+            latentRegionHolder.RequestRenderRegion(GetImageBounds((FutureFeatures)7));
+            IFuture future = new MemCacheFuture(cachePackage.boundsCache,
+                new ApplyFuture(new UserBoundsRefVerb(latentRegionHolder, GetImageBounds(FutureFeatures.Cached)),
                     new IFuture[0]));
-            return this.AddAsynchrony(future, features);
+            return AddAsynchrony(future, features);
         }
 
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
             if (parameterType == null)
             {
-                parameterType = new ImageParameterFromTileAddress(this.GetDefaultCoordinateSystem());
+                parameterType = new ImageParameterFromTileAddress(GetDefaultCoordinateSystem());
             }
 
             FutureFeatures openDocFeatures = FutureFeatures.Cached;
-            IFuturePrototype accessPrototype = this.GetAccessPrototype(AccessMethod.Render,
+            IFuturePrototype accessPrototype = GetAccessPrototype(AccessMethod.Render,
                 openDocFeatures,
                 new IFuturePrototype[]
                 {
                     new UnevaluatedTerm(TermName.ImageBounds), new UnevaluatedTerm(TermName.OutputSize),
                     new UnevaluatedTerm(TermName.UseDocumentTransparency), new UnevaluatedTerm(TermName.ExactColors)
                 });
-            Verb verb = new SourceImageDownsamplerVerb(this.AddCaching(accessPrototype, FutureFeatures.Cached));
+            Verb verb = new SourceImageDownsamplerVerb(AddCaching(accessPrototype, FutureFeatures.Cached));
             IFuturePrototype futurePrototype = new ApplyPrototype(verb,
-                new IFuturePrototype[]
+                new[]
                 {
                     parameterType.GetBoundsParameter(), parameterType.GetSizeParameter(),
                     new ConstantFuture(
-                        new BoolParameter(this.sourceMap.transparencyOptions.useDocumentTransparency)),
+                        new BoolParameter(sourceMap.transparencyOptions.useDocumentTransparency)),
                     new ConstantFuture(new BoolParameter(HasFeature(features, FutureFeatures.ExactColors)))
                 });
             if (HasFeature(features, FutureFeatures.Transparency))
             {
                 IFuturePrototype futurePrototype2 = new ApplyPrototype(verb,
-                    new IFuturePrototype[]
+                    new[]
                     {
                         parameterType.GetBoundsParameter(), parameterType.GetSizeParameter(),
                         new ConstantFuture(
-                            new BoolParameter(this.sourceMap.transparencyOptions.useDocumentTransparency)),
+                            new BoolParameter(sourceMap.transparencyOptions.useDocumentTransparency)),
                         new ConstantFuture(new BoolParameter(true))
                     });
                 if (HasFeature(features, FutureFeatures.MemoryCached))
                 {
-                    futurePrototype = this.AddCaching(futurePrototype, FutureFeatures.MemoryCached);
-                    futurePrototype2 = this.AddCaching(futurePrototype2, FutureFeatures.MemoryCached);
+                    futurePrototype = AddCaching(futurePrototype, FutureFeatures.MemoryCached);
+                    futurePrototype2 = AddCaching(futurePrototype2, FutureFeatures.MemoryCached);
                 }
 
-                futurePrototype = new TransparencyPrototype(this.sourceMap.transparencyOptions,
+                futurePrototype = new TransparencyPrototype(sourceMap.transparencyOptions,
                     futurePrototype,
                     futurePrototype2);
             }
 
-            futurePrototype = this.AddCaching(futurePrototype, features);
-            return this.AddAsynchrony(futurePrototype, features);
+            futurePrototype = AddCaching(futurePrototype, features);
+            return AddAsynchrony(futurePrototype, features);
         }
 
         public static bool HasFeature(FutureFeatures features, FutureFeatures query)
@@ -165,10 +165,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (HasFeature(features, FutureFeatures.Async))
             {
-                future = new MemCacheFuture(this.cachePackage.asyncCache,
-                    new OpenDocumentSensitivePrioritizedFuture(this.cachePackage.openDocumentPrioritizer,
-                        Asynchronizer.MakeFuture(this.cachePackage.computeAsyncScheduler, future),
-                        this.GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
+                future = new MemCacheFuture(cachePackage.asyncCache,
+                    new OpenDocumentSensitivePrioritizedFuture(cachePackage.openDocumentPrioritizer,
+                        Asynchronizer.MakeFuture(cachePackage.computeAsyncScheduler, future),
+                        GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
             }
 
             return future;
@@ -178,12 +178,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (HasFeature(features, FutureFeatures.DiskCached))
             {
-                prototype = new DiskCachePrototype(this.cachePackage.diskCache, prototype);
+                prototype = new DiskCachePrototype(cachePackage.diskCache, prototype);
             }
 
             if (HasFeature(features, FutureFeatures.MemoryCached))
             {
-                prototype = new MemCachePrototype(this.cachePackage.computeCache, prototype);
+                prototype = new MemCachePrototype(cachePackage.computeCache, prototype);
             }
 
             return prototype;
@@ -195,10 +195,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 D.Assert(HasFeature(features, FutureFeatures.MemoryCached),
                     "should always cache async stuff, I think.");
-                prototype = new MemCachePrototype(this.cachePackage.asyncCache,
-                    new OpenDocumentSensitivePrioritizedPrototype(this.cachePackage.openDocumentPrioritizer,
-                        new Asynchronizer(this.cachePackage.computeAsyncScheduler, prototype),
-                        this.GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
+                prototype = new MemCachePrototype(cachePackage.asyncCache,
+                    new OpenDocumentSensitivePrioritizedPrototype(cachePackage.openDocumentPrioritizer,
+                        new Asynchronizer(cachePackage.computeAsyncScheduler, prototype),
+                        GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
             }
 
             return prototype;
@@ -206,7 +206,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal string GetDocumentFilename()
         {
-            Present present = this.localDocumentFuture.Realize("UnwarpedMapTileSource.GetDocumentFilename");
+            Present present = localDocumentFuture.Realize("UnwarpedMapTileSource.GetDocumentFilename");
             if (present is SourceDocument)
             {
                 return ((SourceDocument)present).localDocument.GetFilesystemAbsolutePath();
@@ -217,7 +217,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal TransparencyOptions GetTransparencyOptions()
         {
-            return this.sourceMap.transparencyOptions;
+            return sourceMap.transparencyOptions;
         }
     }
 }

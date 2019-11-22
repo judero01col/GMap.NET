@@ -16,11 +16,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._s3credentialsFilename.myValue;
+                return _s3credentialsFilename.myValue;
             }
             set
             {
-                this._s3credentialsFilename.myValue = value;
+                _s3credentialsFilename.myValue = value;
             }
         }
 
@@ -28,11 +28,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._s3bucket.myValue;
+                return _s3bucket.myValue;
             }
             set
             {
-                this._s3bucket.myValue = value;
+                _s3bucket.myValue = value;
             }
         }
 
@@ -40,45 +40,45 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._s3pathPrefix.myValue;
+                return _s3pathPrefix.myValue;
             }
             set
             {
-                this._s3pathPrefix.myValue = value;
+                _s3pathPrefix.myValue = value;
             }
         }
 
         public RenderToS3Options(DirtyEvent parentDirtyEvent)
         {
-            this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
-            this._s3bucket = new DirtyString(parentDirtyEvent);
-            this._s3pathPrefix = new DirtyString(parentDirtyEvent);
+            _s3credentialsFilename = new DirtyString(parentDirtyEvent);
+            _s3bucket = new DirtyString(parentDirtyEvent);
+            _s3pathPrefix = new DirtyString(parentDirtyEvent);
         }
 
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(xmlTag);
-            writer.WriteAttributeString(attr_s3credentialsFilename, this.s3credentialsFilename);
-            writer.WriteAttributeString(attr_s3bucket, this.s3bucket);
-            writer.WriteAttributeString(attr_s3pathPrefix, this.s3pathPrefix);
+            writer.WriteAttributeString(attr_s3credentialsFilename, s3credentialsFilename);
+            writer.WriteAttributeString(attr_s3bucket, s3bucket);
+            writer.WriteAttributeString(attr_s3pathPrefix, s3pathPrefix);
             writer.WriteEndElement();
         }
 
         public RenderToS3Options(MashupParseContext context, DirtyEvent parentDirtyEvent)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(xmlTag);
-            this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
-            this.s3credentialsFilename = context.GetRequiredAttribute(attr_s3credentialsFilename);
-            this._s3bucket = new DirtyString(parentDirtyEvent);
-            this.s3bucket = context.GetRequiredAttribute(attr_s3bucket);
-            this._s3pathPrefix = new DirtyString(parentDirtyEvent);
-            this.s3pathPrefix = context.GetRequiredAttribute(attr_s3pathPrefix);
+            _s3credentialsFilename = new DirtyString(parentDirtyEvent);
+            s3credentialsFilename = context.GetRequiredAttribute(attr_s3credentialsFilename);
+            _s3bucket = new DirtyString(parentDirtyEvent);
+            s3bucket = context.GetRequiredAttribute(attr_s3bucket);
+            _s3pathPrefix = new DirtyString(parentDirtyEvent);
+            s3pathPrefix = context.GetRequiredAttribute(attr_s3pathPrefix);
             xMLTagReader.SkipAllSubTags();
         }
 
         public override string ToString()
         {
-            return string.Format("s3:{0}/{1}", this.s3bucket, this.s3pathPrefix);
+            return string.Format("s3:{0}/{1}", s3bucket, s3pathPrefix);
         }
     }
 }

@@ -18,10 +18,10 @@ namespace MSR.CVE.BackMaker
 
         public void Complain(NonredundantRenderComplaint complaint)
         {
-            if (!this.complaints.ContainsKey(complaint))
+            if (!complaints.ContainsKey(complaint))
             {
-                this.complaints.Add(complaint, false);
-                this.announce(complaint.ToString());
+                complaints.Add(complaint, false);
+                announce(complaint.ToString());
             }
         }
     }

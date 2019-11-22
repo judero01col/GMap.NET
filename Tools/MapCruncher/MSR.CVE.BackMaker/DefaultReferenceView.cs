@@ -7,7 +7,7 @@ namespace MSR.CVE.BackMaker
 
         public DefaultReferenceView(LatLonZoom llz)
         {
-            this.present = true;
+            present = true;
             this.llz = llz;
         }
 

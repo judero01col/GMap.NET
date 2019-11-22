@@ -31,9 +31,9 @@ namespace MSR.CVE.BackMaker
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
 
             base.Dispose(disposing);
@@ -44,36 +44,36 @@ namespace MSR.CVE.BackMaker
             DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            this.addTransparencyButton = new Button();
-            this.colorGrid = new DataGridView();
-            this.color = new DataGridViewImageColumn();
-            this.Epsilon = new DataGridViewTextBoxColumn();
-            this.HaloWidth = new DataGridViewTextBoxColumn();
-            this.removeTransparencyButton = new Button();
-            this.normalTransparencyButton = new RadioButton();
-            this.invertedTransparencyButton = new RadioButton();
-            this.noTransparencyButton = new RadioButton();
-            this.fuzzSpinner = new NumericUpDown();
-            this.haloSpinner = new NumericUpDown();
-            this.label1 = new Label();
-            this.label2 = new Label();
-            this.useDocumentTransparencyCheckbox = new CheckBox();
-            ((ISupportInitialize)this.colorGrid).BeginInit();
-            ((ISupportInitialize)this.fuzzSpinner).BeginInit();
-            ((ISupportInitialize)this.haloSpinner).BeginInit();
-            base.SuspendLayout();
-            this.addTransparencyButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            this.addTransparencyButton.Location = new Point(3, 95);
-            this.addTransparencyButton.Name = "addTransparencyButton";
-            this.addTransparencyButton.Size = new Size(210, 23);
-            this.addTransparencyButton.TabIndex = 0;
-            this.addTransparencyButton.Text = "Add Color Under Crosshairs";
-            this.addTransparencyButton.UseVisualStyleBackColor = true;
-            this.addTransparencyButton.Click += new EventHandler(this.addTransparencyButton_Click);
-            this.colorGrid.AllowUserToAddRows = false;
-            this.colorGrid.AllowUserToDeleteRows = false;
-            this.colorGrid.AllowUserToResizeRows = false;
-            this.colorGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            addTransparencyButton = new Button();
+            colorGrid = new DataGridView();
+            color = new DataGridViewImageColumn();
+            Epsilon = new DataGridViewTextBoxColumn();
+            HaloWidth = new DataGridViewTextBoxColumn();
+            removeTransparencyButton = new Button();
+            normalTransparencyButton = new RadioButton();
+            invertedTransparencyButton = new RadioButton();
+            noTransparencyButton = new RadioButton();
+            fuzzSpinner = new NumericUpDown();
+            haloSpinner = new NumericUpDown();
+            label1 = new Label();
+            label2 = new Label();
+            useDocumentTransparencyCheckbox = new CheckBox();
+            ((ISupportInitialize)colorGrid).BeginInit();
+            ((ISupportInitialize)fuzzSpinner).BeginInit();
+            ((ISupportInitialize)haloSpinner).BeginInit();
+            SuspendLayout();
+            addTransparencyButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            addTransparencyButton.Location = new Point(3, 95);
+            addTransparencyButton.Name = "addTransparencyButton";
+            addTransparencyButton.Size = new Size(210, 23);
+            addTransparencyButton.TabIndex = 0;
+            addTransparencyButton.Text = "Add Color Under Crosshairs";
+            addTransparencyButton.UseVisualStyleBackColor = true;
+            addTransparencyButton.Click += new EventHandler(addTransparencyButton_Click);
+            colorGrid.AllowUserToAddRows = false;
+            colorGrid.AllowUserToDeleteRows = false;
+            colorGrid.AllowUserToResizeRows = false;
+            colorGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridViewCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle.BackColor = SystemColors.Control;
             dataGridViewCellStyle.Font =
@@ -82,139 +82,139 @@ namespace MSR.CVE.BackMaker
             dataGridViewCellStyle.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle.WrapMode = DataGridViewTriState.True;
-            this.colorGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
-            this.colorGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.colorGrid.Columns.AddRange(new DataGridViewColumn[] {this.color, this.Epsilon, this.HaloWidth});
-            this.colorGrid.Location = new Point(3, 124);
-            this.colorGrid.MultiSelect = false;
-            this.colorGrid.Name = "colorGrid";
-            this.colorGrid.ReadOnly = true;
-            this.colorGrid.RowHeadersVisible = false;
-            this.colorGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            this.colorGrid.Size = new Size(213, 158);
-            this.colorGrid.TabIndex = 1;
-            this.colorGrid.SelectionChanged += new EventHandler(this.pinList_SelectedIndexChanged);
-            this.color.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            this.color.HeaderText = "Color";
-            this.color.Name = "color";
-            this.color.ReadOnly = true;
-            this.color.Resizable = DataGridViewTriState.True;
-            this.color.SortMode = DataGridViewColumnSortMode.Automatic;
-            this.Epsilon.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colorGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
+            colorGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            colorGrid.Columns.AddRange(new DataGridViewColumn[] {color, Epsilon, HaloWidth});
+            colorGrid.Location = new Point(3, 124);
+            colorGrid.MultiSelect = false;
+            colorGrid.Name = "colorGrid";
+            colorGrid.ReadOnly = true;
+            colorGrid.RowHeadersVisible = false;
+            colorGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            colorGrid.Size = new Size(213, 158);
+            colorGrid.TabIndex = 1;
+            colorGrid.SelectionChanged += new EventHandler(pinList_SelectedIndexChanged);
+            color.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            color.HeaderText = "Color";
+            color.Name = "color";
+            color.ReadOnly = true;
+            color.Resizable = DataGridViewTriState.True;
+            color.SortMode = DataGridViewColumnSortMode.Automatic;
+            Epsilon.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            this.Epsilon.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Epsilon.HeaderText = "Fuzziness (+/--)";
-            this.Epsilon.Name = "Epsilon";
-            this.Epsilon.ReadOnly = true;
-            this.HaloWidth.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Epsilon.DefaultCellStyle = dataGridViewCellStyle2;
+            Epsilon.HeaderText = "Fuzziness (+/--)";
+            Epsilon.Name = "Epsilon";
+            Epsilon.ReadOnly = true;
+            HaloWidth.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            this.HaloWidth.DefaultCellStyle = dataGridViewCellStyle3;
-            this.HaloWidth.HeaderText = "Halo";
-            this.HaloWidth.Name = "HaloWidth";
-            this.HaloWidth.ReadOnly = true;
-            this.removeTransparencyButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            this.removeTransparencyButton.Location = new Point(3, 288);
-            this.removeTransparencyButton.Name = "removeTransparencyButton";
-            this.removeTransparencyButton.Size = new Size(213, 23);
-            this.removeTransparencyButton.TabIndex = 2;
-            this.removeTransparencyButton.Text = "Remove Selected Color";
-            this.removeTransparencyButton.UseVisualStyleBackColor = true;
-            this.removeTransparencyButton.Click += new EventHandler(this.removeTransparencyButton_Click);
-            this.normalTransparencyButton.AutoSize = true;
-            this.normalTransparencyButton.Checked = true;
-            this.normalTransparencyButton.Location = new Point(3, 31);
-            this.normalTransparencyButton.Name = "normalTransparencyButton";
-            this.normalTransparencyButton.Size = new Size(182, 17);
-            this.normalTransparencyButton.TabIndex = 3;
-            this.normalTransparencyButton.TabStop = true;
-            this.normalTransparencyButton.Text = "Make selected colors transparent";
-            this.normalTransparencyButton.UseVisualStyleBackColor = true;
-            this.normalTransparencyButton.CheckedChanged +=
-                new EventHandler(this.normalTransparencyButton_CheckedChanged);
-            this.invertedTransparencyButton.AutoSize = true;
-            this.invertedTransparencyButton.Location = new Point(3, 55);
-            this.invertedTransparencyButton.Name = "invertedTransparencyButton";
-            this.invertedTransparencyButton.Size = new Size(155, 17);
-            this.invertedTransparencyButton.TabIndex = 4;
-            this.invertedTransparencyButton.TabStop = true;
-            this.invertedTransparencyButton.Text = "Display only selected colors";
-            this.invertedTransparencyButton.UseVisualStyleBackColor = true;
-            this.invertedTransparencyButton.CheckedChanged +=
-                new EventHandler(this.invertedTransparencyButton_CheckedChanged);
-            this.noTransparencyButton.AutoSize = true;
-            this.noTransparencyButton.Location = new Point(3, 78);
-            this.noTransparencyButton.Name = "noTransparencyButton";
-            this.noTransparencyButton.Size = new Size(124, 17);
-            this.noTransparencyButton.TabIndex = 5;
-            this.noTransparencyButton.TabStop = true;
-            this.noTransparencyButton.Text = "Disable transparency";
-            this.noTransparencyButton.UseVisualStyleBackColor = true;
-            this.noTransparencyButton.CheckedChanged += new EventHandler(this.noTransparencyButton_CheckedChanged);
-            this.fuzzSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.fuzzSpinner.Location = new Point(62, 321);
-            this.fuzzSpinner.Name = "fuzzSpinner";
-            this.fuzzSpinner.Size = new Size(42, 20);
-            this.fuzzSpinner.TabIndex = 6;
-            this.fuzzSpinner.ValueChanged += new EventHandler(this.exactnessSpinner_ValueChanged);
-            this.haloSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.haloSpinner.Location = new Point(165, 321);
-            this.haloSpinner.Name = "haloSpinner";
-            this.haloSpinner.Size = new Size(48, 20);
-            this.haloSpinner.TabIndex = 7;
-            this.haloSpinner.ValueChanged += new EventHandler(this.haloSpinner_ValueChanged);
-            this.label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new Point(0, 323);
-            this.label1.Name = "label1";
-            this.label1.Size = new Size(53, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Fuzziness";
-            this.label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            this.label2.AutoSize = true;
-            this.label2.Location = new Point(129, 323);
-            this.label2.Name = "label2";
-            this.label2.Size = new Size(29, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Halo";
-            this.useDocumentTransparencyCheckbox.AutoSize = true;
-            this.useDocumentTransparencyCheckbox.Location = new Point(3, 8);
-            this.useDocumentTransparencyCheckbox.Name = "useDocumentTransparencyCheckbox";
-            this.useDocumentTransparencyCheckbox.Size = new Size(159, 17);
-            this.useDocumentTransparencyCheckbox.TabIndex = 10;
-            this.useDocumentTransparencyCheckbox.Text = "Use document transparency";
-            this.useDocumentTransparencyCheckbox.UseVisualStyleBackColor = true;
-            this.useDocumentTransparencyCheckbox.CheckedChanged +=
-                new EventHandler(this.useDocumentTransparencyCheckbox_CheckedChanged);
-            base.AutoScaleDimensions = new SizeF(6f, 13f);
-            base.AutoScaleMode = AutoScaleMode.Font;
-            base.Controls.Add(this.useDocumentTransparencyCheckbox);
-            base.Controls.Add(this.label2);
-            base.Controls.Add(this.label1);
-            base.Controls.Add(this.haloSpinner);
-            base.Controls.Add(this.fuzzSpinner);
-            base.Controls.Add(this.noTransparencyButton);
-            base.Controls.Add(this.invertedTransparencyButton);
-            base.Controls.Add(this.normalTransparencyButton);
-            base.Controls.Add(this.removeTransparencyButton);
-            base.Controls.Add(this.colorGrid);
-            base.Controls.Add(this.addTransparencyButton);
-            base.Name = "TransparencyPanel";
-            base.Size = new Size(216, 345);
-            ((ISupportInitialize)this.colorGrid).EndInit();
-            ((ISupportInitialize)this.fuzzSpinner).EndInit();
-            ((ISupportInitialize)this.haloSpinner).EndInit();
-            base.ResumeLayout(false);
-            base.PerformLayout();
+            HaloWidth.DefaultCellStyle = dataGridViewCellStyle3;
+            HaloWidth.HeaderText = "Halo";
+            HaloWidth.Name = "HaloWidth";
+            HaloWidth.ReadOnly = true;
+            removeTransparencyButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            removeTransparencyButton.Location = new Point(3, 288);
+            removeTransparencyButton.Name = "removeTransparencyButton";
+            removeTransparencyButton.Size = new Size(213, 23);
+            removeTransparencyButton.TabIndex = 2;
+            removeTransparencyButton.Text = "Remove Selected Color";
+            removeTransparencyButton.UseVisualStyleBackColor = true;
+            removeTransparencyButton.Click += new EventHandler(removeTransparencyButton_Click);
+            normalTransparencyButton.AutoSize = true;
+            normalTransparencyButton.Checked = true;
+            normalTransparencyButton.Location = new Point(3, 31);
+            normalTransparencyButton.Name = "normalTransparencyButton";
+            normalTransparencyButton.Size = new Size(182, 17);
+            normalTransparencyButton.TabIndex = 3;
+            normalTransparencyButton.TabStop = true;
+            normalTransparencyButton.Text = "Make selected colors transparent";
+            normalTransparencyButton.UseVisualStyleBackColor = true;
+            normalTransparencyButton.CheckedChanged +=
+                new EventHandler(normalTransparencyButton_CheckedChanged);
+            invertedTransparencyButton.AutoSize = true;
+            invertedTransparencyButton.Location = new Point(3, 55);
+            invertedTransparencyButton.Name = "invertedTransparencyButton";
+            invertedTransparencyButton.Size = new Size(155, 17);
+            invertedTransparencyButton.TabIndex = 4;
+            invertedTransparencyButton.TabStop = true;
+            invertedTransparencyButton.Text = "Display only selected colors";
+            invertedTransparencyButton.UseVisualStyleBackColor = true;
+            invertedTransparencyButton.CheckedChanged +=
+                new EventHandler(invertedTransparencyButton_CheckedChanged);
+            noTransparencyButton.AutoSize = true;
+            noTransparencyButton.Location = new Point(3, 78);
+            noTransparencyButton.Name = "noTransparencyButton";
+            noTransparencyButton.Size = new Size(124, 17);
+            noTransparencyButton.TabIndex = 5;
+            noTransparencyButton.TabStop = true;
+            noTransparencyButton.Text = "Disable transparency";
+            noTransparencyButton.UseVisualStyleBackColor = true;
+            noTransparencyButton.CheckedChanged += new EventHandler(noTransparencyButton_CheckedChanged);
+            fuzzSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            fuzzSpinner.Location = new Point(62, 321);
+            fuzzSpinner.Name = "fuzzSpinner";
+            fuzzSpinner.Size = new Size(42, 20);
+            fuzzSpinner.TabIndex = 6;
+            fuzzSpinner.ValueChanged += new EventHandler(exactnessSpinner_ValueChanged);
+            haloSpinner.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            haloSpinner.Location = new Point(165, 321);
+            haloSpinner.Name = "haloSpinner";
+            haloSpinner.Size = new Size(48, 20);
+            haloSpinner.TabIndex = 7;
+            haloSpinner.ValueChanged += new EventHandler(haloSpinner_ValueChanged);
+            label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label1.AutoSize = true;
+            label1.Location = new Point(0, 323);
+            label1.Name = "label1";
+            label1.Size = new Size(53, 13);
+            label1.TabIndex = 8;
+            label1.Text = "Fuzziness";
+            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label2.AutoSize = true;
+            label2.Location = new Point(129, 323);
+            label2.Name = "label2";
+            label2.Size = new Size(29, 13);
+            label2.TabIndex = 9;
+            label2.Text = "Halo";
+            useDocumentTransparencyCheckbox.AutoSize = true;
+            useDocumentTransparencyCheckbox.Location = new Point(3, 8);
+            useDocumentTransparencyCheckbox.Name = "useDocumentTransparencyCheckbox";
+            useDocumentTransparencyCheckbox.Size = new Size(159, 17);
+            useDocumentTransparencyCheckbox.TabIndex = 10;
+            useDocumentTransparencyCheckbox.Text = "Use document transparency";
+            useDocumentTransparencyCheckbox.UseVisualStyleBackColor = true;
+            useDocumentTransparencyCheckbox.CheckedChanged +=
+                new EventHandler(useDocumentTransparencyCheckbox_CheckedChanged);
+            AutoScaleDimensions = new SizeF(6f, 13f);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(useDocumentTransparencyCheckbox);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(haloSpinner);
+            Controls.Add(fuzzSpinner);
+            Controls.Add(noTransparencyButton);
+            Controls.Add(invertedTransparencyButton);
+            Controls.Add(normalTransparencyButton);
+            Controls.Add(removeTransparencyButton);
+            Controls.Add(colorGrid);
+            Controls.Add(addTransparencyButton);
+            Name = "TransparencyPanel";
+            Size = new Size(216, 345);
+            ((ISupportInitialize)colorGrid).EndInit();
+            ((ISupportInitialize)fuzzSpinner).EndInit();
+            ((ISupportInitialize)haloSpinner).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         public TransparencyPanel()
         {
-            this.InitializeComponent();
-            this.haloSpinner.Minimum = TransparencyOptions.HaloSizeRange.min;
-            this.haloSpinner.Maximum = TransparencyOptions.HaloSizeRange.max;
-            this.fuzzSpinner.Minimum = TransparencyOptions.FuzzRange.min;
-            this.fuzzSpinner.Maximum = TransparencyOptions.FuzzRange.max;
-            this.disableSpinnerUpdate = false;
+            InitializeComponent();
+            haloSpinner.Minimum = TransparencyOptions.HaloSizeRange.min;
+            haloSpinner.Maximum = TransparencyOptions.HaloSizeRange.max;
+            fuzzSpinner.Minimum = TransparencyOptions.FuzzRange.min;
+            fuzzSpinner.Maximum = TransparencyOptions.FuzzRange.max;
+            disableSpinnerUpdate = false;
         }
 
         public void Configure(SourceMap sourceMap, TransparencyIfc transparencyIfc)
@@ -223,26 +223,26 @@ namespace MSR.CVE.BackMaker
             if (this.sourceMap != null)
             {
                 this.sourceMap.transparencyOptions.transparencyOptionsChangedEvent -=
-                    new TransparencyOptionsChangedDelegate(this.TransparencyChangedHandler);
+                    new TransparencyOptionsChangedDelegate(TransparencyChangedHandler);
             }
 
             this.sourceMap = sourceMap;
             if (this.sourceMap != null)
             {
                 this.sourceMap.transparencyOptions.transparencyOptionsChangedEvent +=
-                    new TransparencyOptionsChangedDelegate(this.TransparencyChangedHandler);
+                    new TransparencyOptionsChangedDelegate(TransparencyChangedHandler);
             }
 
-            this.update();
+            update();
         }
 
         private void TransparencyChangedHandler()
         {
-            this.needUpdate = true;
-            base.Invalidate();
-            if (this.transparencyIfc != null)
+            needUpdate = true;
+            Invalidate();
+            if (transparencyIfc != null)
             {
-                this.transparencyIfc.InvalidatePipeline();
+                transparencyIfc.InvalidatePipeline();
             }
         }
 
@@ -252,18 +252,18 @@ namespace MSR.CVE.BackMaker
             {
                 if (tc != null)
                 {
-                    foreach (DataGridViewRow dataGridViewRow in (IEnumerable)this.colorGrid.Rows)
+                    foreach (DataGridViewRow dataGridViewRow in (IEnumerable)colorGrid.Rows)
                     {
                         if (((TransparencyColor)dataGridViewRow.Tag).color == tc.color)
                         {
                             dataGridViewRow.Selected = true;
-                            this.colorGrid.CurrentCell = dataGridViewRow.Cells[0];
-                            this.pinList_SelectedIndexChanged(null, null);
+                            colorGrid.CurrentCell = dataGridViewRow.Cells[0];
+                            pinList_SelectedIndexChanged(null, null);
                             return;
                         }
                     }
 
-                    this.UnselectAll();
+                    UnselectAll();
                 }
             }
             catch (Exception ex)
@@ -274,17 +274,17 @@ namespace MSR.CVE.BackMaker
 
         private void UnselectAll()
         {
-            foreach (DataGridViewRow dataGridViewRow in this.colorGrid.SelectedRows)
+            foreach (DataGridViewRow dataGridViewRow in colorGrid.SelectedRows)
             {
                 dataGridViewRow.Selected = false;
             }
 
-            this.pinList_SelectedIndexChanged(null, null);
+            pinList_SelectedIndexChanged(null, null);
         }
 
         public TransparencyColor GetSelected()
         {
-            foreach (DataGridViewRow dataGridViewRow in (IEnumerable)this.colorGrid.Rows)
+            foreach (DataGridViewRow dataGridViewRow in (IEnumerable)colorGrid.Rows)
             {
                 if (dataGridViewRow.Selected)
                 {
@@ -297,55 +297,55 @@ namespace MSR.CVE.BackMaker
 
         private void update()
         {
-            if (this.sourceMap != null)
+            if (sourceMap != null)
             {
-                this.useDocumentTransparencyCheckbox.Checked =
-                    this.sourceMap.transparencyOptions.useDocumentTransparency;
-                TransparencyOptions.TransparencyMode mode = this.sourceMap.transparencyOptions.GetMode();
-                this.suspendDocUpdate = true;
+                useDocumentTransparencyCheckbox.Checked =
+                    sourceMap.transparencyOptions.useDocumentTransparency;
+                TransparencyOptions.TransparencyMode mode = sourceMap.transparencyOptions.GetMode();
+                suspendDocUpdate = true;
                 if (mode == TransparencyOptions.TransparencyMode.Off)
                 {
-                    this.noTransparencyButton.Checked = true;
+                    noTransparencyButton.Checked = true;
                 }
                 else
                 {
                     if (mode == TransparencyOptions.TransparencyMode.Inverted)
                     {
-                        this.invertedTransparencyButton.Checked = true;
+                        invertedTransparencyButton.Checked = true;
                     }
                     else
                     {
                         if (mode == TransparencyOptions.TransparencyMode.Normal)
                         {
-                            this.normalTransparencyButton.Checked = true;
+                            normalTransparencyButton.Checked = true;
                         }
                     }
                 }
 
-                this.suspendDocUpdate = false;
+                suspendDocUpdate = false;
             }
 
-            this.disableSpinnerUpdate = true;
-            TransparencyColor selected = this.GetSelected();
-            this.colorGrid.Rows.Clear();
-            if (this.sourceMap != null)
+            disableSpinnerUpdate = true;
+            TransparencyColor selected = GetSelected();
+            colorGrid.Rows.Clear();
+            if (sourceMap != null)
             {
-                foreach (TransparencyColor current in this.sourceMap.transparencyOptions.colorList)
+                foreach (TransparencyColor current in sourceMap.transparencyOptions.colorList)
                 {
                     DataGridViewRow dataGridViewRow = new DataGridViewRow();
                     Bitmap bitmap = new Bitmap(40, 12);
                     Graphics graphics = Graphics.FromImage(bitmap);
                     graphics.FillRectangle(new SolidBrush(current.color.ToColor()),
                         new Rectangle(new Point(0, 0), bitmap.Size));
-                    dataGridViewRow.CreateCells(this.colorGrid,
+                    dataGridViewRow.CreateCells(colorGrid,
                         new object[] {bitmap, current.fuzz.ToString(), current.halo.ToString()});
                     dataGridViewRow.Tag = current;
-                    this.colorGrid.Rows.Add(dataGridViewRow);
+                    colorGrid.Rows.Add(dataGridViewRow);
                 }
             }
 
-            this.disableSpinnerUpdate = false;
-            this.SetSelected(selected);
+            disableSpinnerUpdate = false;
+            SetSelected(selected);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -355,10 +355,10 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            if (this.needUpdate)
+            if (needUpdate)
             {
-                this.needUpdate = false;
-                this.update();
+                needUpdate = false;
+                update();
             }
 
             base.OnPaint(e);
@@ -366,128 +366,128 @@ namespace MSR.CVE.BackMaker
 
         private void addTransparencyButton_Click(object sender, EventArgs e)
         {
-            if (this.sourceMap != null && this.transparencyIfc != null)
+            if (sourceMap != null && transparencyIfc != null)
             {
-                Pixel baseLayerCenterPixel = this.transparencyIfc.GetBaseLayerCenterPixel();
+                Pixel baseLayerCenterPixel = transparencyIfc.GetBaseLayerCenterPixel();
                 if (baseLayerCenterPixel is UndefinedPixel)
                 {
                     return;
                 }
 
-                foreach (TransparencyColor current in this.sourceMap.transparencyOptions.colorList)
+                foreach (TransparencyColor current in sourceMap.transparencyOptions.colorList)
                 {
                     if (current.color == baseLayerCenterPixel)
                     {
-                        this.SetSelected(current);
+                        SetSelected(current);
                         return;
                     }
                 }
 
-                TransparencyColor selected = this.sourceMap.transparencyOptions.AddColor(baseLayerCenterPixel);
-                this.update();
-                this.SetSelected(selected);
+                TransparencyColor selected = sourceMap.transparencyOptions.AddColor(baseLayerCenterPixel);
+                update();
+                SetSelected(selected);
             }
         }
 
         private void removeTransparencyButton_Click(object sender, EventArgs e)
         {
-            if (this.sourceMap != null && this.colorGrid.SelectedRows.Count >= 1)
+            if (sourceMap != null && colorGrid.SelectedRows.Count >= 1)
             {
-                this.sourceMap.transparencyOptions.RemoveColor((TransparencyColor)this.colorGrid.SelectedRows[0].Tag);
+                sourceMap.transparencyOptions.RemoveColor((TransparencyColor)colorGrid.SelectedRows[0].Tag);
             }
         }
 
         private void normalTransparencyButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.suspendDocUpdate)
+            if (suspendDocUpdate)
             {
                 return;
             }
 
-            if (this.sourceMap != null)
+            if (sourceMap != null)
             {
-                this.sourceMap.transparencyOptions.SetNormalTransparency();
+                sourceMap.transparencyOptions.SetNormalTransparency();
             }
         }
 
         private void invertedTransparencyButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.suspendDocUpdate)
+            if (suspendDocUpdate)
             {
                 return;
             }
 
-            if (this.sourceMap != null)
+            if (sourceMap != null)
             {
-                this.sourceMap.transparencyOptions.SetInvertedTransparency();
+                sourceMap.transparencyOptions.SetInvertedTransparency();
             }
         }
 
         private void noTransparencyButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.suspendDocUpdate)
+            if (suspendDocUpdate)
             {
                 return;
             }
 
-            if (this.sourceMap != null)
+            if (sourceMap != null)
             {
-                this.sourceMap.transparencyOptions.SetDisabledTransparency();
+                sourceMap.transparencyOptions.SetDisabledTransparency();
             }
         }
 
         private void exactnessSpinner_ValueChanged(object sender, EventArgs e)
         {
-            if (this.sourceMap != null && this.colorGrid.SelectedRows.Count >= 1)
+            if (sourceMap != null && colorGrid.SelectedRows.Count >= 1)
             {
-                this.sourceMap.transparencyOptions.SetFuzz((TransparencyColor)this.colorGrid.SelectedRows[0].Tag,
-                    (int)this.fuzzSpinner.Value);
+                sourceMap.transparencyOptions.SetFuzz((TransparencyColor)colorGrid.SelectedRows[0].Tag,
+                    (int)fuzzSpinner.Value);
             }
         }
 
         private void haloSpinner_ValueChanged(object sender, EventArgs e)
         {
-            if (this.sourceMap != null && this.colorGrid.SelectedRows.Count >= 1)
+            if (sourceMap != null && colorGrid.SelectedRows.Count >= 1)
             {
-                this.sourceMap.transparencyOptions.SetHalo((TransparencyColor)this.colorGrid.SelectedRows[0].Tag,
-                    (int)this.haloSpinner.Value);
+                sourceMap.transparencyOptions.SetHalo((TransparencyColor)colorGrid.SelectedRows[0].Tag,
+                    (int)haloSpinner.Value);
             }
         }
 
         private void pinList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.disableSpinnerUpdate)
+            if (disableSpinnerUpdate)
             {
                 return;
             }
 
-            TransparencyColor selected = this.GetSelected();
+            TransparencyColor selected = GetSelected();
             if (selected == null)
             {
-                this.haloSpinner.Enabled = false;
-                this.fuzzSpinner.Enabled = false;
-                this.removeTransparencyButton.Enabled = false;
+                haloSpinner.Enabled = false;
+                fuzzSpinner.Enabled = false;
+                removeTransparencyButton.Enabled = false;
                 return;
             }
 
-            if (this.haloSpinner.Value != selected.halo)
+            if (haloSpinner.Value != selected.halo)
             {
-                this.haloSpinner.Value = selected.halo;
+                haloSpinner.Value = selected.halo;
             }
 
-            if (this.fuzzSpinner.Value != selected.fuzz)
+            if (fuzzSpinner.Value != selected.fuzz)
             {
-                this.fuzzSpinner.Value = selected.fuzz;
+                fuzzSpinner.Value = selected.fuzz;
             }
 
-            this.haloSpinner.Enabled = true;
-            this.fuzzSpinner.Enabled = true;
-            this.removeTransparencyButton.Enabled = true;
+            haloSpinner.Enabled = true;
+            fuzzSpinner.Enabled = true;
+            removeTransparencyButton.Enabled = true;
         }
 
         private void useDocumentTransparencyCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            this.sourceMap.transparencyOptions.useDocumentTransparency = this.useDocumentTransparencyCheckbox.Checked;
+            sourceMap.transparencyOptions.useDocumentTransparency = useDocumentTransparencyCheckbox.Checked;
         }
     }
 }

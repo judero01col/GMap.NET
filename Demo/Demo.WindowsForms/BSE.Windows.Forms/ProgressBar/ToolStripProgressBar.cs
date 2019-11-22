@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Drawing;
@@ -34,7 +32,7 @@ namespace BSE.Windows.Forms
         /// </value>
         public ProgressBar ProgressBar
         {
-            get { return base.Control as ProgressBar; }
+            get { return Control as ProgressBar; }
         }
         /// <summary>
         /// Gets or sets a value indicating whether items are to be placed from right to left
@@ -46,8 +44,8 @@ namespace BSE.Windows.Forms
         /// </value>
         public override RightToLeft RightToLeft
         {
-            get { return this.ProgressBar.RightToLeft; }
-            set { this.ProgressBar.RightToLeft = value; }
+            get { return ProgressBar.RightToLeft; }
+            set { ProgressBar.RightToLeft = value; }
         }
         /// <summary>
         /// Gets or sets the color used for the background rectangle for this <see cref="ToolStripProgressBar"/>.
@@ -61,8 +59,8 @@ namespace BSE.Windows.Forms
         [Description("The color used for the background rectangle of this control.")]
         public Color BackgroundColor
         {
-            get { return this.ProgressBar.BackgroundColor; }
-            set { this.ProgressBar.BackgroundColor = value; }
+            get { return ProgressBar.BackgroundColor; }
+            set { ProgressBar.BackgroundColor = value; }
         }
         /// <summary>
         /// Gets or sets the color used for the value rectangle of this control.
@@ -77,8 +75,8 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used for the value rectangle of this control.")]
         public Color ValueColor
         {
-            get { return this.ProgressBar.ValueColor; }
-            set { this.ProgressBar.ValueColor = value; }
+            get { return ProgressBar.ValueColor; }
+            set { ProgressBar.ValueColor = value; }
         }
         /// <summary>
         /// Gets or sets the foreground color of the hosted control.
@@ -92,8 +90,8 @@ namespace BSE.Windows.Forms
         [Description("The Foreground color used to display text on the progressbar")]
         public override Color ForeColor
         {
-            get { return this.ProgressBar.ForeColor; }
-            set { this.ProgressBar.ForeColor = value; }
+            get { return ProgressBar.ForeColor; }
+            set { ProgressBar.ForeColor = value; }
         }
         /// <summary>
         /// Gets or sets the font to be used on the hosted control.
@@ -106,8 +104,8 @@ namespace BSE.Windows.Forms
         [Description("The font used to display text on the progressbar")]
         public override Font Font
         {
-            get { return this.ProgressBar.Font; }
-            set { this.ProgressBar.Font = value; }
+            get { return ProgressBar.Font; }
+            set { ProgressBar.Font = value; }
         }
         /// <summary>
         /// Gets or sets the upper bound of the range that is defined for this <see cref="ToolStripProgressBar"/>.
@@ -122,8 +120,8 @@ namespace BSE.Windows.Forms
         [Description("The upper bound of the range this progressbar is working with.")]
         public int Maximum
         {
-            get { return this.ProgressBar.Maximum; }
-            set { this.ProgressBar.Maximum = value; }
+            get { return ProgressBar.Maximum; }
+            set { ProgressBar.Maximum = value; }
         }
         /// <summary>
         /// Gets or sets the lower bound of the range that is defined for this <see cref="ToolStripProgressBar"/>.
@@ -138,8 +136,8 @@ namespace BSE.Windows.Forms
         [Description("The lower bound of the range this progressbar is working with.")]
         public int Minimum
         {
-            get { return this.ProgressBar.Minimum; }
-            set { this.ProgressBar.Minimum = value; }
+            get { return ProgressBar.Minimum; }
+            set { ProgressBar.Minimum = value; }
         }
         /// <summary>
         /// Gets or sets the current value of the <see cref="ToolStripProgressBar"/>.
@@ -154,8 +152,8 @@ namespace BSE.Windows.Forms
         [Description("The current value for the progressbar, in the range specified by the minimum and maximum.")]
         public int Value
         {
-            get { return this.ProgressBar.Value; }
-            set { this.ProgressBar.Value = value; }
+            get { return ProgressBar.Value; }
+            set { ProgressBar.Value = value; }
         }
         /// <summary>
         /// Gets or sets the text displayed on the <see cref="BSE.Windows.Forms.ToolStripProgressBar"/>.
@@ -168,8 +166,8 @@ namespace BSE.Windows.Forms
         [Description("The text to display on the progressbar")]
         public override string Text
         {
-            get { return this.ProgressBar.Text; }
-            set { this.ProgressBar.Text = value; }
+            get { return ProgressBar.Text; }
+            set { ProgressBar.Text = value; }
         }
         /// <summary>
         /// Gets the height and width of the ToolStripProgressBar in pixels.
@@ -189,7 +187,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if ((base.Owner != null) && (base.Owner is StatusStrip))
+                if ((Owner != null) && (Owner is StatusStrip))
                 {
                     return new Padding(1, 3, 1, 3);
                 }
@@ -215,10 +213,11 @@ namespace BSE.Windows.Forms
         /// <param name="e">An EventArgs that contains the event data.</param>
         protected override void OnOwnerChanged(EventArgs e)
         {
-            if (base.Owner != null)
+            if (Owner != null)
             {
-                base.Owner.RendererChanged += new EventHandler(OwnerRendererChanged);
+                Owner.RendererChanged += OwnerRendererChanged;
             }
+
             base.OnOwnerChanged(e);
         }
         #endregion
@@ -233,24 +232,21 @@ namespace BSE.Windows.Forms
         }
         private void OwnerRendererChanged(object sender, EventArgs e)
         {
-            ToolStripRenderer toolsTripRenderer = this.Owner.Renderer;
+            ToolStripRenderer toolsTripRenderer = Owner.Renderer;
             if (toolsTripRenderer != null)
             {
-                if (toolsTripRenderer is BseRenderer)
+                if (toolsTripRenderer is BseRenderer renderer)
                 {
-                    ToolStripProfessionalRenderer renderer = toolsTripRenderer as ToolStripProfessionalRenderer;
-                        if (renderer != null)
-                        {
-                            this.ProgressBar.BorderColor = renderer.ColorTable.ToolStripBorder;
-                        }
-                    if (this.Owner.GetType() != typeof(StatusStrip))
+                    ProgressBar.BorderColor = renderer.ColorTable.ToolStripBorder;
+
+                    if (Owner.GetType() != typeof(StatusStrip))
                     {
-                        this.Margin = new Padding(1, 1, 1, 3);
+                        Margin = new Padding(1, 1, 1, 3);
                     }
                 }
                 else
                 {
-                    this.Margin = DefaultMargin;
+                    Margin = DefaultMargin;
                 }
             }
         }

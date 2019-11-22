@@ -39,7 +39,7 @@ namespace BSE.Windows.Forms
         /// <param name="bExpand">Gets a value indicating whether the panel expands.</param>
 		public XPanderStateChangeEventArgs(bool bExpand)
 		{
-			this.m_bExpand = bExpand;
+			m_bExpand = bExpand;
 		}
 
 		#endregion

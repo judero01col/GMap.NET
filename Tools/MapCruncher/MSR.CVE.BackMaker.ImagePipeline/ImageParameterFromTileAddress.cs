@@ -13,19 +13,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public ImageParameterFromTileAddress(CoordinateSystemIfc coordSys, Size outputSize)
         {
-            this.boundsParameter = new ApplyPrototype(new TileAddressToImageRegion(coordSys),
+            boundsParameter = new ApplyPrototype(new TileAddressToImageRegion(coordSys),
                 new IFuturePrototype[] {new UnevaluatedTerm(TermName.TileAddress)});
-            this.sizeParameter = new ConstantFuture(new SizeParameter(outputSize));
+            sizeParameter = new ConstantFuture(new SizeParameter(outputSize));
         }
 
         public IFuturePrototype GetBoundsParameter()
         {
-            return this.boundsParameter;
+            return boundsParameter;
         }
 
         public IFuturePrototype GetSizeParameter()
         {
-            return this.sizeParameter;
+            return sizeParameter;
         }
 
         public override bool Equals(object obj)
@@ -33,8 +33,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             if (obj is ImageParameterFromTileAddress)
             {
                 ImageParameterFromTileAddress imageParameterFromTileAddress = (ImageParameterFromTileAddress)obj;
-                return this.boundsParameter.Equals(imageParameterFromTileAddress.boundsParameter) &&
-                       this.sizeParameter.Equals(imageParameterFromTileAddress.sizeParameter);
+                return boundsParameter.Equals(imageParameterFromTileAddress.boundsParameter) &&
+                       sizeParameter.Equals(imageParameterFromTileAddress.sizeParameter);
             }
 
             return false;
@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override int GetHashCode()
         {
-            return this.boundsParameter.GetHashCode() * 131 + this.sizeParameter.GetHashCode();
+            return boundsParameter.GetHashCode() * 131 + sizeParameter.GetHashCode();
         }
     }
 }

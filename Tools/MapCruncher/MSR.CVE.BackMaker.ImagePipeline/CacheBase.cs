@@ -20,17 +20,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public CacheBase(string hashName)
         {
             this.hashName = hashName;
-            this.cache = new Dictionary<IFuture, CacheRecord>();
-            this.resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + hashName, -1);
+            cache = new Dictionary<IFuture, CacheRecord>();
+            resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + hashName, -1);
         }
 
         public void Dispose()
         {
-            Dictionary<IFuture, CacheRecord> dictionary = this.cache;
-            this.cache = new Dictionary<IFuture, CacheRecord>();
+            Dictionary<IFuture, CacheRecord> dictionary = cache;
+            cache = new Dictionary<IFuture, CacheRecord>();
             foreach (CacheRecord current in dictionary.Values)
             {
-                this.Remove(current, RemoveExpectation.Absent);
+                Remove(current, RemoveExpectation.Absent);
             }
         }
 
@@ -48,11 +48,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                bool flag = this.cache.Remove(record.GetFuture());
+                bool flag = cache.Remove(record.GetFuture());
                 D.Assert(removeExpectation == RemoveExpectation.Unknown ||
                          removeExpectation == RemoveExpectation.Present == flag,
                     "Remove didn't meet expectations. That could suggest a mutating hash.");
-                this.resourceCounter.crement(-1);
+                resourceCounter.crement(-1);
                 record.DropReference();
             }
             finally
@@ -67,13 +67,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             CacheRecord cacheRecord;
             try
             {
-                if (!this.cache.ContainsKey(future))
+                if (!cache.ContainsKey(future))
                 {
                     return null;
                 }
 
-                cacheRecord = this.cache[future];
-                this.Touch(cacheRecord, false);
+                cacheRecord = cache[future];
+                Touch(cacheRecord, false);
                 cacheRecord.AddReference();
             }
             finally
@@ -81,7 +81,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
 
-            Present result = cacheRecord.WaitResult("lookup", this.hashName);
+            Present result = cacheRecord.WaitResult("lookup", hashName);
             cacheRecord.DropReference();
             return result;
         }
@@ -92,9 +92,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             bool result;
             try
             {
-                if (this.cache.ContainsKey(future))
+                if (cache.ContainsKey(future))
                 {
-                    this.Touch(this.cache[future], false);
+                    Touch(cache[future], false);
                     result = true;
                 }
                 else
@@ -117,27 +117,27 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                this.Clean();
+                Clean();
                 Monitor.Enter(this);
                 CacheRecord cacheRecord;
                 bool recordIsNew;
                 try
                 {
-                    if (!this.cache.ContainsKey(future))
+                    if (!cache.ContainsKey(future))
                     {
-                        cacheRecord = this.NewRecord(future);
-                        this.cache[future] = cacheRecord;
-                        this.resourceCounter.crement(1);
+                        cacheRecord = NewRecord(future);
+                        cache[future] = cacheRecord;
+                        resourceCounter.crement(1);
                         flag = true;
                         recordIsNew = true;
                     }
                     else
                     {
-                        cacheRecord = this.cache[future];
+                        cacheRecord = cache[future];
                         recordIsNew = false;
                     }
 
-                    this.Touch(cacheRecord, recordIsNew);
+                    Touch(cacheRecord, recordIsNew);
                     cacheRecord.AddReference();
                 }
                 finally
@@ -145,19 +145,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     Monitor.Exit(this);
                 }
 
-                this.TouchAfterUnlocked(cacheRecord, recordIsNew);
+                TouchAfterUnlocked(cacheRecord, recordIsNew);
                 if (flag)
                 {
                     cacheRecord.Process();
                     flag2 = true;
                 }
 
-                Present present = cacheRecord.WaitResult(refCredit, this.hashName);
+                Present present = cacheRecord.WaitResult(refCredit, hashName);
                 cacheRecord.DropReference();
                 if (present is IEvictable && ((IEvictable)present).EvictMeNow())
                 {
                     D.Sayf(0, "Evicting canceled request for {0}", new object[] {future});
-                    this.Evict(future);
+                    Evict(future);
                 }
 
                 result = present;
@@ -175,11 +175,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                bool flag = this.cache.ContainsKey(future);
+                bool flag = cache.ContainsKey(future);
                 if (flag)
                 {
-                    CacheRecord record = this.cache[future];
-                    this.Remove(record, RemoveExpectation.Unknown);
+                    CacheRecord record = cache[future];
+                    Remove(record, RemoveExpectation.Unknown);
                 }
             }
             finally
@@ -190,7 +190,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(string.Format("Cache({0})", this.hashName));
+            hash.Accumulate(string.Format("Cache({0})", hashName));
         }
     }
 }

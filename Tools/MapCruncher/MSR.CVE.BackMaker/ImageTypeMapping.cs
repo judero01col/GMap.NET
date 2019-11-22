@@ -12,7 +12,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._extension;
+                return _extension;
             }
         }
 
@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._mimeType;
+                return _mimeType;
             }
         }
 
@@ -28,20 +28,20 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._imageFormat;
+                return _imageFormat;
             }
         }
 
         public ImageTypeMapping(string extension, string mimeType, ImageFormat imageFormat)
         {
-            this._extension = extension;
-            this._mimeType = mimeType;
-            this._imageFormat = imageFormat;
+            _extension = extension;
+            _mimeType = mimeType;
+            _imageFormat = imageFormat;
         }
 
         public bool ImageFormatEquals(ImageFormat otherFormat)
         {
-            return this._imageFormat != null && otherFormat != null && this._imageFormat.Guid == otherFormat.Guid;
+            return _imageFormat != null && otherFormat != null && _imageFormat.Guid == otherFormat.Guid;
         }
     }
 }

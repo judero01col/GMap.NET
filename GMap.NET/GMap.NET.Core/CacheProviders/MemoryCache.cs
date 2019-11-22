@@ -80,8 +80,7 @@ namespace GMap.NET.CacheProviders
             _kiberCacheLock.AcquireReaderLock();
             try
             {
-                byte[] ret = null;
-                if (_tilesInMemory.TryGetValue(tile, out ret))
+                if (_tilesInMemory.TryGetValue(tile, out var ret))
                 {
                     return ret;
                 }
@@ -159,7 +158,7 @@ namespace GMap.NET.CacheProviders
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 

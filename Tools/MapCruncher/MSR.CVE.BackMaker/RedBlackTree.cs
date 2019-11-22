@@ -10,13 +10,13 @@ namespace MSR.CVE.BackMaker
 
         public RedBlackTree()
         {
-            this.NIL = RBTreeNode<T>.MakeNilNode(this);
-            this.root = null;
+            NIL = RBTreeNode<T>.MakeNilNode(this);
+            root = null;
         }
 
         public void Insert(T value)
         {
-            this.root.InsertValue(value);
+            root.InsertValue(value);
         }
     }
 }

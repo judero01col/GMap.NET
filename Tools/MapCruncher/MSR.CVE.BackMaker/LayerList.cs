@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.layers.Count;
+                return layers.Count;
             }
         }
 
@@ -21,25 +21,25 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.layers[0];
+                return layers[0];
             }
         }
 
         public LayerList(DirtyEvent parentDirty)
         {
-            this.dirtyEvent = parentDirty;
+            dirtyEvent = parentDirty;
         }
 
         public LayerList(MashupParseContext context, SourceMap.GetFilenameContext filenameContextDelegate,
             DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
         {
-            this.dirtyEvent = parentDirty;
+            dirtyEvent = parentDirty;
             XMLTagReader xMLTagReader = context.NewTagReader("LayerList");
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(Layer.GetXMLTag()))
                 {
-                    this.Add(new Layer(context, filenameContextDelegate, this.dirtyEvent, parentReadyToLockEvent));
+                    Add(new Layer(context, filenameContextDelegate, dirtyEvent, parentReadyToLockEvent));
                 }
             }
         }
@@ -62,51 +62,51 @@ namespace MSR.CVE.BackMaker
 
         internal void AddNewLayer()
         {
-            this.Add(new Layer(this, this.dirtyEvent));
+            Add(new Layer(this, dirtyEvent));
         }
 
         public List<Layer>.Enumerator GetEnumerator()
         {
-            return this.layers.GetEnumerator();
+            return layers.GetEnumerator();
         }
 
         public void Add(Layer layer)
         {
-            this.layers.Add(layer);
-            this.dirtyEvent.SetDirty();
+            layers.Add(layer);
+            dirtyEvent.SetDirty();
         }
 
         public void AddAfter(Layer newLayer, Layer refLayer)
         {
-            int num = this.layers.FindIndex((Layer l) => l == refLayer);
+            int num = layers.FindIndex((Layer l) => l == refLayer);
             if (num < 0)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            this.layers.Insert(num + 1, newLayer);
+            layers.Insert(num + 1, newLayer);
         }
 
         public void Remove(Layer layer)
         {
-            this.layers.Remove(layer);
-            this.dirtyEvent.SetDirty();
+            layers.Remove(layer);
+            dirtyEvent.SetDirty();
         }
 
         internal bool HasLayerNamed(string proposedLayerName)
         {
-            return this.layers.Find((Layer layer) => layer.displayName == proposedLayerName) != null;
+            return layers.Find((Layer layer) => layer.displayName == proposedLayerName) != null;
         }
 
         internal void RemoveSourceMap(SourceMap sourceMap)
         {
-            Layer layer2 = this.layers.Find((Layer layer) => layer.Contains(sourceMap));
+            Layer layer2 = layers.Find((Layer layer) => layer.Contains(sourceMap));
             layer2.Remove(sourceMap);
         }
 
         internal void AutoSelectMaxZooms(MapTileSourceFactory mapTileSourceFactory)
         {
-            foreach (Layer current in this.layers)
+            foreach (Layer current in layers)
             {
                 current.AutoSelectMaxZooms(mapTileSourceFactory);
             }
@@ -114,7 +114,7 @@ namespace MSR.CVE.BackMaker
 
         internal bool SomeSourceMapIsReadyToLock()
         {
-            foreach (Layer current in this.layers)
+            foreach (Layer current in layers)
             {
                 if (current.SomeSourceMapIsReadyToLock())
                 {

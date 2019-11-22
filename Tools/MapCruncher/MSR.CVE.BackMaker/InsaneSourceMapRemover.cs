@@ -26,7 +26,7 @@ namespace MSR.CVE.BackMaker
         {
             this.sourceMap = sourceMap;
             this.mapTileSourceFactory = mapTileSourceFactory;
-            this.undoAddSourceMapDelegate = removeSourceMapDelegate;
+            undoAddSourceMapDelegate = removeSourceMapDelegate;
             this.tryCount = tryCount;
             if (tryCount > 3)
             {
@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker
                     new TileAddress(0, 0, ContinuousCoordinateSystem.theInstance.GetDefaultView().zoom)
                 })).Realize("SourceMap.CheckRendererSanity");
             AsyncRef asyncRef = (AsyncRef)present;
-            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.RendererSanityCheckComplete));
+            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(RendererSanityCheckComplete));
             new PersistentInterest(asyncRef);
         }
 
@@ -51,12 +51,12 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                if (this.handled)
+                if (handled)
                 {
                     return;
                 }
 
-                this.handled = true;
+                handled = true;
             }
             finally
             {
@@ -67,10 +67,10 @@ namespace MSR.CVE.BackMaker
             {
                 if (asyncRef.present is RequestCanceledPresent)
                 {
-                    new InsaneSourceMapRemover(this.sourceMap,
-                        this.mapTileSourceFactory,
-                        this.undoAddSourceMapDelegate,
-                        this.tryCount + 1);
+                    new InsaneSourceMapRemover(sourceMap,
+                        mapTileSourceFactory,
+                        undoAddSourceMapDelegate,
+                        tryCount + 1);
                     return;
                 }
 
@@ -84,7 +84,7 @@ namespace MSR.CVE.BackMaker
                     message = string.Format("Unexpected result type {0}", asyncRef.present.GetType().ToString());
                 }
 
-                this.undoAddSourceMapDelegate(message);
+                undoAddSourceMapDelegate(message);
                 return;
             }
         }

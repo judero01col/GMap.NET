@@ -26,13 +26,13 @@ namespace MSR.CVE.BackMaker
 
         public SourceMapRecord(Layer layer, SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory)
         {
-            this.displayName = sourceMap.displayName;
-            this.sourceMapInfo = sourceMap.sourceMapInfo;
-            this.userBoundingRect = sourceMap.GetUserBoundingBox(mapTileSourceFactory);
-            this.maxZoom = sourceMap.sourceMapRenderOptions.maxZoom;
+            displayName = sourceMap.displayName;
+            sourceMapInfo = sourceMap.sourceMapInfo;
+            userBoundingRect = sourceMap.GetUserBoundingBox(mapTileSourceFactory);
+            maxZoom = sourceMap.sourceMapRenderOptions.maxZoom;
             try
             {
-                this.imageTransformer =
+                imageTransformer =
                     sourceMap.registration.warpStyle.getImageTransformer(sourceMap.registration,
                         InterpolationMode.Invalid);
             }
@@ -42,54 +42,54 @@ namespace MSR.CVE.BackMaker
 
             foreach (Legend current in sourceMap.legendList)
             {
-                this.legendRecords.Add(new LegendRecord("legends",
+                legendRecords.Add(new LegendRecord("legends",
                     sourceMap.GetLegendFilename(current),
                     current.displayName,
                     current.GetOutputSizeSynchronously(mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap)
                         .GetUserBounds(current.latentRegionHolder, FutureFeatures.Cached))));
             }
 
-            this.sourceMapLegendFrame = new SourceMapLegendFrame(layer,
+            sourceMapLegendFrame = new SourceMapLegendFrame(layer,
                 sourceMap,
-                this.legendRecords,
-                new SourceMapLegendFrame.ThumbnailDelegate(this.thumbnailForLegendFrame));
+                legendRecords,
+                new SourceMapLegendFrame.ThumbnailDelegate(thumbnailForLegendFrame));
         }
 
         public SourceMapRecord(SourceMapInfo sourceMapInfo)
         {
-            this.displayName = "";
+            displayName = "";
             this.sourceMapInfo = sourceMapInfo;
-            this.userBoundingRect = null;
+            userBoundingRect = null;
         }
 
         public SourceMapRecord(MashupParseContext context)
         {
-            this.displayName = context.GetRequiredAttribute("DisplayName");
+            displayName = context.GetRequiredAttribute("DisplayName");
             XMLTagReader xMLTagReader = context.NewTagReader("SourceMapRecord");
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(SourceMapInfo.GetXMLTag()))
                 {
-                    this.sourceMapInfo = new SourceMapInfo(context, new DirtyEvent());
+                    sourceMapInfo = new SourceMapInfo(context, new DirtyEvent());
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(MapRectangle.GetXMLTag()))
                     {
-                        this.userBoundingRect = new MapRectangle(context, MercatorCoordinateSystem.theInstance);
+                        userBoundingRect = new MapRectangle(context, MercatorCoordinateSystem.theInstance);
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(LegendRecord.GetXMLTag()))
                         {
-                            this.legendRecords.Add(new LegendRecord(context));
+                            legendRecords.Add(new LegendRecord(context));
                         }
                         else
                         {
                             if (xMLTagReader.TagIs(SourceMapLegendFrame.GetXMLTag()))
                             {
-                                context.AssertUnique(this.sourceMapLegendFrame);
-                                this.sourceMapLegendFrame = new SourceMapLegendFrame(context);
+                                context.AssertUnique(sourceMapLegendFrame);
+                                sourceMapLegendFrame = new SourceMapLegendFrame(context);
                             }
                         }
                     }
@@ -105,27 +105,27 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(GetXMLTag());
-            writer.WriteAttributeString("DisplayName", this.displayName);
-            writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(this.displayName));
-            writer.WriteAttributeString("MaxZoom", this.maxZoom.ToString());
-            this.sourceMapLegendFrame.WriteXML(writer);
-            this.sourceMapInfo.WriteXML(writer);
-            if (this.userBoundingRect != null)
+            writer.WriteAttributeString("DisplayName", displayName);
+            writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(displayName));
+            writer.WriteAttributeString("MaxZoom", maxZoom.ToString());
+            sourceMapLegendFrame.WriteXML(writer);
+            sourceMapInfo.WriteXML(writer);
+            if (userBoundingRect != null)
             {
-                this.userBoundingRect.WriteXML(writer);
+                userBoundingRect.WriteXML(writer);
             }
 
-            foreach (LegendRecord current in this.legendRecords)
+            foreach (LegendRecord current in legendRecords)
             {
                 current.WriteXML(writer);
             }
 
-            if (this.imageTransformer != null)
+            if (imageTransformer != null)
             {
-                this.imageTransformer.writeToXml(writer);
+                imageTransformer.writeToXml(writer);
             }
 
-            foreach (ThumbnailRecord current2 in this.thumbnailRecords)
+            foreach (ThumbnailRecord current2 in thumbnailRecords)
             {
                 current2.WriteXML(writer);
             }
@@ -135,17 +135,17 @@ namespace MSR.CVE.BackMaker
 
         public void WriteSourceMapLegendFrame(RenderOutputMethod renderOutput)
         {
-            this.sourceMapLegendFrame.WriteSourceMapLegendFrame(renderOutput);
+            sourceMapLegendFrame.WriteSourceMapLegendFrame(renderOutput);
         }
 
         private ThumbnailRecord thumbnailForLegendFrame()
         {
-            if (this.thumbnailRecords.Count == 0)
+            if (thumbnailRecords.Count == 0)
             {
                 return null;
             }
 
-            ThumbnailRecord[] array = this.thumbnailRecords.ToArray();
+            ThumbnailRecord[] array = thumbnailRecords.ToArray();
             Array.Sort<ThumbnailRecord>(array,
                 (ThumbnailRecord r0, ThumbnailRecord r1) =>
                     Math.Abs(Math.Max(r0.size.Width, r0.size.Height) - 200) -
@@ -155,7 +155,7 @@ namespace MSR.CVE.BackMaker
 
         public void Add(ThumbnailRecord thumbnailRecord)
         {
-            this.thumbnailRecords.Add(thumbnailRecord);
+            thumbnailRecords.Add(thumbnailRecord);
         }
     }
 }

@@ -16,15 +16,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override Present Realize(string refCredit)
         {
             Present[] paramList =
-                Array.ConvertAll<IFuture, Present>(this.futureParams, (IFuture f) => f.Realize(refCredit));
-            return this.verb.Evaluate(paramList);
+                Array.ConvertAll<IFuture, Present>(futureParams, (IFuture f) => f.Realize(refCredit));
+            return verb.Evaluate(paramList);
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("Apply(");
-            this.verb.AccumulateRobustHash(hash);
-            IFuture[] array = this.futureParams;
+            verb.AccumulateRobustHash(hash);
+            IFuture[] array = futureParams;
             for (int i = 0; i < array.Length; i++)
             {
                 IFuture future = array[i];

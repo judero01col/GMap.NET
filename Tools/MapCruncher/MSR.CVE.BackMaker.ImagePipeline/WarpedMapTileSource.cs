@@ -14,42 +14,42 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public WarpedMapTileSource(UnwarpedMapTileSource unwarpedTileSource, CachePackage cachePackage,
             SourceMap sourceMap)
         {
-            this.unwarpedMapTileSource = unwarpedTileSource;
+            unwarpedMapTileSource = unwarpedTileSource;
             this.cachePackage = cachePackage;
-            this.coordinateSystem = new MercatorCoordinateSystem();
+            coordinateSystem = new MercatorCoordinateSystem();
             if (sourceMap.registration.GetAssociationList().Count <
                 sourceMap.registration.warpStyle.getCorrespondencesRequired())
             {
                 throw new InsufficientCorrespondencesException();
             }
 
-            this.imageTransformer = sourceMap.registration.warpStyle.getImageTransformer(sourceMap.registration,
+            imageTransformer = sourceMap.registration.warpStyle.getImageTransformer(sourceMap.registration,
                 RenderQualityStyle.theStyle.warpInterpolationMode);
         }
 
         public CoordinateSystemIfc GetDefaultCoordinateSystem()
         {
-            return this.coordinateSystem;
+            return coordinateSystem;
         }
 
         public string GetRendererCredit()
         {
-            return this.unwarpedMapTileSource.GetRendererCredit();
+            return unwarpedMapTileSource.GetRendererCredit();
         }
 
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
-            IFuture future = new ApplyFuture(new WarpBoundsVerb(this.imageTransformer),
-                new IFuture[] {this.unwarpedMapTileSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached)});
-            future = new MemCacheFuture(this.cachePackage.boundsCache, future);
-            return this.unwarpedMapTileSource.AddAsynchrony(future, features);
+            IFuture future = new ApplyFuture(new WarpBoundsVerb(imageTransformer),
+                new[] {unwarpedMapTileSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached)});
+            future = new MemCacheFuture(cachePackage.boundsCache, future);
+            return unwarpedMapTileSource.AddAsynchrony(future, features);
         }
 
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
             if (parameterType == null)
             {
-                parameterType = new ImageParameterFromTileAddress(this.GetDefaultCoordinateSystem());
+                parameterType = new ImageParameterFromTileAddress(GetDefaultCoordinateSystem());
             }
 
             FutureFeatures futureFeatures = FutureFeatures.Raw;
@@ -64,74 +64,74 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             IFuturePrototype futurePrototype = new ApplyPrototype(
-                new WarpImageVerb(this.imageTransformer,
-                    this.GetImageBounds(FutureFeatures.Cached),
-                    this.unwarpedMapTileSource.GetImagePrototype(
+                new WarpImageVerb(imageTransformer,
+                    GetImageBounds(FutureFeatures.Cached),
+                    unwarpedMapTileSource.GetImagePrototype(
                         new ImageParameterFromRawBounds(sourceImageOversampleSize),
                         futureFeatures)),
-                new IFuturePrototype[] {parameterType.GetBoundsParameter(), parameterType.GetSizeParameter()});
+                new[] {parameterType.GetBoundsParameter(), parameterType.GetSizeParameter()});
             if (parameterType is ImageParameterFromTileAddress)
             {
                 futurePrototype =
                     new ApplyPrototype(
-                        new FadeVerb(this.unwarpedMapTileSource.GetTransparencyOptions().GetFadeOptions()),
-                        new IFuturePrototype[] {futurePrototype, new UnevaluatedTerm(TermName.TileAddress)});
+                        new FadeVerb(unwarpedMapTileSource.GetTransparencyOptions().GetFadeOptions()),
+                        new[] {futurePrototype, new UnevaluatedTerm(TermName.TileAddress)});
             }
             else
             {
                 D.Say(2, "Warning: Ignoring fade options because I don't have a tile address.");
             }
 
-            futurePrototype = this.unwarpedMapTileSource.AddCaching(futurePrototype, features);
-            return this.unwarpedMapTileSource.AddAsynchrony(futurePrototype, features);
+            futurePrototype = unwarpedMapTileSource.AddCaching(futurePrototype, features);
+            return unwarpedMapTileSource.AddAsynchrony(futurePrototype, features);
         }
 
         public string GetSourceMapDisplayName()
         {
-            return this.unwarpedMapTileSource.GetSourceMapDisplayName();
+            return unwarpedMapTileSource.GetSourceMapDisplayName();
         }
 
         public IFuture GetOpenDocumentFuture(FutureFeatures features)
         {
-            return this.unwarpedMapTileSource.GetOpenDocumentFuture(features);
+            return unwarpedMapTileSource.GetOpenDocumentFuture(features);
         }
 
         public int CompareTo(object obj)
         {
             if (!(obj is WarpedMapTileSource))
             {
-                return base.GetType().FullName.CompareTo(obj.GetType().FullName);
+                return GetType().FullName.CompareTo(obj.GetType().FullName);
             }
 
-            return this.GetDocumentFilename().CompareTo(((WarpedMapTileSource)obj).GetDocumentFilename());
+            return GetDocumentFilename().CompareTo(((WarpedMapTileSource)obj).GetDocumentFilename());
         }
 
         private string GetDocumentFilename()
         {
-            return this.unwarpedMapTileSource.GetDocumentFilename();
+            return unwarpedMapTileSource.GetDocumentFilename();
         }
 
         public IFuture GetImageBounds(FutureFeatures features)
         {
-            IFuture future = new ApplyFuture(new WarpBoundsVerb(this.imageTransformer),
-                new IFuture[] {this.unwarpedMapTileSource.GetImageBounds(features)});
-            future = new MemCacheFuture(this.cachePackage.boundsCache, future);
-            return this.unwarpedMapTileSource.AddAsynchrony(future, features);
+            IFuture future = new ApplyFuture(new WarpBoundsVerb(imageTransformer),
+                new[] {unwarpedMapTileSource.GetImageBounds(features)});
+            future = new MemCacheFuture(cachePackage.boundsCache, future);
+            return unwarpedMapTileSource.AddAsynchrony(future, features);
         }
 
         internal RegistrationDefinition ComputeWarpedRegistration()
         {
-            return this.imageTransformer.getWarpedRegistration();
+            return imageTransformer.getWarpedRegistration();
         }
 
         internal IPointTransformer GetDestLatLonToSourceTransformer()
         {
-            return this.imageTransformer.getDestLatLonToSourceTransformer();
+            return imageTransformer.getDestLatLonToSourceTransformer();
         }
 
         internal IPointTransformer GetSourceToDestLatLonTransformer()
         {
-            return this.imageTransformer.getSourceToDestLatLonTransformer();
+            return imageTransformer.getSourceToDestLatLonTransformer();
         }
     }
 }

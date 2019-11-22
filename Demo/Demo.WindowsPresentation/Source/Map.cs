@@ -38,7 +38,6 @@ namespace Demo.WindowsPresentation
                   counter++ + ", load: " + ElapsedMilliseconds + "ms, render: " + stopwatch.ElapsedMilliseconds + "ms",
                   CultureInfo.InvariantCulture, fd, tf, 20, Brushes.Blue);
             drawingContext.DrawText(text, new Point(text.Height, text.Height));
-            text = null;
         }
 #endif
     }

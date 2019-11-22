@@ -119,7 +119,7 @@ namespace Demo.WindowsPresentation
          //if(false)
          {
             // add my city location for demo
-            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
+            GeoCoderStatusCode status;
 
             PointLatLng? city = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
             if(city != null && status == GeoCoderStatusCode.OK)
@@ -508,7 +508,7 @@ namespace Demo.WindowsPresentation
       {
          try
          {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
                 {
                     progressBar1.Visibility = Visibility.Visible;
                 }));
@@ -525,7 +525,7 @@ namespace Demo.WindowsPresentation
 
          try
          {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
             {
                 progressBar1.Visibility = Visibility.Hidden;
                 groupBox3.Header = "loading, last in " + MainMap.ElapsedMilliseconds + "ms";

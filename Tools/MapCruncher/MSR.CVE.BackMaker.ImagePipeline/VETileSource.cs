@@ -12,12 +12,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             this.cachePackage = cachePackage;
             this.veStyle = veStyle;
-            this.coordinateSystem = new MercatorCoordinateSystem();
+            coordinateSystem = new MercatorCoordinateSystem();
         }
 
         public CoordinateSystemIfc GetDefaultCoordinateSystem()
         {
-            return this.coordinateSystem;
+            return coordinateSystem;
         }
 
         public string GetRendererCredit()
@@ -28,15 +28,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
             D.Assert(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Cached));
-            IFuture future = new MemCacheFuture(this.cachePackage.boundsCache,
+            IFuture future = new MemCacheFuture(cachePackage.boundsCache,
                 new ApplyFuture(
                     new ConstantVerb(new BoundsPresent(new RenderRegion(new MapRectangle(-85.0, -5000.0, 85.0, 5000.0),
                         new DirtyEvent()))),
                     new IFuture[0]));
             if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Async))
             {
-                future = new MemCacheFuture(this.cachePackage.asyncCache,
-                    Asynchronizer.MakeFuture(this.cachePackage.networkAsyncScheduler, future));
+                future = new MemCacheFuture(cachePackage.asyncCache,
+                    Asynchronizer.MakeFuture(cachePackage.networkAsyncScheduler, future));
             }
 
             return future;
@@ -45,12 +45,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
             D.Assert(parameterType == null);
-            IFuturePrototype futurePrototype = new ApplyPrototype(new VETileFetch(this.veStyle),
+            IFuturePrototype futurePrototype = new ApplyPrototype(new VETileFetch(veStyle),
                 new IFuturePrototype[] {new UnevaluatedTerm(TermName.TileAddress)});
-            futurePrototype = AddFeatures(futurePrototype, FutureFeatures.Cached & features, this.cachePackage);
+            futurePrototype = AddFeatures(futurePrototype, FutureFeatures.Cached & features, cachePackage);
             IFuturePrototype prototype = new ApplyPrototype(new VETileUpsamplerVerb(futurePrototype),
                 new IFuturePrototype[] {new UnevaluatedTerm(TermName.TileAddress)});
-            return AddFeatures(prototype, features, this.cachePackage);
+            return AddFeatures(prototype, features, cachePackage);
         }
 
         public static IFuturePrototype AddFeatures(IFuturePrototype prototype, FutureFeatures features,
@@ -77,7 +77,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public string GetSourceMapDisplayName()
         {
-            return string.Format("VE-{0}", this.veStyle);
+            return string.Format("VE-{0}", veStyle);
         }
 
         public IFuture GetOpenDocumentFuture(FutureFeatures features)
@@ -89,10 +89,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (!(obj is VETileSource))
             {
-                return base.GetType().FullName.CompareTo(obj.GetType().FullName);
+                return GetType().FullName.CompareTo(obj.GetType().FullName);
             }
 
-            return this.veStyle.CompareTo(((VETileSource)obj).veStyle);
+            return veStyle.CompareTo(((VETileSource)obj).veStyle);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace MSR.CVE.BackMaker
 
         public void AddHeaderIfAbsent(string key, string value)
         {
-            if (base.IndexOfKey(key) == -1)
+            if (IndexOfKey(key) == -1)
             {
-                base.Add(key, value);
+                Add(key, value);
             }
         }
     }

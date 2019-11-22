@@ -15,7 +15,7 @@ namespace GMap.NET.WindowsForms
    public class GMapOverlay: IDisposable
 #endif
     {
-        bool isVisibile = true;
+        bool _isVisibile = true;
 
         /// <summary>
         ///     is overlay visible
@@ -24,17 +24,17 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return isVisibile;
+                return _isVisibile;
             }
             set
             {
-                if (value != isVisibile)
+                if (value != _isVisibile)
                 {
-                    isVisibile = value;
+                    _isVisibile = value;
 
                     if (Control != null)
                     {
-                        if (isVisibile)
+                        if (_isVisibile)
                         {
                             Control.HoldInvalidation = true;
                             {
@@ -72,7 +72,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        bool isHitTestVisible = true;
+        bool _isHitTestVisible = true;
 
         /// overlay Id	        ///
         /// <summary>
@@ -81,19 +81,19 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         public bool IsHitTestVisible
         {
-            get { return isHitTestVisible; }
-            set { isHitTestVisible = value; }
+            get { return _isHitTestVisible; }
+            set { _isHitTestVisible = value; }
         }
 
-        bool isZoomSignificant = true;
+        bool _isZoomSignificant = true;
 
         /// <summary>
         ///     if false don't consider contained objects when box zooming
         /// </summary>
         public bool IsZoomSignificant
         {
-            get { return isZoomSignificant; }
-            set { isZoomSignificant = value; }
+            get { return _isZoomSignificant; }
+            set { _isZoomSignificant = value; }
         }
 
         /// <summary>
@@ -119,17 +119,17 @@ namespace GMap.NET.WindowsForms
         public readonly ObservableCollectionThreadSafe<GMapPolygon> Polygons =
             new ObservableCollectionThreadSafe<GMapPolygon>();
 
-        GMapControl control;
+        GMapControl _control;
 
         public GMapControl Control
         {
             get
             {
-                return control;
+                return _control;
             }
             internal set
             {
-                control = value;
+                _control = value;
             }
         }
 
@@ -398,19 +398,19 @@ namespace GMap.NET.WindowsForms
         /// </exception>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Id", this.Id);
-            info.AddValue("IsVisible", this.IsVisibile);
+            info.AddValue("Id", Id);
+            info.AddValue("IsVisible", IsVisibile);
 
-            GMapMarker[] markerArray = new GMapMarker[this.Markers.Count];
-            this.Markers.CopyTo(markerArray, 0);
+            GMapMarker[] markerArray = new GMapMarker[Markers.Count];
+            Markers.CopyTo(markerArray, 0);
             info.AddValue("Markers", markerArray);
 
-            GMapRoute[] routeArray = new GMapRoute[this.Routes.Count];
-            this.Routes.CopyTo(routeArray, 0);
+            GMapRoute[] routeArray = new GMapRoute[Routes.Count];
+            Routes.CopyTo(routeArray, 0);
             info.AddValue("Routes", routeArray);
 
-            GMapPolygon[] polygonArray = new GMapPolygon[this.Polygons.Count];
-            this.Polygons.CopyTo(polygonArray, 0);
+            GMapPolygon[] polygonArray = new GMapPolygon[Polygons.Count];
+            Polygons.CopyTo(polygonArray, 0);
             info.AddValue("Polygons", polygonArray);
         }
 
@@ -425,12 +425,12 @@ namespace GMap.NET.WindowsForms
         /// <param name="context">The context.</param>
         protected GMapOverlay(SerializationInfo info, StreamingContext context)
         {
-            this.Id = info.GetString("Id");
-            this.IsVisibile = info.GetBoolean("IsVisible");
+            Id = info.GetString("Id");
+            IsVisibile = info.GetBoolean("IsVisible");
 
-            this.deserializedMarkerArray = Extensions.GetValue<GMapMarker[]>(info, "Markers", new GMapMarker[0]);
-            this.deserializedRouteArray = Extensions.GetValue<GMapRoute[]>(info, "Routes", new GMapRoute[0]);
-            this.deserializedPolygonArray = Extensions.GetValue<GMapPolygon[]>(info, "Polygons", new GMapPolygon[0]);
+            deserializedMarkerArray = Extensions.GetValue<GMapMarker[]>(info, "Markers", new GMapMarker[0]);
+            deserializedRouteArray = Extensions.GetValue<GMapRoute[]>(info, "Routes", new GMapRoute[0]);
+            deserializedPolygonArray = Extensions.GetValue<GMapPolygon[]>(info, "Polygons", new GMapPolygon[0]);
 
             CreateEvents();
         }
@@ -452,21 +452,21 @@ namespace GMap.NET.WindowsForms
             foreach (GMapMarker marker in deserializedMarkerArray)
             {
                 marker.Overlay = this;
-                this.Markers.Add(marker);
+                Markers.Add(marker);
             }
 
             // Populate Routes
             foreach (GMapRoute route in deserializedRouteArray)
             {
                 route.Overlay = this;
-                this.Routes.Add(route);
+                Routes.Add(route);
             }
 
             // Populate Polygons
             foreach (GMapPolygon polygon in deserializedPolygonArray)
             {
                 polygon.Overlay = this;
-                this.Polygons.Add(polygon);
+                Polygons.Add(polygon);
             }
         }
 
@@ -476,13 +476,13 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed;
+        bool _disposed;
 
         public void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                disposed = true;
+                _disposed = true;
 
                 ClearEvents();
 

@@ -168,7 +168,7 @@ namespace Demo.StreetView
             PanoramaCamera.UpDirection = new Vector3D(0, 1, 0);
             PanoramaCamera.LookDirection = new Vector3D(0, 0, 1);
             PanoramaCamera.FieldOfView = 80;
-            this.Camera = PanoramaCamera;
+            Camera = PanoramaCamera;
 
             FieldOfView = 80;
 
@@ -177,7 +177,7 @@ namespace Demo.StreetView
             ///////////////////////////////////////////
             ModelVisual3D LightModel = new ModelVisual3D();
             LightModel.Content = new DirectionalLight(Colors.White, new Vector3D(0, 0, 1));
-            this.Children.Add(LightModel);
+            Children.Add(LightModel);
 
             ///////////////////////////////////////////
             // Panorama Object Initialize
@@ -204,7 +204,7 @@ namespace Demo.StreetView
             RotateTransform.Rotation = PanoramaRotation;
             PanoramaObject.Transform = Group;
 
-            this.Children.Add(PanoramaObject);
+            Children.Add(PanoramaObject);
         }
 
         private Geometry3D CreateGeometry()

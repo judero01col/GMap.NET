@@ -27,9 +27,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             TileAddress tileAddress = (TileAddress)paramList[1];
             BoundsPresent boundsPresent = (BoundsPresent)paramList[2];
             MapRectangle mapWindow =
-                CoordinateSystemUtilities.TileAddressToMapRectangle(this.coordinateSystem, tileAddress);
+                CoordinateSystemUtilities.TileAddressToMapRectangle(coordinateSystem, tileAddress);
             Region clipRegion = boundsPresent.GetRenderRegion()
-                .GetClipRegion(mapWindow, tileAddress.ZoomLevel, this.coordinateSystem);
+                .GetClipRegion(mapWindow, tileAddress.ZoomLevel, coordinateSystem);
             GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(imageRef.image.Size, "UserClipperVerb");
             gDIBigLockedImage.SetClip(clipRegion);
             gDIBigLockedImage.DrawImageOntoThis(imageRef.image,

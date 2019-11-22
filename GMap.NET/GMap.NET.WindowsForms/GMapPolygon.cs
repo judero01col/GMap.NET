@@ -17,7 +17,7 @@ namespace GMap.NET.WindowsForms
    public class GMapPolygon : MapRoute, IDisposable
 #endif
     {
-        private bool visible = true;
+        private bool _visible = true;
 
         /// <summary>
         ///     is polygon visible
@@ -26,17 +26,17 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return visible;
+                return _visible;
             }
             set
             {
-                if (value != visible)
+                if (value != _visible)
                 {
-                    visible = value;
+                    _visible = value;
 
                     if (Overlay != null && Overlay.Control != null)
                     {
-                        if (visible)
+                        if (_visible)
                         {
                             Overlay.Control.UpdatePolygonLocalPosition(this);
                         }
@@ -67,7 +67,7 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         public bool IsHitTestVisible = false;
 
-        private bool isMouseOver;
+        private bool _isMouseOver;
 
         /// <summary>
         ///     is mouse over
@@ -76,11 +76,11 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return isMouseOver;
+                return _isMouseOver;
             }
             internal set
             {
-                isMouseOver = value;
+                _isMouseOver = value;
             }
         }
 
@@ -107,24 +107,24 @@ namespace GMap.NET.WindowsForms
         /// <returns></returns>
         internal bool IsInsideLocal(int x, int y)
         {
-            if (graphicsPath != null)
+            if (_graphicsPath != null)
             {
-                return graphicsPath.IsVisible(x, y);
+                return _graphicsPath.IsVisible(x, y);
             }
 
             return false;
         }
 
-        GraphicsPath graphicsPath;
+        GraphicsPath _graphicsPath;
         internal void UpdateGraphicsPath()
         {
-            if (graphicsPath == null)
+            if (_graphicsPath == null)
             {
-                graphicsPath = new GraphicsPath();
+                _graphicsPath = new GraphicsPath();
             }
             else
             {
-                graphicsPath.Reset();
+                _graphicsPath.Reset();
             }
 
             {
@@ -137,11 +137,11 @@ namespace GMap.NET.WindowsForms
 
                 if (pnts.Length > 2)
                 {
-                    graphicsPath.AddPolygon(pnts);
+                    _graphicsPath.AddPolygon(pnts);
                 }
                 else if (pnts.Length == 2)
                 {
-                    graphicsPath.AddLines(pnts);
+                    _graphicsPath.AddLines(pnts);
                 }
             }
         }
@@ -155,10 +155,10 @@ namespace GMap.NET.WindowsForms
             {
                 if (IsVisible)
                 {
-                    if (graphicsPath != null)
+                    if (_graphicsPath != null)
                     {
-                        g.FillPath(Fill, graphicsPath);
-                        g.DrawPath(Stroke, graphicsPath);
+                        g.FillPath(Fill, _graphicsPath);
+                        g.DrawPath(Stroke, _graphicsPath);
                     }
                 }
             }
@@ -285,8 +285,8 @@ namespace GMap.NET.WindowsForms
         {
             base.GetObjectData(info, context);
 
-            info.AddValue("LocalPoints", this.LocalPoints.ToArray());
-            info.AddValue("Visible", this.IsVisible);
+            info.AddValue("LocalPoints", LocalPoints.ToArray());
+            info.AddValue("Visible", IsVisible);
         }
 
         // Temp store for de-serialization.
@@ -300,8 +300,8 @@ namespace GMap.NET.WindowsForms
         protected GMapPolygon(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            this.deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
-            this.IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
+            deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
+            IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
         }
 
         #endregion
@@ -330,24 +330,24 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed;
+        bool _disposed;
 
         public virtual void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                disposed = true;
+                _disposed = true;
 
                 LocalPoints.Clear();
 
 #if !PocketPC
-                if (graphicsPath != null)
+                if (_graphicsPath != null)
                 {
-                    graphicsPath.Dispose();
-                    graphicsPath = null;
+                    _graphicsPath.Dispose();
+                    _graphicsPath = null;
                 }
 #endif
-                base.Clear();
+                Clear();
             }
         }
 

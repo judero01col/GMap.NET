@@ -17,9 +17,9 @@ namespace MSR.CVE.BackMaker
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
 
             base.Dispose(disposing);
@@ -27,52 +27,52 @@ namespace MSR.CVE.BackMaker
 
         private void InitializeComponent()
         {
-            this.viewerControl = new ViewerControl();
-            base.SuspendLayout();
-            this.viewerControl.Dock = DockStyle.Fill;
-            this.viewerControl.Location = new Point(0, 0);
-            this.viewerControl.Name = "viewerControl";
-            this.viewerControl.Size = new Size(380, 351);
-            this.viewerControl.TabIndex = 0;
-            base.AutoScaleDimensions = new SizeF(6f, 13f);
-            base.AutoScaleMode = AutoScaleMode.Font;
-            base.ClientSize = new Size(380, 351);
-            base.Controls.Add(this.viewerControl);
-            base.FormBorderStyle = FormBorderStyle.SizableToolWindow;
-            base.Name = "SourceMapOverviewWindow";
-            this.Text = "SourceMapOverviewWindow";
-            base.TopMost = true;
-            base.ResumeLayout(false);
+            viewerControl = new ViewerControl();
+            SuspendLayout();
+            viewerControl.Dock = DockStyle.Fill;
+            viewerControl.Location = new Point(0, 0);
+            viewerControl.Name = "viewerControl";
+            viewerControl.Size = new Size(380, 351);
+            viewerControl.TabIndex = 0;
+            AutoScaleDimensions = new SizeF(6f, 13f);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(380, 351);
+            Controls.Add(viewerControl);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            Name = "SourceMapOverviewWindow";
+            Text = "SourceMapOverviewWindow";
+            TopMost = true;
+            ResumeLayout(false);
         }
 
         public SourceMapOverviewWindow()
         {
-            this.InitializeComponent();
-            this.mapPos = new MapPosition(this.viewerControl);
-            this.viewerControl.Initialize(new MapPositionDelegate(this.GetMapPos), "Overview");
+            InitializeComponent();
+            mapPos = new MapPosition(viewerControl);
+            viewerControl.Initialize(new MapPositionDelegate(GetMapPos), "Overview");
         }
 
         public void Initialize(ClosedDelegate closedDelegate, MapDrawingOption ShowDMS)
         {
             this.closedDelegate = closedDelegate;
-            this.viewerControl.ShowDMS = ShowDMS;
-            this.mapPos.setPosition(new ContinuousCoordinateSystem().GetDefaultView());
-            base.Closed += new EventHandler(this.SourceMapOverviewWindow_Closed);
+            viewerControl.ShowDMS = ShowDMS;
+            mapPos.setPosition(new ContinuousCoordinateSystem().GetDefaultView());
+            Closed += new EventHandler(SourceMapOverviewWindow_Closed);
         }
 
         private void SourceMapOverviewWindow_Closed(object sender, EventArgs e)
         {
-            this.closedDelegate();
+            closedDelegate();
         }
 
         private MapPosition GetMapPos()
         {
-            return this.mapPos;
+            return mapPos;
         }
 
         private void SetDefaultView()
         {
-            this.mapPos.setPosition(this.viewerControl.GetCoordinateSystem().GetDefaultView());
+            mapPos.setPosition(viewerControl.GetCoordinateSystem().GetDefaultView());
         }
     }
 }

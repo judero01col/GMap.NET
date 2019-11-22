@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._foxitLib;
+                return _foxitLib;
             }
         }
     }

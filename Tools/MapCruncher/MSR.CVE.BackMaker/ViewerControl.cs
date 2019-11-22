@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker
 
             public void Dragged(Point diff)
             {
-                this.sourceViewer.DragOnImage(diff);
+                sourceViewer.DragOnImage(diff);
             }
 
             public Cursor GetCursor(bool dragging)
@@ -83,18 +83,18 @@ namespace MSR.CVE.BackMaker
 
             public void PaintTile(Graphics g, Rectangle paintLocation)
             {
-                if (this.clipRegion != null)
+                if (clipRegion != null)
                 {
-                    g.Clip = this.clipRegion;
+                    g.Clip = clipRegion;
                 }
 
                 GDIBigLockedImage image;
-                Monitor.Enter(image = this.imageRef.image);
+                Monitor.Enter(image = imageRef.image);
                 try
                 {
-                    g.DrawImage(this.imageRef.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage(),
+                    g.DrawImage(imageRef.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage(),
                         paintLocation,
-                        new Rectangle(new Point(0, 0), this.imageRef.image.Size),
+                        new Rectangle(new Point(0, 0), imageRef.image.Size),
                         GraphicsUnit.Pixel);
                 }
                 finally
@@ -105,7 +105,7 @@ namespace MSR.CVE.BackMaker
 
             public void Dispose()
             {
-                this.imageRef.Dispose();
+                imageRef.Dispose();
             }
         }
 
@@ -136,7 +136,7 @@ namespace MSR.CVE.BackMaker
             public void PaintTile(Graphics g, Rectangle paintLocation)
             {
                 Brush brush = new SolidBrush(Color.LightGray);
-                if (this.fillBG)
+                if (fillBG)
                 {
                     g.FillRectangle(brush, paintLocation);
                 }
@@ -146,11 +146,11 @@ namespace MSR.CVE.BackMaker
                     Font font = new Font("Arial", 8f);
                     PointF pointF =
                         new PointF((float)paintLocation.Left + (float)paintLocation.Width * 0.02f +
-                                   (float)this.offsetPixels,
+                                   (float)offsetPixels,
                             (float)paintLocation.Top + (float)paintLocation.Height * num);
-                    SizeF size = g.MeasureString(this.message, font);
+                    SizeF size = g.MeasureString(message, font);
                     g.FillEllipse(new SolidBrush(Color.Wheat), new RectangleF(pointF, size));
-                    g.DrawString(this.message, font, new SolidBrush(Color.Crimson), pointF);
+                    g.DrawString(message, font, new SolidBrush(Color.Crimson), pointF);
                 }
             }
 
@@ -171,7 +171,7 @@ namespace MSR.CVE.BackMaker
             public void PaintTile(Graphics g, Rectangle paintLocation)
             {
                 Font font = new Font("Helvetica", 10f);
-                SizeF sizeF = g.MeasureString(this.tileName, font);
+                SizeF sizeF = g.MeasureString(tileName, font);
                 PointF point = new Point(paintLocation.X + 20, paintLocation.Y + 8);
                 float num = 5f;
                 g.CompositingMode = CompositingMode.SourceOver;
@@ -179,7 +179,7 @@ namespace MSR.CVE.BackMaker
                 g.FillRectangle(brush,
                     new RectangleF(new PointF(point.X - num, point.Y - num),
                         new SizeF(sizeF.Width + 2f * num, sizeF.Height + 2f * num)));
-                g.DrawString(this.tileName, font, new SolidBrush(Color.Crimson), point);
+                g.DrawString(tileName, font, new SolidBrush(Color.Crimson), point);
             }
 
             public void Dispose()
@@ -219,14 +219,14 @@ namespace MSR.CVE.BackMaker
             public AsyncNotifier(ViewerControl viewerControl)
             {
                 this.viewerControl = viewerControl;
-                this.generation = viewerControl.asyncRequestGeneration;
+                generation = viewerControl.asyncRequestGeneration;
             }
 
             public void AsyncRecordComplete(AsyncRef asyncRef)
             {
-                if (this.viewerControl.asyncRequestGeneration == this.generation)
+                if (viewerControl.asyncRequestGeneration == generation)
                 {
-                    this.viewerControl.InvalidateView();
+                    viewerControl.InvalidateView();
                 }
             }
         }
@@ -275,47 +275,47 @@ namespace MSR.CVE.BackMaker
         {
             set
             {
-                this.llzBox.ShowDMS = value;
+                llzBox.ShowDMS = value;
             }
         }
 
         public ViewerControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.center = new MapPositionDelegate(new NoMapPosition().NoMapPositionDelegate);
-            this.Dock = DockStyle.Fill;
-            base.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+            center = new MapPositionDelegate(new NoMapPosition().NoMapPositionDelegate);
+            Dock = DockStyle.Fill;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.OptimizedDoubleBuffer,
                 true);
-            this.ContextMenu = new ContextMenu();
-            this.ContextMenu.Popup += new EventHandler(this.HandlePopup);
-            base.Layout += new LayoutEventHandler(this.ViewerControl_Layout);
-            this.zenButton.Size = new Size(0, 0);
-            this.zenButton.KeyDown += new KeyEventHandler(this.zenButton_KeyDown);
-            this.zenButton.KeyUp += new KeyEventHandler(this.zenButton_KeyUp);
-            this.InitAppearance();
+            ContextMenu = new ContextMenu();
+            ContextMenu.Popup += new EventHandler(HandlePopup);
+            Layout += new LayoutEventHandler(ViewerControl_Layout);
+            zenButton.Size = new Size(0, 0);
+            zenButton.KeyDown += new KeyEventHandler(zenButton_KeyDown);
+            zenButton.KeyUp += new KeyEventHandler(zenButton_KeyUp);
+            InitAppearance();
         }
 
         public void configureLLZBoxEditable()
         {
-            this.llzBox.configureEditable(this);
+            llzBox.configureEditable(this);
         }
 
         public void latEdited(double newLat)
         {
-            LatLon latlon = new LatLon(newLat, this.center().llz.lon);
-            latlon.CheckValid(this.GetCoordinateSystem());
-            this.center().setPosition(new LatLonZoom(latlon, this.center().llz.zoom));
-            this.center().ForceInteractiveUpdate();
+            LatLon latlon = new LatLon(newLat, center().llz.lon);
+            latlon.CheckValid(GetCoordinateSystem());
+            center().setPosition(new LatLonZoom(latlon, center().llz.zoom));
+            center().ForceInteractiveUpdate();
         }
 
         public void lonEdited(double newLon)
         {
-            LatLon latlon = new LatLon(this.center().llz.lat, newLon);
-            latlon.CheckValid(this.GetCoordinateSystem());
-            this.center().setPosition(new LatLonZoom(latlon, this.center().llz.zoom));
-            this.center().ForceInteractiveUpdate();
+            LatLon latlon = new LatLon(center().llz.lat, newLon);
+            latlon.CheckValid(GetCoordinateSystem());
+            center().setPosition(new LatLonZoom(latlon, center().llz.zoom));
+            center().ForceInteractiveUpdate();
         }
 
         private void zenButton_KeyDown(object sender, KeyEventArgs e)
@@ -326,25 +326,25 @@ namespace MSR.CVE.BackMaker
                 handled = true;
                 if (e.KeyCode == Keys.Up)
                 {
-                    this.DragOnImage(new Point(0, -1));
+                    DragOnImage(new Point(0, -1));
                 }
                 else
                 {
                     if (e.KeyCode == Keys.Down)
                     {
-                        this.DragOnImage(new Point(0, 1));
+                        DragOnImage(new Point(0, 1));
                     }
                     else
                     {
                         if (e.KeyCode == Keys.Left)
                         {
-                            this.DragOnImage(new Point(-1, 0));
+                            DragOnImage(new Point(-1, 0));
                         }
                         else
                         {
                             if (e.KeyCode == Keys.Right)
                             {
-                                this.DragOnImage(new Point(1, 0));
+                                DragOnImage(new Point(1, 0));
                             }
                             else
                             {
@@ -366,11 +366,11 @@ namespace MSR.CVE.BackMaker
                 {
                     if ((e.KeyData & Keys.Shift) == Keys.Shift)
                     {
-                        this.RecordSnapView();
+                        RecordSnapView();
                     }
                     else
                     {
-                        this.RestoreSnapView();
+                        RestoreSnapView();
                     }
 
                     e.Handled = true;
@@ -381,11 +381,11 @@ namespace MSR.CVE.BackMaker
                 {
                     if ((e.KeyData & Keys.Shift) == Keys.Shift)
                     {
-                        this.RecordSnapZoom();
+                        RecordSnapZoom();
                     }
                     else
                     {
-                        this.RestoreSnapZoom();
+                        RestoreSnapZoom();
                     }
 
                     e.Handled = true;
@@ -400,166 +400,166 @@ namespace MSR.CVE.BackMaker
 
         public void RecordSnapView()
         {
-            if (this.snapViewStore != null)
+            if (snapViewStore != null)
             {
-                this.snapViewStore.Record(this.center().llz);
+                snapViewStore.Record(center().llz);
             }
         }
 
         public void RestoreSnapView()
         {
-            if (this.snapViewStore != null)
+            if (snapViewStore != null)
             {
-                LatLonZoom latLonZoom = this.snapViewStore.Restore();
+                LatLonZoom latLonZoom = snapViewStore.Restore();
                 if (latLonZoom != default(LatLonZoom))
                 {
-                    this.center().setPosition(latLonZoom);
-                    this.center().ForceInteractiveUpdate();
+                    center().setPosition(latLonZoom);
+                    center().ForceInteractiveUpdate();
                 }
             }
         }
 
         public void RecordSnapZoom()
         {
-            if (this.snapViewStore != null)
+            if (snapViewStore != null)
             {
-                this.snapViewStore.RecordZoom(this.center().llz.zoom);
+                snapViewStore.RecordZoom(center().llz.zoom);
             }
         }
 
         public void RestoreSnapZoom()
         {
-            if (this.snapViewStore != null)
+            if (snapViewStore != null)
             {
-                int num = this.snapViewStore.RestoreZoom();
+                int num = snapViewStore.RestoreZoom();
                 if (num != 0)
                 {
-                    this.center().setPosition(new LatLonZoom(this.center().llz.latlon, num));
-                    this.center().ForceInteractiveUpdate();
+                    center().setPosition(new LatLonZoom(center().llz.latlon, num));
+                    center().ForceInteractiveUpdate();
                 }
             }
         }
 
         public void Initialize(MapPositionDelegate mpd, string LLZBoxName)
         {
-            this.center = mpd;
-            this.llzBox.setName(LLZBoxName);
+            center = mpd;
+            llzBox.setName(LLZBoxName);
         }
 
         public void SetLLZBoxLabelStyle(LLZBox.LabelStyle labelStyle)
         {
-            this.llzBox.SetLabelStyle(labelStyle);
+            llzBox.SetLabelStyle(labelStyle);
         }
 
         private void InitAppearance()
         {
-            this.pinFont = new Font(new FontFamily("Arial"), 10f, FontStyle.Bold);
-            this.fillBrush = new SolidBrush(Color.White);
-            this.textBrush = new SolidBrush(Color.Red);
-            this.outlinePen = new Pen(this.textBrush, 2f);
-            this.errorContribBrush = new SolidBrush(Color.Green);
-            this.errorContribPen = new Pen(Color.DarkGreen, 2f);
-            this.errorOutlierBrush = new SolidBrush(Color.Blue);
-            this.errorOutlierPen = new Pen(Color.DarkBlue, 2f);
+            pinFont = new Font(new FontFamily("Arial"), 10f, FontStyle.Bold);
+            fillBrush = new SolidBrush(Color.White);
+            textBrush = new SolidBrush(Color.Red);
+            outlinePen = new Pen(textBrush, 2f);
+            errorContribBrush = new SolidBrush(Color.Green);
+            errorContribPen = new Pen(Color.DarkGreen, 2f);
+            errorOutlierBrush = new SolidBrush(Color.Blue);
+            errorOutlierPen = new Pen(Color.DarkBlue, 2f);
         }
 
         private void ViewerControl_Layout(object sender, LayoutEventArgs e)
         {
-            this.MakeCreditsVisible();
+            MakeCreditsVisible();
         }
 
         private void MakeCreditsVisible()
         {
-            this.creditsTextBox.SelectionStart = this.creditsTextBox.Text.Length;
-            this.creditsTextBox.SelectionLength = 0;
-            this.creditsTextBox.ScrollToCaret();
+            creditsTextBox.SelectionStart = creditsTextBox.Text.Length;
+            creditsTextBox.SelectionLength = 0;
+            creditsTextBox.ScrollToCaret();
         }
 
         public void ClearLayers()
         {
-            this.baseLayer = null;
-            this.latentRegionHolder = null;
-            this.alphaLayers = new List<DisplayableSourceCache>();
-            this.SetCreditString(null);
+            baseLayer = null;
+            latentRegionHolder = null;
+            alphaLayers = new List<DisplayableSourceCache>();
+            SetCreditString(null);
         }
 
         public void SetBaseLayer(IDisplayableSource tileSource)
         {
-            this.baseLayer = new DisplayableSourceCache(tileSource);
-            this.SetCreditString(tileSource.GetRendererCredit());
-            this.latentRegionHolder = null;
-            this.userRegionViewController = null;
-            this.InvalidateView();
+            baseLayer = new DisplayableSourceCache(tileSource);
+            SetCreditString(tileSource.GetRendererCredit());
+            latentRegionHolder = null;
+            userRegionViewController = null;
+            InvalidateView();
         }
 
         public void SetLatentRegionHolder(LatentRegionHolder latentRegionHolder)
         {
             this.latentRegionHolder = latentRegionHolder;
-            this.userRegionViewController = null;
-            this.InvalidateView();
+            userRegionViewController = null;
+            InvalidateView();
         }
 
         public void SetCreditString(string credit)
         {
             if (credit == null)
             {
-                this.creditsTextBox.Visible = false;
+                creditsTextBox.Visible = false;
                 return;
             }
 
-            this.creditsTextBox.Visible = true;
-            this.creditsTextBox.Text = credit;
-            this.MakeCreditsVisible();
+            creditsTextBox.Visible = true;
+            creditsTextBox.Text = credit;
+            MakeCreditsVisible();
         }
 
         public MapRectangle GetBounds()
         {
-            return CoordinateSystemUtilities.GetBounds(this.baseLayer.GetDefaultCoordinateSystem(),
-                this.center().llz,
-                base.Size);
+            return CoordinateSystemUtilities.GetBounds(baseLayer.GetDefaultCoordinateSystem(),
+                center().llz,
+                Size);
         }
 
         public CoordinateSystemIfc GetCoordinateSystem()
         {
-            return this.baseLayer.GetDefaultCoordinateSystem();
+            return baseLayer.GetDefaultCoordinateSystem();
         }
 
         public void AddAlphaLayer(IDisplayableSource tileSource)
         {
-            this.alphaLayers.Add(new DisplayableSourceCache(tileSource));
-            this.InvalidateView();
+            alphaLayers.Add(new DisplayableSourceCache(tileSource));
+            InvalidateView();
         }
 
         public void RemoveAlphaLayer(IDisplayableSource tileSource)
         {
-            int index = this.alphaLayers.FindIndex((DisplayableSourceCache dsc0) => dsc0.BackingStoreIs(tileSource));
-            this.alphaLayers.RemoveAt(index);
-            this.InvalidateView();
+            int index = alphaLayers.FindIndex((DisplayableSourceCache dsc0) => dsc0.BackingStoreIs(tileSource));
+            alphaLayers.RemoveAt(index);
+            InvalidateView();
         }
 
         public void setPinList(List<PositionAssociationView> newList)
         {
-            this.pinList = newList;
-            base.Invalidate();
+            pinList = newList;
+            Invalidate();
         }
 
         private void zoomOutButton_Click(object sender, EventArgs e)
         {
-            this.zoom(-1);
+            zoom(-1);
         }
 
         private void zoomInButton_Click(object sender, EventArgs e)
         {
-            this.zoom(1);
+            zoom(1);
         }
 
         public void zoom(int zoomFactor)
         {
-            if (this.baseLayer != null)
+            if (baseLayer != null)
             {
-                this.center()
-                    .setPosition(CoordinateSystemUtilities.GetZoomedView(this.GetCoordinateSystem(),
-                        this.center().llz,
+                center()
+                    .setPosition(CoordinateSystemUtilities.GetZoomedView(GetCoordinateSystem(),
+                        center().llz,
                         zoomFactor));
             }
         }
@@ -567,9 +567,9 @@ namespace MSR.CVE.BackMaker
         private MouseAction ImminentAction(MouseEventArgs e)
         {
             MouseAction mouseAction = null;
-            if (this.userRegionViewController != null)
+            if (userRegionViewController != null)
             {
-                mouseAction = this.userRegionViewController.ImminentAction(e);
+                mouseAction = userRegionViewController.ImminentAction(e);
             }
 
             if (mouseAction == null)
@@ -583,73 +583,73 @@ namespace MSR.CVE.BackMaker
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            base.Invalidate();
+            Invalidate();
         }
 
         protected override void OnMouseClick(MouseEventArgs e)
         {
-            this.zenButton.Focus();
+            zenButton.Focus();
             base.OnMouseClick(e);
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             D.Say(3, string.Format("Zooming -- mousedelta={0}", e.Delta));
-            this.zoom(e.Delta / 120);
+            zoom(e.Delta / 120);
             base.OnMouseWheel(e);
         }
 
         protected void HandlePopup(object sender, EventArgs e)
         {
-            this.ContextMenu.MenuItems.Clear();
-            this.imminentAction.OnPopup(this.ContextMenu);
+            ContextMenu.MenuItems.Clear();
+            imminentAction.OnPopup(ContextMenu);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            this.is_dragging = true;
-            this.drag_origin = new Point(e.X, e.Y);
-            this.imminentAction = this.ImminentAction(e);
-            Cursor.Current = this.imminentAction.GetCursor(true);
+            is_dragging = true;
+            drag_origin = new Point(e.X, e.Y);
+            imminentAction = ImminentAction(e);
+            Cursor.Current = imminentAction.GetCursor(true);
             base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            this.is_dragging = false;
-            this.imminentAction = this.ImminentAction(e);
-            Cursor.Current = this.imminentAction.GetCursor(false);
+            is_dragging = false;
+            imminentAction = ImminentAction(e);
+            Cursor.Current = imminentAction.GetCursor(false);
             base.OnMouseUp(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            this.is_dragging = false;
-            this.imminentAction = new NoAction();
+            is_dragging = false;
+            imminentAction = new NoAction();
             base.OnMouseLeave(e);
         }
 
         private void DragOnImage(Point diff)
         {
-            this.center().setPosition(this.GetCoordinateSystem().GetTranslationInLatLon(this.center().llz, diff));
-            this.center().ForceInteractiveUpdate();
+            center().setPosition(GetCoordinateSystem().GetTranslationInLatLon(center().llz, diff));
+            center().ForceInteractiveUpdate();
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (this.baseLayer != null)
+            if (baseLayer != null)
             {
-                if (this.is_dragging)
+                if (is_dragging)
                 {
-                    Point diff = new Point(e.X - this.drag_origin.X, e.Y - this.drag_origin.Y);
-                    this.imminentAction.Dragged(diff);
-                    base.Invalidate();
-                    this.drag_origin = new Point(e.X, e.Y);
+                    Point diff = new Point(e.X - drag_origin.X, e.Y - drag_origin.Y);
+                    imminentAction.Dragged(diff);
+                    Invalidate();
+                    drag_origin = new Point(e.X, e.Y);
                 }
                 else
                 {
-                    this.imminentAction = this.ImminentAction(e);
-                    Cursor.Current = this.imminentAction.GetCursor(false);
+                    imminentAction = ImminentAction(e);
+                    Cursor.Current = imminentAction.GetCursor(false);
                 }
             }
 
@@ -658,22 +658,22 @@ namespace MSR.CVE.BackMaker
 
         public Point ScreenCenter()
         {
-            return new Point(base.Size.Width / 2, base.Size.Height / 2);
+            return new Point(Size.Width / 2, Size.Height / 2);
         }
 
         public LatLonZoom MapCenter()
         {
-            return this.center().llz;
+            return center().llz;
         }
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            if (this.baseLayer != null)
+            if (baseLayer != null)
             {
-                Point point = this.ScreenCenter();
+                Point point = ScreenCenter();
                 Point offsetInPixels = new Point(point.X - e.Location.X, point.Y - e.Location.Y);
-                this.center().setPosition(CoordinateSystemUtilities.GetZoomedView(this.GetCoordinateSystem(),
-                    this.GetCoordinateSystem().GetTranslationInLatLon(this.center().llz, offsetInPixels),
+                center().setPosition(CoordinateSystemUtilities.GetZoomedView(GetCoordinateSystem(),
+                    GetCoordinateSystem().GetTranslationInLatLon(center().llz, offsetInPixels),
                     1));
             }
 
@@ -688,25 +688,25 @@ namespace MSR.CVE.BackMaker
                 handled = true;
                 if (e.KeyCode == Keys.Up)
                 {
-                    this.DragOnImage(new Point(0, -1));
+                    DragOnImage(new Point(0, -1));
                 }
                 else
                 {
                     if (e.KeyCode == Keys.Down)
                     {
-                        this.DragOnImage(new Point(0, 1));
+                        DragOnImage(new Point(0, 1));
                     }
                     else
                     {
                         if (e.KeyCode == Keys.Left)
                         {
-                            this.DragOnImage(new Point(-1, 0));
+                            DragOnImage(new Point(-1, 0));
                         }
                         else
                         {
                             if (e.KeyCode == Keys.Right)
                             {
-                                this.DragOnImage(new Point(1, 0));
+                                DragOnImage(new Point(1, 0));
                             }
                             else
                             {
@@ -740,26 +740,26 @@ namespace MSR.CVE.BackMaker
 
         private PointF MapPositionToPoint(LatLon pos)
         {
-            Point translationInPixels = this.GetCoordinateSystem().GetTranslationInPixels(this.center().llz, pos);
-            PointF result = new PointF((float)(base.Width / 2 + translationInPixels.X),
-                (float)(base.Height / 2 + translationInPixels.Y));
+            Point translationInPixels = GetCoordinateSystem().GetTranslationInPixels(center().llz, pos);
+            PointF result = new PointF((float)(Width / 2 + translationInPixels.X),
+                (float)(Height / 2 + translationInPixels.Y));
             return result;
         }
 
         private void DrawMarker(PositionAssociationView pav, PaintSpecification e)
         {
-            this.DrawErrorMarkers(pav, e);
+            DrawErrorMarkers(pav, e);
             e.Graphics.CompositingMode = CompositingMode.SourceOver;
             string text = pav.pinId.ToString();
-            this.outlinePen.MiterLimit = 2f;
+            outlinePen.MiterLimit = 2f;
             SizeF size = new SizeF(3f, 3f);
-            PointF pointF = this.MapPositionToPoint(pav.position.pinPosition.latlon);
+            PointF pointF = MapPositionToPoint(pav.position.pinPosition.latlon);
             if (!RectangleF.Inflate(e.ClipRectangle, 100f, 100f).Contains(pointF))
             {
                 return;
             }
 
-            SizeF sizeF = e.Graphics.MeasureString(text, this.pinFont);
+            SizeF sizeF = e.Graphics.MeasureString(text, pinFont);
             double num = 24.0;
             double num2 = 3.0;
             int num3 = 3;
@@ -769,7 +769,7 @@ namespace MSR.CVE.BackMaker
                 sizeF.Height);
             RectangleF rectangleF = new RectangleF(layoutRectangle.Location, layoutRectangle.Size);
             rectangleF.Inflate(size);
-            PointF[] points = new PointF[]
+            PointF[] points = new[]
             {
                 pointF, new PointF((float)((double)pointF.X - num2), rectangleF.Bottom),
                 new PointF(rectangleF.Left + (float)num3, rectangleF.Bottom),
@@ -782,22 +782,22 @@ namespace MSR.CVE.BackMaker
                 new PointF(rectangleF.Right - (float)num3, rectangleF.Bottom),
                 new PointF((float)((double)pointF.X + num2), rectangleF.Bottom)
             };
-            e.Graphics.FillPolygon(this.fillBrush, points);
-            e.Graphics.DrawPolygon(this.outlinePen, points);
-            e.Graphics.DrawString(text, this.pinFont, this.textBrush, layoutRectangle);
+            e.Graphics.FillPolygon(fillBrush, points);
+            e.Graphics.DrawPolygon(outlinePen, points);
+            e.Graphics.DrawString(text, pinFont, textBrush, layoutRectangle);
         }
 
         private void DrawErrorMarkers(PositionAssociationView pav, PaintSpecification e)
         {
-            this.DrawErrorPosition(pav,
+            DrawErrorPosition(pav,
                 DisplayablePosition.ErrorMarker.AsContributor,
-                this.errorContribPen,
-                this.errorContribBrush,
+                errorContribPen,
+                errorContribBrush,
                 e);
-            this.DrawErrorPosition(pav,
+            DrawErrorPosition(pav,
                 DisplayablePosition.ErrorMarker.AsOutlier,
-                this.errorOutlierPen,
-                this.errorOutlierBrush,
+                errorOutlierPen,
+                errorOutlierBrush,
                 e);
         }
 
@@ -810,8 +810,8 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            PointF pointF = this.MapPositionToPoint(pav.position.pinPosition.latlon);
-            PointF pointF2 = this.MapPositionToPoint(errorPosition.latlon);
+            PointF pointF = MapPositionToPoint(pav.position.pinPosition.latlon);
+            PointF pointF2 = MapPositionToPoint(errorPosition.latlon);
             RectangleF rectangleF = new RectangleF((float)(e.ClipRectangle.X - e.ClipRectangle.Width * 2),
                 (float)(e.ClipRectangle.Y - e.ClipRectangle.Height * 2),
                 (float)(e.ClipRectangle.Width * 5),
@@ -838,64 +838,64 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            this.PaintGraphics(new PaintSpecification(e.Graphics, e.ClipRectangle, base.Size, false),
-                this.center().llz);
+            PaintGraphics(new PaintSpecification(e.Graphics, e.ClipRectangle, Size, false),
+                center().llz);
         }
 
         public void PaintPrintWindow(PaintSpecification e, int extraZoom)
         {
-            this.PaintGraphics(e,
-                new LatLonZoom(this.center().llz.lat, this.center().llz.lon, this.center().llz.zoom + extraZoom));
+            PaintGraphics(e,
+                new LatLonZoom(center().llz.lat, center().llz.lon, center().llz.zoom + extraZoom));
         }
 
         private void PaintGraphics(PaintSpecification e, LatLonZoom llz)
         {
-            this.tilesRequired = 0;
-            this.tilesAvailable = 0;
-            this.asyncRequestGeneration++;
-            if (this.baseLayer == null)
+            tilesRequired = 0;
+            tilesAvailable = 0;
+            asyncRequestGeneration++;
+            if (baseLayer == null)
             {
                 return;
             }
 
-            InterestList interestList = this.activeTiles;
-            this.activeTiles = new InterestList();
+            InterestList interestList = activeTiles;
+            activeTiles = new InterestList();
             e.ResetClip();
             e.Graphics.FillRectangle(new SolidBrush(Color.LightPink), new Rectangle(new Point(0, 0), e.Size));
             List<PaintKit> list = new List<PaintKit>();
-            list.AddRange(this.AssembleLayer(e, llz, this.baseLayer, 0));
+            list.AddRange(AssembleLayer(e, llz, baseLayer, 0));
             int num = 1;
-            foreach (IDisplayableSource current in this.alphaLayers)
+            foreach (IDisplayableSource current in alphaLayers)
             {
-                list.AddRange(this.AssembleLayer(e, llz, current, num));
+                list.AddRange(AssembleLayer(e, llz, current, num));
                 num++;
             }
 
-            this.activeTiles.Activate();
-            this.PaintKits(e.Graphics, list);
+            activeTiles.Activate();
+            PaintKits(e.Graphics, list);
             e.ResetClip();
-            if (this.userRegionViewController != null)
+            if (userRegionViewController != null)
             {
                 e.ResetClip();
-                this.userRegionViewController.Paint(e, llz, base.Size);
+                userRegionViewController.Paint(e, llz, Size);
             }
 
-            if (MapDrawingOption.IsEnabled(this.ShowCrosshairs))
+            if (MapDrawingOption.IsEnabled(ShowCrosshairs))
             {
                 Pen pen = new Pen(Color.Yellow);
-                Pen[] array = new Pen[] {pen, new Pen(Color.Black) {DashStyle = DashStyle.Dash}};
+                Pen[] array = new[] {pen, new Pen(Color.Black) {DashStyle = DashStyle.Dash}};
                 for (int i = 0; i < array.Length; i++)
                 {
                     Pen pen2 = array[i];
-                    e.Graphics.DrawLine(pen2, 0, base.Size.Height / 2, base.Size.Width, base.Size.Height / 2);
-                    e.Graphics.DrawLine(pen2, base.Size.Width / 2, 0, base.Size.Width / 2, base.Size.Height);
+                    e.Graphics.DrawLine(pen2, 0, Size.Height / 2, Size.Width, Size.Height / 2);
+                    e.Graphics.DrawLine(pen2, Size.Width / 2, 0, Size.Width / 2, Size.Height);
                 }
             }
 
-            if (MapDrawingOption.IsEnabled(this.ShowPushPins) && this.pinList != null)
+            if (MapDrawingOption.IsEnabled(ShowPushPins) && pinList != null)
             {
                 List<PositionAssociationView> list2 = new List<PositionAssociationView>();
-                list2.AddRange(this.pinList);
+                list2.AddRange(pinList);
                 list2.Sort(delegate(PositionAssociationView p0, PositionAssociationView p1)
                 {
                     double num2 = p1.position.pinPosition.lat - p0.position.pinPosition.lat;
@@ -926,7 +926,7 @@ namespace MSR.CVE.BackMaker
                 });
                 foreach (PositionAssociationView current2 in list2)
                 {
-                    this.DrawMarker(current2, e);
+                    DrawMarker(current2, e);
                 }
             }
 
@@ -935,16 +935,16 @@ namespace MSR.CVE.BackMaker
                 interestList.Dispose();
             }
 
-            if (this.tilesRequired == 0 || this.tilesAvailable == this.tilesRequired)
+            if (tilesRequired == 0 || tilesAvailable == tilesRequired)
             {
-                this.displayProgressBar.Visible = false;
+                displayProgressBar.Visible = false;
                 return;
             }
 
-            this.displayProgressBar.Visible = true;
-            this.displayProgressBar.Minimum = 0;
-            this.displayProgressBar.Maximum = this.tilesRequired;
-            this.displayProgressBar.Value = this.tilesAvailable;
+            displayProgressBar.Visible = true;
+            displayProgressBar.Minimum = 0;
+            displayProgressBar.Maximum = tilesRequired;
+            displayProgressBar.Value = tilesAvailable;
         }
 
         private void PaintKits(Graphics g, List<PaintKit> kits)
@@ -999,17 +999,17 @@ namespace MSR.CVE.BackMaker
             Region clipRegion = null;
             if (asyncRef.present == null)
             {
-                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.BoundsRefAvailable));
+                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(BoundsRefAvailable));
                 asyncRef.SetInterest(524290);
             }
 
-            if ((this.ShowSourceCrop == null || this.ShowSourceCrop.Enabled) && asyncRef.present is IBoundsProvider)
+            if ((ShowSourceCrop == null || ShowSourceCrop.Enabled) && asyncRef.present is IBoundsProvider)
             {
                 clipRegion = ((IBoundsProvider)asyncRef.present).GetRenderRegion().GetClipRegion(
-                    defaultCoordinateSystem.GetUnclippedMapWindow(this.center().llz, e.Size),
-                    this.center().llz.zoom,
+                    defaultCoordinateSystem.GetUnclippedMapWindow(center().llz, e.Size),
+                    center().llz.zoom,
                     defaultCoordinateSystem);
-                this.UpdateUserRegion();
+                UpdateUserRegion();
             }
 
             new PersistentInterest(asyncRef);
@@ -1040,7 +1040,7 @@ namespace MSR.CVE.BackMaker
                     asyncRef2.AddCallback(new AsyncRecord.CompleteCallback(@object.AsyncRecordComplete));
                 }
 
-                this.activeTiles.Add(asyncRef2);
+                activeTiles.Add(asyncRef2);
                 asyncRef2 = (AsyncRef)asyncRef2.Duplicate("ViewerControl.PaintLayer");
                 if (e.SynchronousTiles)
                 {
@@ -1095,18 +1095,18 @@ namespace MSR.CVE.BackMaker
                     }
                 }
 
-                this.tilesRequired++;
+                tilesRequired++;
                 if (!flag)
                 {
-                    this.tilesAvailable++;
+                    tilesAvailable++;
                 }
 
-                if (flag && stackOrder == 0 || MapDrawingOption.IsEnabled(this.ShowTileBoundaries))
+                if (flag && stackOrder == 0 || MapDrawingOption.IsEnabled(ShowTileBoundaries))
                 {
                     paintKit.annotations.Add(new TileBoundaryPainter());
                 }
 
-                if (MapDrawingOption.IsEnabled(this.ShowTileNames))
+                if (MapDrawingOption.IsEnabled(ShowTileNames))
                 {
                     paintKit.annotations.Add(new TileNamePainter(current2.tileAddress.ToString()));
                 }
@@ -1120,52 +1120,52 @@ namespace MSR.CVE.BackMaker
 
         private void BoundsRefAvailable(AsyncRef asyncRef)
         {
-            base.Invalidate();
+            Invalidate();
         }
 
         private void UpdateUserRegion()
         {
-            if (this.userRegionViewController == null && this.latentRegionHolder != null)
+            if (userRegionViewController == null && latentRegionHolder != null)
             {
-                this.userRegionViewController = new UserRegionViewController(this.GetCoordinateSystem(),
+                userRegionViewController = new UserRegionViewController(GetCoordinateSystem(),
                     this,
-                    this.latentRegionHolder,
-                    this.baseLayer);
-                this.InvalidateView();
+                    latentRegionHolder,
+                    baseLayer);
+                InvalidateView();
             }
         }
 
         public void PositionUpdated(LatLonZoom llz)
         {
-            this.llzBox.PositionChanged(llz);
-            base.Invalidate();
+            llzBox.PositionChanged(llz);
+            Invalidate();
         }
 
         public void ForceInteractiveUpdate()
         {
-            base.Update();
+            Update();
         }
 
         public void InvalidateView()
         {
-            base.Invalidate();
+            Invalidate();
         }
 
         public void InvalidatePipeline()
         {
             try
             {
-                foreach (DisplayableSourceCache current in this.alphaLayers)
+                foreach (DisplayableSourceCache current in alphaLayers)
                 {
                     current.Flush();
                 }
 
-                if (this.baseLayer != null)
+                if (baseLayer != null)
                 {
-                    this.baseLayer.Flush();
+                    baseLayer.Flush();
                 }
 
-                base.Invalidate();
+                Invalidate();
             }
             catch (InvalidOperationException)
             {
@@ -1174,23 +1174,23 @@ namespace MSR.CVE.BackMaker
 
         public void AddLayer(IDisplayableSource warpedMapTileSource)
         {
-            if (this.baseLayer == null)
+            if (baseLayer == null)
             {
-                this.SetBaseLayer(warpedMapTileSource);
+                SetBaseLayer(warpedMapTileSource);
                 return;
             }
 
-            this.AddAlphaLayer(warpedMapTileSource);
+            AddAlphaLayer(warpedMapTileSource);
         }
 
         public Pixel GetBaseLayerCenterPixel()
         {
-            IDisplayableSource displayableSource = this.baseLayer;
+            IDisplayableSource displayableSource = baseLayer;
             CoordinateSystemIfc defaultCoordinateSystem = displayableSource.GetDefaultCoordinateSystem();
             TileDisplayDescriptorArray tileArrayDescriptor =
-                defaultCoordinateSystem.GetTileArrayDescriptor(this.center().llz, base.Size);
-            int num = base.Size.Width / 2;
-            int num2 = base.Size.Height / 2;
+                defaultCoordinateSystem.GetTileArrayDescriptor(center().llz, Size);
+            int num = Size.Width / 2;
+            int num2 = Size.Height / 2;
             foreach (TileDisplayDescriptor current in tileArrayDescriptor)
             {
                 Rectangle paintLocation = current.paintLocation;
@@ -1251,9 +1251,9 @@ namespace MSR.CVE.BackMaker
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
 
             base.Dispose(disposing);
@@ -1261,89 +1261,89 @@ namespace MSR.CVE.BackMaker
 
         private void InitializeComponent()
         {
-            this.zoomOutButton = new Button();
-            this.zoomInButton = new Button();
-            this.creditsTextBox = new TextBox();
-            this.zenButton = new Button();
-            this.displayProgressBar = new ProgressBar();
-            this.llzBox = new LLZBox();
-            this.SuspendLayout();
+            zoomOutButton = new Button();
+            zoomInButton = new Button();
+            creditsTextBox = new TextBox();
+            zenButton = new Button();
+            displayProgressBar = new ProgressBar();
+            llzBox = new LLZBox();
+            SuspendLayout();
             // 
             // zoomOutButton
             // 
-            this.zoomOutButton.Location = new Point(242, 39);
-            this.zoomOutButton.Name = "zoomOutButton";
-            this.zoomOutButton.Size = new Size(82, 23);
-            this.zoomOutButton.TabIndex = 9;
-            this.zoomOutButton.Text = "Zoom Out";
-            this.zoomOutButton.Click += new EventHandler(this.zoomOutButton_Click);
+            zoomOutButton.Location = new Point(242, 39);
+            zoomOutButton.Name = "zoomOutButton";
+            zoomOutButton.Size = new Size(82, 23);
+            zoomOutButton.TabIndex = 9;
+            zoomOutButton.Text = "Zoom Out";
+            zoomOutButton.Click += new EventHandler(zoomOutButton_Click);
             // 
             // zoomInButton
             // 
-            this.zoomInButton.Location = new Point(242, 68);
-            this.zoomInButton.Name = "zoomInButton";
-            this.zoomInButton.Size = new Size(82, 23);
-            this.zoomInButton.TabIndex = 10;
-            this.zoomInButton.Text = "Zoom In";
-            this.zoomInButton.Click += new EventHandler(this.zoomInButton_Click);
+            zoomInButton.Location = new Point(242, 68);
+            zoomInButton.Name = "zoomInButton";
+            zoomInButton.Size = new Size(82, 23);
+            zoomInButton.TabIndex = 10;
+            zoomInButton.Text = "Zoom In";
+            zoomInButton.Click += new EventHandler(zoomInButton_Click);
             // 
             // creditsTextBox
             // 
-            this.creditsTextBox.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Right);
-            this.creditsTextBox.Location = new Point(330, 34);
-            this.creditsTextBox.Multiline = true;
-            this.creditsTextBox.Name = "creditsTextBox";
-            this.creditsTextBox.ReadOnly = true;
-            this.creditsTextBox.Size = new Size(115, 32);
-            this.creditsTextBox.TabIndex = 12;
-            this.creditsTextBox.Visible = false;
+            creditsTextBox.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Right);
+            creditsTextBox.Location = new Point(330, 34);
+            creditsTextBox.Multiline = true;
+            creditsTextBox.Name = "creditsTextBox";
+            creditsTextBox.ReadOnly = true;
+            creditsTextBox.Size = new Size(115, 32);
+            creditsTextBox.TabIndex = 12;
+            creditsTextBox.Visible = false;
             // 
             // zenButton
             // 
-            this.zenButton.Location = new Point(242, 10);
-            this.zenButton.Name = "zenButton";
-            this.zenButton.Size = new Size(82, 23);
-            this.zenButton.TabIndex = 13;
-            this.zenButton.Text = "zenButton";
-            this.zenButton.UseVisualStyleBackColor = true;
+            zenButton.Location = new Point(242, 10);
+            zenButton.Name = "zenButton";
+            zenButton.Size = new Size(82, 23);
+            zenButton.TabIndex = 13;
+            zenButton.Text = "zenButton";
+            zenButton.UseVisualStyleBackColor = true;
             // 
             // displayProgressBar
             // 
-            this.displayProgressBar.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left
+            displayProgressBar.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left
                                                                              | AnchorStyles.Right);
-            this.displayProgressBar.Location = new Point(330, 14);
-            this.displayProgressBar.Name = "displayProgressBar";
-            this.displayProgressBar.Size = new Size(115, 19);
-            this.displayProgressBar.TabIndex = 14;
+            displayProgressBar.Location = new Point(330, 14);
+            displayProgressBar.Name = "displayProgressBar";
+            displayProgressBar.Size = new Size(115, 19);
+            displayProgressBar.TabIndex = 14;
             // 
             // llzBox
             // 
-            this.llzBox.Dock = DockStyle.Top;
-            this.llzBox.Location = new Point(0, 0);
-            this.llzBox.Margin = new Padding(4, 4, 4, 4);
-            this.llzBox.Name = "llzBox";
-            this.llzBox.Size = new Size(456, 95);
-            this.llzBox.TabIndex = 11;
+            llzBox.Dock = DockStyle.Top;
+            llzBox.Location = new Point(0, 0);
+            llzBox.Margin = new Padding(4, 4, 4, 4);
+            llzBox.Name = "llzBox";
+            llzBox.Size = new Size(456, 95);
+            llzBox.TabIndex = 11;
             // 
             // ViewerControl
             // 
-            this.Controls.Add(this.creditsTextBox);
-            this.Controls.Add(this.zoomInButton);
-            this.Controls.Add(this.zoomOutButton);
-            this.Controls.Add(this.displayProgressBar);
-            this.Controls.Add(this.zenButton);
-            this.Controls.Add(this.llzBox);
-            this.Name = "ViewerControl";
-            this.Size = new Size(456, 615);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            Controls.Add(creditsTextBox);
+            Controls.Add(zoomInButton);
+            Controls.Add(zoomOutButton);
+            Controls.Add(displayProgressBar);
+            Controls.Add(zenButton);
+            Controls.Add(llzBox);
+            Name = "ViewerControl";
+            Size = new Size(456, 615);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         Size ViewerControlIfcSize
         {
             get
             {
-                return base.Size;
+                return Size;
             }
         }
     }

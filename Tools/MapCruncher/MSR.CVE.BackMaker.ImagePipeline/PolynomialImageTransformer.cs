@@ -43,16 +43,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 jamaMatrix2.SetElement(i, 1, latLon2.lat);
             }
 
-            this.destMercatorToSourceTransformer = getPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
-            this.sourceToDestMercatorTransformer_approximate =
+            destMercatorToSourceTransformer = getPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
+            sourceToDestMercatorTransformer_approximate =
                 getApproximateInverterPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
             DownhillInverterPointTransformer flakyPointTransformer =
-                new DownhillInverterPointTransformer(this.destMercatorToSourceTransformer,
-                    this.sourceToDestMercatorTransformer_approximate);
+                new DownhillInverterPointTransformer(destMercatorToSourceTransformer,
+                    sourceToDestMercatorTransformer_approximate);
             IPointTransformer sourceToMercator = new RobustPointTransformer(flakyPointTransformer,
-                this.sourceToDestMercatorTransformer_approximate);
-            this.destLatLonToSourceTransformer = new LatLonToSourceTransform(this.destMercatorToSourceTransformer);
-            this.sourceToDestLatLonTransformer = new SourceToLatLonTransform(sourceToMercator);
+                sourceToDestMercatorTransformer_approximate);
+            destLatLonToSourceTransformer = new LatLonToSourceTransform(destMercatorToSourceTransformer);
+            sourceToDestLatLonTransformer = new SourceToLatLonTransform(sourceToMercator);
         }
 
         internal override void doTransformImage(GDIBigLockedImage sourceImage, MapRectangle sourceBounds,
@@ -71,12 +71,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             JamaMatrix matrix2 = FindAffineMatrix(sourceBounds, outr2);
             FastImageWarper.doWarp(destImage,
                 sourceImage,
-                new IPointTransformer[]
+                new[]
                 {
-                    new Affine2DPointTransformer(matrix), this.destMercatorToSourceTransformer,
+                    new Affine2DPointTransformer(matrix), destMercatorToSourceTransformer,
                     new Affine2DPointTransformer(matrix2)
                 },
-                this.interpolationMode);
+                interpolationMode);
         }
 
         private static IPolyPointTransformer getPolyPointTransformer(JamaMatrix sourcePoints, JamaMatrix destPoints,
@@ -231,8 +231,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             int arg_15_1 = 0;
             double[] array2 = new double[2];
             arg_15_0[arg_15_1] = array2;
-            array[1] = new double[] {1.02, 0.93};
-            array[2] = new double[] {0.0, 1.0};
+            array[1] = new[] {1.02, 0.93};
+            array[2] = new[] {0.0, 1.0};
             double[][] arg_73_0 = array;
             int arg_73_1 = 3;
             double[] array3 = new double[2];
@@ -286,14 +286,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             writer.WriteStartElement("Transform");
             writer.WriteAttributeString("input", "SourceSpace");
             writer.WriteAttributeString("output", "Mercator");
-            this.sourceToDestMercatorTransformer_approximate.writeToXml(writer);
+            sourceToDestMercatorTransformer_approximate.writeToXml(writer);
             writer.WriteEndElement();
             writer.WriteStartElement("Transform");
             writer.WriteAttributeString("input", "Mercator");
             writer.WriteAttributeString("output", "SourceSpace");
             writer.WriteComment(
                 "This is the 'canonical' transform MapCruncher uses to warp its images. It numerically inverts this transform to compute its inverse. The SourceSpace->Mercator transform should be considered an approximation to the numerical inversion.");
-            this.destMercatorToSourceTransformer.writeToXml(writer);
+            destMercatorToSourceTransformer.writeToXml(writer);
             writer.WriteEndElement();
         }
     }

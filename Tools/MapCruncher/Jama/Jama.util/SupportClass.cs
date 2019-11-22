@@ -30,11 +30,11 @@ public class SupportClass
         {
             get
             {
-                return this.groupingActivated;
+                return groupingActivated;
             }
             set
             {
-                this.groupingActivated = value;
+                groupingActivated = value;
             }
         }
 
@@ -42,11 +42,11 @@ public class SupportClass
         {
             get
             {
-                return this.minIntDigits;
+                return minIntDigits;
             }
             set
             {
-                this.minIntDigits = value;
+                minIntDigits = value;
             }
         }
 
@@ -54,11 +54,11 @@ public class SupportClass
         {
             get
             {
-                return this.maxIntDigits;
+                return maxIntDigits;
             }
             set
             {
-                this.maxIntDigits = value;
+                maxIntDigits = value;
             }
         }
 
@@ -66,11 +66,11 @@ public class SupportClass
         {
             get
             {
-                return this.minFractionDigits;
+                return minFractionDigits;
             }
             set
             {
-                this.minFractionDigits = value;
+                minFractionDigits = value;
             }
         }
 
@@ -78,114 +78,114 @@ public class SupportClass
         {
             get
             {
-                return this.maxFractionDigits;
+                return maxFractionDigits;
             }
             set
             {
-                this.maxFractionDigits = value;
+                maxFractionDigits = value;
             }
         }
 
         public TextNumberFormat()
         {
-            this.numberFormat = new NumberFormatInfo();
-            this.numberFormatType = 0;
-            this.groupingActivated = true;
-            this.separator = this.GetSeparator(0);
-            this.maxIntDigits = 127;
-            this.minIntDigits = 1;
-            this.maxFractionDigits = 3;
-            this.minFractionDigits = 0;
+            numberFormat = new NumberFormatInfo();
+            numberFormatType = 0;
+            groupingActivated = true;
+            separator = GetSeparator(0);
+            maxIntDigits = 127;
+            minIntDigits = 1;
+            maxFractionDigits = 3;
+            minFractionDigits = 0;
         }
 
         public void setMaximumIntegerDigits(int newValue)
         {
-            this.maxIntDigits = newValue;
+            maxIntDigits = newValue;
             if (newValue <= 0)
             {
-                this.maxIntDigits = 0;
-                this.minIntDigits = 0;
+                maxIntDigits = 0;
+                minIntDigits = 0;
             }
             else
             {
-                if (this.maxIntDigits < this.minIntDigits)
+                if (maxIntDigits < minIntDigits)
                 {
-                    this.minIntDigits = this.maxIntDigits;
+                    minIntDigits = maxIntDigits;
                 }
             }
         }
 
         public void setMinimumIntegerDigits(int newValue)
         {
-            this.minIntDigits = newValue;
+            minIntDigits = newValue;
             if (newValue <= 0)
             {
-                this.minIntDigits = 0;
+                minIntDigits = 0;
             }
             else
             {
-                if (this.maxIntDigits < this.minIntDigits)
+                if (maxIntDigits < minIntDigits)
                 {
-                    this.maxIntDigits = this.minIntDigits;
+                    maxIntDigits = minIntDigits;
                 }
             }
         }
 
         public void setMaximumFractionDigits(int newValue)
         {
-            this.maxFractionDigits = newValue;
+            maxFractionDigits = newValue;
             if (newValue <= 0)
             {
-                this.maxFractionDigits = 0;
-                this.minFractionDigits = 0;
+                maxFractionDigits = 0;
+                minFractionDigits = 0;
             }
             else
             {
-                if (this.maxFractionDigits < this.minFractionDigits)
+                if (maxFractionDigits < minFractionDigits)
                 {
-                    this.minFractionDigits = this.maxFractionDigits;
+                    minFractionDigits = maxFractionDigits;
                 }
             }
         }
 
         public void setMinimumFractionDigits(int newValue)
         {
-            this.minFractionDigits = newValue;
+            minFractionDigits = newValue;
             if (newValue <= 0)
             {
-                this.minFractionDigits = 0;
+                minFractionDigits = 0;
             }
             else
             {
-                if (this.maxFractionDigits < this.minFractionDigits)
+                if (maxFractionDigits < minFractionDigits)
                 {
-                    this.maxFractionDigits = this.minFractionDigits;
+                    maxFractionDigits = minFractionDigits;
                 }
             }
         }
 
         private TextNumberFormat(formatTypes theType, int digits)
         {
-            this.numberFormat = NumberFormatInfo.CurrentInfo;
-            this.numberFormatType = (int)theType;
-            this.groupingActivated = true;
-            this.separator = this.GetSeparator((int)theType);
-            this.maxIntDigits = 127;
-            this.minIntDigits = 1;
-            this.maxFractionDigits = 3;
-            this.minFractionDigits = 0;
+            numberFormat = NumberFormatInfo.CurrentInfo;
+            numberFormatType = (int)theType;
+            groupingActivated = true;
+            separator = GetSeparator((int)theType);
+            maxIntDigits = 127;
+            minIntDigits = 1;
+            maxFractionDigits = 3;
+            minFractionDigits = 0;
         }
 
         private TextNumberFormat(formatTypes theType, CultureInfo cultureNumberFormat, int digits)
         {
-            this.numberFormat = cultureNumberFormat.NumberFormat;
-            this.numberFormatType = (int)theType;
-            this.groupingActivated = true;
-            this.separator = this.GetSeparator((int)theType);
-            this.maxIntDigits = 127;
-            this.minIntDigits = 1;
-            this.maxFractionDigits = 3;
-            this.minFractionDigits = 0;
+            numberFormat = cultureNumberFormat.NumberFormat;
+            numberFormatType = (int)theType;
+            groupingActivated = true;
+            separator = GetSeparator((int)theType);
+            maxIntDigits = 127;
+            minIntDigits = 1;
+            maxFractionDigits = 3;
+            minFractionDigits = 0;
         }
 
         public static TextNumberFormat getTextNumberInstance()
@@ -230,21 +230,21 @@ public class SupportClass
         public override bool Equals(object obj)
         {
             bool result;
-            if (obj == null || base.GetType() != obj.GetType())
+            if (obj == null || GetType() != obj.GetType())
             {
                 result = false;
             }
             else
             {
                 TextNumberFormat textNumberFormat = (TextNumberFormat)obj;
-                result = this.numberFormat == textNumberFormat.numberFormat &&
-                         this.numberFormatType == textNumberFormat.numberFormatType &&
-                         this.groupingActivated == textNumberFormat.groupingActivated &&
-                         this.separator == textNumberFormat.separator &&
-                         this.maxIntDigits == textNumberFormat.maxIntDigits &&
-                         this.minIntDigits == textNumberFormat.minIntDigits &&
-                         this.maxFractionDigits == textNumberFormat.maxFractionDigits &&
-                         this.minFractionDigits == textNumberFormat.minFractionDigits;
+                result = numberFormat == textNumberFormat.numberFormat &&
+                         numberFormatType == textNumberFormat.numberFormatType &&
+                         groupingActivated == textNumberFormat.groupingActivated &&
+                         separator == textNumberFormat.separator &&
+                         maxIntDigits == textNumberFormat.maxIntDigits &&
+                         minIntDigits == textNumberFormat.minIntDigits &&
+                         maxFractionDigits == textNumberFormat.maxFractionDigits &&
+                         minFractionDigits == textNumberFormat.minFractionDigits;
             }
 
             return result;
@@ -252,24 +252,24 @@ public class SupportClass
 
         public override int GetHashCode()
         {
-            return this.numberFormat.GetHashCode() ^ this.numberFormatType ^ this.groupingActivated.GetHashCode() ^
-                   this.separator.GetHashCode() ^ this.maxIntDigits ^ this.minIntDigits ^ this.maxFractionDigits ^
-                   this.minFractionDigits;
+            return numberFormat.GetHashCode() ^ numberFormatType ^ groupingActivated.GetHashCode() ^
+                   separator.GetHashCode() ^ maxIntDigits ^ minIntDigits ^ maxFractionDigits ^
+                   minFractionDigits;
         }
 
         public string FormatDouble(double number)
         {
             string result;
-            if (this.groupingActivated)
+            if (groupingActivated)
             {
-                result = this.SetIntDigits(
-                    number.ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat));
+                result = SetIntDigits(
+                    number.ToString(GetCurrentFormatString() + GetNumberOfDigits(number), numberFormat));
             }
             else
             {
-                result = this.SetIntDigits(number
-                    .ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat)
-                    .Replace(this.separator, ""));
+                result = SetIntDigits(number
+                    .ToString(GetCurrentFormatString() + GetNumberOfDigits(number), numberFormat)
+                    .Replace(separator, ""));
             }
 
             return result;
@@ -278,16 +278,16 @@ public class SupportClass
         public string FormatLong(long number)
         {
             string result;
-            if (this.groupingActivated)
+            if (groupingActivated)
             {
-                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.minFractionDigits,
-                    this.numberFormat));
+                result = SetIntDigits(number.ToString(GetCurrentFormatString() + minFractionDigits,
+                    numberFormat));
             }
             else
             {
-                result = this.SetIntDigits(number
-                    .ToString(this.GetCurrentFormatString() + this.minFractionDigits, this.numberFormat)
-                    .Replace(this.separator, ""));
+                result = SetIntDigits(number
+                    .ToString(GetCurrentFormatString() + minFractionDigits, numberFormat)
+                    .Replace(separator, ""));
             }
 
             return result;
@@ -296,29 +296,29 @@ public class SupportClass
         private string SetIntDigits(string number)
         {
             string str = "";
-            int i = number.IndexOf(this.numberFormat.NumberDecimalSeparator);
+            int i = number.IndexOf(numberFormat.NumberDecimalSeparator);
             string text;
             if (i > 0)
             {
                 str = number.Substring(i);
-                text = number.Substring(0, i).Replace(this.numberFormat.NumberGroupSeparator, "");
+                text = number.Substring(0, i).Replace(numberFormat.NumberGroupSeparator, "");
             }
             else
             {
-                text = number.Replace(this.numberFormat.NumberGroupSeparator, "");
+                text = number.Replace(numberFormat.NumberGroupSeparator, "");
             }
 
-            text = text.PadLeft(this.MinIntDigits, '0');
-            if ((i = text.Length - this.MaxIntDigits) > 0)
+            text = text.PadLeft(MinIntDigits, '0');
+            if ((i = text.Length - MaxIntDigits) > 0)
             {
                 text = text.Remove(0, i);
             }
 
-            if (this.groupingActivated)
+            if (groupingActivated)
             {
                 for (i = text.Length; i > 3; i -= 3)
                 {
-                    text = text.Insert(i - 3, this.numberFormat.NumberGroupSeparator);
+                    text = text.Insert(i - 3, numberFormat.NumberGroupSeparator);
                 }
             }
 
@@ -344,7 +344,7 @@ public class SupportClass
         private string GetCurrentFormatString()
         {
             string result = "n";
-            switch (this.numberFormatType)
+            switch (numberFormatType)
             {
                 case 0:
                     result = "n";
@@ -369,16 +369,16 @@ public class SupportClass
             switch (numberFormatType)
             {
                 case 0:
-                    result = this.numberFormat.NumberGroupSeparator;
+                    result = numberFormat.NumberGroupSeparator;
                     break;
                 case 1:
-                    result = this.numberFormat.NumberGroupSeparator;
+                    result = numberFormat.NumberGroupSeparator;
                     break;
                 case 2:
-                    result = this.numberFormat.CurrencyGroupSeparator;
+                    result = numberFormat.CurrencyGroupSeparator;
                     break;
                 case 3:
-                    result = this.numberFormat.PercentGroupSeparator;
+                    result = numberFormat.PercentGroupSeparator;
                     break;
             }
 
@@ -409,8 +409,8 @@ public class SupportClass
                 num++;
             }
 
-            return num < this.minFractionDigits ? this.minFractionDigits :
-                num < this.maxFractionDigits ? num : this.maxFractionDigits;
+            return num < minFractionDigits ? minFractionDigits :
+                num < maxFractionDigits ? num : maxFractionDigits;
         }
     }
 
@@ -421,15 +421,15 @@ public class SupportClass
 
         public BackStringReader(string s) : base(s)
         {
-            this.buffer = new char[this.position];
+            buffer = new char[position];
         }
 
         public override int Read()
         {
             int result;
-            if (this.position >= 0 && this.position < this.buffer.Length)
+            if (position >= 0 && position < buffer.Length)
             {
-                result = (int)this.buffer[this.position++];
+                result = (int)buffer[position++];
             }
             else
             {
@@ -441,7 +441,7 @@ public class SupportClass
 
         public override int Read(char[] array, int index, int count)
         {
-            int num = this.buffer.Length - this.position;
+            int num = buffer.Length - position;
             int result;
             if (count <= 0)
             {
@@ -456,10 +456,10 @@ public class SupportClass
                         num = count;
                     }
 
-                    Array.Copy(this.buffer, this.position, array, index, num);
+                    Array.Copy(buffer, position, array, index, num);
                     count -= num;
                     index += num;
-                    this.position += num;
+                    position += num;
                 }
 
                 if (count > 0)
@@ -492,25 +492,25 @@ public class SupportClass
 
         public void UnRead(int unReadChar)
         {
-            this.position--;
-            this.buffer[this.position] = (char)unReadChar;
+            position--;
+            buffer[position] = (char)unReadChar;
         }
 
         public void UnRead(char[] array, int index, int count)
         {
-            this.Move(array, index, count);
+            Move(array, index, count);
         }
 
         public void UnRead(char[] array)
         {
-            this.Move(array, 0, array.Length - 1);
+            Move(array, 0, array.Length - 1);
         }
 
         private void Move(char[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
             {
-                this.UnRead((int)array[i]);
+                UnRead((int)array[i]);
             }
         }
     }
@@ -571,19 +571,19 @@ public class SupportClass
         private int read()
         {
             int result;
-            if (this.inReader != null)
+            if (inReader != null)
             {
-                result = this.inReader.Read();
+                result = inReader.Read();
             }
             else
             {
-                if (this.inStream != null)
+                if (inStream != null)
                 {
-                    result = this.inStream.Read();
+                    result = inStream.Read();
                 }
                 else
                 {
-                    result = this.inStringReader.Read();
+                    result = inStringReader.Read();
                 }
             }
 
@@ -592,35 +592,35 @@ public class SupportClass
 
         private void unread(int ch)
         {
-            if (this.inReader != null)
+            if (inReader != null)
             {
-                this.inReader.UnRead(ch);
+                inReader.UnRead(ch);
             }
             else
             {
-                if (this.inStream != null)
+                if (inStream != null)
                 {
-                    this.inStream.UnRead(ch);
+                    inStream.UnRead(ch);
                 }
                 else
                 {
-                    this.inStringReader.UnRead(ch);
+                    inStringReader.UnRead(ch);
                 }
             }
         }
 
         private void init()
         {
-            this.buf = new StringBuilder();
-            this.ttype = -4;
-            this.WordChars(65, 90);
-            this.WordChars(97, 122);
-            this.WordChars(160, 255);
-            this.WhitespaceChars(0, 32);
-            this.CommentChar(47);
-            this.QuoteChar(39);
-            this.QuoteChar(34);
-            this.ParseNumbers();
+            buf = new StringBuilder();
+            ttype = -4;
+            WordChars(65, 90);
+            WordChars(97, 122);
+            WordChars(160, 255);
+            WhitespaceChars(0, 32);
+            CommentChar(47);
+            QuoteChar(39);
+            QuoteChar(34);
+            ParseNumbers();
         }
 
         private void setAttributes(int low, int hi, sbyte attrib)
@@ -629,14 +629,14 @@ public class SupportClass
             int num2 = Math.Min(255, hi);
             for (int i = num; i <= num2; i++)
             {
-                this.attribute[i] = attrib;
+                attribute[i] = attrib;
             }
         }
 
         private bool isWordChar(int data)
         {
             char c = (char)data;
-            return data != -1 && (c > 'ÿ' || this.attribute[(int)c] == 1 || this.attribute[(int)c] == 16);
+            return data != -1 && (c > 'ÿ' || attribute[(int)c] == 1 || attribute[(int)c] == 16);
         }
 
         public StreamTokenizerSupport(StringReader reader)
@@ -648,45 +648,45 @@ public class SupportClass
             }
 
             reader.Close();
-            this.inStringReader = new BackStringReader(text);
-            this.init();
+            inStringReader = new BackStringReader(text);
+            init();
         }
 
         public StreamTokenizerSupport(StreamReader reader)
         {
-            this.inReader = new BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream,
+            inReader = new BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream,
                 2,
                 reader.CurrentEncoding);
-            this.init();
+            init();
         }
 
         public StreamTokenizerSupport(Stream stream)
         {
-            this.inStream = new BackInputStream(new BufferedStream(stream), 2);
-            this.init();
+            inStream = new BackInputStream(new BufferedStream(stream), 2);
+            init();
         }
 
         public virtual void CommentChar(int ch)
         {
             if (ch >= 0 && ch <= 255)
             {
-                this.attribute[ch] = 4;
+                attribute[ch] = 4;
             }
         }
 
         public virtual void EOLIsSignificant(bool flag)
         {
-            this.eolIsSignificant = flag;
+            eolIsSignificant = flag;
         }
 
         public virtual int Lineno()
         {
-            return this.lineno;
+            return lineno;
         }
 
         public virtual void LowerCaseMode(bool flag)
         {
-            this.lowerCaseMode = flag;
+            lowerCaseMode = flag;
         }
 
         public virtual int NextToken()
@@ -695,21 +695,21 @@ public class SupportClass
             char c2 = '\0';
             int num = 0;
             int result;
-            if (this.pushedback)
+            if (pushedback)
             {
-                this.pushedback = false;
-                result = this.ttype;
+                pushedback = false;
+                result = ttype;
             }
             else
             {
-                this.ttype = -4;
+                ttype = -4;
                 int num2 = 0;
-                this.nval = 0.0;
-                this.sval = null;
-                this.buf.Length = 0;
+                nval = 0.0;
+                sval = null;
+                buf.Length = 0;
                 do
                 {
-                    int num3 = this.read();
+                    int num3 = read();
                     char c3 = c;
                     c = (char)num3;
                     switch (num2)
@@ -717,37 +717,37 @@ public class SupportClass
                         case 0:
                             if (num3 == -1)
                             {
-                                this.ttype = -1;
+                                ttype = -1;
                                 num2 = 100;
                             }
                             else
                             {
                                 if (c > 'ÿ')
                                 {
-                                    this.buf.Append(c);
-                                    this.ttype = -3;
+                                    buf.Append(c);
+                                    ttype = -3;
                                     num2 = 1;
                                 }
                                 else
                                 {
-                                    if (this.attribute[(int)c] == 4)
+                                    if (attribute[(int)c] == 4)
                                     {
                                         num2 = 7;
                                     }
                                     else
                                     {
-                                        if (this.attribute[(int)c] == 1)
+                                        if (attribute[(int)c] == 1)
                                         {
-                                            this.buf.Append(c);
-                                            this.ttype = -3;
+                                            buf.Append(c);
+                                            ttype = -3;
                                             num2 = 1;
                                         }
                                         else
                                         {
-                                            if (this.attribute[(int)c] == 16)
+                                            if (attribute[(int)c] == 16)
                                             {
-                                                this.ttype = -2;
-                                                this.buf.Append(c);
+                                                ttype = -2;
+                                                buf.Append(c);
                                                 if (c == '-')
                                                 {
                                                     num2 = 2;
@@ -766,33 +766,33 @@ public class SupportClass
                                             }
                                             else
                                             {
-                                                if (this.attribute[(int)c] == 8)
+                                                if (attribute[(int)c] == 8)
                                                 {
                                                     c2 = c;
-                                                    this.ttype = (int)c;
+                                                    ttype = (int)c;
                                                     num2 = 6;
                                                 }
                                                 else
                                                 {
-                                                    if ((this.slashSlashComments || this.slashStarComments) && c == '/')
+                                                    if ((slashSlashComments || slashStarComments) && c == '/')
                                                     {
                                                         num2 = 10;
                                                     }
                                                     else
                                                     {
-                                                        if (this.attribute[(int)c] == 0)
+                                                        if (attribute[(int)c] == 0)
                                                         {
-                                                            this.ttype = (int)c;
+                                                            ttype = (int)c;
                                                             num2 = 100;
                                                         }
                                                         else
                                                         {
                                                             if (c == '\n' || c == '\r')
                                                             {
-                                                                this.lineno++;
-                                                                if (this.eolIsSignificant)
+                                                                lineno++;
+                                                                if (eolIsSignificant)
                                                                 {
-                                                                    this.ttype = 10;
+                                                                    ttype = 10;
                                                                     if (c == '\n')
                                                                     {
                                                                         num2 = 100;
@@ -824,44 +824,44 @@ public class SupportClass
 
                             break;
                         case 1:
-                            if (this.isWordChar(num3))
+                            if (isWordChar(num3))
                             {
-                                this.buf.Append(c);
+                                buf.Append(c);
                             }
                             else
                             {
                                 if (num3 != -1)
                                 {
-                                    this.unread((int)c);
+                                    unread((int)c);
                                 }
 
-                                this.sval = this.buf.ToString();
+                                sval = buf.ToString();
                                 num2 = 100;
                             }
 
                             break;
                         case 2:
-                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
+                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-')
                             {
-                                if (this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                if (attribute[(int)c] == 4 && char.IsNumber(c))
                                 {
-                                    this.buf.Append(c);
+                                    buf.Append(c);
                                     num2 = 3;
                                 }
                                 else
                                 {
                                     if (num3 != -1)
                                     {
-                                        this.unread((int)c);
+                                        unread((int)c);
                                     }
 
-                                    this.ttype = 45;
+                                    ttype = 45;
                                     num2 = 100;
                                 }
                             }
                             else
                             {
-                                this.buf.Append(c);
+                                buf.Append(c);
                                 if (c == '.')
                                 {
                                     num2 = 4;
@@ -874,34 +874,34 @@ public class SupportClass
 
                             break;
                         case 3:
-                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
+                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-')
                             {
-                                if (char.IsNumber(c) && this.attribute[(int)c] == 1)
+                                if (char.IsNumber(c) && attribute[(int)c] == 1)
                                 {
-                                    this.buf.Append(c);
+                                    buf.Append(c);
                                 }
                                 else
                                 {
-                                    if (c == '.' && this.attribute[(int)c] == 2)
+                                    if (c == '.' && attribute[(int)c] == 2)
                                     {
-                                        this.buf.Append(c);
+                                        buf.Append(c);
                                     }
                                     else
                                     {
-                                        if (num3 != -1 && this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                        if (num3 != -1 && attribute[(int)c] == 4 && char.IsNumber(c))
                                         {
-                                            this.buf.Append(c);
+                                            buf.Append(c);
                                         }
                                         else
                                         {
                                             if (num3 != -1)
                                             {
-                                                this.unread((int)c);
+                                                unread((int)c);
                                             }
 
                                             try
                                             {
-                                                this.nval = double.Parse(this.buf.ToString());
+                                                nval = double.Parse(buf.ToString());
                                             }
                                             catch (FormatException)
                                             {
@@ -914,7 +914,7 @@ public class SupportClass
                             }
                             else
                             {
-                                this.buf.Append(c);
+                                buf.Append(c);
                                 if (c == '.')
                                 {
                                     num2 = 4;
@@ -923,36 +923,36 @@ public class SupportClass
 
                             break;
                         case 4:
-                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
+                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-' || c == '.')
                             {
-                                if (this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                if (attribute[(int)c] == 4 && char.IsNumber(c))
                                 {
-                                    this.buf.Append(c);
+                                    buf.Append(c);
                                 }
                                 else
                                 {
                                     if (num3 != -1)
                                     {
-                                        this.unread((int)c);
+                                        unread((int)c);
                                     }
 
-                                    string text = this.buf.ToString();
+                                    string text = buf.ToString();
                                     if (text.Equals("-."))
                                     {
-                                        this.unread(46);
-                                        this.ttype = 45;
+                                        unread(46);
+                                        ttype = 45;
                                     }
                                     else
                                     {
-                                        if (text.Equals(".") && 1 == this.attribute[(int)c3])
+                                        if (text.Equals(".") && 1 == attribute[(int)c3])
                                         {
-                                            this.ttype = 46;
+                                            ttype = 46;
                                         }
                                         else
                                         {
                                             try
                                             {
-                                                this.nval = double.Parse(text);
+                                                nval = double.Parse(text);
                                             }
                                             catch (FormatException)
                                             {
@@ -965,22 +965,22 @@ public class SupportClass
                             }
                             else
                             {
-                                this.buf.Append(c);
+                                buf.Append(c);
                                 num2 = 5;
                             }
 
                             break;
                         case 5:
-                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
+                            if (num3 == -1 || attribute[(int)c] != 16 || c == '-' || c == '.')
                             {
                                 if (num3 != -1)
                                 {
-                                    this.unread((int)c);
+                                    unread((int)c);
                                 }
 
                                 try
                                 {
-                                    this.nval = double.Parse(this.buf.ToString());
+                                    nval = double.Parse(buf.ToString());
                                 }
                                 catch (FormatException)
                                 {
@@ -990,17 +990,17 @@ public class SupportClass
                             }
                             else
                             {
-                                this.buf.Append(c);
+                                buf.Append(c);
                             }
 
                             break;
                         case 6:
                             if (num3 == -1 || c == c2 || c == '\r' || c == '\n')
                             {
-                                this.sval = this.buf.ToString();
+                                sval = buf.ToString();
                                 if (c == '\r' || c == '\n')
                                 {
-                                    this.unread((int)c);
+                                    unread((int)c);
                                 }
 
                                 num2 = 100;
@@ -1013,7 +1013,7 @@ public class SupportClass
                                 }
                                 else
                                 {
-                                    this.buf.Append(c);
+                                    buf.Append(c);
                                 }
                             }
 
@@ -1021,14 +1021,14 @@ public class SupportClass
                         case 7:
                             if (num3 == -1)
                             {
-                                this.ttype = -1;
+                                ttype = -1;
                                 num2 = 100;
                             }
                             else
                             {
                                 if (c == '\n' || c == '\r')
                                 {
-                                    this.unread((int)c);
+                                    unread((int)c);
                                     num2 = 0;
                                 }
                             }
@@ -1037,7 +1037,7 @@ public class SupportClass
                         case 8:
                             if (c != '\n' && num3 != -1)
                             {
-                                this.unread((int)c);
+                                unread((int)c);
                             }
 
                             num2 = 100;
@@ -1045,7 +1045,7 @@ public class SupportClass
                         case 9:
                             if (c != '\n' && num3 != -1)
                             {
-                                this.unread((int)c);
+                                unread((int)c);
                             }
 
                             num2 = 0;
@@ -1065,10 +1065,10 @@ public class SupportClass
                                 {
                                     if (num3 != -1)
                                     {
-                                        this.unread((int)c);
+                                        unread((int)c);
                                     }
 
-                                    this.ttype = 47;
+                                    ttype = 47;
                                     num2 = 100;
                                 }
                             }
@@ -1077,7 +1077,7 @@ public class SupportClass
                         case 11:
                             if (num3 == -1)
                             {
-                                this.ttype = -1;
+                                ttype = -1;
                                 num2 = 100;
                             }
                             else
@@ -1104,13 +1104,13 @@ public class SupportClass
 
                             if (c == '\n')
                             {
-                                this.lineno++;
+                                lineno++;
                             }
                             else
                             {
                                 if (num3 == -1)
                                 {
-                                    this.ttype = -1;
+                                    ttype = -1;
                                     num2 = 100;
                                 }
                             }
@@ -1119,7 +1119,7 @@ public class SupportClass
                         case 13:
                             if (num3 == -1)
                             {
-                                this.sval = this.buf.ToString();
+                                sval = buf.ToString();
                                 num2 = 100;
                             }
                             else
@@ -1127,43 +1127,43 @@ public class SupportClass
                                 num2 = 6;
                                 if (c == 'a')
                                 {
-                                    this.buf.Append(7);
+                                    buf.Append(7);
                                 }
                                 else
                                 {
                                     if (c == 'b')
                                     {
-                                        this.buf.Append('\b');
+                                        buf.Append('\b');
                                     }
                                     else
                                     {
                                         if (c == 'f')
                                         {
-                                            this.buf.Append(12);
+                                            buf.Append(12);
                                         }
                                         else
                                         {
                                             if (c == 'n')
                                             {
-                                                this.buf.Append('\n');
+                                                buf.Append('\n');
                                             }
                                             else
                                             {
                                                 if (c == 'r')
                                                 {
-                                                    this.buf.Append('\r');
+                                                    buf.Append('\r');
                                                 }
                                                 else
                                                 {
                                                     if (c == 't')
                                                     {
-                                                        this.buf.Append('\t');
+                                                        buf.Append('\t');
                                                     }
                                                     else
                                                     {
                                                         if (c == 'v')
                                                         {
-                                                            this.buf.Append(11);
+                                                            buf.Append(11);
                                                         }
                                                         else
                                                         {
@@ -1174,7 +1174,7 @@ public class SupportClass
                                                             }
                                                             else
                                                             {
-                                                                this.buf.Append(c);
+                                                                buf.Append(c);
                                                             }
                                                         }
                                                     }
@@ -1189,15 +1189,15 @@ public class SupportClass
                         case 14:
                             if (num3 == -1 || c < '0' || c > '7')
                             {
-                                this.buf.Append((char)num);
+                                buf.Append((char)num);
                                 if (num3 == -1)
                                 {
-                                    this.sval = this.buf.ToString();
+                                    sval = buf.ToString();
                                     num2 = 100;
                                 }
                                 else
                                 {
-                                    this.unread((int)c);
+                                    unread((int)c);
                                     num2 = 6;
                                 }
                             }
@@ -1210,8 +1210,8 @@ public class SupportClass
                                 }
                                 else
                                 {
-                                    this.buf.Append((char)num);
-                                    this.buf.Append(c);
+                                    buf.Append((char)num);
+                                    buf.Append(c);
                                     num2 = 6;
                                 }
                             }
@@ -1220,12 +1220,12 @@ public class SupportClass
                     }
                 } while (num2 != 100);
 
-                if (this.ttype == -3 && this.lowerCaseMode)
+                if (ttype == -3 && lowerCaseMode)
                 {
-                    this.sval = this.sval.ToLower();
+                    sval = sval.ToLower();
                 }
 
-                result = this.ttype;
+                result = ttype;
             }
 
             return result;
@@ -1235,31 +1235,31 @@ public class SupportClass
         {
             if (ch >= 0 && ch <= 255)
             {
-                this.attribute[ch] = 0;
+                attribute[ch] = 0;
             }
         }
 
         public virtual void OrdinaryChars(int low, int hi)
         {
-            this.setAttributes(low, hi, 0);
+            setAttributes(low, hi, 0);
         }
 
         public virtual void ParseNumbers()
         {
             for (int i = 48; i <= 57; i++)
             {
-                this.attribute[i] = 16;
+                attribute[i] = 16;
             }
 
-            this.attribute[46] = 16;
-            this.attribute[45] = 16;
+            attribute[46] = 16;
+            attribute[45] = 16;
         }
 
         public virtual void PushBack()
         {
-            if (this.ttype != -4)
+            if (ttype != -4)
             {
-                this.pushedback = true;
+                pushedback = true;
             }
         }
 
@@ -1267,40 +1267,40 @@ public class SupportClass
         {
             if (ch >= 0 && ch <= 255)
             {
-                this.attribute[ch] = 8;
+                attribute[ch] = 8;
             }
         }
 
         public virtual void ResetSyntax()
         {
-            this.OrdinaryChars(0, 255);
+            OrdinaryChars(0, 255);
         }
 
         public virtual void SlashSlashComments(bool flag)
         {
-            this.slashSlashComments = flag;
+            slashSlashComments = flag;
         }
 
         public virtual void SlashStarComments(bool flag)
         {
-            this.slashStarComments = flag;
+            slashStarComments = flag;
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("Token[");
-            int num = this.ttype;
+            int num = ttype;
             switch (num)
             {
                 case -4:
                     stringBuilder.Append("NOTHING");
                     break;
                 case -3:
-                    stringBuilder.Append(this.sval);
+                    stringBuilder.Append(sval);
                     break;
                 case -2:
                     stringBuilder.Append("number=");
-                    stringBuilder.Append(this.nval);
+                    stringBuilder.Append(nval);
                     break;
                 case -1:
                     stringBuilder.Append("EOF");
@@ -1314,34 +1314,34 @@ public class SupportClass
                     break;
             }
 
-            if (this.ttype > 0)
+            if (ttype > 0)
             {
-                if (this.attribute[this.ttype] == 8)
+                if (attribute[ttype] == 8)
                 {
                     stringBuilder.Append("quoted string=");
-                    stringBuilder.Append(this.sval);
+                    stringBuilder.Append(sval);
                 }
                 else
                 {
                     stringBuilder.Append('\'');
-                    stringBuilder.Append((char)this.ttype);
+                    stringBuilder.Append((char)ttype);
                     stringBuilder.Append('\'');
                 }
             }
 
             stringBuilder.Append("], Line ");
-            stringBuilder.Append(this.lineno);
+            stringBuilder.Append(lineno);
             return stringBuilder.ToString();
         }
 
         public virtual void WhitespaceChars(int low, int hi)
         {
-            this.setAttributes(low, hi, 2);
+            setAttributes(low, hi, 2);
         }
 
         public virtual void WordChars(int low, int hi)
         {
-            this.setAttributes(low, hi, 1);
+            setAttributes(low, hi, 1);
         }
     }
 
@@ -1352,13 +1352,13 @@ public class SupportClass
 
         public BackReader(Stream streamReader, int size, Encoding encoding) : base(streamReader, encoding)
         {
-            this.buffer = new char[size];
-            this.position = size;
+            buffer = new char[size];
+            position = size;
         }
 
         public BackReader(Stream streamReader, Encoding encoding) : base(streamReader, encoding)
         {
-            this.buffer = new char[this.position];
+            buffer = new char[position];
         }
 
         public bool MarkSupported()
@@ -1379,9 +1379,9 @@ public class SupportClass
         public override int Read()
         {
             int result;
-            if (this.position >= 0 && this.position < this.buffer.Length)
+            if (position >= 0 && position < buffer.Length)
             {
-                result = (int)this.buffer[this.position++];
+                result = (int)buffer[position++];
             }
             else
             {
@@ -1393,7 +1393,7 @@ public class SupportClass
 
         public override int Read(char[] array, int index, int count)
         {
-            int num = this.buffer.Length - this.position;
+            int num = buffer.Length - position;
             int result;
             if (count <= 0)
             {
@@ -1408,10 +1408,10 @@ public class SupportClass
                         num = count;
                     }
 
-                    Array.Copy(this.buffer, this.position, array, index, num);
+                    Array.Copy(buffer, position, array, index, num);
                     count -= num;
                     index += num;
-                    this.position += num;
+                    position += num;
                 }
 
                 if (count > 0)
@@ -1444,30 +1444,30 @@ public class SupportClass
 
         public bool IsReady()
         {
-            return this.position >= this.buffer.Length || this.BaseStream.Position >= this.BaseStream.Length;
+            return position >= buffer.Length || BaseStream.Position >= BaseStream.Length;
         }
 
         public void UnRead(int unReadChar)
         {
-            this.position--;
-            this.buffer[this.position] = (char)unReadChar;
+            position--;
+            buffer[position] = (char)unReadChar;
         }
 
         public void UnRead(char[] array, int index, int count)
         {
-            this.Move(array, index, count);
+            Move(array, index, count);
         }
 
         public void UnRead(char[] array)
         {
-            this.Move(array, 0, array.Length - 1);
+            Move(array, 0, array.Length - 1);
         }
 
         private void Move(char[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
             {
-                this.UnRead((int)array[i]);
+                UnRead((int)array[i]);
             }
         }
     }
@@ -1479,13 +1479,13 @@ public class SupportClass
 
         public BackInputStream(Stream streamReader, int size) : base(streamReader)
         {
-            this.buffer = new byte[size];
-            this.position = size;
+            buffer = new byte[size];
+            position = size;
         }
 
         public BackInputStream(Stream streamReader) : base(streamReader)
         {
-            this.buffer = new byte[this.position];
+            buffer = new byte[position];
         }
 
         public bool MarkSupported()
@@ -1496,9 +1496,9 @@ public class SupportClass
         public override int Read()
         {
             int result;
-            if (this.position >= 0 && this.position < this.buffer.Length)
+            if (position >= 0 && position < buffer.Length)
             {
-                result = (int)this.buffer[this.position++];
+                result = (int)buffer[position++];
             }
             else
             {
@@ -1513,9 +1513,9 @@ public class SupportClass
             int num = count + index;
             byte[] array2 = ToByteArray(array);
             int num2 = 0;
-            while (this.position < this.buffer.Length && index < num)
+            while (position < buffer.Length && index < num)
             {
-                array2[index++] = this.buffer[this.position++];
+                array2[index++] = buffer[position++];
                 num2++;
             }
 
@@ -1534,33 +1534,33 @@ public class SupportClass
 
         public void UnRead(int element)
         {
-            this.position--;
-            if (this.position >= 0)
+            position--;
+            if (position >= 0)
             {
-                this.buffer[this.position] = (byte)element;
+                buffer[position] = (byte)element;
             }
         }
 
         public void UnRead(byte[] array, int index, int count)
         {
-            this.Move(array, index, count);
+            Move(array, index, count);
         }
 
         public void UnRead(byte[] array)
         {
-            this.Move(array, 0, array.Length - 1);
+            Move(array, 0, array.Length - 1);
         }
 
         public long Skip(long numberOfBytes)
         {
-            return this.BaseStream.Seek(numberOfBytes, SeekOrigin.Current) - this.BaseStream.Position;
+            return BaseStream.Seek(numberOfBytes, SeekOrigin.Current) - BaseStream.Position;
         }
 
         private void Move(byte[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
             {
-                this.UnRead((int)array[i]);
+                UnRead((int)array[i]);
             }
         }
     }

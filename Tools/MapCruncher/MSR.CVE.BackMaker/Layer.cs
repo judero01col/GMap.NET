@@ -24,7 +24,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._lastView;
+                return _lastView;
             }
         }
 
@@ -32,11 +32,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._expanded;
+                return _expanded;
             }
             set
             {
-                this._expanded = value;
+                _expanded = value;
             }
         }
 
@@ -44,12 +44,12 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._displayName;
+                return _displayName;
             }
             set
             {
-                this._displayName = value;
-                this.dirtyEvent.SetDirty();
+                _displayName = value;
+                dirtyEvent.SetDirty();
             }
         }
 
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._simulateTransparencyWithVEBackingLayer;
+                return _simulateTransparencyWithVEBackingLayer;
             }
         }
 
@@ -65,7 +65,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._renderClip;
+                return _renderClip;
             }
         }
 
@@ -73,7 +73,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.sourceMaps[0];
+                return sourceMaps[0];
             }
         }
 
@@ -81,23 +81,23 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.sourceMaps.Count;
+                return sourceMaps.Count;
             }
         }
 
         public string GetDisplayName()
         {
-            return this.displayName;
+            return displayName;
         }
 
         public void SetDisplayName(string value)
         {
-            this.displayName = value;
+            displayName = value;
         }
 
         public Layer(LayerList otherLayers, DirtyEvent parentDirty)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
+            dirtyEvent = new DirtyEvent(parentDirty);
             int num = 1;
             string text = "New Layer";
             while (otherLayers.HasLayerNamed(text))
@@ -106,40 +106,40 @@ namespace MSR.CVE.BackMaker
                 text = string.Format("{0} {1}", "New Layer", num);
             }
 
-            this._displayName = text;
+            _displayName = text;
         }
 
         public Layer(MashupParseContext context, SourceMap.GetFilenameContext filenameContextDelegate,
             DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
+            dirtyEvent = new DirtyEvent(parentDirty);
             XMLTagReader xMLTagReader = context.NewTagReader("Layer");
             context.ExpectIdentity(this);
             string attribute = context.reader.GetAttribute("DisplayName");
             if (attribute != null)
             {
-                this._displayName = attribute;
-                context.GetAttributeBoolean("Expanded", ref this._expanded);
+                _displayName = attribute;
+                context.GetAttributeBoolean("Expanded", ref _expanded);
                 string attribute2 = context.reader.GetAttribute("SimulateTransparencyWithVEBackingLayer");
                 if (attribute2 != null)
                 {
-                    this._simulateTransparencyWithVEBackingLayer = attribute2;
+                    _simulateTransparencyWithVEBackingLayer = attribute2;
                 }
 
                 while (xMLTagReader.FindNextStartTag())
                 {
                     if (xMLTagReader.TagIs(SourceMap.GetXMLTag()))
                     {
-                        this.Add(new SourceMap(context,
+                        Add(new SourceMap(context,
                             filenameContextDelegate,
-                            this.dirtyEvent,
+                            dirtyEvent,
                             parentReadyToLockEvent));
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(LayerView.GetXMLTag()))
                         {
-                            this._lastView = new LayerView(this, context);
+                            _lastView = new LayerView(this, context);
                         }
                         else
                         {
@@ -159,14 +159,14 @@ namespace MSR.CVE.BackMaker
 
                                 if (mapPosition != null)
                                 {
-                                    this._lastView = new LayerView(this, mapPosition);
+                                    _lastView = new LayerView(this, mapPosition);
                                 }
                             }
                             else
                             {
                                 if (xMLTagReader.TagIs(RenderClip.GetXMLTag()))
                                 {
-                                    this._renderClip = new RenderClip(context);
+                                    _renderClip = new RenderClip(context);
                                 }
                             }
                         }
@@ -182,22 +182,22 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement("Layer");
-            wc.writer.WriteAttributeString("DisplayName", this._displayName);
-            wc.writer.WriteAttributeString("Expanded", this._expanded.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteAttributeString("DisplayName", _displayName);
+            wc.writer.WriteAttributeString("Expanded", _expanded.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteAttributeString("SimulateTransparencyWithVEBackingLayer",
-                this._simulateTransparencyWithVEBackingLayer);
+                _simulateTransparencyWithVEBackingLayer);
             wc.WriteIdentityAttr(this);
             foreach (SourceMap current in this)
             {
                 current.WriteXML(wc);
             }
 
-            if (this.lastView != null)
+            if (lastView != null)
             {
-                this._lastView.WriteXML(wc.writer);
+                _lastView.WriteXML(wc.writer);
             }
 
-            this._renderClip.WriteXML(wc);
+            _renderClip.WriteXML(wc);
             wc.writer.WriteEndElement();
         }
 
@@ -213,14 +213,14 @@ namespace MSR.CVE.BackMaker
 
         internal string GetFilesystemName()
         {
-            return RenderState.ForceValidFilename(string.Format("Layer_{0}", this.displayName));
+            return RenderState.ForceValidFilename(string.Format("Layer_{0}", displayName));
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("Layer(");
-            hash.Accumulate(this.displayName);
-            foreach (SourceMap current in this.sourceMaps)
+            hash.Accumulate(displayName);
+            foreach (SourceMap current in sourceMaps)
             {
                 current.AccumulateRobustHash(hash);
             }
@@ -231,7 +231,7 @@ namespace MSR.CVE.BackMaker
         public void AccumulateRobustHash_PerTile(CachePackage cachePackage, IRobustHash hash)
         {
             hash.Accumulate("Layer(");
-            foreach (SourceMap current in this.sourceMaps)
+            foreach (SourceMap current in sourceMaps)
             {
                 current.AccumulateRobustHash_PerTile(cachePackage, hash);
             }
@@ -241,36 +241,36 @@ namespace MSR.CVE.BackMaker
 
         public List<SourceMap>.Enumerator GetEnumerator()
         {
-            return this.sourceMaps.GetEnumerator();
+            return sourceMaps.GetEnumerator();
         }
 
         public List<SourceMap> GetBackToFront()
         {
-            List<SourceMap> list = new List<SourceMap>(this.sourceMaps);
+            List<SourceMap> list = new List<SourceMap>(sourceMaps);
             list.Reverse();
             return list;
         }
 
         public void Add(SourceMap sourceMap)
         {
-            this.sourceMaps.Add(sourceMap);
-            this.dirtyEvent.SetDirty();
+            sourceMaps.Add(sourceMap);
+            dirtyEvent.SetDirty();
         }
 
         internal bool Contains(SourceMap sourceMap)
         {
-            return this.sourceMaps.Contains(sourceMap);
+            return sourceMaps.Contains(sourceMap);
         }
 
         internal void Remove(SourceMap sourceMap)
         {
-            this.sourceMaps.Remove(sourceMap);
-            this.dirtyEvent.SetDirty();
+            sourceMaps.Remove(sourceMap);
+            dirtyEvent.SetDirty();
         }
 
         internal void AutoSelectMaxZooms(MapTileSourceFactory mapTileSourceFactory)
         {
-            foreach (SourceMap current in this.sourceMaps)
+            foreach (SourceMap current in sourceMaps)
             {
                 current.AutoSelectMaxZoom(mapTileSourceFactory);
             }
@@ -283,23 +283,23 @@ namespace MSR.CVE.BackMaker
 
         public void NotePositionLocked(MapPosition referenceMapPosition)
         {
-            this._lastView = new LayerView(this, referenceMapPosition);
+            _lastView = new LayerView(this, referenceMapPosition);
         }
 
         internal void AddAt(SourceMap sourceMap, int index)
         {
-            this.sourceMaps.Insert(index, sourceMap);
+            sourceMaps.Insert(index, sourceMap);
         }
 
         internal int GetIndexOfSourceMap(SourceMap targetSourceMap)
         {
-            return this.sourceMaps.FindIndex((SourceMap item) => item == targetSourceMap);
+            return sourceMaps.FindIndex((SourceMap item) => item == targetSourceMap);
         }
 
         internal MapRectangle GetUserBoundingBox(MapTileSourceFactory mapTileSourceFactory)
         {
             MapRectangle mapRectangle = null;
-            foreach (SourceMap current in this.sourceMaps)
+            foreach (SourceMap current in sourceMaps)
             {
                 mapRectangle = MapRectangle.Union(mapRectangle, current.GetUserBoundingBox(mapTileSourceFactory));
             }
@@ -309,7 +309,7 @@ namespace MSR.CVE.BackMaker
 
         internal bool SomeSourceMapIsReadyToLock()
         {
-            foreach (SourceMap current in this.sourceMaps)
+            foreach (SourceMap current in sourceMaps)
             {
                 if (current.ReadyToLock())
                 {

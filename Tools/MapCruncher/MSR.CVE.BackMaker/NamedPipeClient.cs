@@ -11,14 +11,14 @@ namespace MSR.CVE.BackMaker
             DateTime now = DateTime.Now;
             while (true)
             {
-                this.pipeHandle = CreateFile("\\\\.\\pipe\\" + name,
+                pipeHandle = CreateFile("\\\\.\\pipe\\" + name,
                     3221225472u,
                     0u,
                     new IntPtr(0),
                     3u,
                     0u,
                     new IntPtr(0));
-                if (!this.pipeHandle.IsInvalid)
+                if (!pipeHandle.IsInvalid)
                 {
                     return;
                 }
@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker
 
         public void Dispose()
         {
-            this.pipeHandle.Close();
+            pipeHandle.Close();
         }
     }
 }

@@ -13,13 +13,13 @@ namespace MSR.CVE.BackMaker
 
         public IDisplayableSource CreateDisplayableUnwarpedSource(SourceMap sourceMap)
         {
-            return this.CreateUnwarpedSource(sourceMap);
+            return CreateUnwarpedSource(sourceMap);
         }
 
         public UnwarpedMapTileSource CreateUnwarpedSource(SourceMap sourceMap)
         {
-            return new UnwarpedMapTileSource(this.cachePackage,
-                sourceMap.documentFuture.GetSynchronousFuture(this.cachePackage),
+            return new UnwarpedMapTileSource(cachePackage,
+                sourceMap.documentFuture.GetSynchronousFuture(cachePackage),
                 sourceMap);
         }
 
@@ -30,33 +30,33 @@ namespace MSR.CVE.BackMaker
                 return null;
             }
 
-            return this.CreateWarpedSource(sourceMap);
+            return CreateWarpedSource(sourceMap);
         }
 
         public IRenderableSource CreateRenderableWarpedSource(SourceMap sourceMap)
         {
             D.Assert(sourceMap.ReadyToLock());
-            return this.CreateWarpedSource(sourceMap);
+            return CreateWarpedSource(sourceMap);
         }
 
         public WarpedMapTileSource CreateWarpedSource(SourceMap sourceMap)
         {
-            return new WarpedMapTileSource(this.CreateUnwarpedSource(sourceMap), this.cachePackage, sourceMap);
+            return new WarpedMapTileSource(CreateUnwarpedSource(sourceMap), cachePackage, sourceMap);
         }
 
         public int GetOpenSourceDocumentCacheSpillCount()
         {
-            return this.cachePackage.openSourceDocumentCache.GetSpillCount();
+            return cachePackage.openSourceDocumentCache.GetSpillCount();
         }
 
         internal void PurgeOpenSourceDocumentCache()
         {
-            this.cachePackage.openSourceDocumentCache.Purge();
+            cachePackage.openSourceDocumentCache.Purge();
         }
 
         internal CachePackage GetCachePackage()
         {
-            return this.cachePackage;
+            return cachePackage;
         }
 
         public string[] GetKnownFileTypes()

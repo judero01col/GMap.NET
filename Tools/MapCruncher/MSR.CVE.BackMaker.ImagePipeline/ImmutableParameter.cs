@@ -10,13 +10,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._value;
+                return _value;
             }
         }
 
         public ImmutableParameter(T value)
         {
-            this._value = value;
+            _value = value;
         }
 
         public Present Duplicate(string refCredit)

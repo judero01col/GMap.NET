@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuturePrototype GetSizeParameter()
         {
-            return new ConstantFuture(new SizeParameter(this.outputSize));
+            return new ConstantFuture(new SizeParameter(outputSize));
         }
 
         public override bool Equals(object obj)
@@ -26,7 +26,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             if (obj is ImageParameterFromRawBounds)
             {
                 ImageParameterFromRawBounds imageParameterFromRawBounds = (ImageParameterFromRawBounds)obj;
-                return this.outputSize.Equals(imageParameterFromRawBounds.outputSize);
+                return outputSize.Equals(imageParameterFromRawBounds.outputSize);
             }
 
             return false;
@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override int GetHashCode()
         {
-            return 2227 + this.outputSize.GetHashCode();
+            return 2227 + outputSize.GetHashCode();
         }
     }
 }

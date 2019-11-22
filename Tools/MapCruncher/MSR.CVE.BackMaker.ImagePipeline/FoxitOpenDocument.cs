@@ -16,16 +16,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             this.sourceFilename = sourceFilename;
             this.pageNumber = pageNumber;
-            this.foxitViewer = new RemoteFoxitStub(sourceFilename, pageNumber);
-            this.actualBoundingBox = this.foxitViewer.GetPageSize();
-            this.boundingBox = SourceMapRendererTools.ToSquare(this.actualBoundingBox);
+            foxitViewer = new RemoteFoxitStub(sourceFilename, pageNumber);
+            actualBoundingBox = foxitViewer.GetPageSize();
+            boundingBox = SourceMapRendererTools.ToSquare(actualBoundingBox);
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FoxitOpenDocument");
-            hash.Accumulate(this.sourceFilename);
-            hash.Accumulate(this.pageNumber);
+            hash.Accumulate(sourceFilename);
+            hash.Accumulate(pageNumber);
         }
 
         public Present Duplicate(string refCredit)
@@ -35,7 +35,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Dispose()
         {
-            this.foxitViewer.Dispose();
+            foxitViewer.Dispose();
         }
 
         internal Present Render(MapRectangle mapRect, Size size, bool useDocumentTransparency, bool exactColors)
@@ -44,8 +44,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 (float)mapRect.lat0,
                 (float)(mapRect.lon1 - mapRect.lon0),
                 (float)(mapRect.lat1 - mapRect.lat0));
-            double num = (double)this.actualBoundingBox.Width / (double)this.boundingBox.Width;
-            double num2 = (double)this.actualBoundingBox.Height / (double)this.boundingBox.Height;
+            double num = (double)actualBoundingBox.Width / (double)boundingBox.Width;
+            double num2 = (double)actualBoundingBox.Height / (double)boundingBox.Height;
             Size pagesize = new Size((int)Math.Round((double)size.Width / (double)rectangleF.Width * num),
                 (int)Math.Round((double)size.Height / (double)rectangleF.Height * num2));
             Point topleft = new Point((int)Math.Round((double)-(double)pagesize.Width / num * mapRect.lon0),
@@ -56,11 +56,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             IFoxitViewer obj;
-            Monitor.Enter(obj = this.foxitViewer);
+            Monitor.Enter(obj = foxitViewer);
             GDIBigLockedImage image;
             try
             {
-                image = this.foxitViewer.Render(size, topleft, pagesize, useDocumentTransparency);
+                image = foxitViewer.Render(size, topleft, pagesize, useDocumentTransparency);
             }
             finally
             {
@@ -74,16 +74,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new BoundsPresent(new RenderRegion(new MapRectangle(0.0,
                     0.0,
-                    (double)(this.actualBoundingBox.Height / this.boundingBox.Height),
-                    (double)(this.actualBoundingBox.Width / this.boundingBox.Width)),
+                    (double)(actualBoundingBox.Height / boundingBox.Height),
+                    (double)(actualBoundingBox.Width / boundingBox.Width)),
                 new DirtyEvent()));
         }
 
         public long GetSize()
         {
-            if (this.foxitViewer is RemoteFoxitStub)
+            if (foxitViewer is RemoteFoxitStub)
             {
-                return ((RemoteFoxitStub)this.foxitViewer).GetSize();
+                return ((RemoteFoxitStub)foxitViewer).GetSize();
             }
 
             return 83886080L;
@@ -105,14 +105,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     SizeParameter sizeParameter = (SizeParameter)paramList[2];
                     BoolParameter boolParameter = (BoolParameter)paramList[3];
                     BoolParameter boolParameter2 = (BoolParameter)paramList[4];
-                    return this.Render(mapRectangleParameter.value,
+                    return Render(mapRectangleParameter.value,
                         sizeParameter.value,
                         boolParameter.value,
                         boolParameter2.value);
                 }
                 case 1:
                     D.Assert(paramList.Length == 1);
-                    return this.FetchBounds();
+                    return FetchBounds();
                 case 2:
                     D.Assert(paramList.Length == 2);
                     return new IntParameter(5);

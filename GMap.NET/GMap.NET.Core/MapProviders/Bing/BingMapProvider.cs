@@ -511,7 +511,7 @@ namespace GMap.NET.MapProviders
                 {
                     #region -- title --
 
-                    int tooltipEnd = 0;
+                    int tooltipEnd;
                     {
                         int x = route.IndexOf("<RoutePath><Line>") + 17;
                         if (x >= 17)
@@ -576,7 +576,6 @@ namespace GMap.NET.MapProviders
                             throw new Exception(
                                 "Service Unavailable, There's a problem with the service right now. Please try again later.");
                         default:
-                            points = null;
                             break; // unknown, for possible future error codes
                     }
 
@@ -683,7 +682,7 @@ namespace GMap.NET.MapProviders
 
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<PointLatLng> pointList)
         {
-            var status = GeoCoderStatusCode.UNKNOWN_ERROR;
+            GeoCoderStatusCode status;
             pointList = null;
 
             try

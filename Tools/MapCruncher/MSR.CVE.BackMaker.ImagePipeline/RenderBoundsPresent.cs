@@ -13,12 +13,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public RenderBounds GetRenderBounds()
         {
-            return this.renderBounds;
+            return renderBounds;
         }
 
         public RenderRegion GetRenderRegion()
         {
-            return new RenderRegion(this.renderBounds.imageBounds, new DirtyEvent());
+            return new RenderRegion(renderBounds.imageBounds, new DirtyEvent());
         }
 
         public Present Duplicate(string refCredit)

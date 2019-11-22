@@ -18,14 +18,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._warpStyle;
+                return _warpStyle;
             }
             set
             {
-                if (this._warpStyle != value)
+                if (_warpStyle != value)
                 {
-                    this._warpStyle = value;
-                    this.dirtyEvent.SetDirty();
+                    _warpStyle = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
@@ -40,32 +40,32 @@ namespace MSR.CVE.BackMaker
             this.dirtyEvent = new DirtyEvent(dirtyEvent);
             if (prototype != null)
             {
-                this.associationList.AddRange(prototype.associationList);
-                this.isLocked = prototype.isLocked;
+                associationList.AddRange(prototype.associationList);
+                isLocked = prototype.isLocked;
             }
 
-            this.SetNextPinID();
+            SetNextPinID();
         }
 
         private void SetNextPinID()
         {
             int num = -1;
-            foreach (PositionAssociation current in this.associationList)
+            foreach (PositionAssociation current in associationList)
             {
                 num = Math.Max(num, current.pinId);
             }
 
-            this.nextPinId = num + 1;
+            nextPinId = num + 1;
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            foreach (PositionAssociation current in this.associationList)
+            foreach (PositionAssociation current in associationList)
             {
                 current.AccumulateRobustHash(hash);
             }
 
-            this.warpStyle.AccumulateRobustHash(hash);
+            warpStyle.AccumulateRobustHash(hash);
         }
 
         public override int GetHashCode()
@@ -77,7 +77,7 @@ namespace MSR.CVE.BackMaker
         {
             if (positionAssociaton.pinId == -1)
             {
-                positionAssociaton.pinId = this.nextPinId;
+                positionAssociaton.pinId = nextPinId;
             }
 
             if (positionAssociaton.associationName == "")
@@ -85,25 +85,25 @@ namespace MSR.CVE.BackMaker
                 positionAssociaton.associationName = string.Format("Pin{0}", positionAssociaton.pinId);
             }
 
-            this.nextPinId = Math.Max(this.nextPinId, positionAssociaton.pinId) + 1;
-            this.associationList.Add(positionAssociaton);
-            this.dirtyEvent.SetDirty();
+            nextPinId = Math.Max(nextPinId, positionAssociaton.pinId) + 1;
+            associationList.Add(positionAssociaton);
+            dirtyEvent.SetDirty();
         }
 
         public void RemoveAssociation(PositionAssociation assoc)
         {
-            this.associationList.Remove(assoc);
-            this.dirtyEvent.SetDirty();
+            associationList.Remove(assoc);
+            dirtyEvent.SetDirty();
         }
 
         public List<PositionAssociation> GetAssociationList()
         {
-            return this.associationList;
+            return associationList;
         }
 
         internal PositionAssociation GetAssocByName(string name)
         {
-            foreach (PositionAssociation current in this.associationList)
+            foreach (PositionAssociation current in associationList)
             {
                 if (current.associationName == name)
                 {
@@ -116,12 +116,12 @@ namespace MSR.CVE.BackMaker
 
         internal bool ReadyToLock()
         {
-            return this.associationList.Count >= this.warpStyle.getCorrespondencesRequired();
+            return associationList.Count >= warpStyle.getCorrespondencesRequired();
         }
 
         internal string[] GetLockStatusText()
         {
-            return this.warpStyle.getDescriptionStrings(this.associationList.Count).ToArray();
+            return warpStyle.getDescriptionStrings(associationList.Count).ToArray();
         }
 
         public static string GetXMLTag()
@@ -132,8 +132,8 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(RegistrationDefinitionTag);
-            this.warpStyle.WriteXML(writer);
-            foreach (PositionAssociation current in this.GetAssociationList())
+            warpStyle.WriteXML(writer);
+            foreach (PositionAssociation current in GetAssociationList())
             {
                 current.WriteXML(writer);
             }
@@ -145,12 +145,12 @@ namespace MSR.CVE.BackMaker
         {
             this.dirtyEvent = new DirtyEvent(dirtyEvent);
             XMLTagReader xMLTagReader = context.NewTagReader(RegistrationDefinitionTag);
-            this.warpStyle = TransformationStyleFactory.ReadFromXMLAttribute(context);
+            warpStyle = TransformationStyleFactory.ReadFromXMLAttribute(context);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(PositionAssociation.XMLTag()))
                 {
-                    this.AddAssociation(new PositionAssociation(context, dirtyEvent));
+                    AddAssociation(new PositionAssociation(context, dirtyEvent));
                 }
             }
         }

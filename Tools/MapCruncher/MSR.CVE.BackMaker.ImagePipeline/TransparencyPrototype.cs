@@ -16,9 +16,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            return new TransparencyFuture(this.transparencyOptions,
-                this.antialiasedPrototype.Curry(paramDict),
-                this.exactColorPrototype.Curry(paramDict));
+            return new TransparencyFuture(transparencyOptions,
+                antialiasedPrototype.Curry(paramDict),
+                exactColorPrototype.Curry(paramDict));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                PointD transformedPoint = this.getTransformedPoint(p0, false);
+                PointD transformedPoint = getTransformedPoint(p0, false);
                 p1.x = transformedPoint.x;
                 p1.y = transformedPoint.y;
             }
@@ -32,13 +32,13 @@ namespace MSR.CVE.BackMaker
 
         protected PointD getTransformedPoint(PointD goal, bool debug)
         {
-            PointD pointD = this.approximateSourceToDestWarp.getTransformedPoint(goal);
-            PointD transformedPoint = this.destToSourceWarp.getTransformedPoint(pointD);
-            PointD transformedPoint2 = this.approximateSourceToDestWarp.getTransformedPoint(transformedPoint);
+            PointD pointD = approximateSourceToDestWarp.getTransformedPoint(goal);
+            PointD transformedPoint = destToSourceWarp.getTransformedPoint(pointD);
+            PointD transformedPoint2 = approximateSourceToDestWarp.getTransformedPoint(transformedPoint);
             double num = (transformedPoint2 - pointD).Length();
             for (int i = 0; i < 200; i++)
             {
-                PointD[] array = new PointD[]
+                PointD[] array = new[]
                 {
                     pointD, new PointD(pointD.x + num, pointD.y), new PointD(pointD.x - num, pointD.y),
                     new PointD(pointD.x, pointD.y + num), new PointD(pointD.x, pointD.y - num),
@@ -51,7 +51,7 @@ namespace MSR.CVE.BackMaker
                     delegate(PointD p1)
                     {
                         PointD pointD2 = new PointD();
-                        this.destToSourceWarp.doTransform(p1, pointD2);
+                        destToSourceWarp.doTransform(p1, pointD2);
                         return pointD2;
                     });
                 double[] array3 = new double[9];

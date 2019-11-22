@@ -15,17 +15,17 @@ namespace MSR.CVE.BackMaker
 
         public ExceptionMessageRecord(SerializationInfo info, StreamingContext context)
         {
-            this.message = (string)info.GetValue("Message", typeof(string));
+            message = (string)info.GetValue("Message", typeof(string));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Message", this.message, typeof(string));
+            info.AddValue("Message", message, typeof(string));
         }
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", base.ToString(), this.message);
+            return string.Format("{0}: {1}", base.ToString(), message);
         }
     }
 }

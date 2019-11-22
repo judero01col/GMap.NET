@@ -9,27 +9,27 @@ namespace Jama.test
         {
             int num = 0;
             int value = 0;
-            double[] array = new double[] {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
-            double[] y = new double[] {1.0, 4.0, 7.0, 10.0, 2.0, 5.0, 8.0, 11.0, 3.0, 6.0, 9.0, 12.0};
-            double[][] array2 = new double[][]
+            double[] array = new[] {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
+            double[] y = new[] {1.0, 4.0, 7.0, 10.0, 2.0, 5.0, 8.0, 11.0, 3.0, 6.0, 9.0, 12.0};
+            double[][] array2 = new[]
             {
-                new double[] {1.0, 4.0, 7.0, 10.0}, new double[] {2.0, 5.0, 8.0, 11.0},
-                new double[] {3.0, 6.0, 9.0, 12.0}
+                new[] {1.0, 4.0, 7.0, 10.0}, new[] {2.0, 5.0, 8.0, 11.0},
+                new[] {3.0, 6.0, 9.0, 12.0}
             };
             double[][] a = array2;
-            double[][] a2 = new double[][]
+            double[][] a2 = new[]
             {
-                new double[] {1.0, 2.0, 3.0}, new double[] {4.0, 5.0, 6.0}, new double[] {7.0, 8.0, 9.0},
-                new double[] {10.0, 11.0, 12.0}
+                new[] {1.0, 2.0, 3.0}, new[] {4.0, 5.0, 6.0}, new[] {7.0, 8.0, 9.0},
+                new[] {10.0, 11.0, 12.0}
             };
-            double[][] a3 = new double[][] {new double[] {5.0, 8.0, 11.0}, new double[] {6.0, 9.0, 12.0}};
-            double[][] a4 = new double[][]
+            double[][] a3 = new[] {new[] {5.0, 8.0, 11.0}, new[] {6.0, 9.0, 12.0}};
+            double[][] a4 = new[]
             {
-                new double[] {1.0, 4.0, 7.0}, new double[] {2.0, 5.0, 8.0, 11.0}, new double[] {3.0, 6.0, 9.0, 12.0}
+                new[] {1.0, 4.0, 7.0}, new[] {2.0, 5.0, 8.0, 11.0}, new[] {3.0, 6.0, 9.0, 12.0}
             };
-            double[][] a5 = new double[][]
+            double[][] a5 = new[]
             {
-                new double[] {4.0, 1.0, 1.0}, new double[] {1.0, 2.0, 3.0}, new double[] {1.0, 3.0, 6.0}
+                new[] {4.0, 1.0, 1.0}, new[] {1.0, 2.0, 3.0}, new[] {1.0, 3.0, 6.0}
             };
             double[][] array3 = new double[3][];
             double[][] arg_1CC_0 = array3;
@@ -60,20 +60,20 @@ namespace Jama.test
             array4[0] = 1.0;
             array4[2] = 2E-07;
             arg_251_0[arg_251_1] = array4;
-            array3[2] = new double[] {0.0, -2E-07, 0.0, 1.0};
+            array3[2] = new[] {0.0, -2E-07, 0.0, 1.0};
             double[][] arg_294_0 = array3;
             int arg_294_1 = 3;
             array4 = new double[4];
             array4[2] = 1.0;
             arg_294_0[arg_294_1] = array4;
             double[][] a7 = array3;
-            double[][] a8 = new double[][]
+            double[][] a8 = new[]
             {
-                new double[] {166.0, 188.0, 210.0}, new double[] {188.0, 214.0, 240.0},
-                new double[] {210.0, 240.0, 270.0}
+                new[] {166.0, 188.0, 210.0}, new[] {188.0, 214.0, 240.0},
+                new[] {210.0, 240.0, 270.0}
             };
-            double[][] a9 = new double[][] {new double[] {13.0}, new double[] {15.0}};
-            double[][] a10 = new double[][] {new double[] {1.0, 3.0}, new double[] {7.0, 9.0}};
+            double[][] a9 = new[] {new[] {13.0}, new[] {15.0}};
+            double[][] a10 = new[] {new[] {1.0, 3.0}, new[] {7.0, 9.0}};
             int num2 = 3;
             int num3 = 4;
             int m = 5;
@@ -85,10 +85,10 @@ namespace Jama.test
             int num5 = 2;
             int num6 = 1;
             int num7 = 3;
-            int[] r = new int[] {1, 2};
-            int[] r2 = new int[] {1, 3};
-            int[] c = new int[] {1, 2, 3};
-            int[] c2 = new int[] {1, 2, 4};
+            int[] r = new[] {1, 2};
+            int[] r2 = new[] {1, 3};
+            int[] c = new[] {1, 2, 3};
+            int[] c2 = new[] {1, 2, 4};
             double y2 = 33.0;
             double y3 = 30.0;
             double y4 = 15.0;
@@ -1256,13 +1256,13 @@ namespace Jama.test
 
         private static int try_failure(int count, string s, string e)
         {
-            print(string.Concat(new string[] {">    ", s, "*** failure ***\n>      Message: ", e, "\n"}));
+            print(string.Concat(new[] {">    ", s, "*** failure ***\n>      Message: ", e, "\n"}));
             return ++count;
         }
 
         private static int try_warning(int count, string s, string e)
         {
-            print(string.Concat(new string[] {">    ", s, "*** warning ***\n>      Message: ", e, "\n"}));
+            print(string.Concat(new[] {">    ", s, "*** warning ***\n>      Message: ", e, "\n"}));
             return ++count;
         }
 

@@ -73,7 +73,7 @@ namespace GMap.NET.Projections
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            double[] lks = new double[] {lng, lat};
+            double[] lks = new[] {lng, lat};
             lks = DTM10(lks);
             lks = MTD10(lks);
             lks = DTM00(lks);
@@ -93,7 +93,7 @@ namespace GMap.NET.Projections
 
             double res = GetTileMatrixResolution(zoom);
 
-            double[] lks = new double[] {x * res + orignX, orignY - y * res};
+            double[] lks = new[] {x * res + orignX, orignY - y * res};
             lks = MTD11(lks);
             lks = DTM10(lks);
             lks = MTD10(lks);
@@ -122,7 +122,7 @@ namespace GMap.NET.Projections
             double x = (v + h) * Math.Cos(lat) * Math.Cos(lon);
             double y = (v + h) * Math.Cos(lat) * Math.Sin(lon);
             double z = ((1 - es) * v + h) * Math.Sin(lat);
-            return new double[] {x, y, z,};
+            return new[] {x, y, z,};
         }
 
         double[] MTD10(double[] pnt)
@@ -170,7 +170,7 @@ namespace GMap.NET.Projections
                     }
                     else // center of earth
                     {
-                        return new double[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -semiMinor,};
+                        return new[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -semiMinor,};
                     }
                 }
             }
@@ -206,7 +206,7 @@ namespace GMap.NET.Projections
                 lat = Math.Atan(Sin_p1 / Cos_p1);
             }
 
-            return new double[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
+            return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
         }
 
         double[] DTM00(double[] lonlat)
@@ -258,9 +258,9 @@ namespace GMap.NET.Projections
                                                                            330.0 * esp))))) + falseNorthing;
 
             if (lonlat.Length < 3)
-                return new double[] {x / metersPerUnit, y / metersPerUnit};
+                return new[] {x / metersPerUnit, y / metersPerUnit};
             else
-                return new double[] {x / metersPerUnit, y / metersPerUnit, lonlat[2]};
+                return new[] {x / metersPerUnit, y / metersPerUnit, lonlat[2]};
         }
 
         double[] DTM01(double[] lonlat)
@@ -281,7 +281,7 @@ namespace GMap.NET.Projections
             double x = (v + h) * Math.Cos(lat) * Math.Cos(lon);
             double y = (v + h) * Math.Cos(lat) * Math.Sin(lon);
             double z = ((1 - es) * v + h) * Math.Sin(lat);
-            return new double[] {x, y, z,};
+            return new[] {x, y, z,};
         }
 
         double[] MTD01(double[] pnt)
@@ -329,7 +329,7 @@ namespace GMap.NET.Projections
                     }
                     else // center of earth
                     {
-                        return new double[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -semiMinor2,};
+                        return new[] {RadiansToDegrees(lon), RadiansToDegrees(Math.PI * 0.5), -semiMinor2,};
                     }
                 }
             }
@@ -366,7 +366,7 @@ namespace GMap.NET.Projections
                 lat = Math.Atan(Sin_p1 / Cos_p1);
             }
 
-            return new double[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
+            return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), Height,};
         }
 
         double[] MTD11(double[] p)
@@ -438,16 +438,16 @@ namespace GMap.NET.Projections
                                                                                        24.0 * ts))) / cos_phi);
 
                 if (p.Length < 3)
-                    return new double[] {RadiansToDegrees(lon), RadiansToDegrees(lat)};
+                    return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat)};
                 else
-                    return new double[] {RadiansToDegrees(lon), RadiansToDegrees(lat), p[2]};
+                    return new[] {RadiansToDegrees(lon), RadiansToDegrees(lat), p[2]};
             }
             else
             {
                 if (p.Length < 3)
-                    return new double[] {RadiansToDegrees(HALF_PI * Sign(y)), RadiansToDegrees(centralMeridian)};
+                    return new[] {RadiansToDegrees(HALF_PI * Sign(y)), RadiansToDegrees(centralMeridian)};
                 else
-                    return new double[] {RadiansToDegrees(HALF_PI * Sign(y)), RadiansToDegrees(centralMeridian), p[2]};
+                    return new[] {RadiansToDegrees(HALF_PI * Sign(y)), RadiansToDegrees(centralMeridian), p[2]};
             }
         }
 
@@ -472,7 +472,7 @@ namespace GMap.NET.Projections
 
         #endregion
 
-        static double[] resolutions = new double[]
+        static double[] resolutions = new[]
         {
             4096.0, 2048.0, 1024.0, 512.0, 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25, 0.15, 0.1,
             0.05, 0.01

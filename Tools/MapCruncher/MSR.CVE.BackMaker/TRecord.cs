@@ -15,12 +15,12 @@ namespace MSR.CVE.BackMaker
 
         public TRecord(SerializationInfo info, StreamingContext context)
         {
-            this.message = (T)(object)info.GetValue("Message", typeof(T));
+            message = (T)(object)info.GetValue("Message", typeof(T));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Message", this.message, typeof(T));
+            info.AddValue("Message", message, typeof(T));
         }
     }
 }

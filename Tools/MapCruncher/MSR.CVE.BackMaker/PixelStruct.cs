@@ -22,15 +22,15 @@ namespace MSR.CVE.BackMaker
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate((int)this.b);
-            hash.Accumulate((int)this.g);
-            hash.Accumulate((int)this.r);
-            hash.Accumulate((int)this.a);
+            hash.Accumulate((int)b);
+            hash.Accumulate((int)g);
+            hash.Accumulate((int)r);
+            hash.Accumulate((int)a);
         }
 
         public Color ToColor()
         {
-            return Color.FromArgb((int)this.a, (int)this.r, (int)this.g, (int)this.b);
+            return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
         }
 
         public static bool operator ==(PixelStruct p1, PixelStruct p2)
@@ -50,7 +50,7 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return (int)(this.a + 131 * (this.r + 131 * (this.g + 131 * this.b)));
+            return (int)(a + 131 * (r + 131 * (g + 131 * b)));
         }
     }
 }

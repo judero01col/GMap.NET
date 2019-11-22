@@ -24,14 +24,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                int num = this.sourceMapRecords.FindIndex((SourceMapRecord smr) =>
+                int num = sourceMapRecords.FindIndex((SourceMapRecord smr) =>
                     smr.displayName == sourceMap.displayName);
                 if (num == -1)
                 {
                     throw new IndexOutOfRangeException();
                 }
 
-                return this.sourceMapRecords[num];
+                return sourceMapRecords[num];
             }
         }
 
@@ -43,20 +43,20 @@ namespace MSR.CVE.BackMaker
         public CrunchedLayer(RenderOptions renderOptions, Layer layer, List<RangeDescriptor> rangeDescriptors,
             MapTileSourceFactory mapTileSourceFactory)
         {
-            this.displayName = layer.GetDisplayName();
-            this.namingScheme = new VENamingScheme(layer.GetFilesystemName(), renderOptions.GetOutputTileSuffix());
+            displayName = layer.GetDisplayName();
+            namingScheme = new VENamingScheme(layer.GetFilesystemName(), renderOptions.GetOutputTileSuffix());
             this.rangeDescriptors = rangeDescriptors;
             bool flag;
-            this.defaultView = this.GetDefaultView(layer, new Size(600, 600), mapTileSourceFactory, out flag);
+            defaultView = GetDefaultView(layer, new Size(600, 600), mapTileSourceFactory, out flag);
             foreach (SourceMap current in layer)
             {
-                this.sourceMapRecords.Add(new SourceMapRecord(layer, current, mapTileSourceFactory));
+                sourceMapRecords.Add(new SourceMapRecord(layer, current, mapTileSourceFactory));
             }
         }
 
         public CrunchedLayer(MashupParseContext context)
         {
-            this.displayName = context.reader.GetAttribute(Layer.GetLayerDisplayNameTag());
+            displayName = context.reader.GetAttribute(Layer.GetLayerDisplayNameTag());
             XMLTagReader xMLTagReader = context.NewTagReader(Layer.GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
@@ -70,7 +70,7 @@ namespace MSR.CVE.BackMaker
                     if (xMLTagReader.TagIs("DefaultView"))
                     {
                         XMLTagReader xMLTagReader3 = context.NewTagReader("DefaultView");
-                        this.defaultView = LatLonZoom.ReadFromAttributes(context, MercatorCoordinateSystem.theInstance);
+                        defaultView = LatLonZoom.ReadFromAttributes(context, MercatorCoordinateSystem.theInstance);
                         xMLTagReader3.SkipAllSubTags();
                     }
                     else
@@ -82,7 +82,7 @@ namespace MSR.CVE.BackMaker
                             {
                                 if (xMLTagReader4.TagIs(SourceMapInfo.GetXMLTag()))
                                 {
-                                    this.sourceMapRecords.Add(
+                                    sourceMapRecords.Add(
                                         new SourceMapRecord(new SourceMapInfo(context, new DirtyEvent())));
                                 }
                             }
@@ -96,7 +96,7 @@ namespace MSR.CVE.BackMaker
                                 {
                                     if (xMLTagReader5.TagIs(SourceMapRecord.GetXMLTag()))
                                     {
-                                        this.sourceMapRecords.Add(new SourceMapRecord(context));
+                                        sourceMapRecords.Add(new SourceMapRecord(context));
                                     }
                                 }
                             }
@@ -104,7 +104,7 @@ namespace MSR.CVE.BackMaker
                             {
                                 if (xMLTagReader.TagIs(RenderedTileNamingScheme.GetXMLTag()))
                                 {
-                                    this.namingScheme = RenderedTileNamingScheme.ReadXML(context);
+                                    namingScheme = RenderedTileNamingScheme.ReadXML(context);
                                 }
                             }
                         }
@@ -116,27 +116,27 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(GetXMLTag());
-            writer.WriteAttributeString(Layer.GetLayerDisplayNameTag(), this.displayName);
-            writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(this.displayName));
-            this.namingScheme.WriteXML(writer);
+            writer.WriteAttributeString(Layer.GetLayerDisplayNameTag(), displayName);
+            writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(displayName));
+            namingScheme.WriteXML(writer);
             writer.WriteStartElement("DefaultView");
-            this.defaultView.WriteXMLToAttributes(writer);
+            defaultView.WriteXMLToAttributes(writer);
             writer.WriteEndElement();
             writer.WriteStartElement("SourceMapRecordList");
-            foreach (SourceMapRecord current in this.sourceMapRecords)
+            foreach (SourceMapRecord current in sourceMapRecords)
             {
                 current.WriteXML(writer);
             }
 
             writer.WriteEndElement();
             writer.WriteStartElement("RangeDescriptors");
-            foreach (RangeDescriptor current2 in this.rangeDescriptors)
+            foreach (RangeDescriptor current2 in rangeDescriptors)
             {
                 current2.WriteXML(writer);
             }
 
             writer.WriteEndElement();
-            foreach (ThumbnailRecord current3 in this.thumbnailRecords)
+            foreach (ThumbnailRecord current3 in thumbnailRecords)
             {
                 current3.WriteXML(writer);
             }
@@ -151,7 +151,7 @@ namespace MSR.CVE.BackMaker
             allBoundsValid = true;
             foreach (SourceMap current in layer)
             {
-                if (!this.AccumulateBoundingBox(current, mapTileSourceFactory, ref mapRectangle))
+                if (!AccumulateBoundingBox(current, mapTileSourceFactory, ref mapRectangle))
                 {
                     allBoundsValid = false;
                 }
@@ -193,7 +193,7 @@ namespace MSR.CVE.BackMaker
 
         internal void WriteSourceMapLegendFrames(RenderOutputMethod renderOutput)
         {
-            foreach (SourceMapRecord current in this.sourceMapRecords)
+            foreach (SourceMapRecord current in sourceMapRecords)
             {
                 current.WriteSourceMapLegendFrame(renderOutput);
             }
@@ -201,7 +201,7 @@ namespace MSR.CVE.BackMaker
 
         public void Add(ThumbnailRecord thumbnailRecord)
         {
-            this.thumbnailRecords.Add(thumbnailRecord);
+            thumbnailRecords.Add(thumbnailRecord);
         }
     }
 }

@@ -17,14 +17,14 @@ namespace MSR.CVE.BackMaker
 
         public OpenRequest(SerializationInfo info, StreamingContext context)
         {
-            this.filename = (string)info.GetValue("Filename", typeof(string));
-            this.pageNumber = (int)info.GetValue("PageNumber", typeof(int));
+            filename = (string)info.GetValue("Filename", typeof(string));
+            pageNumber = (int)info.GetValue("PageNumber", typeof(int));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Filename", this.filename);
-            info.AddValue("PageNumber", this.pageNumber);
+            info.AddValue("Filename", filename);
+            info.AddValue("PageNumber", pageNumber);
         }
     }
 }

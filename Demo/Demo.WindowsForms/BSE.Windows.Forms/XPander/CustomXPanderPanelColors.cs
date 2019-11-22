@@ -41,12 +41,12 @@ namespace BSE.Windows.Forms
         [Description("The backcolor of a XPanderPanel.")]
         public virtual Color BackColor
         {
-            get { return this.m_backColor; }
+            get { return m_backColor; }
             set
             {
-                if (value.Equals(this.m_backColor) == false)
+                if (value.Equals(m_backColor) == false)
                 {
-                    this.m_backColor = value;
+                    m_backColor = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -57,12 +57,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient on a flat XPanderPanel captionbar.")]
         public virtual Color FlatCaptionGradientBegin
         {
-            get { return this.m_flatCaptionGradientBegin; }
+            get { return m_flatCaptionGradientBegin; }
             set
             {
-                if (value.Equals(this.m_flatCaptionGradientBegin) == false)
+                if (value.Equals(m_flatCaptionGradientBegin) == false)
                 {
-                    this.m_flatCaptionGradientBegin = value;
+                    m_flatCaptionGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -73,12 +73,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient on a flat XPanderPanel captionbar.")]
         public virtual Color FlatCaptionGradientEnd
         {
-            get { return this.m_flatCaptionGradientEnd; }
+            get { return m_flatCaptionGradientEnd; }
             set
             {
-                if (value.Equals(this.m_flatCaptionGradientEnd) == false)
+                if (value.Equals(m_flatCaptionGradientEnd) == false)
                 {
-                    this.m_flatCaptionGradientEnd = value;
+                    m_flatCaptionGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -89,12 +89,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient used when the XPanderPanel is pressed down.")]
         public virtual Color CaptionPressedGradientBegin
         {
-            get { return this.m_captionPressedGradientBegin; }
+            get { return m_captionPressedGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionPressedGradientBegin) == false)
+                if (value.Equals(m_captionPressedGradientBegin) == false)
                 {
-                    this.m_captionPressedGradientBegin = value;
+                    m_captionPressedGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -105,12 +105,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used when the XPanderPanel is pressed down.")]
         public virtual Color CaptionPressedGradientEnd
         {
-            get { return this.m_captionPressedGradientEnd; }
+            get { return m_captionPressedGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionPressedGradientEnd) == false)
+                if (value.Equals(m_captionPressedGradientEnd) == false)
                 {
-                    this.m_captionPressedGradientEnd = value;
+                    m_captionPressedGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -121,12 +121,12 @@ namespace BSE.Windows.Forms
         [Description("The middle color of the gradient used when the XPanderPanel is pressed down.")]
         public virtual Color CaptionPressedGradientMiddle
         {
-            get { return this.m_captionPressedGradientMiddle; }
+            get { return m_captionPressedGradientMiddle; }
             set
             {
-                if (value.Equals(this.m_captionPressedGradientMiddle) == false)
+                if (value.Equals(m_captionPressedGradientMiddle) == false)
                 {
-                    this.m_captionPressedGradientMiddle = value;
+                    m_captionPressedGradientMiddle = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -137,12 +137,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient used when the XPanderPanel is checked.")]
         public virtual Color CaptionCheckedGradientBegin
         {
-            get { return this.m_captionCheckedGradientBegin; }
+            get { return m_captionCheckedGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionCheckedGradientBegin) == false)
+                if (value.Equals(m_captionCheckedGradientBegin) == false)
                 {
-                    this.m_captionCheckedGradientBegin = value;
+                    m_captionCheckedGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -153,12 +153,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used when the XPanderPanel is checked.")]
         public virtual Color CaptionCheckedGradientEnd
         {
-            get { return this.m_captionCheckedGradientEnd; }
+            get { return m_captionCheckedGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionCheckedGradientEnd) == false)
+                if (value.Equals(m_captionCheckedGradientEnd) == false)
                 {
-                    this.m_captionCheckedGradientEnd = value;
+                    m_captionCheckedGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -169,12 +169,12 @@ namespace BSE.Windows.Forms
         [Description("The middle color of the gradient used when the XPanderPanel is checked.")]
         public virtual Color CaptionCheckedGradientMiddle
         {
-            get { return this.m_captionCheckedGradientMiddle; }
+            get { return m_captionCheckedGradientMiddle; }
             set
             {
-                if (value.Equals(this.m_captionCheckedGradientMiddle) == false)
+                if (value.Equals(m_captionCheckedGradientMiddle) == false)
                 {
-                    this.m_captionCheckedGradientMiddle = value;
+                    m_captionCheckedGradientMiddle = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -185,12 +185,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient used when the XPanderPanel is selected.")]
         public virtual Color CaptionSelectedGradientBegin
         {
-            get { return this.m_captionSelectedGradientBegin; }
+            get { return m_captionSelectedGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientBegin) == false)
+                if (value.Equals(m_captionSelectedGradientBegin) == false)
                 {
-                    this.m_captionSelectedGradientBegin = value;
+                    m_captionSelectedGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -201,12 +201,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used when the XPanderPanel is selected.")]
         public virtual Color CaptionSelectedGradientEnd
         {
-            get { return this.m_captionSelectedGradientEnd; }
+            get { return m_captionSelectedGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientEnd) == false)
+                if (value.Equals(m_captionSelectedGradientEnd) == false)
                 {
-                    this.m_captionSelectedGradientEnd = value;
+                    m_captionSelectedGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -217,12 +217,12 @@ namespace BSE.Windows.Forms
         [Description("The middle color of the gradient used when the XPanderPanel is selected.")]
         public virtual Color CaptionSelectedGradientMiddle
         {
-            get { return this.m_captionSelectedGradientMiddle; }
+            get { return m_captionSelectedGradientMiddle; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientMiddle) == false)
+                if (value.Equals(m_captionSelectedGradientMiddle) == false)
                 {
-                    this.m_captionSelectedGradientMiddle = value;
+                    m_captionSelectedGradientMiddle = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -233,12 +233,12 @@ namespace BSE.Windows.Forms
         [Description("The text color used when the XPanderPanel is selected.")]
         public virtual Color CaptionSelectedText
         {
-            get { return this.m_captionSelectedText; }
+            get { return m_captionSelectedText; }
             set
             {
-                if (value.Equals(this.m_captionSelectedText) == false)
+                if (value.Equals(m_captionSelectedText) == false)
                 {
-                    this.m_captionSelectedText = value;
+                    m_captionSelectedText = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }

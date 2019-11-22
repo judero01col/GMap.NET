@@ -8,20 +8,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._documentFuture;
+                return _documentFuture;
             }
         }
 
         public void WriteXML(MashupWriteContext context, string pathBase)
         {
             context.writer.WriteStartElement(GetXMLTag());
-            this._documentFuture.WriteXML(context, pathBase);
+            _documentFuture.WriteXML(context, pathBase);
             context.writer.WriteEndElement();
         }
 
         public GeneralDocumentFuture(IDocumentFuture documentFuture)
         {
-            this._documentFuture = documentFuture;
+            _documentFuture = documentFuture;
         }
 
         public GeneralDocumentFuture(MashupParseContext context, string pathBase)
@@ -31,28 +31,28 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 if (xMLTagReader.TagIs(FutureDocumentFromFilesystem.GetXMLTag()))
                 {
-                    if (this._documentFuture != null)
+                    if (_documentFuture != null)
                     {
                         throw new InvalidMashupFile(context, "Too many specs in " + GetXMLTag());
                     }
 
-                    this._documentFuture = new FutureDocumentFromFilesystem(context, pathBase);
+                    _documentFuture = new FutureDocumentFromFilesystem(context, pathBase);
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(FutureDocumentFromUri.GetXMLTag()))
                     {
-                        if (this._documentFuture != null)
+                        if (_documentFuture != null)
                         {
                             throw new InvalidMashupFile(context, "Too many specs in " + GetXMLTag());
                         }
 
-                        this._documentFuture = new FutureDocumentFromUri(context);
+                        _documentFuture = new FutureDocumentFromUri(context);
                     }
                 }
             }
 
-            if (this._documentFuture == null)
+            if (_documentFuture == null)
             {
                 throw new InvalidMashupFile(context, "No spec in " + GetXMLTag());
             }
@@ -65,18 +65,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture GetSynchronousFuture(CachePackage cachePackage)
         {
-            return new MemCacheFuture(cachePackage.documentFetchCache, this.documentFuture);
+            return new MemCacheFuture(cachePackage.documentFetchCache, documentFuture);
         }
 
         public IFuture GetAsynchronousFuture(CachePackage cachePackage)
         {
             return new MemCacheFuture(cachePackage.asyncCache,
-                Asynchronizer.MakeFuture(cachePackage.computeAsyncScheduler, this.GetSynchronousFuture(cachePackage)));
+                Asynchronizer.MakeFuture(cachePackage.computeAsyncScheduler, GetSynchronousFuture(cachePackage)));
         }
 
         public SourceDocument RealizeSynchronously(CachePackage cachePackage)
         {
-            Present present = this.GetSynchronousFuture(cachePackage).Realize("SourceDocument.RealizeSynchronously");
+            Present present = GetSynchronousFuture(cachePackage).Realize("SourceDocument.RealizeSynchronously");
             if (present is SourceDocument)
             {
                 SourceDocument sourceDocument = (SourceDocument)present;
@@ -89,7 +89,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal void AccumulateRobustHash(IRobustHash hash)
         {
-            this.documentFuture.AccumulateRobustHash(hash);
+            documentFuture.AccumulateRobustHash(hash);
         }
     }
 }

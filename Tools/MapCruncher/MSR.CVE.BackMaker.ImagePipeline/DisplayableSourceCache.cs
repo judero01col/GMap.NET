@@ -24,56 +24,56 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Flush()
         {
-            this.cachedCoordSys = null;
-            this.cachedRendererCredit = null;
-            this.cachedUserBounds = null;
-            this.cachedImageRequest = null;
+            cachedCoordSys = null;
+            cachedRendererCredit = null;
+            cachedUserBounds = null;
+            cachedImageRequest = null;
         }
 
         public CoordinateSystemIfc GetDefaultCoordinateSystem()
         {
-            if (this.cachedCoordSys == null)
+            if (cachedCoordSys == null)
             {
-                this.cachedCoordSys = this.backingSource.GetDefaultCoordinateSystem();
+                cachedCoordSys = backingSource.GetDefaultCoordinateSystem();
             }
 
-            return this.cachedCoordSys;
+            return cachedCoordSys;
         }
 
         public string GetRendererCredit()
         {
-            if (this.cachedRendererCredit == null)
+            if (cachedRendererCredit == null)
             {
-                this.cachedRendererCredit = this.backingSource.GetRendererCredit();
+                cachedRendererCredit = backingSource.GetRendererCredit();
             }
 
-            return this.cachedRendererCredit;
+            return cachedRendererCredit;
         }
 
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
-            if (this.cachedUserBounds == null || this.lastUserBoundsRequest_latentRegionHolder != latentRegionHolder ||
-                this.lastUserBoundsRequest_features != features)
+            if (cachedUserBounds == null || lastUserBoundsRequest_latentRegionHolder != latentRegionHolder ||
+                lastUserBoundsRequest_features != features)
             {
-                this.lastUserBoundsRequest_latentRegionHolder = latentRegionHolder;
-                this.lastUserBoundsRequest_features = features;
-                this.cachedUserBounds = this.backingSource.GetUserBounds(latentRegionHolder, features);
+                lastUserBoundsRequest_latentRegionHolder = latentRegionHolder;
+                lastUserBoundsRequest_features = features;
+                cachedUserBounds = backingSource.GetUserBounds(latentRegionHolder, features);
             }
 
-            return this.cachedUserBounds;
+            return cachedUserBounds;
         }
 
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
-            if (this.cachedImageRequest == null || this.lastImageRequest_parameterType != parameterType ||
-                this.lastImageRequest_features != features)
+            if (cachedImageRequest == null || lastImageRequest_parameterType != parameterType ||
+                lastImageRequest_features != features)
             {
-                this.lastImageRequest_parameterType = parameterType;
-                this.lastImageRequest_features = features;
-                this.cachedImageRequest = this.backingSource.GetImagePrototype(parameterType, features);
+                lastImageRequest_parameterType = parameterType;
+                lastImageRequest_features = features;
+                cachedImageRequest = backingSource.GetImagePrototype(parameterType, features);
             }
 
-            return this.cachedImageRequest;
+            return cachedImageRequest;
         }
     }
 }

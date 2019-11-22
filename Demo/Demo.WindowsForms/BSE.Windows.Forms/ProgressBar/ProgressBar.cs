@@ -68,12 +68,12 @@ namespace BSE.Windows.Forms
         [Description("The color used for the background rectangle of this control.")]
         public Color BackgroundColor
         {
-            get { return this._backgroundColor; }
+            get { return _backgroundColor; }
             set
             {
-                if (this._backgroundColor != value)
+                if (_backgroundColor != value)
                 {
-                    this._backgroundColor = value;
+                    _backgroundColor = value;
                     OnBackgroundColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -90,12 +90,12 @@ namespace BSE.Windows.Forms
         [Description("The color used for the value rectangle of this control.")]
         public Color ValueColor
         {
-            get { return this._valueColor; }
+            get { return _valueColor; }
             set
             {
-                if (this._valueColor != value)
+                if (_valueColor != value)
                 {
-                    this._valueColor = value;
+                    _valueColor = value;
                     OnValueColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -110,12 +110,12 @@ namespace BSE.Windows.Forms
         /// </value>
         public Color BorderColor
         {
-            get { return this._borderColor; }
+            get { return _borderColor; }
             set
             {
-                if (this._borderColor != value)
+                if (_borderColor != value)
                 {
-                    this._borderColor = value;
+                    _borderColor = value;
                     OnBorderColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -143,10 +143,10 @@ namespace BSE.Windows.Forms
         [Description("The upper bound of range this ProgressBar is working with.")]
         public int Maximum
         {
-            get { return this._iMaximum; }
+            get { return _iMaximum; }
             set
             {
-                if (this._iMaximum != value)
+                if (_iMaximum != value)
                 {
                     if (value < 0)
                     {
@@ -158,15 +158,15 @@ namespace BSE.Windows.Forms
                                 nameof(Maximum)));
                     }
 
-                    if (this._iMinimum > value)
+                    if (_iMinimum > value)
                     {
-                        this._iMinimum = value;
+                        _iMinimum = value;
                     }
 
-                    this._iMaximum = value;
-                    if (this._iValue > this._iMaximum)
+                    _iMaximum = value;
+                    if (_iValue > _iMaximum)
                     {
-                        this._iValue = this._iMaximum;
+                        _iValue = _iMaximum;
                     }
 
                     UpdatePos();
@@ -185,10 +185,10 @@ namespace BSE.Windows.Forms
         [Description("The lower bound of range this ProgressBar is working with.")]
         public int Minimum
         {
-            get { return this._iMinimum; }
+            get { return _iMinimum; }
             set
             {
-                if (this._iMinimum != value)
+                if (_iMinimum != value)
                 {
                     if (value < 0)
                     {
@@ -200,15 +200,15 @@ namespace BSE.Windows.Forms
                                 nameof(Minimum)));
                     }
 
-                    if (this._iMaximum < value)
+                    if (_iMaximum < value)
                     {
-                        this._iMaximum = value;
+                        _iMaximum = value;
                     }
 
-                    this._iMinimum = value;
-                    if (this._iValue < this._iMinimum)
+                    _iMinimum = value;
+                    if (_iValue < _iMinimum)
                     {
-                        this._iValue = this._iMinimum;
+                        _iValue = _iMinimum;
                     }
 
                     UpdatePos();
@@ -228,23 +228,23 @@ namespace BSE.Windows.Forms
             "The current value for the ProgressBar, in the range specified by the minimum and maximum properties.")]
         public int Value
         {
-            get { return this._iValue; }
+            get { return _iValue; }
             set
             {
-                if (this._iValue != value)
+                if (_iValue != value)
                 {
-                    if (value < this._iMinimum || value > this._iMaximum)
+                    if (value < _iMinimum || value > _iMaximum)
                     {
                         throw new ArgumentOutOfRangeException(nameof(Value),
                             string.Format(CultureInfo.InvariantCulture,
                                 Resources.IDS_InvalidBoundArgument,
-                                new object[]
-                                {
-                                    "Value", value.ToString(CultureInfo.CurrentCulture), "'minimum'", "'maximum'"
-                                }));
+                                nameof(Value),
+                                value.ToString(CultureInfo.CurrentCulture),
+                                "'minimum'",
+                                "'maximum'"));
                     }
 
-                    this._iValue = value;
+                    _iValue = value;
                     UpdatePos();
                 }
             }
@@ -259,18 +259,18 @@ namespace BSE.Windows.Forms
         /// </summary>
         public ProgressBar()
         {
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
 
-            this._iMaximum = 100;
-            this._backgroundColor = Color.FromArgb(20, 20, 255);
-            this._valueColor = Color.FromArgb(255, 0, 255);
-            this._borderColor = SystemColors.ActiveBorder;
-            this.BackColor = Color.Transparent;
+            _iMaximum = 100;
+            _backgroundColor = Color.FromArgb(20, 20, 255);
+            _valueColor = Color.FromArgb(255, 0, 255);
+            _borderColor = SystemColors.ActiveBorder;
+            BackColor = Color.Transparent;
         }
 
         #endregion
@@ -286,27 +286,26 @@ namespace BSE.Windows.Forms
             using (var antiAlias = new UseAntiAlias(e.Graphics))
             {
                 var graphics = e.Graphics;
-                DrawProgressBar(
-                    graphics,
-                    this.ClientRectangle,
-                    this._backgroundColor,
-                    this._valueColor,
-                    this._borderColor,
-                    this.RightToLeft,
-                    this.Minimum,
-                    this.Maximum,
-                    this.Value);
+                DrawProgressBar(graphics,
+                    ClientRectangle,
+                    _backgroundColor,
+                    _valueColor,
+                    _borderColor,
+                    RightToLeft,
+                    Minimum,
+                    Maximum,
+                    Value);
 
-                if (string.IsNullOrEmpty(this.Text) == false)
+                if (string.IsNullOrEmpty(Text) == false)
                 {
                     using (var useClearTypeGridFit = new UseClearTypeGridFit(graphics))
                     {
-                        using (SolidBrush textBrush = new SolidBrush(this.ForeColor))
+                        using (var textBrush = new SolidBrush(ForeColor))
                         {
-                            using (StringFormat stringFormat = new StringFormat())
+                            using (var stringFormat = new StringFormat())
                             {
                                 stringFormat.FormatFlags = StringFormatFlags.NoWrap;
-                                if (this.RightToLeft == RightToLeft.Yes)
+                                if (RightToLeft == RightToLeft.Yes)
                                 {
                                     stringFormat.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
                                 }
@@ -315,8 +314,8 @@ namespace BSE.Windows.Forms
                                 stringFormat.LineAlignment = StringAlignment.Center;
                                 stringFormat.Alignment = StringAlignment.Center;
 
-                                Rectangle stringRectangle = this.ClientRectangle;
-                                graphics.DrawString(this.Text, this.Font, textBrush, stringRectangle, stringFormat);
+                                var stringRectangle = ClientRectangle;
+                                graphics.DrawString(Text, Font, textBrush, stringRectangle, stringFormat);
                             }
                         }
                     }
@@ -331,10 +330,10 @@ namespace BSE.Windows.Forms
         /// <param name="e">A EventArgs that contains the event data.</param>
         protected virtual void OnBorderColorChanged(object sender, EventArgs e)
         {
-            this.Invalidate(true);
-            if (this.BorderColorChanged != null)
+            Invalidate(true);
+            if (BorderColorChanged != null)
             {
-                this.BorderColorChanged(sender, e);
+                BorderColorChanged(sender, e);
             }
         }
 
@@ -346,9 +345,9 @@ namespace BSE.Windows.Forms
         protected virtual void OnBackgroundColorChanged(object sender, EventArgs e)
         {
             Invalidate();
-            if (this.BackgroundColorChanged != null)
+            if (BackgroundColorChanged != null)
             {
-                this.BackgroundColorChanged(sender, e);
+                BackgroundColorChanged(sender, e);
             }
         }
 
@@ -360,9 +359,9 @@ namespace BSE.Windows.Forms
         protected virtual void OnValueColorChanged(object sender, EventArgs e)
         {
             Invalidate(true);
-            if (this.ValueColorChanged != null)
+            if (ValueColorChanged != null)
             {
-                this.ValueColorChanged(sender, e);
+                ValueColorChanged(sender, e);
             }
         }
 
@@ -372,7 +371,7 @@ namespace BSE.Windows.Forms
 
         private void UpdatePos()
         {
-            this.Invalidate(true);
+            Invalidate(true);
         }
 
         private static void DrawProgressBar(
@@ -503,15 +502,11 @@ namespace BSE.Windows.Forms
                 return null;
             }
 
-            LinearGradientBrush linearGradientBrush = linearGradientBrush =
-                new LinearGradientBrush(bounds, Color.White, backColor, LinearGradientMode.Vertical);
-            if (linearGradientBrush != null)
-            {
-                Blend blend = new Blend();
-                blend.Positions = new float[] {0.0F, 0.2F, 0.3F, 0.5F, 0.6F, 0.8F, 1.0F};
-                blend.Factors = new float[] {0.3F, 0.4F, 0.5F, 0.8F, 1.0F, 1.0F, 0.9F};
-                linearGradientBrush.Blend = blend;
-            }
+            var linearGradientBrush = new LinearGradientBrush(bounds, Color.White, backColor, LinearGradientMode.Vertical);
+            var blend = new Blend();
+            blend.Positions = new[] {0.0F, 0.2F, 0.3F, 0.5F, 0.6F, 0.8F, 1.0F};
+            blend.Factors = new[] {0.3F, 0.4F, 0.5F, 0.8F, 1.0F, 1.0F, 0.9F};
+            linearGradientBrush.Blend = blend;
 
             return linearGradientBrush;
         }

@@ -18,12 +18,12 @@ namespace GMap.NET.WindowsPresentation
         readonly BackgroundWorker _worker = new BackgroundWorker();
         List<GPoint> _list = new List<GPoint>();
         int _zoom;
-        GMapProvider provider;
-        int sleep;
-        int all;
+        GMapProvider _provider;
+        int _sleep;
+        int _all;
         public bool ShowCompleteMessage = false;
-        RectLatLng area;
-        GSize maxOfTiles;
+        RectLatLng _area;
+        GSize _maxOfTiles;
 
         public TilePrefetcher()
         {
@@ -51,7 +51,7 @@ namespace GMap.NET.WindowsPresentation
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                     new Action(() =>
                     {
-                        label2.Text = "all tiles saved";
+                        Label2.Text = "all tiles saved";
                     }));
             }
         }
@@ -65,7 +65,7 @@ namespace GMap.NET.WindowsPresentation
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                     new Action(() =>
                     {
-                        label2.Text = "saving tiles...";
+                        Label2.Text = "saving tiles...";
                     }));
             }
         }
@@ -77,7 +77,7 @@ namespace GMap.NET.WindowsPresentation
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                     new Action(() =>
                     {
-                        label2.Text = left + " tile to save...";
+                        Label2.Text = left + " tile to save...";
                     }));
             }
         }
@@ -86,13 +86,13 @@ namespace GMap.NET.WindowsPresentation
         {
             if (!_worker.IsBusy)
             {
-                this.label1.Text = "...";
-                this.progressBar1.Value = 0;
+                Label1.Text = "...";
+                ProgressBar1.Value = 0;
 
-                this.area = area;
-                this._zoom = zoom;
-                this.provider = provider;
-                this.sleep = sleep;
+                _area = area;
+                _zoom = zoom;
+                _provider = provider;
+                _sleep = sleep;
 
                 GMaps.Instance.UseMemoryCache = false;
                 GMaps.Instance.CacheOnIdleRead = false;
@@ -100,7 +100,7 @@ namespace GMap.NET.WindowsPresentation
 
                 _worker.RunWorkerAsync();
 
-                this.ShowDialog();
+                ShowDialog();
             }
         }
 
@@ -132,11 +132,11 @@ namespace GMap.NET.WindowsPresentation
             {
                 if (!e.Cancelled)
                 {
-                    MessageBox.Show("Prefetch Complete! => " + ((int)e.Result).ToString() + " of " + all);
+                    MessageBox.Show("Prefetch Complete! => " + ((int)e.Result).ToString() + " of " + _all);
                 }
                 else
                 {
-                    MessageBox.Show("Prefetch Canceled! => " + ((int)e.Result).ToString() + " of " + all);
+                    MessageBox.Show("Prefetch Canceled! => " + ((int)e.Result).ToString() + " of " + _all);
                 }
             }
 
@@ -146,12 +146,12 @@ namespace GMap.NET.WindowsPresentation
             GMaps.Instance.CacheOnIdleRead = true;
             GMaps.Instance.BoostCacheEngine = false;
 
-            this.Close();
+            Close();
         }
 
         bool CacheTiles(int zoom, GPoint p)
         {
-            foreach (var type in provider.Overlays)
+            foreach (var type in _provider.Overlays)
             {
                 Exception ex;
                 PureImage img;
@@ -159,7 +159,7 @@ namespace GMap.NET.WindowsPresentation
                 // tile number inversion(BottomLeft -> TopLeft) for pergo maps
                 if (type is TurkeyMapProvider)
                 {
-                    img = GMaps.Instance.GetImageFrom(type, new GPoint(p.X, maxOfTiles.Height - p.Y), zoom, out ex);
+                    img = GMaps.Instance.GetImageFrom(type, new GPoint(p.X, _maxOfTiles.Height - p.Y), zoom, out ex);
                 }
                 else // ok
                 {
@@ -188,16 +188,16 @@ namespace GMap.NET.WindowsPresentation
                 _list = null;
             }
 
-            _list = provider.Projection.GetAreaTileList(area, _zoom, 0);
-            maxOfTiles = provider.Projection.GetTileMatrixMaxXY(_zoom);
-            all = _list.Count;
+            _list = _provider.Projection.GetAreaTileList(_area, _zoom, 0);
+            _maxOfTiles = _provider.Projection.GetTileMatrixMaxXY(_zoom);
+            _all = _list.Count;
 
             int countOk = 0;
             int retry = 0;
 
             Stuff.Shuffle<GPoint>(_list);
 
-            for (int i = 0; i < all; i++)
+            for (int i = 0; i < _all; i++)
             {
                 if (_worker.CancellationPending)
                     break;
@@ -224,9 +224,9 @@ namespace GMap.NET.WindowsPresentation
                     }
                 }
 
-                _worker.ReportProgress((int)((i + 1) * 100 / all), i + 1);
+                _worker.ReportProgress((int)((i + 1) * 100 / _all), i + 1);
 
-                Thread.Sleep(sleep);
+                Thread.Sleep(_sleep);
             }
 
             e.Result = countOk;
@@ -239,16 +239,16 @@ namespace GMap.NET.WindowsPresentation
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.label1.Text = "Fetching tile at zoom (" + _zoom + "): " + ((int)e.UserState).ToString() + " of " +
-                               all + ", complete: " + e.ProgressPercentage.ToString() + "%";
-            this.progressBar1.Value = e.ProgressPercentage;
+            Label1.Text = "Fetching tile at zoom (" + _zoom + "): " + ((int)e.UserState).ToString() + " of " +
+                               _all + ", complete: " + e.ProgressPercentage.ToString() + "%";
+            ProgressBar1.Value = e.ProgressPercentage;
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                this.Close();
+                Close();
             }
 
             base.OnPreviewKeyDown(e);
@@ -256,7 +256,7 @@ namespace GMap.NET.WindowsPresentation
 
         protected override void OnClosed(EventArgs e)
         {
-            this.Stop();
+            Stop();
 
             base.OnClosed(e);
         }

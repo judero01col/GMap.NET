@@ -11,12 +11,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override Present Realize(string refCredit)
         {
-            return this.parameter;
+            return parameter;
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
-            this.parameter.AccumulateRobustHash(hash);
+            parameter.AccumulateRobustHash(hash);
         }
     }
 }

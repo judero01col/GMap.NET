@@ -16,9 +16,9 @@ namespace Jama
             get
             {
                 bool result;
-                for (int i = 0; i < this.n; i++)
+                for (int i = 0; i < n; i++)
                 {
-                    if (this.LU[i][i] == 0.0)
+                    if (LU[i][i] == 0.0)
                     {
                         result = false;
                         return result;
@@ -34,15 +34,15 @@ namespace Jama
         {
             get
             {
-                JamaMatrix jamaMatrix = new JamaMatrix(this.m, this.n);
+                JamaMatrix jamaMatrix = new JamaMatrix(m, n);
                 double[][] array = jamaMatrix.Array;
-                for (int i = 0; i < this.m; i++)
+                for (int i = 0; i < m; i++)
                 {
-                    for (int j = 0; j < this.n; j++)
+                    for (int j = 0; j < n; j++)
                     {
                         if (i > j)
                         {
-                            array[i][j] = this.LU[i][j];
+                            array[i][j] = LU[i][j];
                         }
                         else
                         {
@@ -66,15 +66,15 @@ namespace Jama
         {
             get
             {
-                JamaMatrix jamaMatrix = new JamaMatrix(this.n, this.n);
+                JamaMatrix jamaMatrix = new JamaMatrix(n, n);
                 double[][] array = jamaMatrix.Array;
-                for (int i = 0; i < this.n; i++)
+                for (int i = 0; i < n; i++)
                 {
-                    for (int j = 0; j < this.n; j++)
+                    for (int j = 0; j < n; j++)
                     {
                         if (i <= j)
                         {
-                            array[i][j] = this.LU[i][j];
+                            array[i][j] = LU[i][j];
                         }
                         else
                         {
@@ -91,10 +91,10 @@ namespace Jama
         {
             get
             {
-                int[] array = new int[this.m];
-                for (int i = 0; i < this.m; i++)
+                int[] array = new int[m];
+                for (int i = 0; i < m; i++)
                 {
-                    array[i] = this.piv[i];
+                    array[i] = piv[i];
                 }
 
                 return array;
@@ -105,10 +105,10 @@ namespace Jama
         {
             get
             {
-                double[] array = new double[this.m];
-                for (int i = 0; i < this.m; i++)
+                double[] array = new double[m];
+                for (int i = 0; i < m; i++)
                 {
-                    array[i] = (double)this.piv[i];
+                    array[i] = (double)piv[i];
                 }
 
                 return array;
@@ -117,27 +117,27 @@ namespace Jama
 
         public LUDecomposition(JamaMatrix A)
         {
-            this.LU = A.ArrayCopy;
-            this.m = A.RowDimension;
-            this.n = A.ColumnDimension;
-            this.piv = new int[this.m];
-            for (int i = 0; i < this.m; i++)
+            LU = A.ArrayCopy;
+            m = A.RowDimension;
+            n = A.ColumnDimension;
+            piv = new int[m];
+            for (int i = 0; i < m; i++)
             {
-                this.piv[i] = i;
+                piv[i] = i;
             }
 
-            this.pivsign = 1;
-            double[] array = new double[this.m];
-            for (int j = 0; j < this.n; j++)
+            pivsign = 1;
+            double[] array = new double[m];
+            for (int j = 0; j < n; j++)
             {
-                for (int i = 0; i < this.m; i++)
+                for (int i = 0; i < m; i++)
                 {
-                    array[i] = this.LU[i][j];
+                    array[i] = LU[i][j];
                 }
 
-                for (int i = 0; i < this.m; i++)
+                for (int i = 0; i < m; i++)
                 {
-                    double[] array2 = this.LU[i];
+                    double[] array2 = LU[i];
                     int num = Math.Min(i, j);
                     double num2 = 0.0;
                     for (int k = 0; k < num; k++)
@@ -149,7 +149,7 @@ namespace Jama
                 }
 
                 int num3 = j;
-                for (int i = j + 1; i < this.m; i++)
+                for (int i = j + 1; i < m; i++)
                 {
                     if (Math.Abs(array[i]) > Math.Abs(array[num3]))
                     {
@@ -159,24 +159,24 @@ namespace Jama
 
                 if (num3 != j)
                 {
-                    for (int k = 0; k < this.n; k++)
+                    for (int k = 0; k < n; k++)
                     {
-                        double num4 = this.LU[num3][k];
-                        this.LU[num3][k] = this.LU[j][k];
-                        this.LU[j][k] = num4;
+                        double num4 = LU[num3][k];
+                        LU[num3][k] = LU[j][k];
+                        LU[j][k] = num4;
                     }
 
-                    int num5 = this.piv[num3];
-                    this.piv[num3] = this.piv[j];
-                    this.piv[j] = num5;
-                    this.pivsign = -this.pivsign;
+                    int num5 = piv[num3];
+                    piv[num3] = piv[j];
+                    piv[j] = num5;
+                    pivsign = -pivsign;
                 }
 
-                if ((j < this.m) & (this.LU[j][j] != 0.0))
+                if ((j < m) & (LU[j][j] != 0.0))
                 {
-                    for (int i = j + 1; i < this.m; i++)
+                    for (int i = j + 1; i < m; i++)
                     {
-                        this.LU[i][j] /= this.LU[j][j];
+                        LU[i][j] /= LU[j][j];
                     }
                 }
             }
@@ -184,15 +184,15 @@ namespace Jama
 
         public virtual double det()
         {
-            if (this.m != this.n)
+            if (m != n)
             {
                 throw new ArgumentException("Matrix must be square.");
             }
 
-            double num = (double)this.pivsign;
-            for (int i = 0; i < this.n; i++)
+            double num = (double)pivsign;
+            for (int i = 0; i < n; i++)
             {
-                num *= this.LU[i][i];
+                num *= LU[i][i];
             }
 
             return num;
@@ -200,42 +200,42 @@ namespace Jama
 
         public virtual JamaMatrix solve(JamaMatrix B)
         {
-            if (B.RowDimension != this.m)
+            if (B.RowDimension != m)
             {
                 throw new ArgumentException("Matrix row dimensions must agree.");
             }
 
-            if (!this.Nonsingular)
+            if (!Nonsingular)
             {
                 throw new CorrespondencesAreSingularException();
             }
 
             int columnDimension = B.ColumnDimension;
-            JamaMatrix matrix = B.getMatrix(this.piv, 0, columnDimension - 1);
+            JamaMatrix matrix = B.getMatrix(piv, 0, columnDimension - 1);
             double[][] array = matrix.Array;
-            for (int i = 0; i < this.n; i++)
+            for (int i = 0; i < n; i++)
             {
-                for (int j = i + 1; j < this.n; j++)
+                for (int j = i + 1; j < n; j++)
                 {
                     for (int k = 0; k < columnDimension; k++)
                     {
-                        array[j][k] -= array[i][k] * this.LU[j][i];
+                        array[j][k] -= array[i][k] * LU[j][i];
                     }
                 }
             }
 
-            for (int i = this.n - 1; i >= 0; i--)
+            for (int i = n - 1; i >= 0; i--)
             {
                 for (int k = 0; k < columnDimension; k++)
                 {
-                    array[i][k] /= this.LU[i][i];
+                    array[i][k] /= LU[i][i];
                 }
 
                 for (int j = 0; j < i; j++)
                 {
                     for (int k = 0; k < columnDimension; k++)
                     {
-                        array[j][k] -= array[i][k] * this.LU[j][i];
+                        array[j][k] -= array[i][k] * LU[j][i];
                     }
                 }
             }

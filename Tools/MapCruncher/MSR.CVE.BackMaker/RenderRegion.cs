@@ -18,27 +18,27 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.vertexList.Count;
+                return vertexList.Count;
             }
         }
 
         public RenderRegion(MapRectangle rect, DirtyEvent parentDirty)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
-            this.vertexList.Add(rect.GetNW());
-            this.vertexList.Add(rect.GetSW());
-            this.vertexList.Add(rect.GetSE());
-            this.vertexList.Add(rect.GetNE());
+            dirtyEvent = new DirtyEvent(parentDirty);
+            vertexList.Add(rect.GetNW());
+            vertexList.Add(rect.GetSW());
+            vertexList.Add(rect.GetSE());
+            vertexList.Add(rect.GetNE());
         }
 
         internal RenderRegion Copy(DirtyEvent parentDirty)
         {
-            return new RenderRegion(new List<LatLon>(this.vertexList), parentDirty);
+            return new RenderRegion(new List<LatLon>(vertexList), parentDirty);
         }
 
         public RenderRegion(List<LatLon> vertexList, DirtyEvent parentDirty)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
+            dirtyEvent = new DirtyEvent(parentDirty);
             this.vertexList = vertexList;
         }
 
@@ -48,7 +48,7 @@ namespace MSR.CVE.BackMaker
             renderDebug.IntersectedVertexList = new List<TracedVertex>();
             List<TracedVertex> list = new List<TracedVertex>();
             int num = 0;
-            foreach (LatLon current in this.vertexList)
+            foreach (LatLon current in vertexList)
             {
                 list.Add(new TracedVertex(num, current));
                 num++;
@@ -125,7 +125,7 @@ namespace MSR.CVE.BackMaker
 
         private List<TracedVertex> IntersectWithRectangle(MapRectangle mapWindow)
         {
-            RenderDebug renderDebug = this.IntersectWithRectangleDebug(mapWindow);
+            RenderDebug renderDebug = IntersectWithRectangleDebug(mapWindow);
             return renderDebug.FinalClipRegion;
         }
 
@@ -140,7 +140,7 @@ namespace MSR.CVE.BackMaker
                         mapWindow.lon0 + (double)i,
                         mapWindow.lat1,
                         mapWindow.lon1 + (double)i);
-                    Region clipRegionComponent = this.GetClipRegionComponent(clippedMapWindow, zoom, csi);
+                    Region clipRegionComponent = GetClipRegionComponent(clippedMapWindow, zoom, csi);
                     if (region == null)
                     {
                         region = clipRegionComponent;
@@ -154,12 +154,12 @@ namespace MSR.CVE.BackMaker
                 return region;
             }
 
-            return this.GetClipRegionComponent(mapWindow, zoom, csi);
+            return GetClipRegionComponent(mapWindow, zoom, csi);
         }
 
         private Region GetClipRegionComponent(MapRectangle clippedMapWindow, int zoom, CoordinateSystemIfc csi)
         {
-            TracedScreenPoint[] path = this.GetPath(clippedMapWindow, zoom, csi);
+            TracedScreenPoint[] path = GetPath(clippedMapWindow, zoom, csi);
             PointF[] array = new PointF[path.GetLength(0)];
             for (int i = 0; i < path.GetLength(0); i++)
             {
@@ -175,7 +175,7 @@ namespace MSR.CVE.BackMaker
         public TracedScreenPoint[] GetPath(MapRectangle mapWindow, int zoom, CoordinateSystemIfc csi)
         {
             MapRectangle mapWindow2 = mapWindow.GrowFraction(0.1);
-            List<TracedVertex> list = this.IntersectWithRectangle(mapWindow2);
+            List<TracedVertex> list = IntersectWithRectangle(mapWindow2);
             TracedScreenPoint[] array = new TracedScreenPoint[list.Count];
             int num = 0;
             foreach (TracedVertex current in list)
@@ -191,30 +191,30 @@ namespace MSR.CVE.BackMaker
 
         public void UpdatePoint(int index, LatLon newPosition)
         {
-            this.vertexList[index] = newPosition;
-            this.SetDirty();
+            vertexList[index] = newPosition;
+            SetDirty();
         }
 
         public List<LatLon> GetAsLatLonList()
         {
-            return this.vertexList;
+            return vertexList;
         }
 
         internal LatLon GetPoint(int index)
         {
-            return this.vertexList[index];
+            return vertexList[index];
         }
 
         internal void InsertPoint(int index, LatLon newPosition)
         {
-            this.vertexList.Insert(index, newPosition);
-            this.SetDirty();
+            vertexList.Insert(index, newPosition);
+            SetDirty();
         }
 
         internal void RemovePoint(int index)
         {
-            this.vertexList.RemoveAt(index);
-            this.SetDirty();
+            vertexList.RemoveAt(index);
+            SetDirty();
         }
 
         public static string GetXMLTag()
@@ -225,7 +225,7 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("RenderRegion");
-            foreach (LatLon current in this.vertexList)
+            foreach (LatLon current in vertexList)
             {
                 current.WriteXML(writer);
             }
@@ -235,36 +235,36 @@ namespace MSR.CVE.BackMaker
 
         public RenderRegion(MashupParseContext context, DirtyEvent parentDirty, CoordinateSystemIfc coordSys)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirty);
+            dirtyEvent = new DirtyEvent(parentDirty);
             XMLTagReader xMLTagReader = context.NewTagReader("RenderRegion");
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(LatLon.GetXMLTag()))
                 {
-                    this.vertexList.Add(new LatLon(context, coordSys));
+                    vertexList.Add(new LatLon(context, coordSys));
                 }
             }
         }
 
         public override int GetHashCode()
         {
-            return this.cachedHashCode;
+            return cachedHashCode;
         }
 
         public void SetDirty()
         {
-            this.cachedHashCode = 19;
-            foreach (LatLon arg_1D_0 in this.vertexList)
+            cachedHashCode = 19;
+            foreach (LatLon arg_1D_0 in vertexList)
             {
-                this.cachedHashCode = this.cachedHashCode * 131 + this.vertexList.GetHashCode();
+                cachedHashCode = cachedHashCode * 131 + vertexList.GetHashCode();
             }
 
-            this.dirtyEvent.SetDirty();
+            dirtyEvent.SetDirty();
         }
 
         internal void AccumulateBoundingBox(ref MapRectangle boundingBox)
         {
-            foreach (LatLon current in this.vertexList)
+            foreach (LatLon current in vertexList)
             {
                 boundingBox = MapRectangle.AddToBoundingBox(boundingBox, current);
             }
@@ -273,13 +273,13 @@ namespace MSR.CVE.BackMaker
         internal MapRectangle GetBoundingBox()
         {
             MapRectangle result = null;
-            this.AccumulateBoundingBox(ref result);
+            AccumulateBoundingBox(ref result);
             return result;
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            foreach (LatLon current in this.vertexList)
+            foreach (LatLon current in vertexList)
             {
                 current.AccumulateRobustHash(hash);
             }

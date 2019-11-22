@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("RenderedTileFetch(");
-            this.namingScheme.AccumulateRobustHash(hash);
+            namingScheme.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
 
@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             try
             {
                 TileAddress ta = (TileAddress)paramList[0];
-                string renderPath = this.namingScheme.GetRenderPath(ta);
+                string renderPath = namingScheme.GetRenderPath(ta);
                 if (File.Exists(renderPath))
                 {
                     GDIBigLockedImage gDIBigLockedImage = GDIBigLockedImage.FromFile(renderPath);

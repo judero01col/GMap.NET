@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            return new DiskCacheFuture(this.cache, this.prototype.Curry(paramDict));
+            return new DiskCacheFuture(cache, prototype.Curry(paramDict));
         }
     }
 }

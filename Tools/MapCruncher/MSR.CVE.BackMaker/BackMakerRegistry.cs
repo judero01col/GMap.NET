@@ -12,38 +12,38 @@ namespace MSR.CVE.BackMaker
         private void initialize(string customPrefix)
         {
             this.customPrefix = customPrefix;
-            this.BackMaker_key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft Research\\CVE", true);
-            if (this.BackMaker_key == null)
+            BackMaker_key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft Research\\CVE", true);
+            if (BackMaker_key == null)
             {
-                this.BackMaker_key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft Research\\CVE");
+                BackMaker_key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft Research\\CVE");
             }
         }
 
         public BackMakerRegistry(string customPrefix)
         {
-            this.initialize(customPrefix);
+            initialize(customPrefix);
         }
 
         public BackMakerRegistry()
         {
-            this.initialize("");
+            initialize("");
         }
 
         public void Dispose()
         {
-            this.BackMaker_key.Close();
+            BackMaker_key.Close();
         }
 
         private string AddPrefixes(string rawKeyName)
         {
-            return "backmaker_" + this.customPrefix + rawKeyName;
+            return "backmaker_" + customPrefix + rawKeyName;
         }
 
         public string GetValue(string keyName)
         {
-            if (this.BackMaker_key != null)
+            if (BackMaker_key != null)
             {
-                return (string)this.BackMaker_key.GetValue(this.AddPrefixes(keyName));
+                return (string)BackMaker_key.GetValue(AddPrefixes(keyName));
             }
 
             return null;
@@ -51,15 +51,15 @@ namespace MSR.CVE.BackMaker
 
         public void SetValue(string keyName, string value)
         {
-            if (this.BackMaker_key != null)
+            if (BackMaker_key != null)
             {
                 if (value == null)
                 {
-                    this.BackMaker_key.DeleteValue(this.AddPrefixes(keyName), false);
+                    BackMaker_key.DeleteValue(AddPrefixes(keyName), false);
                     return;
                 }
 
-                this.BackMaker_key.SetValue(this.AddPrefixes(keyName), value);
+                BackMaker_key.SetValue(AddPrefixes(keyName), value);
             }
         }
     }

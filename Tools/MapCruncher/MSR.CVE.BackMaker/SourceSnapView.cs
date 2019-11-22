@@ -11,22 +11,22 @@ namespace MSR.CVE.BackMaker
 
         public void Record(LatLonZoom llz)
         {
-            this.smvm.RecordSource(llz);
+            smvm.RecordSource(llz);
         }
 
         public LatLonZoom Restore()
         {
-            return this.smvm.RestoreSource();
+            return smvm.RestoreSource();
         }
 
         public void RecordZoom(int zoom)
         {
-            this.smvm.RecordSourceZoom(zoom);
+            smvm.RecordSourceZoom(zoom);
         }
 
         public int RestoreZoom()
         {
-            return this.smvm.RestoreSourceZoom();
+            return smvm.RestoreSourceZoom();
         }
     }
 }

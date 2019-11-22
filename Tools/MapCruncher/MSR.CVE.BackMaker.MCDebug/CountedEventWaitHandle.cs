@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         public override void Close()
         {
             base.Close();
-            DiagnosticUI.theDiagnostics.fetchResourceCounter("event-" + this.name, -1).crement(-1);
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("event-" + name, -1).crement(-1);
         }
     }
 }

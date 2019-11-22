@@ -23,7 +23,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
             public void Dispose()
             {
-                this.result.Dispose();
+                result.Dispose();
             }
         }
 
@@ -54,16 +54,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public DiskCache()
         {
-            this.cacheDir = Path.Combine(Environment.GetEnvironmentVariable("TMP"), "mapcache\\");
-            this.stableFreshCountPathname = Path.Combine(this.cacheDir, "FreshCount.txt");
-            this.CreateCacheDirIfNeeded();
+            cacheDir = Path.Combine(Environment.GetEnvironmentVariable("TMP"), "mapcache\\");
+            stableFreshCountPathname = Path.Combine(cacheDir, "FreshCount.txt");
+            CreateCacheDirIfNeeded();
             DebugThreadInterrupter.theInstance.AddThread("DiskCache.DeferredWriteThread",
-                new ThreadStart(this.DeferredWriteThread),
+                new ThreadStart(DeferredWriteThread),
                 ThreadPriority.Normal);
             DebugThreadInterrupter.theInstance.AddThread("DiskCache.EvictThread",
-                new ThreadStart(this.EvictThread),
+                new ThreadStart(EvictThread),
                 ThreadPriority.Normal);
-            this.resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("DiskCache", -1);
+            resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("DiskCache", -1);
         }
 
         public void Dispose()
@@ -71,15 +71,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.disposed = true;
-                if (this.plowCacheEvent != null)
+                disposed = true;
+                if (plowCacheEvent != null)
                 {
-                    this.plowCacheEvent.Set();
+                    plowCacheEvent.Set();
                 }
 
-                if (this.writeQueueNonEmptyEvent != null)
+                if (writeQueueNonEmptyEvent != null)
                 {
-                    this.writeQueueNonEmptyEvent.Set();
+                    writeQueueNonEmptyEvent.Set();
                 }
             }
             finally
@@ -90,13 +90,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public Present Get(IFuture future, string refCredit)
         {
-            string text = this.makeCachePathname(future, "fresh.");
-            string text2 = this.makeCachePathname(future, "stale.");
+            string text = makeCachePathname(future, "fresh.");
+            string text2 = makeCachePathname(future, "stale.");
             Monitor.Enter(this);
             try
             {
                 long num;
-                Present present = this.Fetch(text, out num);
+                Present present = Fetch(text, out num);
                 if (present != null)
                 {
                     D.Sayf(10, "fresh hit! {0}", new object[] {"fresh."});
@@ -104,11 +104,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     return result;
                 }
 
-                present = this.Fetch(text2, out num);
+                present = Fetch(text2, out num);
                 if (present != null)
                 {
                     File.Move(text2, text);
-                    this.IncrementFreshCount(num);
+                    IncrementFreshCount(num);
                     D.Sayf(10, "stale hit! {0} {1}", new object[] {"stale.", num});
                     Present result = present;
                     return result;
@@ -120,43 +120,43 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             Present result2 = future.Realize(refCredit);
-            this.ScheduleDeferredWrite(result2, text, future.ToString());
+            ScheduleDeferredWrite(result2, text, future.ToString());
             D.Sayf(10, "miss", new object[0]);
             return result2;
         }
 
         private void IncrementFreshCount(long increment)
         {
-            if (this.demoting)
+            if (demoting)
             {
-                this.delayedIncrementFreshCount += increment;
+                delayedIncrementFreshCount += increment;
                 return;
             }
 
-            this.freshCount += increment;
-            if (this.freshCount - this.lastStableFreshCount > 10485760L)
+            freshCount += increment;
+            if (freshCount - lastStableFreshCount > 10485760L)
             {
-                this.UpdateStableFreshCount();
+                UpdateStableFreshCount();
             }
 
-            if (this.freshCount > 524288000L)
+            if (freshCount > 524288000L)
             {
-                this.plowCacheEvent.Set();
+                plowCacheEvent.Set();
             }
 
-            this.resourceCounter.crement((int)increment);
+            resourceCounter.crement((int)increment);
         }
 
         private void UpdateStableFreshCount()
         {
             try
             {
-                FileStream fileStream = File.Open(this.stableFreshCountPathname, FileMode.Create);
+                FileStream fileStream = File.Open(stableFreshCountPathname, FileMode.Create);
                 StreamWriter streamWriter = new StreamWriter(fileStream);
-                streamWriter.Write(this.freshCount.ToString());
+                streamWriter.Write(freshCount.ToString());
                 streamWriter.Close();
                 fileStream.Close();
-                this.lastStableFreshCount = this.freshCount;
+                lastStableFreshCount = freshCount;
             }
             catch (IOException)
             {
@@ -166,7 +166,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private string makeCachePathname(IFuture future, string cacheSide)
         {
             string path = cacheSide + RobustHashTools.Hash(future).ToString() + ".cc";
-            return Path.Combine(this.cacheDir, path);
+            return Path.Combine(cacheDir, path);
         }
 
         private Present Fetch(string path, out long length)
@@ -175,7 +175,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 try
                 {
-                    return this.presentDiskDispatcher.ReadObject(path, out length);
+                    return presentDiskDispatcher.ReadObject(path, out length);
                 }
                 catch (Exception arg)
                 {
@@ -192,34 +192,34 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             try
             {
-                if (!Directory.Exists(this.cacheDir))
+                if (!Directory.Exists(cacheDir))
                 {
-                    Directory.CreateDirectory(this.cacheDir);
-                    this.freshCount = 0L;
+                    Directory.CreateDirectory(cacheDir);
+                    freshCount = 0L;
                 }
                 else
                 {
                     try
                     {
-                        FileStream fileStream = File.Open(this.stableFreshCountPathname, FileMode.Open);
+                        FileStream fileStream = File.Open(stableFreshCountPathname, FileMode.Open);
                         StreamReader streamReader = new StreamReader(fileStream);
                         string s = streamReader.ReadToEnd();
                         fileStream.Close();
-                        this.freshCount = long.Parse(s);
+                        freshCount = long.Parse(s);
                     }
                     catch (Exception)
                     {
-                        this.freshCount = 0L;
+                        freshCount = 0L;
                     }
                 }
 
-                this.lastStableFreshCount = this.freshCount;
-                this.freshCount += 10485760L;
+                lastStableFreshCount = freshCount;
+                freshCount += 10485760L;
             }
             catch (Exception innerException)
             {
                 throw new ConfigurationException(
-                    string.Format("TileCache cannot create or access cache directory {0}", this.cacheDir),
+                    string.Format("TileCache cannot create or access cache directory {0}", cacheDir),
                     innerException);
             }
         }
@@ -230,8 +230,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             try
             {
                 DeferredWriteRecord item = new DeferredWriteRecord(result, freshPath, debugOriginInfo);
-                this.deferredWriteQueue.Enqueue(item);
-                this.writeQueueNonEmptyEvent.Set();
+                deferredWriteQueue.Enqueue(item);
+                writeQueueNonEmptyEvent.Set();
             }
             finally
             {
@@ -244,11 +244,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             try
             {
                 long increment;
-                this.presentDiskDispatcher.WriteObject(record.result, record.freshPath, out increment);
+                presentDiskDispatcher.WriteObject(record.result, record.freshPath, out increment);
                 Monitor.Enter(this);
                 try
                 {
-                    this.IncrementFreshCount(increment);
+                    IncrementFreshCount(increment);
                 }
                 finally
                 {
@@ -265,19 +265,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private void DeferredWriteThread()
         {
-            while (!this.disposed)
+            while (!disposed)
             {
-                this.writeQueueNonEmptyEvent.WaitOne();
+                writeQueueNonEmptyEvent.WaitOne();
                 int num = 0;
-                while (!this.disposed)
+                while (!disposed)
                 {
                     DeferredWriteRecord deferredWriteRecord = null;
                     Monitor.Enter(this);
                     try
                     {
-                        if (this.deferredWriteQueue.Count > 0)
+                        if (deferredWriteQueue.Count > 0)
                         {
-                            deferredWriteRecord = this.deferredWriteQueue.Dequeue();
+                            deferredWriteRecord = deferredWriteQueue.Dequeue();
                         }
                     }
                     finally
@@ -290,7 +290,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         break;
                     }
 
-                    this.WriteRecord(deferredWriteRecord);
+                    WriteRecord(deferredWriteRecord);
                     num++;
                 }
             }
@@ -298,8 +298,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.writeQueueNonEmptyEvent.Close();
-                this.writeQueueNonEmptyEvent = null;
+                writeQueueNonEmptyEvent.Close();
+                writeQueueNonEmptyEvent = null;
             }
             finally
             {
@@ -312,30 +312,30 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Label_0000:
             try
             {
-                this.plowCacheEvent.WaitOne();
+                plowCacheEvent.WaitOne();
                 lock (this)
                 {
-                    if (this.disposed)
+                    if (disposed)
                     {
                         lock (this)
                         {
-                            this.plowCacheEvent.Close();
-                            this.plowCacheEvent = null;
+                            plowCacheEvent.Close();
+                            plowCacheEvent = null;
                         }
 
                         return;
                     }
 
-                    if (this.freshCount <= 0x1f400000L)
+                    if (freshCount <= 0x1f400000L)
                     {
                         goto Label_0000;
                     }
                 }
 
-                D.Sayf(1, "Before evict: freshCount {0} kB", new object[] {this.freshCount >> 10});
-                this.EvictStaleFiles();
-                this.EvictDemoteFreshFiles();
-                D.Sayf(1, "After evict: freshCount {0} kB", new object[] {this.freshCount >> 10});
+                D.Sayf(1, "Before evict: freshCount {0} kB", new object[] {freshCount >> 10});
+                EvictStaleFiles();
+                EvictDemoteFreshFiles();
+                D.Sayf(1, "After evict: freshCount {0} kB", new object[] {freshCount >> 10});
             }
             catch (Exception exception)
             {
@@ -352,7 +352,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             string[] files;
             try
             {
-                files = Directory.GetFiles(this.cacheDir, "stale.*.cc");
+                files = Directory.GetFiles(cacheDir, "stale.*.cc");
             }
             finally
             {
@@ -367,7 +367,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Enter(this);
                 try
                 {
-                    if (this.disposed)
+                    if (disposed)
                     {
                         break;
                     }
@@ -376,7 +376,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     {
                         try
                         {
-                            this.presentDiskDispatcher.DeleteCacheFile(cacheControlFilePath);
+                            presentDiskDispatcher.DeleteCacheFile(cacheControlFilePath);
                             num++;
                         }
                         catch (IOException)
@@ -403,14 +403,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.demoting = true;
+                demoting = true;
             }
             finally
             {
                 Monitor.Exit(this);
             }
 
-            string[] files = Directory.GetFiles(this.cacheDir, "fresh.*.cc");
+            string[] files = Directory.GetFiles(cacheDir, "fresh.*.cc");
             int num = 0;
             string[] array = files;
             for (int i = 0; i < array.Length; i++)
@@ -419,7 +419,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Enter(this);
                 try
                 {
-                    if (this.disposed)
+                    if (disposed)
                     {
                         break;
                     }
@@ -436,8 +436,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             string path = fileName.Replace("fresh.", "stale.");
                             string text2 = Path.Combine(Path.GetDirectoryName(text), path);
                             File.Move(text, text2);
-                            long num2 = this.presentDiskDispatcher.CacheFileLength(text2);
-                            this.freshCount -= num2;
+                            long num2 = presentDiskDispatcher.CacheFileLength(text2);
+                            freshCount -= num2;
                             num++;
                         }
                     }
@@ -462,12 +462,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 D.Sayf(1,
                     "EvictDemoteFreshFiles: At end of pass, {0} bytes unaccounted for. Writing off.",
-                    new object[] {this.freshCount});
-                this.freshCount = 0L;
-                this.demoting = false;
-                this.IncrementFreshCount(this.delayedIncrementFreshCount);
-                this.delayedIncrementFreshCount = 0L;
-                this.UpdateStableFreshCount();
+                    new object[] {freshCount});
+                freshCount = 0L;
+                demoting = false;
+                IncrementFreshCount(delayedIncrementFreshCount);
+                delayedIncrementFreshCount = 0L;
+                UpdateStableFreshCount();
             }
             finally
             {

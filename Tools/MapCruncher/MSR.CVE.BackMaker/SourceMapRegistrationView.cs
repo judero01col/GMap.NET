@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._sourceMap;
+                return _sourceMap;
             }
         }
 
@@ -26,27 +26,27 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._locked;
+                return _locked;
             }
         }
 
         public object GetViewedObject()
         {
-            return this.sourceMap;
+            return sourceMap;
         }
 
         public SourceMapRegistrationView(SourceMap sourceMap, MapPosition lockedMapView)
         {
-            this._sourceMap = sourceMap;
-            this._locked = true;
-            this.referenceMapView = new MapPosition(lockedMapView, null);
-            this.sourceMapView = lockedMapView.llz;
+            _sourceMap = sourceMap;
+            _locked = true;
+            referenceMapView = new MapPosition(lockedMapView, null);
+            sourceMapView = lockedMapView.llz;
         }
 
         public SourceMapRegistrationView(SourceMap sourceMap, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
-            this._sourceMap = sourceMap;
-            this._locked = false;
+            _sourceMap = sourceMap;
+            _locked = false;
             this.sourceMapView = sourceMapView;
             this.referenceMapView = new MapPosition(referenceMapView, null);
         }
@@ -58,9 +58,9 @@ namespace MSR.CVE.BackMaker
 
         public SourceMapRegistrationView(SourceMap sourceMap, MashupParseContext context)
         {
-            this._sourceMap = sourceMap;
+            _sourceMap = sourceMap;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
-            this._locked = context.GetRequiredAttributeBoolean(lockedAttribute);
+            _locked = context.GetRequiredAttributeBoolean(lockedAttribute);
             bool flag = false;
             while (xMLTagReader.FindNextStartTag())
             {
@@ -71,7 +71,7 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader2.TagIs(LatLonZoom.GetXMLTag()))
                         {
-                            this.sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
+                            sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
                             flag = true;
                         }
                     }
@@ -85,7 +85,7 @@ namespace MSR.CVE.BackMaker
                         {
                             if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
                             {
-                                this.referenceMapView =
+                                referenceMapView =
                                     new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
                             }
                         }
@@ -93,12 +93,12 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            if (this.referenceMapView == null)
+            if (referenceMapView == null)
             {
                 throw new InvalidMashupFile(context, "No " + referenceMapViewTag + " tag in LayerView.");
             }
 
-            if (flag == this._locked)
+            if (flag == _locked)
             {
                 throw new InvalidMashupFile(context, "locked flag disagrees with " + sourceMapViewTag + " element.");
             }
@@ -107,33 +107,33 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(GetXMLTag());
-            writer.WriteAttributeString(lockedAttribute, this.locked.ToString(CultureInfo.InvariantCulture));
-            if (!this.locked)
+            writer.WriteAttributeString(lockedAttribute, locked.ToString(CultureInfo.InvariantCulture));
+            if (!locked)
             {
                 writer.WriteStartElement(sourceMapViewTag);
-                this.sourceMapView.WriteXML(writer);
+                sourceMapView.WriteXML(writer);
                 writer.WriteEndElement();
             }
 
             writer.WriteStartElement(referenceMapViewTag);
-            this.referenceMapView.WriteXML(writer);
+            referenceMapView.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
 
         public MapPosition GetReferenceMapView()
         {
-            return this.referenceMapView;
+            return referenceMapView;
         }
 
         public LatLonZoom GetSourceMapView()
         {
-            if (this.locked)
+            if (locked)
             {
-                return this.referenceMapView.llz;
+                return referenceMapView.llz;
             }
 
-            return this.sourceMapView;
+            return sourceMapView;
         }
     }
 }

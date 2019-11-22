@@ -37,7 +37,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override Present Realize(string refCredit)
         {
-            Present present = this.documentFuture.Realize(refCredit);
+            Present present = documentFuture.Realize(refCredit);
             if (!(present is SourceDocument))
             {
                 return PresentFailureCode.FailedCast(present, "FetchDocumentFuture");
@@ -93,7 +93,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FetchDocumentFuture(");
-            this.documentFuture.AccumulateRobustHash(hash);
+            documentFuture.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
 

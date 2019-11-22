@@ -24,12 +24,12 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._pinId;
+                return _pinId;
             }
             set
             {
-                this._pinId = value;
-                this.dirtyEvent.SetDirty();
+                _pinId = value;
+                dirtyEvent.SetDirty();
             }
         }
 
@@ -37,12 +37,12 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._associationName;
+                return _associationName;
             }
             set
             {
-                this._associationName = value;
-                this.dirtyEvent.SetDirty();
+                _associationName = value;
+                dirtyEvent.SetDirty();
             }
         }
 
@@ -50,11 +50,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._qualityMessage;
+                return _qualityMessage;
             }
             set
             {
-                this._qualityMessage = value;
+                _qualityMessage = value;
             }
         }
 
@@ -62,7 +62,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._imagePosition;
+                return _imagePosition;
             }
         }
 
@@ -70,7 +70,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._sourcePosition;
+                return _sourcePosition;
             }
         }
 
@@ -78,7 +78,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._globalPosition;
+                return _globalPosition;
             }
         }
 
@@ -86,24 +86,24 @@ namespace MSR.CVE.BackMaker
             LatLonZoom globalPosition, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
-            this._pinId = -1;
-            this._associationName = associationName;
-            this._imagePosition = new DisplayablePosition(imagePosition);
-            this._sourcePosition = new DisplayablePosition(sourcePosition);
-            this._globalPosition = new DisplayablePosition(globalPosition);
+            _pinId = -1;
+            _associationName = associationName;
+            _imagePosition = new DisplayablePosition(imagePosition);
+            _sourcePosition = new DisplayablePosition(sourcePosition);
+            _globalPosition = new DisplayablePosition(globalPosition);
         }
 
         public override int GetHashCode()
         {
-            return this._sourcePosition.GetHashCode() ^ this._globalPosition.GetHashCode() ^ this._pinId ^
-                   this._associationName.GetHashCode();
+            return _sourcePosition.GetHashCode() ^ _globalPosition.GetHashCode() ^ _pinId ^
+                   _associationName.GetHashCode();
         }
 
         public void UpdateAssociation(LatLonZoom sourceLLZ, LatLonZoom globalLLZ)
         {
-            this._sourcePosition = new DisplayablePosition(sourceLLZ);
-            this._globalPosition = new DisplayablePosition(globalLLZ);
-            this.dirtyEvent.SetDirty();
+            _sourcePosition = new DisplayablePosition(sourceLLZ);
+            _globalPosition = new DisplayablePosition(globalLLZ);
+            dirtyEvent.SetDirty();
         }
 
         public static string XMLTag()
@@ -114,13 +114,13 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(PositionAssociationTag);
-            writer.WriteAttributeString(pinIdAttr, this._pinId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString(associationNameAttr, this._associationName);
+            writer.WriteAttributeString(pinIdAttr, _pinId.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(associationNameAttr, _associationName);
             writer.WriteStartElement(SourcePositionTag);
-            this._sourcePosition.WriteXML(writer);
+            _sourcePosition.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteStartElement(GlobalPositionTag);
-            this._globalPosition.WriteXML(writer);
+            _globalPosition.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
@@ -129,11 +129,11 @@ namespace MSR.CVE.BackMaker
         {
             this.dirtyEvent = dirtyEvent;
             XMLTagReader xMLTagReader = context.NewTagReader(PositionAssociationTag);
-            this._pinId = -1;
-            context.GetAttributeInt(pinIdAttr, ref this._pinId);
-            if ((this.associationName = context.reader.GetAttribute(associationNameAttr)) == null)
+            _pinId = -1;
+            context.GetAttributeInt(pinIdAttr, ref _pinId);
+            if ((associationName = context.reader.GetAttribute(associationNameAttr)) == null)
             {
-                this.associationName = "";
+                associationName = "";
             }
 
             while (xMLTagReader.FindNextStartTag())
@@ -145,9 +145,9 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader2.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                         {
-                            this._sourcePosition =
+                            _sourcePosition =
                                 new DisplayablePosition(context, ContinuousCoordinateSystem.theInstance);
-                            this._imagePosition = new DisplayablePosition(this._sourcePosition.pinPosition);
+                            _imagePosition = new DisplayablePosition(_sourcePosition.pinPosition);
                         }
                     }
                 }
@@ -160,7 +160,7 @@ namespace MSR.CVE.BackMaker
                         {
                             if (xMLTagReader3.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                             {
-                                this._globalPosition =
+                                _globalPosition =
                                     new DisplayablePosition(context, MercatorCoordinateSystem.theInstance);
                             }
                         }
@@ -168,17 +168,17 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            if (this._sourcePosition == null || this._globalPosition == null)
+            if (_sourcePosition == null || _globalPosition == null)
             {
                 throw new Exception(string.Format("Pin {0} does not have a source and/or global position defined",
-                    this.associationName));
+                    associationName));
             }
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this._sourcePosition.pinPosition.AccumulateRobustHash(hash);
-            this._globalPosition.pinPosition.AccumulateRobustHash(hash);
+            _sourcePosition.pinPosition.AccumulateRobustHash(hash);
+            _globalPosition.pinPosition.AccumulateRobustHash(hash);
         }
     }
 }

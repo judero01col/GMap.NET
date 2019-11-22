@@ -15,18 +15,18 @@ namespace MSR.CVE.BackMaker.MCDebug
         {
             get
             {
-                return this._debugFeaturesEnabled;
+                return _debugFeaturesEnabled;
             }
             set
             {
-                this._debugFeaturesEnabled = value;
-                this.listeners(this._debugFeaturesEnabled);
+                _debugFeaturesEnabled = value;
+                listeners(_debugFeaturesEnabled);
             }
         }
 
         public void AddListener(DebugKnobListener listener)
         {
-            this.listeners = (DebugKnobListener)Delegate.Combine(this.listeners, listener);
+            listeners = (DebugKnobListener)Delegate.Combine(listeners, listener);
         }
     }
 }

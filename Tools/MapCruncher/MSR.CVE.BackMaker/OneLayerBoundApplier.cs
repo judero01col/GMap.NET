@@ -12,9 +12,9 @@ namespace MSR.CVE.BackMaker
         {
             this.source = source;
             this.layer = layer;
-            this.clippedImageFuture = new MemCachePrototype(cachePackage.computeCache,
+            clippedImageFuture = new MemCachePrototype(cachePackage.computeCache,
                 new ApplyPrototype(new UserClipperVerb(),
-                    new IFuturePrototype[]
+                    new[]
                     {
                         source.GetImagePrototype(null, (FutureFeatures)11),
                         new UnevaluatedTerm(TermName.TileAddress), source.GetUserBounds(null, FutureFeatures.Cached)
@@ -24,8 +24,8 @@ namespace MSR.CVE.BackMaker
         internal string DescribeSourceForComplaint()
         {
             return string.Format("Layer {0} Source {1}",
-                this.layer.GetDisplayName(),
-                this.source.GetSourceMapDisplayName());
+                layer.GetDisplayName(),
+                source.GetSourceMapDisplayName());
         }
     }
 }

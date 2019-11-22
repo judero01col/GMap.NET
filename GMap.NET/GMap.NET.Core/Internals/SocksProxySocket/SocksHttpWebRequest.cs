@@ -252,7 +252,7 @@ namespace GMap.NET.Internals
 
                 // read the HTTP reply
                 var buffer = new byte[1024 * 4];
-                int bytesReceived = 0;
+                int bytesReceived;
                 bool headerDone = false;
 
                 while ((bytesReceived = _socksConnection.Receive(buffer)) > 0)
@@ -387,8 +387,7 @@ namespace GMap.NET.Internals
 
                     case "Content-Length":
                     {
-                        long r = 0;
-                        if (long.TryParse(headerEntry[1], out r))
+                        if (long.TryParse(headerEntry[1], out long r))
                         {
                             ContentLength = r;
                         }

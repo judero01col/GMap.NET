@@ -20,11 +20,11 @@ namespace GMap.NET.Internals
 
         public Tile(int zoom, GPoint pos)
         {
-            this.NotEmpty = true;
+            NotEmpty = true;
             this.zoom = zoom;
             this.pos = pos;
-            this.overlays = null;
-            this.OverlaysCount = 0;
+            overlays = null;
+            OverlaysCount = 0;
         }
 
         public IEnumerable<PureImage> Overlays
@@ -135,7 +135,7 @@ namespace GMap.NET.Internals
                 return false;
 
             Tile comp = (Tile)obj;
-            return comp.Zoom == this.Zoom && comp.Pos == this.Pos;
+            return comp.Zoom == Zoom && comp.Pos == Pos;
         }
 
         public override int GetHashCode()

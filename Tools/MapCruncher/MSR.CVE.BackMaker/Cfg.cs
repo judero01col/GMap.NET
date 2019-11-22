@@ -9,18 +9,18 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._name;
+                return _name;
             }
             set
             {
-                this._name = value;
+                _name = value;
             }
         }
 
         public Cfg(string name, T defaultValue)
         {
             this.name = name;
-            this.value = defaultValue;
+            value = defaultValue;
         }
 
         public abstract void ParseFrom(string str);

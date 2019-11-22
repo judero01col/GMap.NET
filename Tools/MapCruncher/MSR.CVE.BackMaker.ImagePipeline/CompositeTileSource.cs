@@ -27,31 +27,31 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
             List<IFuture> list = new List<IFuture>();
-            foreach (SourceMap current in this.layer)
+            foreach (SourceMap current in layer)
             {
                 if (current.ReadyToLock())
                 {
                     LatentRegionHolder latentRegionHolder2 = new LatentRegionHolder(new DirtyEvent(), new DirtyEvent());
-                    list.Add(this.mapTileSourceFactory.CreateRenderableWarpedSource(current)
+                    list.Add(mapTileSourceFactory.CreateRenderableWarpedSource(current)
                         .GetUserBounds(latentRegionHolder2, features));
                 }
             }
 
             IFuture future = new ApplyFuture(new CompositeBoundsVerb(), list.ToArray());
             D.Assert(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached));
-            return new MemCacheFuture(this.mapTileSourceFactory.GetCachePackage().boundsCache, future);
+            return new MemCacheFuture(mapTileSourceFactory.GetCachePackage().boundsCache, future);
         }
 
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
             List<IFuturePrototype> list = new List<IFuturePrototype>();
             list.Add(parameterType.GetSizeParameter());
-            foreach (SourceMap current in this.layer)
+            foreach (SourceMap current in layer)
             {
                 if (current.ReadyToLock())
                 {
                     IDisplayableSource displayableSource =
-                        this.mapTileSourceFactory.CreateDisplayableWarpedSource(current);
+                        mapTileSourceFactory.CreateDisplayableWarpedSource(current);
                     list.Add(displayableSource.GetImagePrototype(parameterType, features));
                 }
             }
@@ -59,13 +59,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             IFuturePrototype futurePrototype = new ApplyPrototype(new CompositeImageVerb(), list.ToArray());
             if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.DiskCached))
             {
-                futurePrototype = new DiskCachePrototype(this.mapTileSourceFactory.GetCachePackage().diskCache,
+                futurePrototype = new DiskCachePrototype(mapTileSourceFactory.GetCachePackage().diskCache,
                     futurePrototype);
             }
 
             if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached))
             {
-                futurePrototype = new MemCachePrototype(this.mapTileSourceFactory.GetCachePackage().computeCache,
+                futurePrototype = new MemCachePrototype(mapTileSourceFactory.GetCachePackage().computeCache,
                     futurePrototype);
             }
 

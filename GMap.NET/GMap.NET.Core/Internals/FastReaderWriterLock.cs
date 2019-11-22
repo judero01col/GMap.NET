@@ -43,7 +43,7 @@ namespace GMap.NET.Internals
         {
             if (UseNativeSRWLock)
             {
-                NativeMethods.InitializeSRWLock(out this.LockSRW);
+                NativeMethods.InitializeSRWLock(out LockSRW);
             }
             else
             {
@@ -198,7 +198,7 @@ namespace GMap.NET.Internals
         public void Dispose()
         {
 #if UseFastResourceLock
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
 #endif
         }

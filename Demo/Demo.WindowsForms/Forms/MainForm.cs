@@ -220,19 +220,17 @@ namespace Demo.WindowsForms
                 //if(false)
                 {
                     // add my city location for demo
-                    GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
+                    GeoCoderStatusCode status;
+                    PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
+
+                    if (pos != null && status == GeoCoderStatusCode.OK)
                     {
-                        PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
+                        currentMarker.Position = pos.Value;
 
-                        if (pos != null && status == GeoCoderStatusCode.OK)
-                        {
-                            currentMarker.Position = pos.Value;
-
-                            GMapMarker myCity = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green_small);
-                            myCity.ToolTipMode = MarkerTooltipMode.Always;
-                            myCity.ToolTipText = "Welcome to Lithuania! ;}";
-                            objects.Markers.Add(myCity);
-                        }
+                        GMapMarker myCity = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green_small);
+                        myCity.ToolTipMode = MarkerTooltipMode.Always;
+                        myCity.ToolTipText = "Welcome to Lithuania! ;}";
+                        objects.Markers.Add(myCity);
                     }
 
                     // add some points in lithuania
@@ -710,7 +708,7 @@ namespace Demo.WindowsForms
                 try
                 {
                     string Ip = string.Empty;
-                    int count = 0;
+                    int count;
                     lock (TcpStateNeedtraceInfo)
                     {
                         count = TcpStateNeedtraceInfo.Count;
@@ -726,7 +724,7 @@ namespace Demo.WindowsForms
 
                         List<PingReply> tracert;
 
-                        bool contains = false;
+                        bool contains;
                         lock (TraceRoutes)
                         {
                             contains = TraceRoutes.TryGetValue(Ip, out tracert);
@@ -1034,7 +1032,7 @@ namespace Demo.WindowsForms
                                 {
                                     // routes
                                     GMapRoute route;
-                                    if (!this.tcpRoutes.TryGetValue(tcp.Key, out route))
+                                    if (!tcpRoutes.TryGetValue(tcp.Key, out route))
                                     {
                                         lock (TraceRoutes)
                                         {
@@ -1242,13 +1240,14 @@ namespace Demo.WindowsForms
                     {
                         HttpWebRequest httpReq = WebRequest.Create(reqUrl) as HttpWebRequest;
                         {
-                            string result = string.Empty;
-                            using (HttpWebResponse response = httpReq.GetResponse() as HttpWebResponse)
+                            string result;
+                            using (var response = httpReq.GetResponse() as HttpWebResponse)
                             {
-                                using (StreamReader reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.UTF8))
+                                using (var reader = new StreamReader(response.GetResponseStream(), System.Text.Encoding.UTF8))
                                 {
                                     result = reader.ReadToEnd();
                                 }
+
                                 response.Close();
                             }
 
@@ -1402,10 +1401,8 @@ namespace Demo.WindowsForms
                     }
 
                     sessions.Clear();
-                    sessions = null;
 
                     track.Clear();
-                    track = null;
                 }
 
                 MainMap.Refresh();
@@ -1422,7 +1419,7 @@ namespace Demo.WindowsForms
         /// <param name="place"></param>
         void AddLocationLithuania(string place)
         {
-            GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
+            GeoCoderStatusCode status;
             PointLatLng? pos = GMapProviders.GoogleMap.GetPoint("Lithuania, " + place, out status);
             if (pos != null && status == GeoCoderStatusCode.OK)
             {
@@ -1857,7 +1854,7 @@ namespace Demo.WindowsForms
                     if (DialogResult.Yes == d.ShowDialog())
                     {
                         UserAcceptedLicenseOnce = true;
-                        this.Text += " - license accepted by " + Environment.UserName + " at " + DateTime.Now;
+                        Text += " - license accepted by " + Environment.UserName + " at " + DateTime.Now;
                     }
                 }
                 else

@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._extn;
+                return _extn;
             }
         }
 
@@ -22,15 +22,15 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                D.Assert(this._imageFormat != null);
-                return this._imageFormat;
+                D.Assert(_imageFormat != null);
+                return _imageFormat;
             }
         }
 
         private OutputTileType(string extn, ImageFormat imageFormat)
         {
-            this._extn = extn;
-            this._imageFormat = imageFormat;
+            _extn = extn;
+            _imageFormat = imageFormat;
         }
 
         public static OutputTileType Parse(string extn)

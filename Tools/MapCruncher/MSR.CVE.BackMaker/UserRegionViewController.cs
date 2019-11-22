@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker
                 if (o2 is State)
                 {
                     State state = (State)o2;
-                    return this.center == state.center && this.size == state.size && this.valid == state.valid;
+                    return center == state.center && size == state.size && valid == state.valid;
                 }
 
                 return false;
@@ -28,19 +28,19 @@ namespace MSR.CVE.BackMaker
 
             public override int GetHashCode()
             {
-                return this.center.GetHashCode() ^ this.size.GetHashCode();
+                return center.GetHashCode() ^ size.GetHashCode();
             }
 
             public override string ToString()
             {
-                return string.Format("{0} {1}", this.center, this.size);
+                return string.Format("{0} {1}", center, size);
             }
 
             public State(State state)
             {
-                this.center = state.center;
-                this.size = new Size(state.size.Width, state.size.Height);
-                this.valid = state.valid;
+                center = state.center;
+                size = new Size(state.size.Width, state.size.Height);
+                valid = state.valid;
             }
         }
 
@@ -71,7 +71,7 @@ namespace MSR.CVE.BackMaker
 
             public void Dragged(Point diff)
             {
-                this.controller.DragVertex(diff, this.draggedVertexIndex);
+                controller.DragVertex(diff, draggedVertexIndex);
             }
 
             public Cursor GetCursor(bool dragging)
@@ -81,13 +81,13 @@ namespace MSR.CVE.BackMaker
 
             public void OnPopup(ContextMenu menu)
             {
-                MenuItem menuItem = menu.MenuItems.Add("Remove corner", new EventHandler(this.RemoveCorner));
-                menuItem.Enabled = this.controller.RemoveEnabled();
+                MenuItem menuItem = menu.MenuItems.Add("Remove corner", new EventHandler(RemoveCorner));
+                menuItem.Enabled = controller.RemoveEnabled();
             }
 
             public void RemoveCorner(object sender, EventArgs e)
             {
-                this.controller.RemoveCorner(this.draggedVertexIndex);
+                controller.RemoveCorner(draggedVertexIndex);
             }
         }
 
@@ -104,7 +104,7 @@ namespace MSR.CVE.BackMaker
                 this.controller = controller;
                 this.originalVertexIndex = originalVertexIndex;
                 menuIncarnationCounter++;
-                this.menuIncarnation = menuIncarnationCounter;
+                menuIncarnation = menuIncarnationCounter;
                 this.clickedPoint = clickedPoint;
             }
 
@@ -119,14 +119,14 @@ namespace MSR.CVE.BackMaker
 
             public void OnPopup(ContextMenu menu)
             {
-                menu.MenuItems.Add("Add corner", new EventHandler(this.AddCorner));
-                D.Say(0, string.Format("Updating menu from incarnation {0}", this.menuIncarnation));
+                menu.MenuItems.Add("Add corner", new EventHandler(AddCorner));
+                D.Say(0, string.Format("Updating menu from incarnation {0}", menuIncarnation));
             }
 
             public void AddCorner(object sender, EventArgs e)
             {
-                D.Say(0, string.Format("AddCorner from incarnation {0}", this.menuIncarnation));
-                this.controller.AddCorner(this.clickedPoint, this.originalVertexIndex);
+                D.Say(0, string.Format("AddCorner from incarnation {0}", menuIncarnation));
+                controller.AddCorner(clickedPoint, originalVertexIndex);
             }
         }
 
@@ -149,23 +149,23 @@ namespace MSR.CVE.BackMaker
             this.csi = csi;
             this.svdp = svdp;
             this.latentRegionHolder = latentRegionHolder;
-            this.displayableSource = unwarpedMapTileSource;
-            this.vertexFillBrush = new SolidBrush(Color.LightBlue);
-            this.vertexStrokePen = new Pen(Color.DarkBlue, 1f);
-            this.segmentFillBrush = new SolidBrush(Color.DarkBlue);
+            displayableSource = unwarpedMapTileSource;
+            vertexFillBrush = new SolidBrush(Color.LightBlue);
+            vertexStrokePen = new Pen(Color.DarkBlue, 1f);
+            segmentFillBrush = new SolidBrush(Color.DarkBlue);
         }
 
         private void UpdateState(State state)
         {
-            if (state.Equals(this.lastState))
+            if (state.Equals(lastState))
             {
                 return;
             }
 
-            TracedScreenPoint[] path = this.GetUserRegion()
-                .GetPath(CoordinateSystemUtilities.GetBounds(this.csi, state.center, state.size),
+            TracedScreenPoint[] path = GetUserRegion()
+                .GetPath(CoordinateSystemUtilities.GetBounds(csi, state.center, state.size),
                     state.center.zoom,
-                    this.csi);
+                    csi);
             List<TracedScreenPoint> list = new List<TracedScreenPoint>();
             int length = path.GetLength(0);
             for (int i = 0; i < length; i++)
@@ -202,18 +202,18 @@ namespace MSR.CVE.BackMaker
             }
 
             list2.AddRange(list3);
-            this.clickableThings = list2.ToArray();
-            this.lastState = new State(state);
+            clickableThings = list2.ToArray();
+            lastState = new State(state);
         }
 
         internal RenderRegion GetUserRegion()
         {
-            return this.latentRegionHolder.renderRegion;
+            return latentRegionHolder.renderRegion;
         }
 
         internal void Paint(PaintSpecification e, LatLonZoom center, Size size)
         {
-            if (this.GetUserRegion() == null)
+            if (GetUserRegion() == null)
             {
                 return;
             }
@@ -222,26 +222,26 @@ namespace MSR.CVE.BackMaker
             state.center = center;
             state.size = size;
             state.valid = true;
-            this.UpdateState(state);
-            ClickableThing[] array = this.clickableThings;
+            UpdateState(state);
+            ClickableThing[] array = clickableThings;
             for (int i = 0; i < array.Length; i++)
             {
                 ClickableThing clickableThing = array[i];
-                e.Graphics.FillPath(this.segmentFillBrush, clickableThing.path);
+                e.Graphics.FillPath(segmentFillBrush, clickableThing.path);
             }
         }
 
         internal ViewerControl.MouseAction ImminentAction(MouseEventArgs e)
         {
-            if (this.clickableThings == null)
+            if (clickableThings == null)
             {
                 return null;
             }
 
             int i = 0;
-            while (i < this.clickableThings.GetLength(0))
+            while (i < clickableThings.GetLength(0))
             {
-                ClickableThing clickableThing = this.clickableThings[i];
+                ClickableThing clickableThing = clickableThings[i];
                 if (clickableThing.vertexLocation.originalIndex >= 0 && clickableThing.path.IsVisible(e.Location))
                 {
                     if (clickableThing.clickedWhich == ClickableThing.ClickedWhich.Segment)
@@ -262,45 +262,45 @@ namespace MSR.CVE.BackMaker
 
         internal void DragVertex(Point diff, int draggedVertexIndex)
         {
-            LatLon point = this.GetUserRegion().GetPoint(draggedVertexIndex);
-            LatLonZoom center = new LatLonZoom(point.lat, point.lon, this.svdp.MapCenter().zoom);
+            LatLon point = GetUserRegion().GetPoint(draggedVertexIndex);
+            LatLonZoom center = new LatLonZoom(point.lat, point.lon, svdp.MapCenter().zoom);
             diff = new Point(-diff.X, -diff.Y);
-            LatLonZoom translationInLatLon = this.csi.GetTranslationInLatLon(center, diff);
-            this.GetUserRegion().UpdatePoint(draggedVertexIndex, translationInLatLon.latlon);
-            this.Invalidate();
+            LatLonZoom translationInLatLon = csi.GetTranslationInLatLon(center, diff);
+            GetUserRegion().UpdatePoint(draggedVertexIndex, translationInLatLon.latlon);
+            Invalidate();
         }
 
         internal void AddCorner(Point newCornerPoint, int originalVertexIndex)
         {
-            LatLonZoom center = this.svdp.MapCenter();
-            Point offsetInPixels = new Point(this.svdp.ScreenCenter().X - newCornerPoint.X,
-                this.svdp.ScreenCenter().Y - newCornerPoint.Y);
-            LatLonZoom translationInLatLon = this.csi.GetTranslationInLatLon(center, offsetInPixels);
+            LatLonZoom center = svdp.MapCenter();
+            Point offsetInPixels = new Point(svdp.ScreenCenter().X - newCornerPoint.X,
+                svdp.ScreenCenter().Y - newCornerPoint.Y);
+            LatLonZoom translationInLatLon = csi.GetTranslationInLatLon(center, offsetInPixels);
             D.Say(0, string.Format("newCornerPosition= {0}", translationInLatLon));
-            this.GetUserRegion().InsertPoint(originalVertexIndex + 1, translationInLatLon.latlon);
-            this.Invalidate();
+            GetUserRegion().InsertPoint(originalVertexIndex + 1, translationInLatLon.latlon);
+            Invalidate();
         }
 
         internal void RemoveCorner(int originalVertexIndex)
         {
-            this.GetUserRegion().RemovePoint(originalVertexIndex);
-            this.Invalidate();
+            GetUserRegion().RemovePoint(originalVertexIndex);
+            Invalidate();
         }
 
         internal bool RemoveEnabled()
         {
-            return this.GetUserRegion().Count > 3;
+            return GetUserRegion().Count > 3;
         }
 
         private void Invalidate()
         {
-            AsyncRef asyncRef = (AsyncRef)this.displayableSource
-                .GetUserBounds(this.latentRegionHolder, (FutureFeatures)7)
+            AsyncRef asyncRef = (AsyncRef)displayableSource
+                .GetUserBounds(latentRegionHolder, (FutureFeatures)7)
                 .Realize("UserRegionViewController.Invalidate");
             asyncRef.ProcessSynchronously();
             asyncRef.Dispose();
-            this.svdp.InvalidateView();
-            this.lastState.valid = false;
+            svdp.InvalidateView();
+            lastState.valid = false;
         }
     }
 }

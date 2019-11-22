@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("VETileFetch:");
-            hash.Accumulate(this.mapStyle);
+            hash.Accumulate(mapStyle);
         }
 
         public static bool StyleIsValid(string s)
@@ -51,10 +51,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 text += num.ToString();
             }
 
-            string text2 = this.mapStyle == "r" ? "png" : "jpeg";
+            string text2 = mapStyle == "r" ? "png" : "jpeg";
             string formatString = VEUrlFormat.theFormat.GetFormatString();
             string text3 = string.Format(formatString,
-                new object[] {this.mapStyle, num, text, text2, VEUrlFormat.theFormat.GetGenerationNumber()});
+                new object[] {mapStyle, num, text, text2, VEUrlFormat.theFormat.GetGenerationNumber()});
             D.Sayf(6, "getting VE url {0}", new object[] {text3});
             return text3;
         }

@@ -19,25 +19,25 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.path = path;
             this.pageNumber = pageNumber;
             File.GetLastWriteTime(path).ToUniversalTime();
-            this.ValidateFilename();
+            ValidateFilename();
         }
 
         public FutureDocumentFromFilesystem(MashupParseContext context, string pathBase)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             string requiredAttribute = context.GetRequiredAttribute(FilenameAttr);
-            this.path = Path.Combine(pathBase, requiredAttribute);
-            this.pageNumber = context.GetRequiredAttributeInt(PageNumberAttr);
+            path = Path.Combine(pathBase, requiredAttribute);
+            pageNumber = context.GetRequiredAttributeInt(PageNumberAttr);
             xMLTagReader.SkipAllSubTags();
-            this.ValidateFilename();
+            ValidateFilename();
         }
 
         public void WriteXML(MashupWriteContext context, string pathBase)
         {
-            string value = MakeRelativePath(pathBase, this.path);
+            string value = MakeRelativePath(pathBase, path);
             context.writer.WriteStartElement(GetXMLTag());
             context.writer.WriteAttributeString(FilenameAttr, value);
-            context.writer.WriteAttributeString(PageNumberAttr, this.pageNumber.ToString(CultureInfo.InvariantCulture));
+            context.writer.WriteAttributeString(PageNumberAttr, pageNumber.ToString(CultureInfo.InvariantCulture));
             context.writer.WriteEndElement();
         }
 
@@ -54,9 +54,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 text = Path.GetFullPath(pathBase);
             }
 
-            string[] array = text.Split(new char[] {Path.DirectorySeparatorChar});
+            string[] array = text.Split(new[] {Path.DirectorySeparatorChar});
             string fullPath = Path.GetFullPath(path);
-            string[] array2 = fullPath.Split(new char[] {Path.DirectorySeparatorChar});
+            string[] array2 = fullPath.Split(new[] {Path.DirectorySeparatorChar});
             if (array[0] != array2[0])
             {
                 return fullPath;
@@ -85,29 +85,29 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private void ValidateFilename()
         {
-            if (!File.Exists(this.path))
+            if (!File.Exists(path))
             {
-                throw new InvalidFileContentsException(string.Format("Document reference to {0} invalid", this.path));
+                throw new InvalidFileContentsException(string.Format("Document reference to {0} invalid", path));
             }
         }
 
         public override Present Realize(string refCredit)
         {
-            return new SourceDocument(new LocalDocumentDescriptor(this.path, this.pageNumber));
+            return new SourceDocument(new LocalDocumentDescriptor(path, pageNumber));
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FutureDocumentFromFilesystem(");
-            hash.Accumulate(this.path);
-            hash.Accumulate(this.pageNumber);
-            hash.Accumulate(this.lastWriteTime.ToBinary());
+            hash.Accumulate(path);
+            hash.Accumulate(pageNumber);
+            hash.Accumulate(lastWriteTime.ToBinary());
             hash.Accumulate(")");
         }
 
         public string GetDefaultDisplayName()
         {
-            return Path.GetFileNameWithoutExtension(this.path);
+            return Path.GetFileNameWithoutExtension(path);
         }
 
         internal static string GetXMLTag()

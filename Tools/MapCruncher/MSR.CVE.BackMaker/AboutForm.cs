@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker
         {
             InitializeComponent();
 
-            string text = string.Concat(new string[]
+            string text = string.Concat(new[]
             {
                 "\r\n<html>\r\n<center>\r\n<br /><br /><i>", BuildConfig.theConfig.editionName,
                 "</i>\r\n<br>Version ", versionNumber, "\r\n<p>\r\n<a target=\"new\" href=\"",
@@ -29,7 +29,7 @@ namespace MSR.CVE.BackMaker
             }
 
             //text += "\r\n<p>\r\n<center>Feedback is welcome.  Write to<br>\r\n<tt>cruncher</tt> at <tt>microsoft</tt> dot <tt>com</tt></center>\r\n\r\n<p>\r\n<b>Warning:</b>\r\nThis computer program is protected by copyright law and international treaties.\r\nUnauthorized reproduction or distribution of this program, or any portion of it,\r\nmay result in severe civil and criminal penalties, and will be prosecuted to the\r\nmaximum extent possible under the law.\r\n</html>\r\n";
-            this.aboutContentsBrowser.DocumentText = text;
+            aboutContentsBrowser.DocumentText = text;
         }
     }
 }

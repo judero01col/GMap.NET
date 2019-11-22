@@ -17,7 +17,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             D.Assert(paramList.Length == 1);
             IBoundsProvider boundsProvider = (IBoundsProvider)paramList[0];
             RenderRegion renderRegion = boundsProvider.GetRenderRegion();
-            IPointTransformer robustPointTransform = this.imageTransformer.getSourceToDestLatLonTransformer();
+            IPointTransformer robustPointTransform = imageTransformer.getSourceToDestLatLonTransformer();
             double num = 0.05;
             List<LatLon> asLatLonList = renderRegion.GetAsLatLonList();
             List<LatLon> list = new List<LatLon>();
@@ -39,7 +39,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("WarpBoundsVerb(");
-            this.imageTransformer.AccumulateRobustHash(hash);
+            imageTransformer.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
     }

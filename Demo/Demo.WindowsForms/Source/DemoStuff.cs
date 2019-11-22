@@ -66,9 +66,9 @@ namespace Demo.WindowsForms
 #if !PocketPC
         public static bool PingNetwork(string hostNameOrAddress)
         {
-            bool pingStatus = false;
+            bool pingStatus;
 
-            using (Ping p = new Ping())
+            using (var p = new Ping())
             {
                 byte[] buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 int timeout = 4444; // 4s
@@ -203,7 +203,6 @@ namespace Demo.WindowsForms
                             }
 
                             points.Clear();
-                            points = null;
 
                             rd.Close();
                         }
@@ -248,9 +247,9 @@ namespace Demo.WindowsForms
          url += "&app=GMap.NET.WindowsMobile";
 #endif
 
-            string xml = string.Empty;
+            string xml;
             {
-                HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+                var request = (HttpWebRequest) WebRequest.Create(url);
 
                 request.UserAgent = GMapProvider.UserAgent;
                 request.Timeout = GMapProvider.TimeoutMs;
@@ -258,11 +257,11 @@ namespace Demo.WindowsForms
                 request.Accept = "*/*";
                 request.KeepAlive = true;
 
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var response = request.GetResponse() as HttpWebResponse)
                 {
-                    using (Stream responseStream = response.GetResponseStream())
+                    using (var responseStream = response.GetResponseStream())
                     {
-                        using (StreamReader read = new StreamReader(responseStream, Encoding.UTF8))
+                        using (var read = new StreamReader(responseStream, Encoding.UTF8))
                         {
                             xml = read.ReadToEnd();
                         }
@@ -431,7 +430,7 @@ namespace Demo.WindowsForms
                     bounds.Left,
                     bounds.Right));
 
-                var items = response.Split(new string[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
+                var items = response.Split(new[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
 
                 //int i = 0;
                 foreach (var it in items)
@@ -490,9 +489,9 @@ namespace Demo.WindowsForms
 
         static string GetFlightRadarContentUsingHttp(string url)
         {
-            string ret = string.Empty;
+            string ret;
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+            var request = (HttpWebRequest) WebRequest.Create(url);
 
             request.UserAgent = GMapProvider.UserAgent;
             request.Timeout = GMapProvider.TimeoutMs;

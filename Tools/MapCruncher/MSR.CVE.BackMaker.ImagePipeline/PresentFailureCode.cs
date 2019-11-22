@@ -11,19 +11,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._ex;
+                return _ex;
             }
         }
 
         public PresentFailureCode(PresentFailureCode innerFailure, string provenance)
         {
             this.provenance = provenance + innerFailure.provenance;
-            this._ex = innerFailure._ex;
+            _ex = innerFailure._ex;
         }
 
         public PresentFailureCode(Exception ex)
         {
-            this._ex = ex;
+            _ex = ex;
         }
 
         public PresentFailureCode(string str) : this(new Exception(str))
@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override string ToString()
         {
-            return this.provenance + ": " + this.exception.Message;
+            return provenance + ": " + exception.Message;
         }
 
         public Present Duplicate(string refCredit)

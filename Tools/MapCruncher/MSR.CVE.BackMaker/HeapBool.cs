@@ -8,17 +8,17 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.b;
+                return b;
             }
             set
             {
-                this.b = value;
+                b = value;
             }
         }
 
         public HeapBool(bool initialValue)
         {
-            this.b = initialValue;
+            b = initialValue;
         }
     }
 }

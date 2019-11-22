@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.bytes;
+                return bytes;
             }
         }
 

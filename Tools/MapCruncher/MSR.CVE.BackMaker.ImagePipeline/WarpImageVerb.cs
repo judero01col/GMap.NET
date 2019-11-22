@@ -39,9 +39,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             D.Assert(paramList.Length == 2);
             MapRectangle value = ((MapRectangleParameter)paramList[0]).value;
             Size value2 = ((SizeParameter)paramList[1]).value;
-            MapRectangle mapRectangle = value.Transform(this.imageTransformer.getDestLatLonToSourceTransformer())
+            MapRectangle mapRectangle = value.Transform(imageTransformer.getDestLatLonToSourceTransformer())
                 .GrowFraction(0.05);
-            Present present = this.warpedBoundsFuture.Realize("WarpImageVerb.Evaluate-bounds");
+            Present present = warpedBoundsFuture.Realize("WarpImageVerb.Evaluate-bounds");
             if (present is BoundsPresent)
             {
                 MapRectangle boundingBox = ((BoundsPresent)present).GetRenderRegion().GetBoundingBox();
@@ -51,7 +51,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
             }
 
-            Present present2 = this.sourceMapSupplier.Curry(new ParamDict(new object[]
+            Present present2 = sourceMapSupplier.Curry(new ParamDict(new object[]
             {
                 TermName.ImageBounds, new MapRectangleParameter(mapRectangle)
             })).Realize("WarpImageVerb.Evaluate");
@@ -62,7 +62,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
             ImageRef imageRef = (ImageRef)present2;
             GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(value2, "WarpImageVerb");
-            this.imageTransformer.doTransformImage(imageRef.image, mapRectangle, gDIBigLockedImage, value);
+            imageTransformer.doTransformImage(imageRef.image, mapRectangle, gDIBigLockedImage, value);
             imageRef.Dispose();
             return new ImageRef(new ImageRefCounted(gDIBigLockedImage));
         }
@@ -70,8 +70,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("WarpImageVerb(");
-            this.imageTransformer.AccumulateRobustHash(hash);
-            this.sourceMapSupplier.Curry(new ParamDict(new object[] {TermName.ImageBounds, new UnboundParameter()}))
+            imageTransformer.AccumulateRobustHash(hash);
+            sourceMapSupplier.Curry(new ParamDict(new object[] {TermName.ImageBounds, new UnboundParameter()}))
                 .AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }

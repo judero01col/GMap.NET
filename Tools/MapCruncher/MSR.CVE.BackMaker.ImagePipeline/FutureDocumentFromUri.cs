@@ -23,9 +23,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override Present Realize(string refCredit)
         {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(this.documentUri);
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(documentUri);
             httpWebRequest.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.Revalidate);
-            D.Sayf(0, "Fetching {0}", new object[] {this.documentUri});
+            D.Sayf(0, "Fetching {0}", new object[] {documentUri});
             HttpWebResponse httpWebResponse;
             try
             {
@@ -48,7 +48,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             StreamTee streamTee = new StreamTee(responseStream, outputStream);
             byte[] buffer = hashAlgorithm.ComputeHash(streamTee);
             streamTee.Close();
-            string arg = this.BytesToHexString(buffer);
+            string arg = BytesToHexString(buffer);
             string text2 = Path.Combine(MakeDownloadCacheDir(),
                 string.Format("Hash-{0}.{1}", arg, ImageTypeMapper.ByMimeType(httpWebResponse.ContentType).extension));
             if (File.Exists(text2))
@@ -61,7 +61,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             httpWebResponse.Close();
-            return new SourceDocument(new LocalDocumentDescriptor(text2, this.pageNumber));
+            return new SourceDocument(new LocalDocumentDescriptor(text2, pageNumber));
         }
 
         private static string MakeDownloadCacheDir()
@@ -95,29 +95,29 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void WriteXML(MashupWriteContext wc, string pathBase)
         {
             wc.writer.WriteStartElement(GetXMLTag());
-            wc.writer.WriteAttributeString(FetchedDocumentUriAttr, this.documentUri.ToString());
+            wc.writer.WriteAttributeString(FetchedDocumentUriAttr, documentUri.ToString());
             wc.writer.WriteAttributeString(FetchedDocumentPageNumberAttr,
-                this.pageNumber.ToString(CultureInfo.InvariantCulture));
+                pageNumber.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteEndElement();
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(this.documentUri.ToString());
-            hash.Accumulate(this.pageNumber);
+            hash.Accumulate(documentUri.ToString());
+            hash.Accumulate(pageNumber);
         }
 
         public FutureDocumentFromUri(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
-            this.documentUri = new Uri(context.GetRequiredAttribute(FetchedDocumentUriAttr));
-            this.pageNumber = context.GetRequiredAttributeInt(FetchedDocumentPageNumberAttr);
+            documentUri = new Uri(context.GetRequiredAttribute(FetchedDocumentUriAttr));
+            pageNumber = context.GetRequiredAttributeInt(FetchedDocumentPageNumberAttr);
             xMLTagReader.SkipAllSubTags();
         }
 
         public string GetDefaultDisplayName()
         {
-            return this.documentUri.ToString();
+            return documentUri.ToString();
         }
     }
 }

@@ -225,7 +225,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             ProtocolComplete = callback;
             HandShake = GetHostPortBytes(host, port);
-            Server.BeginConnect(proxyEndPoint, new AsyncCallback(this.OnConnect), Server);
+            Server.BeginConnect(proxyEndPoint, new AsyncCallback(OnConnect), Server);
             AsyncResult = new IAsyncProxyResult();
             return AsyncResult;
         }
@@ -242,7 +242,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             ProtocolComplete = callback;
             HandShake = GetEndPointBytes(remoteEP);
-            Server.BeginConnect(proxyEndPoint, new AsyncCallback(this.OnConnect), Server);
+            Server.BeginConnect(proxyEndPoint, new AsyncCallback(OnConnect), Server);
             AsyncResult = new IAsyncProxyResult();
             return AsyncResult;
         }
@@ -269,7 +269,7 @@ namespace Org.Mentalis.Network.ProxySocket
                     0,
                     4,
                     SocketFlags.None,
-                    new AsyncCallback(this.OnAuthSent),
+                    new AsyncCallback(OnAuthSent),
                     Server);
             }
             catch (Exception e)
@@ -302,7 +302,7 @@ namespace Org.Mentalis.Network.ProxySocket
                     0,
                     Buffer.Length,
                     SocketFlags.None,
-                    new AsyncCallback(this.OnAuthReceive),
+                    new AsyncCallback(OnAuthReceive),
                     Server);
             }
             catch (Exception e)
@@ -337,7 +337,7 @@ namespace Org.Mentalis.Network.ProxySocket
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
-                        new AsyncCallback(this.OnAuthReceive),
+                        new AsyncCallback(OnAuthReceive),
                         Server);
                 }
                 else
@@ -356,7 +356,7 @@ namespace Org.Mentalis.Network.ProxySocket
                             return;
                     }
 
-                    authenticate.BeginAuthenticate(new HandShakeComplete(this.OnAuthenticated));
+                    authenticate.BeginAuthenticate(new HandShakeComplete(OnAuthenticated));
                 }
             }
             catch (Exception e)
@@ -383,7 +383,7 @@ namespace Org.Mentalis.Network.ProxySocket
                     0,
                     HandShake.Length,
                     SocketFlags.None,
-                    new AsyncCallback(this.OnSent),
+                    new AsyncCallback(OnSent),
                     Server);
             }
             catch (Exception ex)
@@ -416,7 +416,7 @@ namespace Org.Mentalis.Network.ProxySocket
                     0,
                     Buffer.Length,
                     SocketFlags.None,
-                    new AsyncCallback(this.OnReceive),
+                    new AsyncCallback(OnReceive),
                     Server);
             }
             catch (Exception e)
@@ -450,7 +450,7 @@ namespace Org.Mentalis.Network.ProxySocket
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
-                        new AsyncCallback(this.OnReceive),
+                        new AsyncCallback(OnReceive),
                         Server);
             }
             catch (Exception e)
@@ -482,7 +482,7 @@ namespace Org.Mentalis.Network.ProxySocket
             }
 
             Received = 0;
-            Server.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, new AsyncCallback(this.OnReadLast), Server);
+            Server.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, new AsyncCallback(OnReadLast), Server);
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace Org.Mentalis.Network.ProxySocket
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
-                        new AsyncCallback(this.OnReadLast),
+                        new AsyncCallback(OnReadLast),
                         Server);
             }
             catch (Exception e)

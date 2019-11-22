@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.legend.sourceMap;
+                return legend.sourceMap;
             }
         }
 
@@ -26,71 +26,71 @@ namespace MSR.CVE.BackMaker
 
         public void Activate()
         {
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
             bool flag = false;
-            if (this.legend.GetLastView() != null)
+            if (legend.GetLastView() != null)
             {
-                LegendView lastView = this.legend.GetLastView();
+                LegendView lastView = legend.GetLastView();
                 if (lastView.showingPreview)
                 {
                     throw new Exception("unimpl");
                 }
 
-                this.SetupNonpreviewView();
+                SetupNonpreviewView();
                 uIPositionManager.GetSMPos().setPosition(lastView.GetSourceMapView());
                 uIPositionManager.GetVEPos().setPosition(lastView.GetReferenceMapView());
                 flag = true;
-                this.viewControl.SetVEMapStyle(lastView.GetReferenceMapView().style);
+                viewControl.SetVEMapStyle(lastView.GetReferenceMapView().style);
             }
 
             if (!flag)
             {
-                this.SetupNonpreviewView();
+                SetupNonpreviewView();
                 uIPositionManager.GetSMPos().setPosition(new ContinuousCoordinateSystem().GetDefaultView());
-                uIPositionManager.GetVEPos().setPosition(this.DefaultReferenceMapPosition());
+                uIPositionManager.GetVEPos().setPosition(DefaultReferenceMapPosition());
             }
 
-            uIPositionManager.SetPositionMemory(this.legend);
-            this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.LegendOptions);
-            this.viewControl.GetLegendPanel().Configure(this.legend,
-                this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap));
+            uIPositionManager.SetPositionMemory(legend);
+            viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.LegendOptions);
+            viewControl.GetLegendPanel().Configure(legend,
+                mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap));
             uIPositionManager.PositionUpdated();
         }
 
         public void Dispose()
         {
-            this.viewControl.GetCachePackage().ClearSchedulers();
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
+            viewControl.GetCachePackage().ClearSchedulers();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
             uIPositionManager.SetPositionMemory(null);
             uIPositionManager.GetSMPos().setPosition(new LatLonZoom(0.0, 0.0, 0));
             uIPositionManager.switchFree();
-            this.viewControl.GetSMViewerControl().ClearLayers();
-            this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
-            this.viewControl.GetLegendPanel().Configure(null, null);
-            this.viewControl.setDisplayedRegistration(null);
-            this.legend = null;
+            viewControl.GetSMViewerControl().ClearLayers();
+            viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
+            viewControl.GetLegendPanel().Configure(null, null);
+            viewControl.setDisplayedRegistration(null);
+            legend = null;
         }
 
         private void SetupNonpreviewView()
         {
-            this.viewControl.GetSMViewerControl().SetBaseLayer(new LegendDisplayableSourceWrapper(
-                this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap),
-                this.legend.latentRegionHolder));
-            this.viewControl.GetSMViewerControl().SetLatentRegionHolder(this.legend.latentRegionHolder);
-            this.viewControl.GetUIPositionManager().switchFree();
+            viewControl.GetSMViewerControl().SetBaseLayer(new LegendDisplayableSourceWrapper(
+                mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap),
+                legend.latentRegionHolder));
+            viewControl.GetSMViewerControl().SetLatentRegionHolder(legend.latentRegionHolder);
+            viewControl.GetUIPositionManager().switchFree();
         }
 
         internal LatLonZoom DefaultReferenceMapPosition()
         {
-            return SourceMapViewManager.DefaultReferenceMapPosition(this.sourceMap,
-                this.mapTileSourceFactory,
-                this.viewControl,
+            return SourceMapViewManager.DefaultReferenceMapPosition(sourceMap,
+                mapTileSourceFactory,
+                viewControl,
                 null);
         }
 
         public object GetViewedObject()
         {
-            return this.legend;
+            return legend;
         }
     }
 }

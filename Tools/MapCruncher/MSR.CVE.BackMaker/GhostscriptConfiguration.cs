@@ -11,17 +11,17 @@ namespace MSR.CVE.BackMaker
         private const string GS_URL = "http://sourceforge.net/project/showfiles.php?group_id=1897";
         private string status = "";
         private string binPath;
-        private string[] GS_KEY_ROOTS = new string[] {"Software\\GPL Ghostscript", "Software\\AFPL Ghostscript"};
-        private string[] GS_FILESYSTEM_ROOTS = new string[] {"\\GS\\", "\\Program Files\\GS\\"};
+        private string[] GS_KEY_ROOTS = new[] {"Software\\GPL Ghostscript", "Software\\AFPL Ghostscript"};
+        private string[] GS_FILESYSTEM_ROOTS = new[] {"\\GS\\", "\\Program Files\\GS\\"};
 
         public GhostscriptConfiguration()
         {
-            if (this.LookInRegistry())
+            if (LookInRegistry())
             {
                 return;
             }
 
-            if (this.LookInFilesystem())
+            if (LookInFilesystem())
             {
                 return;
             }
@@ -29,16 +29,16 @@ namespace MSR.CVE.BackMaker
             throw new ConfigurationException(string.Format(
                 "Cannot find Ghostscript.\nGo get a copy from {0}\n\nDetails:\n{1}",
                 "http://sourceforge.net/project/showfiles.php?group_id=1897",
-                this.status));
+                status));
         }
 
         private bool LookInRegistry()
         {
-            string[] gS_KEY_ROOTS = this.GS_KEY_ROOTS;
+            string[] gS_KEY_ROOTS = GS_KEY_ROOTS;
             for (int i = 0; i < gS_KEY_ROOTS.Length; i++)
             {
                 string root = gS_KEY_ROOTS[i];
-                if (this.LookInRegistry(root))
+                if (LookInRegistry(root))
                 {
                     return true;
                 }
@@ -50,10 +50,10 @@ namespace MSR.CVE.BackMaker
         private bool LookInRegistry(string root)
         {
             RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(root, false);
-            this.status += string.Format("In HKEY_LOCAL_MACHINE\\{0}, found key = {1}\n", root, registryKey != null);
+            status += string.Format("In HKEY_LOCAL_MACHINE\\{0}, found key = {1}\n", root, registryKey != null);
             if (registryKey == null)
             {
-                this.status +=
+                status +=
                     string.Format(
                         "Cannot find GPL Ghostscript configuration in registry {{LOCAL_MACHINE,CURRENT_USER}}\\{0}.\n",
                         root);
@@ -61,19 +61,19 @@ namespace MSR.CVE.BackMaker
             }
 
             string[] subKeyNames = registryKey.GetSubKeyNames();
-            this.status += string.Format("Found subkeys for versions {0}\n", subKeyNames.ToString());
-            Array.Sort<string>(subKeyNames, new Comparison<string>(this.VersionComparison));
+            status += string.Format("Found subkeys for versions {0}\n", subKeyNames.ToString());
+            Array.Sort<string>(subKeyNames, new Comparison<string>(VersionComparison));
             string text = subKeyNames[subKeyNames.Length - 1];
-            this.status += string.Format("Examining registry info for version {0}\n", text);
+            status += string.Format("Examining registry info for version {0}\n", text);
             registryKey = registryKey.OpenSubKey(text);
             string text2 = (string)registryKey.GetValue("GS_DLL");
             string text3 = text2.Substring(0, text2.LastIndexOf('\\'));
-            return this.LookInDirectory(text3);
+            return LookInDirectory(text3);
         }
 
         private int VersionComparison(string v0, string v1)
         {
-            return this.ArrayCompare(v0.Split(new char[] {'.'}), v1.Split(new char[] {'.'}));
+            return ArrayCompare(v0.Split(new[] {'.'}), v1.Split(new[] {'.'}));
         }
 
         private int ArrayCompare(Array a1, Array a2)
@@ -110,7 +110,7 @@ namespace MSR.CVE.BackMaker
 
             string path = binPath + "gswin32c.exe";
             bool flag = File.Exists(path);
-            this.status += string.Format("At path {0}, found file = {1}\n", binPath, flag);
+            status += string.Format("At path {0}, found file = {1}\n", binPath, flag);
             if (flag)
             {
                 this.binPath = binPath;
@@ -121,11 +121,11 @@ namespace MSR.CVE.BackMaker
 
         private bool LookInFilesystem()
         {
-            string[] gS_FILESYSTEM_ROOTS = this.GS_FILESYSTEM_ROOTS;
+            string[] gS_FILESYSTEM_ROOTS = GS_FILESYSTEM_ROOTS;
             for (int i = 0; i < gS_FILESYSTEM_ROOTS.Length; i++)
             {
                 string root = gS_FILESYSTEM_ROOTS[i];
-                if (this.LookInRegistry(root))
+                if (LookInRegistry(root))
                 {
                     return true;
                 }
@@ -143,7 +143,7 @@ namespace MSR.CVE.BackMaker
             }
             catch (DirectoryNotFoundException)
             {
-                this.status += string.Format("No directory {0}\n", root);
+                status += string.Format("No directory {0}\n", root);
                 return false;
             }
 
@@ -155,20 +155,20 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            Array.Sort<string>(directories, new Comparison<string>(this.VersionComparison));
+            Array.Sort<string>(directories, new Comparison<string>(VersionComparison));
             string arg = directories[directories.Length - 1] + "\\bin\\";
-            this.status += string.Format("Considering filesystem path {0}\n", arg);
-            return this.LookInDirectory(arg);
+            status += string.Format("Considering filesystem path {0}\n", arg);
+            return LookInDirectory(arg);
         }
 
         internal string GetExecutablePath()
         {
-            return this.binPath + "gswin32c.exe";
+            return binPath + "gswin32c.exe";
         }
 
         internal string GetExecutablePathDebug()
         {
-            return this.binPath + "gswin32.exe";
+            return binPath + "gswin32.exe";
         }
     }
 }

@@ -15,9 +15,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            IFuture[] futureParams = Array.ConvertAll<IFuturePrototype, IFuture>(this.prototypeParams,
+            IFuture[] futureParams = Array.ConvertAll<IFuturePrototype, IFuture>(prototypeParams,
                 (IFuturePrototype p) => p.Curry(paramDict));
-            return new ApplyFuture(this.verb, futureParams);
+            return new ApplyFuture(verb, futureParams);
         }
     }
 }

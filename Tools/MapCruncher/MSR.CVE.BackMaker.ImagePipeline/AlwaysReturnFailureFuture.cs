@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public Present Realize(string refCredit)
         {
-            return this.pfc;
+            return pfc;
         }
 
         public void AccumulateRobustHash(IRobustHash hash)

@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._block;
+                    return _block;
                 }
             }
 
@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._path;
+                    return _path;
                 }
             }
 
@@ -46,12 +46,12 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._fileExists;
+                    return _fileExists;
                 }
                 set
                 {
-                    this._fileExists = value;
-                    this.block.SetDirty();
+                    _fileExists = value;
+                    block.SetDirty();
                 }
             }
 
@@ -59,12 +59,12 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._fileLength;
+                    return _fileLength;
                 }
                 set
                 {
-                    this._fileLength = value;
-                    this.block.SetDirty();
+                    _fileLength = value;
+                    block.SetDirty();
                 }
             }
 
@@ -72,7 +72,7 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._indirectManifestBlockId;
+                    return _indirectManifestBlockId;
                 }
             }
 
@@ -93,40 +93,40 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this.path == null;
+                    return path == null;
                 }
             }
 
             public ManifestRecord(ManifestBlock block, string path, bool fileExists, long fileLength,
                 int indirectManifestBlockId)
             {
-                this._block = block;
-                this._path = path;
-                this._fileExists = fileExists;
-                this._fileLength = fileLength;
-                this._indirectManifestBlockId = indirectManifestBlockId;
+                _block = block;
+                _path = path;
+                _fileExists = fileExists;
+                _fileLength = fileLength;
+                _indirectManifestBlockId = indirectManifestBlockId;
                 D.Assert(block == null || path != null);
             }
 
             internal void WriteXML(XmlTextWriter xtw)
             {
                 xtw.WriteStartElement("ManifestRecord");
-                xtw.WriteAttributeString("Path", this.path);
-                xtw.WriteAttributeString("FileExists", this.fileExists.ToString(CultureInfo.InvariantCulture));
-                xtw.WriteAttributeString("FileLength", this.fileLength.ToString(CultureInfo.InvariantCulture));
+                xtw.WriteAttributeString("Path", path);
+                xtw.WriteAttributeString("FileExists", fileExists.ToString(CultureInfo.InvariantCulture));
+                xtw.WriteAttributeString("FileLength", fileLength.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteAttributeString("IndirectManifestBlockId",
-                    this.indirectManifestBlockId.ToString(CultureInfo.InvariantCulture));
+                    indirectManifestBlockId.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteEndElement();
             }
 
             public ManifestRecord(MashupParseContext context, ManifestBlock block)
             {
-                this._block = block;
+                _block = block;
                 XMLTagReader xMLTagReader = context.NewTagReader("ManifestRecord");
-                this._path = context.GetRequiredAttribute("Path");
-                this._fileExists = context.GetRequiredAttributeBoolean("FileExists");
-                this._fileLength = context.GetRequiredAttributeLong("FileLength");
-                this._indirectManifestBlockId = context.GetRequiredAttributeInt("IndirectManifestBlockId");
+                _path = context.GetRequiredAttribute("Path");
+                _fileExists = context.GetRequiredAttributeBoolean("FileExists");
+                _fileLength = context.GetRequiredAttributeLong("FileLength");
+                _indirectManifestBlockId = context.GetRequiredAttributeInt("IndirectManifestBlockId");
                 xMLTagReader.SkipAllSubTags();
             }
 
@@ -137,21 +137,21 @@ namespace MSR.CVE.BackMaker
 
             public override string ToString()
             {
-                return string.Format("MR({0}, {1})", this.path, this.fileExists);
+                return string.Format("MR({0}, {1})", path, fileExists);
             }
 
             internal ManifestRecord ReplaceBlock(ManifestBlock manifestBlock)
             {
                 return new ManifestRecord(manifestBlock,
-                    this.path,
-                    this.fileExists,
-                    this.fileLength,
-                    this.indirectManifestBlockId);
+                    path,
+                    fileExists,
+                    fileLength,
+                    indirectManifestBlockId);
             }
 
             internal ManifestRecord ReplaceIndirect(int newIndirectBlockId)
             {
-                return new ManifestRecord(this.block, this.path, this.fileExists, this.fileLength, newIndirectBlockId);
+                return new ManifestRecord(block, path, fileExists, fileLength, newIndirectBlockId);
             }
         }
 
@@ -167,12 +167,12 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._splitThreshold;
+                    return _splitThreshold;
                 }
                 set
                 {
-                    this._splitThreshold = value;
-                    this.tellDirty();
+                    _splitThreshold = value;
+                    tellDirty();
                 }
             }
 
@@ -180,18 +180,18 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._nextUnassignedBlockId;
+                    return _nextUnassignedBlockId;
                 }
                 set
                 {
-                    this._nextUnassignedBlockId = value;
-                    this.tellDirty();
+                    _nextUnassignedBlockId = value;
+                    tellDirty();
                 }
             }
 
             public ManifestSuperBlock(int nextUnassignedBlockId, TellManifestDirty tellDirty)
             {
-                this._nextUnassignedBlockId = nextUnassignedBlockId;
+                _nextUnassignedBlockId = nextUnassignedBlockId;
                 this.tellDirty = tellDirty;
             }
 
@@ -199,8 +199,8 @@ namespace MSR.CVE.BackMaker
             {
                 this.tellDirty = tellDirty;
                 XMLTagReader xMLTagReader = context.NewTagReader(GetXmlTag());
-                this._nextUnassignedBlockId = context.GetRequiredAttributeInt("NextUnassignedBlockId");
-                this._splitThreshold = context.GetRequiredAttributeInt("SplitThreshold");
+                _nextUnassignedBlockId = context.GetRequiredAttributeInt("NextUnassignedBlockId");
+                _splitThreshold = context.GetRequiredAttributeInt("SplitThreshold");
                 xMLTagReader.SkipAllSubTags();
             }
 
@@ -208,8 +208,8 @@ namespace MSR.CVE.BackMaker
             {
                 xtw.WriteStartElement(GetXmlTag());
                 xtw.WriteAttributeString("NextUnassignedBlockId",
-                    this._nextUnassignedBlockId.ToString(CultureInfo.InvariantCulture));
-                xtw.WriteAttributeString("SplitThreshold", this._splitThreshold.ToString(CultureInfo.InvariantCulture));
+                    _nextUnassignedBlockId.ToString(CultureInfo.InvariantCulture));
+                xtw.WriteAttributeString("SplitThreshold", _splitThreshold.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteEndElement();
             }
 
@@ -235,7 +235,7 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._superBlock;
+                    return _superBlock;
                 }
             }
 
@@ -243,25 +243,25 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this.recordList.Count;
+                    return recordList.Count;
                 }
             }
 
             public void SetDirty()
             {
-                this.dirty = true;
-                this.tellManifestDirty();
+                dirty = true;
+                tellManifestDirty();
             }
 
             internal void CommitChanges(Manifest manifest)
             {
-                if (!this.dirty)
+                if (!dirty)
                 {
                     return;
                 }
 
-                this.WriteChanges(manifest.storageMethod);
-                this.dirty = false;
+                WriteChanges(manifest.storageMethod);
+                dirty = false;
             }
 
             private string manifestFilename(int blockId)
@@ -272,16 +272,16 @@ namespace MSR.CVE.BackMaker
             private void WriteChanges(RenderOutputMethod outputMethod)
             {
                 Stream w = outputMethod.MakeChildMethod("manifests")
-                    .CreateFile(this.manifestFilename(this.blockId), "text/xml");
+                    .CreateFile(manifestFilename(blockId), "text/xml");
                 XmlTextWriter xmlTextWriter = new XmlTextWriter(w, Encoding.UTF8);
                 using (xmlTextWriter)
                 {
                     xmlTextWriter.Formatting = Formatting.Indented;
                     xmlTextWriter.WriteStartDocument(true);
                     xmlTextWriter.WriteStartElement("ManifestBlock");
-                    if (this._superBlock != null)
+                    if (_superBlock != null)
                     {
-                        this._superBlock.WriteXML(xmlTextWriter);
+                        _superBlock.WriteXML(xmlTextWriter);
                     }
 
                     foreach (ManifestRecord current in this)
@@ -300,7 +300,7 @@ namespace MSR.CVE.BackMaker
                 this.blockId = blockId;
                 try
                 {
-                    Stream input = outputMethod.MakeChildMethod("manifests").ReadFile(this.manifestFilename(blockId));
+                    Stream input = outputMethod.MakeChildMethod("manifests").ReadFile(manifestFilename(blockId));
                     XmlTextReader xmlTextReader = new XmlTextReader(input);
                     using (xmlTextReader)
                     {
@@ -315,14 +315,14 @@ namespace MSR.CVE.BackMaker
                                 {
                                     if (xMLTagReader.TagIs(ManifestRecord.GetXmlTag()))
                                     {
-                                        this.recordList.Add(new ManifestRecord(mashupParseContext, this));
+                                        recordList.Add(new ManifestRecord(mashupParseContext, this));
                                     }
                                     else
                                     {
                                         if (xMLTagReader.TagIs(ManifestSuperBlock.GetXmlTag()))
                                         {
-                                            this._superBlock = new ManifestSuperBlock(mashupParseContext,
-                                                new TellManifestDirty(this.SetDirty));
+                                            _superBlock = new ManifestSuperBlock(mashupParseContext,
+                                                new TellManifestDirty(SetDirty));
                                         }
                                     }
                                 }
@@ -339,9 +339,9 @@ namespace MSR.CVE.BackMaker
                 }
                 finally
                 {
-                    if (blockId == 0 && this._superBlock == null)
+                    if (blockId == 0 && _superBlock == null)
                     {
-                        this._superBlock = new ManifestSuperBlock(1, new TellManifestDirty(this.SetDirty));
+                        _superBlock = new ManifestSuperBlock(1, new TellManifestDirty(SetDirty));
                     }
                 }
             }
@@ -352,26 +352,26 @@ namespace MSR.CVE.BackMaker
                 D.Assert(newRecord.block == this);
                 if (afterRecord.IsTailRecord)
                 {
-                    this.recordList.Add(newRecord);
+                    recordList.Add(newRecord);
                 }
                 else
                 {
-                    this.recordList.Insert(
-                        this.recordList.FindIndex((ManifestRecord mrb) => mrb.path == afterRecord.path),
+                    recordList.Insert(
+                        recordList.FindIndex((ManifestRecord mrb) => mrb.path == afterRecord.path),
                         newRecord);
                 }
 
-                this.SetDirty();
+                SetDirty();
             }
 
             public IEnumerator<ManifestRecord> GetEnumerator()
             {
-                return this.recordList.GetEnumerator();
+                return recordList.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this.recordList.GetEnumerator();
+                return recordList.GetEnumerator();
             }
 
             internal void Split(CreateBlock createBlock)
@@ -387,22 +387,22 @@ namespace MSR.CVE.BackMaker
                 Converter<ManifestRecord, ManifestRecord> converter = null;
                 for (int i = 0; i < num; i++)
                 {
-                    int index = (int)((double)i / (double)num * this.recordList.Count);
-                    int num4 = (int)((i + 1.0) / (double)num * this.recordList.Count);
+                    int index = (int)((double)i / (double)num * recordList.Count);
+                    int num4 = (int)((i + 1.0) / (double)num * recordList.Count);
                     if (converter == null)
                     {
                         converter = mr => mr.ReplaceBlock(subBlocks[i]);
                     }
 
-                    subBlocks[i].recordList = this.recordList.GetRange(index, num4 - index)
+                    subBlocks[i].recordList = recordList.GetRange(index, num4 - index)
                         .ConvertAll<ManifestRecord>(converter);
-                    ManifestRecord item = this.recordList[index].ReplaceIndirect(subBlocks[i].blockId);
+                    ManifestRecord item = recordList[index].ReplaceIndirect(subBlocks[i].blockId);
                     list.Add(item);
                     subBlocks[i].SetDirty();
                 }
 
-                this.recordList = list;
-                this.SetDirty();
+                recordList = list;
+                SetDirty();
             }
         }
 
@@ -416,35 +416,35 @@ namespace MSR.CVE.BackMaker
         public Manifest(RenderOutputMethod storageMethod)
         {
             this.storageMethod = storageMethod;
-            this.rootBlock = this.FetchBlock(0);
+            rootBlock = FetchBlock(0);
         }
 
         public void Test_SetSplitThreshold(int splitThreshold)
         {
-            this.rootBlock.superBlock.splitThreshold = splitThreshold;
+            rootBlock.superBlock.splitThreshold = splitThreshold;
         }
 
         private ManifestBlock FetchBlock(int blockId)
         {
-            if (this.blockCache.ContainsKey(blockId))
+            if (blockCache.ContainsKey(blockId))
             {
-                return this.blockCache[blockId];
+                return blockCache[blockId];
             }
 
             ManifestBlock manifestBlock =
-                new ManifestBlock(new TellManifestDirty(this.SetDirty), this.storageMethod, blockId);
-            this.blockCache[blockId] = manifestBlock;
+                new ManifestBlock(new TellManifestDirty(SetDirty), storageMethod, blockId);
+            blockCache[blockId] = manifestBlock;
             return manifestBlock;
         }
 
         private ManifestBlock CreateBlock()
         {
-            ManifestBlock manifestBlock = new ManifestBlock(new TellManifestDirty(this.SetDirty),
-                this.storageMethod,
-                this.rootBlock.superBlock.nextUnassignedBlockId);
-            this.rootBlock.superBlock.nextUnassignedBlockId++;
-            D.Assert(!this.blockCache.ContainsKey(manifestBlock.blockId));
-            this.blockCache[manifestBlock.blockId] = manifestBlock;
+            ManifestBlock manifestBlock = new ManifestBlock(new TellManifestDirty(SetDirty),
+                storageMethod,
+                rootBlock.superBlock.nextUnassignedBlockId);
+            rootBlock.superBlock.nextUnassignedBlockId++;
+            D.Assert(!blockCache.ContainsKey(manifestBlock.blockId));
+            blockCache[manifestBlock.blockId] = manifestBlock;
             return manifestBlock;
         }
 
@@ -465,7 +465,7 @@ namespace MSR.CVE.BackMaker
                             return record3;
                         }
 
-                        rootBlock = this.FetchBlock(record2.indirectManifestBlockId);
+                        rootBlock = FetchBlock(record2.indirectManifestBlockId);
                         tailRecord = record3;
                         flag = true;
                         break;
@@ -483,17 +483,17 @@ namespace MSR.CVE.BackMaker
 
         internal ManifestRecord FindFirstGreaterThan(string p)
         {
-            return this.Search((string recP) => recP == null || recP.CompareTo(p) > 0);
+            return Search((string recP) => recP == null || recP.CompareTo(p) > 0);
         }
 
         internal ManifestRecord FindFirstGreaterEqual(string p)
         {
-            return this.Search((string recP) => recP == null || recP.CompareTo(p) >= 0);
+            return Search((string recP) => recP == null || recP.CompareTo(p) >= 0);
         }
 
         internal ManifestRecord FindFirstEqual(string path)
         {
-            ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
+            ManifestRecord manifestRecord = FindFirstGreaterEqual(path);
             if (manifestRecord.path == path)
             {
                 return manifestRecord;
@@ -504,7 +504,7 @@ namespace MSR.CVE.BackMaker
 
         internal void Add(string path, long fileLength)
         {
-            ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
+            ManifestRecord manifestRecord = FindFirstGreaterEqual(path);
             if (manifestRecord.path == path)
             {
                 manifestRecord.fileExists = true;
@@ -512,18 +512,18 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            ManifestBlock manifestBlock = manifestRecord.block == null ? this.rootBlock : manifestRecord.block;
+            ManifestBlock manifestBlock = manifestRecord.block == null ? rootBlock : manifestRecord.block;
             ManifestRecord newRecord = new ManifestRecord(manifestBlock, path, true, fileLength, -1);
             manifestBlock.Insert(newRecord, manifestRecord);
-            if (manifestBlock.Count > this.rootBlock.superBlock.splitThreshold)
+            if (manifestBlock.Count > rootBlock.superBlock.splitThreshold)
             {
-                manifestBlock.Split(new ManifestBlock.CreateBlock(this.CreateBlock));
+                manifestBlock.Split(new ManifestBlock.CreateBlock(CreateBlock));
             }
         }
 
         public void Remove(string p)
         {
-            ManifestRecord manifestRecord = this.FindFirstEqual(p);
+            ManifestRecord manifestRecord = FindFirstEqual(p);
             if (manifestRecord.IsTailRecord)
             {
                 return;
@@ -535,7 +535,7 @@ namespace MSR.CVE.BackMaker
 
         public void CommitChanges()
         {
-            foreach (ManifestBlock current in this.blockCache.Values)
+            foreach (ManifestBlock current in blockCache.Values)
             {
                 current.CommitChanges(this);
             }
@@ -543,11 +543,11 @@ namespace MSR.CVE.BackMaker
 
         internal void SetDirty()
         {
-            this.dirtyCount++;
-            if (this.dirtyCount > 100)
+            dirtyCount++;
+            if (dirtyCount > 100)
             {
-                this.CommitChanges();
-                this.dirtyCount = 0;
+                CommitChanges();
+                dirtyCount = 0;
             }
         }
     }

@@ -20,41 +20,41 @@ namespace MSR.CVE.BackMaker
         {
             this.filename = filename;
             this.pageNumber = pageNumber;
-            this.Establish();
+            Establish();
         }
 
         private void Establish()
         {
-            if (this.namedPipeServer != null)
+            if (namedPipeServer != null)
             {
                 return;
             }
 
             string text = Guid.NewGuid().ToString();
-            this.namedPipeServer = new NamedPipeServer(string.Format("{0} {1}", "-remoteServer", text), text);
+            namedPipeServer = new NamedPipeServer(string.Format("{0} {1}", "-remoteServer", text), text);
             RectangleFRecord rectangleFRecord =
-                (RectangleFRecord)this.namedPipeServer.RPC(new OpenRequest(this.filename, this.pageNumber));
-            this.pageSize = rectangleFRecord.rect;
+                (RectangleFRecord)namedPipeServer.RPC(new OpenRequest(filename, pageNumber));
+            pageSize = rectangleFRecord.rect;
         }
 
         private void Teardown()
         {
-            if (this.namedPipeServer != null)
+            if (namedPipeServer != null)
             {
-                this.namedPipeServer.Dispose();
-                this.namedPipeServer = null;
+                namedPipeServer.Dispose();
+                namedPipeServer = null;
             }
         }
 
         public void Dispose()
         {
-            this.Teardown();
+            Teardown();
         }
 
         public RectangleF GetPageSize()
         {
-            this.Establish();
-            return this.pageSize;
+            Establish();
+            return pageSize;
         }
 
         public object RobustRPC(ISerializable request)
@@ -62,21 +62,21 @@ namespace MSR.CVE.BackMaker
             object result;
             try
             {
-                this.Establish();
-                result = this.namedPipeServer.RPC(request);
+                Establish();
+                result = namedPipeServer.RPC(request);
             }
             catch (Exception)
             {
-                this.Teardown();
-                this.Establish();
-                result = this.namedPipeServer.RPC(request);
+                Teardown();
+                Establish();
+                result = namedPipeServer.RPC(request);
             }
 
-            this.namedPipeServer.childProcess.Refresh();
-            if (this.namedPipeServer.childProcess.VirtualMemorySize64 > 1073741824L ||
-                this.namedPipeServer.childProcess.HandleCount > 512)
+            namedPipeServer.childProcess.Refresh();
+            if (namedPipeServer.childProcess.VirtualMemorySize64 > 1073741824L ||
+                namedPipeServer.childProcess.HandleCount > 512)
             {
-                this.Teardown();
+                Teardown();
             }
 
             return result;
@@ -84,7 +84,7 @@ namespace MSR.CVE.BackMaker
 
         public GDIBigLockedImage Render(Size outSize, Point topleft, Size pagesize, bool transparentBackground)
         {
-            object obj = this.RobustRPC(new RenderRequest(topleft, pagesize, outSize, transparentBackground));
+            object obj = RobustRPC(new RenderRequest(topleft, pagesize, outSize, transparentBackground));
             if (obj is RenderReply)
             {
                 RenderReply renderReply = (RenderReply)obj;
@@ -121,9 +121,9 @@ namespace MSR.CVE.BackMaker
 
         internal long GetSize()
         {
-            if (this.namedPipeServer != null && this.namedPipeServer.childProcess != null)
+            if (namedPipeServer != null && namedPipeServer.childProcess != null)
             {
-                long workingSet = this.namedPipeServer.childProcess.WorkingSet64;
+                long workingSet = namedPipeServer.childProcess.WorkingSet64;
                 D.Sayf(0, "Current foxit WSS {0}", new object[] {workingSet});
                 return workingSet;
             }

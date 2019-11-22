@@ -36,50 +36,50 @@ namespace MSR.CVE.BackMaker
 
         public int Get(int width, int height)
         {
-            D.Assert(!this.locked);
-            if (!this.created || width != this.allocatedSize.Width || height != this.allocatedSize.Height)
+            D.Assert(!locked);
+            if (!created || width != allocatedSize.Width || height != allocatedSize.Height)
             {
-                this.dispose();
-                this.allocatedSize = new Size(width, height);
-                this.create();
+                dispose();
+                allocatedSize = new Size(width, height);
+                create();
             }
 
-            D.Assert(this.created && width == this.allocatedSize.Width && height == this.allocatedSize.Height);
-            this.locked = true;
-            FPDFBitmap_FillRect(this.bitmapHandle,
+            D.Assert(created && width == allocatedSize.Width && height == allocatedSize.Height);
+            locked = true;
+            FPDFBitmap_FillRect(bitmapHandle,
                 0,
                 0,
-                this.allocatedSize.Width,
-                this.allocatedSize.Height,
+                allocatedSize.Width,
+                allocatedSize.Height,
                 255,
                 255,
                 255,
                 255);
-            return this.bitmapHandle;
+            return bitmapHandle;
         }
 
         private void dispose()
         {
-            D.Assert(!this.locked);
-            if (this.created)
+            D.Assert(!locked);
+            if (created)
             {
-                FPDFBitmap_Destroy(this.bitmapHandle);
-                this.created = false;
+                FPDFBitmap_Destroy(bitmapHandle);
+                created = false;
             }
         }
 
         private void create()
         {
-            D.Assert(!this.created);
-            D.Assert(!this.locked);
-            this.bitmapHandle = FPDFBitmap_Create(this.allocatedSize.Width, this.allocatedSize.Height, 1);
-            this.created = true;
+            D.Assert(!created);
+            D.Assert(!locked);
+            bitmapHandle = FPDFBitmap_Create(allocatedSize.Width, allocatedSize.Height, 1);
+            created = true;
         }
 
         public void Release(int bitmapHandle)
         {
-            D.Assert(this.locked);
-            this.locked = false;
+            D.Assert(locked);
+            locked = false;
         }
     }
 }

@@ -27,10 +27,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             int num2 = Math.Max(parameter2.value.Width, parameter2.value.Height);
             if (num > 1.0 && num2 <= 0x400)
             {
-                IFuture future = this.prototype.Curry(new ParamDict(new object[]
+                IFuture future = prototype.Curry(new ParamDict(new object[]
                 {
-                    TermName.ImageBounds, new MapRectangleParameter(this.unitRectangle), TermName.OutputSize,
-                    new SizeParameter(this.memoizedSize), TermName.UseDocumentTransparency, present,
+                    TermName.ImageBounds, new MapRectangleParameter(unitRectangle), TermName.OutputSize,
+                    new SizeParameter(memoizedSize), TermName.UseDocumentTransparency, present,
                     TermName.ExactColors, present2
                 }));
                 StrongHash hash = new StrongHash();
@@ -51,14 +51,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             lock (image)
                             {
                                 Graphics graphics = image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheGraphics();
-                                MapRectangle region = parameter.value.Intersect(this.unitRectangle);
+                                MapRectangle region = parameter.value.Intersect(unitRectangle);
                                 if (!region.IsEmpty())
                                 {
-                                    RectangleF srcRect = this.SelectSubRectangle(this.unitRectangle,
+                                    RectangleF srcRect = SelectSubRectangle(unitRectangle,
                                         region,
-                                        this.memoizedSize);
+                                        memoizedSize);
                                     RectangleF destRect =
-                                        this.SelectSubRectangle(parameter.value, region, parameter2.value);
+                                        SelectSubRectangle(parameter.value, region, parameter2.value);
                                     Image image2 = ref2.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
                                     graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
                                     graphics.DrawImage(image2, destRect, srcRect, GraphicsUnit.Pixel);
@@ -90,7 +90,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return present3;
             }
 
-            return this.prototype
+            return prototype
                 .Curry(new ParamDict(new object[]
                 {
                     TermName.ImageBounds, parameter, TermName.OutputSize, parameter2,
@@ -113,7 +113,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             hash.Accumulate("SourceImageDownsamplerVerb(");
             DummyTerm dummyTerm = new DummyTerm();
-            IFuture future = this.prototype.Curry(new ParamDict(new object[]
+            IFuture future = prototype.Curry(new ParamDict(new object[]
             {
                 TermName.ImageBounds, dummyTerm, TermName.OutputSize, dummyTerm, TermName.UseDocumentTransparency,
                 dummyTerm, TermName.ExactColors, dummyTerm

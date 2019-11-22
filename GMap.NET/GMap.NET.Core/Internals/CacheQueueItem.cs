@@ -11,9 +11,9 @@
 
         public CacheQueueItem(RawTile tile, byte[] Img, CacheUsage cacheType)
         {
-            this.Tile = tile;
+            Tile = tile;
             this.Img = Img;
-            this.CacheType = cacheType;
+            CacheType = cacheType;
         }
 
         public override string ToString()

@@ -15,11 +15,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._x;
+                return _x;
             }
             set
             {
-                this._x = value;
+                _x = value;
             }
         }
 
@@ -27,11 +27,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._y;
+                return _y;
             }
             set
             {
-                this._y = value;
+                _y = value;
             }
         }
 
@@ -39,11 +39,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._width;
+                return _width;
             }
             set
             {
-                this._width = value;
+                _width = value;
             }
         }
 
@@ -51,11 +51,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._height;
+                return _height;
             }
             set
             {
-                this._height = value;
+                _height = value;
             }
         }
 
@@ -63,7 +63,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._x;
+                return _x;
             }
         }
 
@@ -71,7 +71,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._x + this._width;
+                return _x + _width;
             }
         }
 
@@ -79,7 +79,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._y;
+                return _y;
             }
         }
 
@@ -87,67 +87,67 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._y + this._height;
+                return _y + _height;
             }
         }
 
         public RectangleD(double x, double y, double width, double height)
         {
-            this._x = x;
-            this._y = y;
-            this._width = width;
-            this._height = height;
+            _x = x;
+            _y = y;
+            _width = width;
+            _height = height;
         }
 
         public RectangleF ToRectangleF()
         {
-            return new RectangleF((float)this.X, (float)this.Y, (float)this.Width, (float)this.Height);
+            return new RectangleF((float)X, (float)Y, (float)Width, (float)Height);
         }
 
         public RectangleD Round()
         {
-            int num = (int)Math.Round(this.Left);
-            int num2 = (int)Math.Round(this.Top);
-            int num3 = (int)Math.Round(this.Right);
-            int num4 = (int)Math.Round(this.Bottom);
+            int num = (int)Math.Round(Left);
+            int num2 = (int)Math.Round(Top);
+            int num3 = (int)Math.Round(Right);
+            int num4 = (int)Math.Round(Bottom);
             return new RectangleD((double)num, (double)num2, (double)(num3 - num), (double)(num4 - num2));
         }
 
         public Int32Rect ToInt32Rect()
         {
-            int num = (int)Math.Round(this.Left);
-            int num2 = (int)Math.Round(this.Top);
-            int num3 = (int)Math.Round(this.Right);
-            int num4 = (int)Math.Round(this.Bottom);
+            int num = (int)Math.Round(Left);
+            int num2 = (int)Math.Round(Top);
+            int num3 = (int)Math.Round(Right);
+            int num4 = (int)Math.Round(Bottom);
             return new Int32Rect(num, num2, num3 - num, num4 - num2);
         }
 
         public override string ToString()
         {
             return string.Format("RectangleD(x{0}, y{1}, w{2}, h{3})",
-                new object[] {this._x, this._y, this._width, this._height});
+                new object[] {_x, _y, _width, _height});
         }
 
         public RectangleD Intersect(RectangleD r1)
         {
-            double num = Math.Max(this.Left, r1.Left);
-            double num2 = Math.Min(this.Right, r1.Right);
-            double num3 = Math.Max(this.Top, r1.Top);
-            double num4 = Math.Min(this.Bottom, r1.Bottom);
+            double num = Math.Max(Left, r1.Left);
+            double num2 = Math.Min(Right, r1.Right);
+            double num3 = Math.Max(Top, r1.Top);
+            double num4 = Math.Min(Bottom, r1.Bottom);
             return new RectangleD(num, num3, num2 - num, num4 - num3);
         }
 
         public RectangleD Grow(double margin)
         {
-            return new RectangleD(this.X - margin,
-                this.Y - margin,
-                this.Width + 2.0 * margin,
-                this.Height + 2.0 * margin);
+            return new RectangleD(X - margin,
+                Y - margin,
+                Width + 2.0 * margin,
+                Height + 2.0 * margin);
         }
 
         internal bool IntIsEmpty()
         {
-            Int32Rect int32Rect = this.ToInt32Rect();
+            Int32Rect int32Rect = ToInt32Rect();
             return int32Rect.Width <= 0 || int32Rect.Height <= 0;
         }
     }

@@ -21,14 +21,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override Present Realize(string refCredit)
         {
-            Present present = this.antialiasedFuture.Realize(refCredit);
-            if (this.transparencyOptions.Effectless())
+            Present present = antialiasedFuture.Realize(refCredit);
+            if (transparencyOptions.Effectless())
             {
                 return present;
             }
 
-            Present present2 = this.exactColorFuture.Realize(refCredit);
-            return this.Evaluate(new Present[] {present, present2});
+            Present present2 = exactColorFuture.Realize(refCredit);
+            return Evaluate(new[] {present, present2});
         }
 
         private unsafe Present Evaluate(params Present[] paramList)
@@ -91,7 +91,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                                 PixelStruct* structPtr4 = structPtr3 + i * num3 + num4;
                                 PixelStruct* structPtr6 = structPtr5 + i * num3 + num4;
                                 structPtr2[0] = structPtr4[0];
-                                if (this.transparencyOptions.ShouldBeTransparent(structPtr6->r,
+                                if (transparencyOptions.ShouldBeTransparent(structPtr6->r,
                                     structPtr6->g,
                                     structPtr6->b))
                                 {
@@ -116,7 +116,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             ref3.Dispose();
             ImageRef source = new ImageRef(new ImageRefCounted(image));
             int num6 = 0;
-            foreach (TransparencyColor color in this.transparencyOptions.colorList)
+            foreach (TransparencyColor color in transparencyOptions.colorList)
             {
                 num6 = Math.Max(num6, color.halo);
             }
@@ -132,9 +132,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("TransparencyVerb(");
-            this.transparencyOptions.AccumulateRobustHash(hash);
-            this.antialiasedFuture.AccumulateRobustHash(hash);
-            this.exactColorFuture.AccumulateRobustHash(hash);
+            transparencyOptions.AccumulateRobustHash(hash);
+            antialiasedFuture.AccumulateRobustHash(hash);
+            exactColorFuture.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
 

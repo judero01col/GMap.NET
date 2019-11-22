@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker
 
         public override string GetTileFilename(TileAddress ta)
         {
-            return string.Format("{0}{1}", GetQuadKey(ta), this.fileSuffix);
+            return string.Format("{0}{1}", GetQuadKey(ta), fileSuffix);
         }
     }
 }

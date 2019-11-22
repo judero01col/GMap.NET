@@ -70,7 +70,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
          Marker.ZIndex -= 10000;
          Cursor = Cursors.Arrow;
 
-         this.Effect = null;
+         Effect = null;
 
          scale.ScaleY = 1;
          scale.ScaleX = 1;
@@ -86,7 +86,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
          Marker.ZIndex += 10000;
          Cursor = Cursors.Hand;
 
-         this.Effect = ShadowEffect;
+         Effect = ShadowEffect;
 
          scale.ScaleY = 1.5;
          scale.ScaleX = 1.5;
@@ -269,9 +269,9 @@ namespace Demo.WindowsPresentation.CustomMarkers
             {
                dc.PushTransform(new RotateTransform(Angle.Value, Width/2, Height/2));
                {
-                  PolyLineSegment polySeg = new PolyLineSegment(new Point[] { new Point(Width*0.2, Height*0.3), new Point(Width*0.8, Height*0.3) }, true);
+                  PolyLineSegment polySeg = new PolyLineSegment(new[] { new Point(Width*0.2, Height*0.3), new Point(Width*0.8, Height*0.3) }, true);
                   PathFigure pathFig = new PathFigure(new Point(Width*0.5, -Height*0.22), new PathSegment[] { polySeg }, true);
-                  PathGeometry pathGeo = new PathGeometry(new PathFigure[] { pathFig });
+                  PathGeometry pathGeo = new PathGeometry(new[] { pathFig });
                   dc.DrawGeometry(Brushes.AliceBlue, StrokeArrow, pathGeo);
                }
                dc.Pop();

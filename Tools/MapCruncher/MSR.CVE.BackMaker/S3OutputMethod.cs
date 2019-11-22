@@ -29,11 +29,11 @@ namespace MSR.CVE.BackMaker
                     try
                     {
                         HeaderList headerList = new HeaderList();
-                        headerList.Add("content-type", this.contentType);
+                        headerList.Add("content-type", contentType);
                         headerList.Add("x-amz-acl", "public-read");
-                        this.s3OutputMethod.s3adaptor.put(this.s3OutputMethod.bucketName,
-                            this.s3key,
-                            new S3Content(this.ToArray()),
+                        s3OutputMethod.s3adaptor.put(s3OutputMethod.bucketName,
+                            s3key,
+                            new S3Content(ToArray()),
                             headerList);
                         break;
                     }
@@ -67,46 +67,46 @@ namespace MSR.CVE.BackMaker
             this.s3adaptor = s3adaptor;
             this.bucketName = bucketName;
             this.basePath = basePath;
-            this.bucketCreated = new HeapBool(false);
+            bucketCreated = new HeapBool(false);
         }
 
         public S3OutputMethod(S3OutputMethod template)
         {
-            this.s3adaptor = template.s3adaptor;
-            this.bucketName = template.bucketName;
-            this.basePath = template.basePath;
-            this.bucketCreated = template.bucketCreated;
+            s3adaptor = template.s3adaptor;
+            bucketName = template.bucketName;
+            basePath = template.basePath;
+            bucketCreated = template.bucketCreated;
         }
 
         public Stream CreateFile(string relativePath, string contentType)
         {
-            if (!this.bucketCreated.value)
+            if (!bucketCreated.value)
             {
-                this.s3adaptor.CreateBucket(this.bucketName);
-                this.bucketCreated.value = true;
+                s3adaptor.CreateBucket(bucketName);
+                bucketCreated.value = true;
             }
 
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             return new S3PutClosure(this, path, contentType);
         }
 
         public Stream ReadFile(string relativePath)
         {
-            string path = this.GetPath(relativePath);
+            string path = GetPath(relativePath);
             HeaderList headers = new HeaderList();
-            return this.s3adaptor.getStream(this.bucketName, path, headers);
+            return s3adaptor.getStream(bucketName, path, headers);
         }
 
         public Uri GetUri(string relativePath)
         {
-            string pathValue = Path.Combine(Path.Combine(this.bucketName, this.basePath), relativePath)
+            string pathValue = Path.Combine(Path.Combine(bucketName, basePath), relativePath)
                 .Replace('\\', '/');
             return new UriBuilder("http", "s3.amazonaws.com", 80, pathValue).Uri;
         }
 
         private string GetPath(string relativePath)
         {
-            string text = Path.Combine(this.basePath, relativePath);
+            string text = Path.Combine(basePath, relativePath);
             return text.Replace("\\", "/");
         }
 
@@ -117,7 +117,7 @@ namespace MSR.CVE.BackMaker
 
         public RenderOutputMethod MakeChildMethod(string subdir)
         {
-            return new S3OutputMethod(this) {basePath = this.GetPath(subdir)};
+            return new S3OutputMethod(this) {basePath = GetPath(subdir)};
         }
 
         public FileIdentification GetFileIdentification(string relativePath)

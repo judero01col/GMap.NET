@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._versionNumberString;
+                return _versionNumberString;
             }
         }
 
@@ -32,12 +32,12 @@ namespace MSR.CVE.BackMaker
 
         protected MashupXMLSchemaVersion(string versionNumberString)
         {
-            this._versionNumberString = versionNumberString;
+            _versionNumberString = versionNumberString;
         }
 
         public void WriteXMLAttribute(XmlTextWriter writer)
         {
-            writer.WriteAttributeString("Version", this.versionNumberString);
+            writer.WriteAttributeString("Version", versionNumberString);
         }
 
         public static MashupXMLSchemaVersion ReadXMLAttribute(XmlTextReader reader)

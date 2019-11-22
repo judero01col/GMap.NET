@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._image;
+                return _image;
             }
         }
 
@@ -28,25 +28,25 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                if (this._referenceHistory == null)
+                if (_referenceHistory == null)
                 {
-                    this._referenceHistory = new List<string>();
+                    _referenceHistory = new List<string>();
                 }
 
-                return this._referenceHistory;
+                return _referenceHistory;
             }
         }
 
         public ImageRefCounted(GDIBigLockedImage image)
         {
-            this._image = image;
+            _image = image;
             imageResourceCounter.crement(1);
         }
 
         private void Dispose()
         {
-            this._image.Dispose();
-            this._image = null;
+            _image.Dispose();
+            _image = null;
             imageResourceCounter.crement(-1);
         }
 
@@ -55,14 +55,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                D.Assert(!this.disposed);
-                this.refs++;
+                D.Assert(!disposed);
+                refs++;
                 if (BuildConfig.theConfig.debugRefs)
                 {
-                    this.referenceHistory.Add(string.Format("{0} Add  {1} refs={2}",
+                    referenceHistory.Add(string.Format("{0} Add  {1} refs={2}",
                         MakeObjectID.Maker.make(this),
                         refCredit,
-                        this.refs));
+                        refs));
                 }
             }
             finally
@@ -76,29 +76,29 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.disposed)
+                if (disposed)
                 {
                     if (BuildConfig.theConfig.debugRefs)
                     {
-                        this.PrintReferenceHistory();
+                        PrintReferenceHistory();
                     }
 
-                    D.Assert(!this.disposed);
+                    D.Assert(!disposed);
                 }
 
-                this.refs--;
+                refs--;
                 if (BuildConfig.theConfig.debugRefs)
                 {
-                    this.referenceHistory.Add(string.Format("{0} Drop {1} refs={2}",
+                    referenceHistory.Add(string.Format("{0} Drop {1} refs={2}",
                         MakeObjectID.Maker.make(this),
                         refCredit,
-                        this.refs));
+                        refs));
                 }
 
-                if (this.refs == 0)
+                if (refs == 0)
                 {
-                    this.Dispose();
-                    this.disposed = true;
+                    Dispose();
+                    disposed = true;
                 }
             }
             finally
@@ -109,7 +109,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private void PrintReferenceHistory()
         {
-            foreach (string current in this.referenceHistory)
+            foreach (string current in referenceHistory)
             {
                 D.Sayf(0, "History: {0}", new object[] {current});
             }

@@ -235,7 +235,7 @@ namespace GMap.NET.Internals
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 

@@ -21,7 +21,7 @@ namespace MSR.CVE.BackMaker
         public S3Response put(string bucket, string key, S3Content content, HeaderList headers)
         {
             WebRequest webRequest =
-                this.BuildWebRequest("PUT", bucket + "/" + this.EncodeKeyForSignature(key), headers);
+                BuildWebRequest("PUT", bucket + "/" + EncodeKeyForSignature(key), headers);
             webRequest.ContentLength = (long)content.Bytes.Length;
             Stream requestStream = webRequest.GetRequestStream();
             requestStream.Write(content.Bytes, 0, content.Bytes.Length);
@@ -32,14 +32,14 @@ namespace MSR.CVE.BackMaker
         public Stream getStream(string bucket, string key, HeaderList headers)
         {
             WebRequest webRequest =
-                this.BuildWebRequest("GET", bucket + "/" + this.EncodeKeyForSignature(key), headers);
+                BuildWebRequest("GET", bucket + "/" + EncodeKeyForSignature(key), headers);
             WebResponse response = webRequest.GetResponse();
             return response.GetResponseStream();
         }
 
         public void CreateBucket(string bucketName)
         {
-            WebRequest webRequest = this.BuildWebRequest("PUT", bucketName, new HeaderList());
+            WebRequest webRequest = BuildWebRequest("PUT", bucketName, new HeaderList());
             webRequest.ContentLength = 0L;
             webRequest.GetRequestStream().Close();
             S3Response.Execute(webRequest);
@@ -137,10 +137,10 @@ namespace MSR.CVE.BackMaker
             stringBuilder.Append(objectPath);
             string text2 = stringBuilder.ToString();
             Encoding encoding = new UTF8Encoding();
-            HMACSHA1 hMACSHA = new HMACSHA1(encoding.GetBytes(this.secretAccessKey));
+            HMACSHA1 hMACSHA = new HMACSHA1(encoding.GetBytes(secretAccessKey));
             byte[] inArray = hMACSHA.ComputeHash(encoding.GetBytes(text2.ToCharArray()));
             string arg = Convert.ToBase64String(inArray);
-            webRequest.Headers.Add("Authorization", string.Format("AWS {0}:{1}", this.accessKeyId, arg));
+            webRequest.Headers.Add("Authorization", string.Format("AWS {0}:{1}", accessKeyId, arg));
             return webRequest;
         }
     }

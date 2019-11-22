@@ -58,7 +58,7 @@ namespace GMap.NET.Projections
             var x = (Round(east) - -3700000.0) * Pow(2, 5);
             var y = (Round(north) - 1300000.0) * Pow(2, 5);
 
-            return new long[] {(long)x, (long)y};
+            return new[] {(long)x, (long)y};
         }
 
         double[] wgsToUTM(double la, double lo, int zone)
@@ -110,7 +110,7 @@ namespace GMap.NET.Projections
             var north = 0.0 + dN / UNITS;
             north = roundoff(north, UTMSIZE);
 
-            return new double[] {east, north, zone};
+            return new[] {east, north, zone};
         }
 
         #endregion
@@ -131,7 +131,7 @@ namespace GMap.NET.Projections
             east = roundoff(east, UTMSIZE);
             north = roundoff(north, UTMSIZE);
 
-            return new double[] {east, north};
+            return new[] {east, north};
         }
 
         double[] utmToWGS(double eastIn, double northIn, int zone)
@@ -180,7 +180,7 @@ namespace GMap.NET.Projections
             var longrad = DegreesToRadians(getLCM(zone)) + w;
             var lon = RadiansToDegrees(longrad);
 
-            return new double[] {lat, lon, latrad, longrad};
+            return new[] {lat, lon, latrad, longrad};
         }
 
         #endregion

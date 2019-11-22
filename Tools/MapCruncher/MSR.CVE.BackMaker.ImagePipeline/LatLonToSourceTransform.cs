@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override void doTransform(PointD p0, PointD p1)
         {
             PointD transformedPoint =
-                this.mercatorToSource.getTransformedPoint(MercatorCoordinateSystem.LatLonToMercator(p0));
+                mercatorToSource.getTransformedPoint(MercatorCoordinateSystem.LatLonToMercator(p0));
             p1.x = transformedPoint.x;
             p1.y = transformedPoint.y;
         }

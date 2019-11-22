@@ -18,12 +18,12 @@ namespace MSR.CVE.BackMaker
 
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteAttributeString(TransformationStyleNameAttr, this.getXmlName());
+            writer.WriteAttributeString(TransformationStyleNameAttr, getXmlName());
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(this.getXmlName());
+            hash.Accumulate(getXmlName());
         }
     }
 }

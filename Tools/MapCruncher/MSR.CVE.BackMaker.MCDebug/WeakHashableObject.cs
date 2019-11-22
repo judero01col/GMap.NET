@@ -9,18 +9,18 @@ namespace MSR.CVE.BackMaker.MCDebug
 
         public WeakHashableObject(object target)
         {
-            this.obj = new WeakReference(target);
-            this.hashCode = target.GetHashCode();
+            obj = new WeakReference(target);
+            hashCode = target.GetHashCode();
         }
 
         public override int GetHashCode()
         {
-            return this.hashCode;
+            return hashCode;
         }
 
         public override bool Equals(object other)
         {
-            object target = this.obj.Target;
+            object target = obj.Target;
             if (target == null)
             {
                 return false;
@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker.MCDebug
 
         public override string ToString()
         {
-            object target = this.obj.Target;
+            object target = obj.Target;
             return target.ToString();
         }
     }

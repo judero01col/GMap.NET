@@ -36,7 +36,7 @@ namespace BSE.Windows.Forms
             //With this, the using of a transparent backcolor is possible
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 			InitializeComponent();
-            this.BackColor = Color.Transparent;
+            BackColor = Color.Transparent;
 		}
 
 		#endregion

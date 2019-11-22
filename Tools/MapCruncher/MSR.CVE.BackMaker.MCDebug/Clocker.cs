@@ -10,19 +10,19 @@ namespace MSR.CVE.BackMaker.MCDebug
 
         public int stamp()
         {
-            this.start();
-            return (int)DateTime.Now.Subtract(this.startTime).TotalSeconds;
+            start();
+            return (int)DateTime.Now.Subtract(startTime).TotalSeconds;
         }
 
         private void start()
         {
-            if (this.started)
+            if (started)
             {
                 return;
             }
 
-            this.startTime = DateTime.Now;
-            this.started = true;
+            startTime = DateTime.Now;
+            started = true;
         }
     }
 }

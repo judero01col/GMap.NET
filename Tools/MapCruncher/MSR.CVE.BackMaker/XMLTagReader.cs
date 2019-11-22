@@ -31,16 +31,16 @@ namespace MSR.CVE.BackMaker
             this.tag = tag;
             if (reader.IsEmptyElement)
             {
-                this.empty = true;
+                empty = true;
             }
         }
 
         public bool TagIs(string s)
         {
-            if (this.lastStart != null && this.lastStart == s)
+            if (lastStart != null && lastStart == s)
             {
-                this.context.mostRecentXTRTagIs = this.lastStart;
-                this.lastStart = null;
+                context.mostRecentXTRTagIs = lastStart;
+                lastStart = null;
                 return true;
             }
 
@@ -49,69 +49,69 @@ namespace MSR.CVE.BackMaker
 
         public void SkipAllSubTags()
         {
-            while (this.FindNextStartTag())
+            while (FindNextStartTag())
             {
             }
         }
 
         public string GetContent()
         {
-            return this.content.ToString();
+            return content.ToString();
         }
 
         public bool FindNextStartTag()
         {
-            if (this.done)
+            if (done)
             {
                 return false;
             }
 
-            if (this.empty)
+            if (empty)
             {
-                this.done = true;
+                done = true;
                 return false;
             }
 
-            if (this.reader.NodeType == XmlNodeType.Element && this.lastStart != null &&
-                this.lastStart == this.reader.Name)
+            if (reader.NodeType == XmlNodeType.Element && lastStart != null &&
+                lastStart == reader.Name)
             {
-                this.ignoredTags.Add(this.lastStart);
+                ignoredTags.Add(lastStart);
                 XMLTagReader xMLTagReader =
-                    new XMLTagReader(this.reader, this.lastStart, this.ignoredTags, this.context);
+                    new XMLTagReader(reader, lastStart, ignoredTags, context);
                 xMLTagReader.SkipAllSubTags();
             }
 
-            while (this.reader.Read())
+            while (reader.Read())
             {
-                if (this.reader.NodeType == XmlNodeType.Element)
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    this.lastStart = this.reader.Name;
-                    this.context.mostRecentXTRTagIs = null;
+                    lastStart = reader.Name;
+                    context.mostRecentXTRTagIs = null;
                     return true;
                 }
 
-                if (this.reader.NodeType == XmlNodeType.EndElement)
+                if (reader.NodeType == XmlNodeType.EndElement)
                 {
-                    if (this.reader.Name == this.tag)
+                    if (reader.Name == tag)
                     {
-                        this.done = true;
+                        done = true;
                         return false;
                     }
 
-                    throw new InvalidMashupFile(this.reader,
+                    throw new InvalidMashupFile(reader,
                         string.Format("Bad Mashup file!  XML tag {0} improperly closed with </{1}> (line {2})",
-                            this.tag,
-                            this.reader.Name,
-                            this.reader.LineNumber));
+                            tag,
+                            reader.Name,
+                            reader.LineNumber));
                 }
                 else
                 {
-                    string value = this.reader.Value;
-                    this.content.Append(value);
+                    string value = reader.Value;
+                    content.Append(value);
                 }
             }
 
-            throw new InvalidMashupFile(this.reader, "Unexpected end of file");
+            throw new InvalidMashupFile(reader, "Unexpected end of file");
         }
     }
 }

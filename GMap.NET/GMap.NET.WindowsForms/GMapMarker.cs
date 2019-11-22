@@ -24,33 +24,33 @@ namespace GMap.NET.WindowsForms
          attr.SetColorKey(Color.White, Color.White);
       }
 #endif
-        GMapOverlay overlay;
+        GMapOverlay _overlay;
 
         public GMapOverlay Overlay
         {
             get
             {
-                return overlay;
+                return _overlay;
             }
             internal set
             {
-                overlay = value;
+                _overlay = value;
             }
         }
 
-        private PointLatLng position;
+        private PointLatLng _position;
 
         public PointLatLng Position
         {
             get
             {
-                return position;
+                return _position;
             }
             set
             {
-                if (position != value)
+                if (_position != value)
                 {
-                    position = value;
+                    _position = value;
 
                     if (IsVisible)
                     {
@@ -65,19 +65,19 @@ namespace GMap.NET.WindowsForms
 
         public object Tag;
 
-        Point offset;
+        Point _offset;
 
         public Point Offset
         {
             get
             {
-                return offset;
+                return _offset;
             }
             set
             {
-                if (offset != value)
+                if (_offset != value)
                 {
-                    offset = value;
+                    _offset = value;
 
                     if (IsVisible)
                     {
@@ -90,7 +90,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        Rectangle area;
+        Rectangle _area;
 
         /// <summary>
         ///     marker position in local coordinates, internal only, do not set it manualy
@@ -99,13 +99,13 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return area.Location;
+                return _area.Location;
             }
             set
             {
-                if (area.Location != value)
+                if (_area.Location != value)
                 {
-                    area.Location = value;
+                    _area.Location = value;
                     {
                         if (Overlay != null && Overlay.Control != null)
                         {
@@ -126,7 +126,7 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                Point ret = area.Location;
+                Point ret = _area.Location;
                 ret.Offset(-Offset.X, -Offset.Y);
                 return ret;
             }
@@ -136,11 +136,11 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return area.Size;
+                return _area.Size;
             }
             set
             {
-                area.Size = value;
+                _area.Size = value;
             }
         }
 
@@ -148,7 +148,7 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return area;
+                return _area;
             }
         }
 
@@ -156,13 +156,13 @@ namespace GMap.NET.WindowsForms
 
         public MarkerTooltipMode ToolTipMode = MarkerTooltipMode.OnMouseOver;
 
-        string toolTipText;
+        string _toolTipText;
 
         public string ToolTipText
         {
             get
             {
-                return toolTipText;
+                return _toolTipText;
             }
 
             set
@@ -176,11 +176,11 @@ namespace GMap.NET.WindowsForms
 #endif
                 }
 
-                toolTipText = value;
+                _toolTipText = value;
             }
         }
 
-        private bool visible = true;
+        private bool _visible = true;
 
         /// <summary>
         ///     is marker visible
@@ -189,17 +189,17 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return visible;
+                return _visible;
             }
             set
             {
-                if (value != visible)
+                if (value != _visible)
                 {
-                    visible = value;
+                    _visible = value;
 
                     if (Overlay != null && Overlay.Control != null)
                     {
-                        if (visible)
+                        if (_visible)
                         {
                             Overlay.Control.UpdateMarkerLocalPosition(this);
                         }
@@ -235,7 +235,7 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         public bool IsHitTestVisible = true;
 
-        private bool isMouseOver;
+        private bool _isMouseOver;
 
         /// <summary>
         ///     is mouse over marker
@@ -244,17 +244,17 @@ namespace GMap.NET.WindowsForms
         {
             get
             {
-                return isMouseOver;
+                return _isMouseOver;
             }
             internal set
             {
-                isMouseOver = value;
+                _isMouseOver = value;
             }
         }
 
         public GMapMarker(PointLatLng pos)
         {
-            this.Position = pos;
+            Position = pos;
         }
 
         public virtual void OnRender(Graphics g)
@@ -287,16 +287,16 @@ namespace GMap.NET.WindowsForms
         /// </exception>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Position", this.Position);
-            info.AddValue("Tag", this.Tag);
-            info.AddValue("Offset", this.Offset);
-            info.AddValue("Area", this.area);
-            info.AddValue("ToolTip", this.ToolTip);
-            info.AddValue("ToolTipMode", this.ToolTipMode);
-            info.AddValue("ToolTipText", this.ToolTipText);
-            info.AddValue("Visible", this.IsVisible);
-            info.AddValue("DisableregionCheck", this.DisableRegionCheck);
-            info.AddValue("IsHitTestVisible", this.IsHitTestVisible);
+            info.AddValue("Position", Position);
+            info.AddValue("Tag", Tag);
+            info.AddValue("Offset", Offset);
+            info.AddValue("Area", _area);
+            info.AddValue("ToolTip", ToolTip);
+            info.AddValue("ToolTipMode", ToolTipMode);
+            info.AddValue("ToolTipText", ToolTipText);
+            info.AddValue("Visible", IsVisible);
+            info.AddValue("DisableregionCheck", DisableRegionCheck);
+            info.AddValue("IsHitTestVisible", IsHitTestVisible);
         }
 
         /// <summary>
@@ -306,20 +306,20 @@ namespace GMap.NET.WindowsForms
         /// <param name="context">The context.</param>
         protected GMapMarker(SerializationInfo info, StreamingContext context)
         {
-            this.Position = Extensions.GetStruct<PointLatLng>(info, "Position", PointLatLng.Empty);
-            this.Tag = Extensions.GetValue<object>(info, "Tag", null);
-            this.Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
-            this.area = Extensions.GetStruct<Rectangle>(info, "Area", Rectangle.Empty);
+            Position = Extensions.GetStruct<PointLatLng>(info, "Position", PointLatLng.Empty);
+            Tag = Extensions.GetValue<object>(info, "Tag", null);
+            Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
+            _area = Extensions.GetStruct<Rectangle>(info, "Area", Rectangle.Empty);
 
-            this.ToolTip = Extensions.GetValue<GMapToolTip>(info, "ToolTip", null);
-            if (this.ToolTip != null) this.ToolTip.Marker = this;
+            ToolTip = Extensions.GetValue<GMapToolTip>(info, "ToolTip", null);
+            if (ToolTip != null) ToolTip.Marker = this;
 
-            this.ToolTipMode =
+            ToolTipMode =
                 Extensions.GetStruct<MarkerTooltipMode>(info, "ToolTipMode", MarkerTooltipMode.OnMouseOver);
-            this.ToolTipText = info.GetString("ToolTipText");
-            this.IsVisible = info.GetBoolean("Visible");
-            this.DisableRegionCheck = info.GetBoolean("DisableregionCheck");
-            this.IsHitTestVisible = info.GetBoolean("IsHitTestVisible");
+            ToolTipText = info.GetString("ToolTipText");
+            IsVisible = info.GetBoolean("Visible");
+            DisableRegionCheck = info.GetBoolean("DisableregionCheck");
+            IsHitTestVisible = info.GetBoolean("IsHitTestVisible");
         }
 
         #endregion
@@ -328,19 +328,19 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed;
+        bool _disposed;
 
         public virtual void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                disposed = true;
+                _disposed = true;
 
                 Tag = null;
 
                 if (ToolTip != null)
                 {
-                    toolTipText = null;
+                    _toolTipText = null;
                     ToolTip.Dispose();
                     ToolTip = null;
                 }

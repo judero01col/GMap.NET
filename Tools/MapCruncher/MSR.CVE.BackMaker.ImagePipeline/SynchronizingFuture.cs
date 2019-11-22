@@ -19,24 +19,24 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Dispose()
         {
-            if (this.asyncReadyEvent != null)
+            if (asyncReadyEvent != null)
             {
-                this.asyncReadyEvent.Close();
-                this.asyncReadyEvent = null;
+                asyncReadyEvent.Close();
+                asyncReadyEvent = null;
             }
         }
 
         public override Present Realize(string refCredit)
         {
-            Present present = this.asyncFuture.Realize(refCredit);
+            Present present = asyncFuture.Realize(refCredit);
             if (present is AsyncRef)
             {
                 AsyncRef asyncRef = (AsyncRef)present;
-                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.PresentReadyCallback));
-                asyncRef.SetInterest(this.interestValue);
+                asyncRef.AddCallback(new AsyncRecord.CompleteCallback(PresentReadyCallback));
+                asyncRef.SetInterest(interestValue);
                 AsyncRef asyncRef2 = (AsyncRef)asyncRef.Duplicate(refCredit + "2");
                 new PersistentInterest(asyncRef);
-                this.asyncReadyEvent.WaitOne();
+                asyncReadyEvent.WaitOne();
                 return asyncRef2.present;
             }
 
@@ -45,13 +45,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private void PresentReadyCallback(AsyncRef asyncRef)
         {
-            this.asyncReadyEvent.Set();
+            asyncReadyEvent.Set();
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("SynchronizingFuture(");
-            this.asyncFuture.AccumulateRobustHash(hash);
+            asyncFuture.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
     }

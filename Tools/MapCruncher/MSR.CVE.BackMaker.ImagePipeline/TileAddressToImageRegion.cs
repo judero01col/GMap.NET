@@ -20,12 +20,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return new PresentFailureCode(new Exception("zoomlevel 0"));
             }
 
-            ITileAddressLayout tileAddressLayout = this.coordinateSystem.GetTileAddressLayout();
+            ITileAddressLayout tileAddressLayout = coordinateSystem.GetTileAddressLayout();
             TileAddress tileAddress2 = new TileAddress(tileAddressLayout.XValueOneTileEast(tileAddress),
                 tileAddressLayout.YValueOneTileSouth(tileAddress),
                 tileAddress.ZoomLevel);
-            LatLon latLonOfTileNW = this.coordinateSystem.GetLatLonOfTileNW(tileAddress);
-            LatLon latLonOfTileNW2 = this.coordinateSystem.GetLatLonOfTileNW(tileAddress2);
+            LatLon latLonOfTileNW = coordinateSystem.GetLatLonOfTileNW(tileAddress);
+            LatLon latLonOfTileNW2 = coordinateSystem.GetLatLonOfTileNW(tileAddress2);
             if (latLonOfTileNW2.lon <= latLonOfTileNW.lon)
             {
                 latLonOfTileNW2 = new LatLon(latLonOfTileNW2.lat, latLonOfTileNW2.lon + 360.0);

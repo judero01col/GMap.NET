@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker
 
             public int Compare(TKey x, TKey y)
             {
-                return this.comparer.Compare(y, x);
+                return comparer.Compare(y, x);
             }
         }
 
@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.forwardDict.Count;
+                return forwardDict.Count;
             }
         }
 
@@ -35,7 +35,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                SortedDictionary<TKey, TValue>.Enumerator enumerator = this.forwardDict.GetEnumerator();
+                SortedDictionary<TKey, TValue>.Enumerator enumerator = forwardDict.GetEnumerator();
                 if (enumerator.MoveNext())
                 {
                     KeyValuePair<TKey, TValue> current = enumerator.Current;
@@ -50,7 +50,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                SortedDictionary<TKey, TValue>.Enumerator enumerator = this.backwardDict.GetEnumerator();
+                SortedDictionary<TKey, TValue>.Enumerator enumerator = backwardDict.GetEnumerator();
                 if (enumerator.MoveNext())
                 {
                     KeyValuePair<TKey, TValue> current = enumerator.Current;
@@ -65,14 +65,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.forwardDict.Keys;
+                return forwardDict.Keys;
             }
         }
 
         public BiSortedDictionary()
         {
-            this.forwardDict = new SortedDictionary<TKey, TValue>();
-            this.backwardDict = new SortedDictionary<TKey, TValue>(new BackwardsComparer(this.forwardDict.Comparer));
+            forwardDict = new SortedDictionary<TKey, TValue>();
+            backwardDict = new SortedDictionary<TKey, TValue>(new BackwardsComparer(forwardDict.Comparer));
         }
 
         public void Add(TKey key, TValue value)
@@ -80,8 +80,8 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                this.forwardDict.Add(key, value);
-                this.backwardDict.Add(key, value);
+                forwardDict.Add(key, value);
+                backwardDict.Add(key, value);
             }
             finally
             {
@@ -94,8 +94,8 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                this.forwardDict.Remove(key);
-                this.backwardDict.Remove(key);
+                forwardDict.Remove(key);
+                backwardDict.Remove(key);
             }
             finally
             {
@@ -105,7 +105,7 @@ namespace MSR.CVE.BackMaker
 
         public SortedDictionary<TKey, TValue>.KeyCollection.Enumerator GetEnumerator()
         {
-            return this.forwardDict.Keys.GetEnumerator();
+            return forwardDict.Keys.GetEnumerator();
         }
     }
 }

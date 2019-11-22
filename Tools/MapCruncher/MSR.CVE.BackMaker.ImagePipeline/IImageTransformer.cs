@@ -26,13 +26,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
 
                 QualitySortPair qualitySortPair = (QualitySortPair)obj;
-                int num = -this.fitQuality.CompareTo(qualitySortPair.fitQuality);
+                int num = -fitQuality.CompareTo(qualitySortPair.fitQuality);
                 if (num != 0)
                 {
                     return num;
                 }
 
-                return this.assoc.associationName.CompareTo(qualitySortPair.assoc.associationName);
+                return assoc.associationName.CompareTo(qualitySortPair.assoc.associationName);
             }
         }
 
@@ -52,18 +52,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal IPointTransformer getDestLatLonToSourceTransformer()
         {
-            return this.destLatLonToSourceTransformer;
+            return destLatLonToSourceTransformer;
         }
 
         internal IPointTransformer getSourceToDestLatLonTransformer()
         {
-            return this.sourceToDestLatLonTransformer;
+            return sourceToDestLatLonTransformer;
         }
 
         public RegistrationDefinition getWarpedRegistration()
         {
-            IPointTransformer pointTransformer = this.getSourceToDestLatLonTransformer();
-            List<PositionAssociation> associationList = this.registration.GetAssociationList();
+            IPointTransformer pointTransformer = getSourceToDestLatLonTransformer();
+            List<PositionAssociation> associationList = registration.GetAssociationList();
             List<QualitySortPair> list = new List<QualitySortPair>();
             for (int i = 0; i < associationList.Count; i++)
             {
@@ -87,7 +87,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
             list.Sort();
             RegistrationDefinition registrationDefinition = new RegistrationDefinition(new DirtyEvent());
-            registrationDefinition.warpStyle = this.registration.warpStyle;
+            registrationDefinition.warpStyle = registration.warpStyle;
             foreach (QualitySortPair current in list)
             {
                 registrationDefinition.AddAssociation(current.assoc);
@@ -99,8 +99,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this.registration.AccumulateRobustHash(hash);
-            hash.Accumulate((int)this.interpolationMode);
+            registration.AccumulateRobustHash(hash);
+            hash.Accumulate((int)interpolationMode);
         }
 
         internal abstract void writeToXml(XmlTextWriter writer);

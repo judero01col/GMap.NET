@@ -71,7 +71,6 @@ namespace GMap.NET.Internals
                             base.Remove(first);
                             memoryCacheSize -= m.Length;
                         }
-                        m = null;
                     }
                     catch (Exception ex)
                     {

@@ -8,10 +8,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public FastPoly1PointTransformer(JamaMatrix matrix) : base(matrix)
         {
-            this.polynomialDegree = 1;
+            polynomialDegree = 1;
             for (int i = 0; i < 6; i++)
             {
-                this.c[i] = matrix.GetElement(i, 0);
+                c[i] = matrix.GetElement(i, 0);
             }
         }
 
@@ -23,8 +23,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             double arg_1B_0 = p0.y;
             double arg_22_0 = p0.y;
             double arg_29_0 = p0.y;
-            p1.x = this.c[0] + this.c[1] * p0.y + this.c[2] * p0.x;
-            p1.y = this.c[3] + this.c[4] * p0.y + this.c[5] * p0.x;
+            p1.x = c[0] + c[1] * p0.y + c[2] * p0.x;
+            p1.y = c[3] + c[4] * p0.y + c[5] * p0.x;
         }
     }
 }

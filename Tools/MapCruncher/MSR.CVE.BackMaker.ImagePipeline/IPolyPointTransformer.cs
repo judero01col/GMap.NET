@@ -17,8 +17,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override void writeToXml(XmlTextWriter writer)
         {
-            JamaMatrix jamaMatrix = PolyExps(this.polynomialDegree);
-            string[] array = new string[] {"x", "y"};
+            JamaMatrix jamaMatrix = PolyExps(polynomialDegree);
+            string[] array = new[] {"x", "y"};
             for (int i = 0; i < 2; i++)
             {
                 writer.WriteStartElement("Sum");
@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     writer.WriteStartElement("Term");
                     writer.WriteAttributeString("Coefficient",
-                        this.transformCoefficients.GetElement(i * jamaMatrix.RowDimension + j, 0)
+                        transformCoefficients.GetElement(i * jamaMatrix.RowDimension + j, 0)
                             .ToString(CultureInfo.InvariantCulture));
                     for (int k = 0; k < 2; k++)
                     {

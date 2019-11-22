@@ -164,7 +164,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             ProtocolComplete = callback;
             Buffer = GetHostPortBytes(host, port);
-            Server.BeginConnect(proxyEndPoint, new AsyncCallback(this.OnConnect), Server);
+            Server.BeginConnect(proxyEndPoint, new AsyncCallback(OnConnect), Server);
             AsyncResult = new IAsyncProxyResult();
             return AsyncResult;
         }
@@ -181,7 +181,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             ProtocolComplete = callback;
             Buffer = GetEndPointBytes(remoteEP);
-            Server.BeginConnect(proxyEndPoint, new AsyncCallback(this.OnConnect), Server);
+            Server.BeginConnect(proxyEndPoint, new AsyncCallback(OnConnect), Server);
             AsyncResult = new IAsyncProxyResult();
             return AsyncResult;
         }
@@ -204,7 +204,7 @@ namespace Org.Mentalis.Network.ProxySocket
 
             try
             {
-                Server.BeginSend(Buffer, 0, Buffer.Length, SocketFlags.None, new AsyncCallback(this.OnSent), Server);
+                Server.BeginSend(Buffer, 0, Buffer.Length, SocketFlags.None, new AsyncCallback(OnSent), Server);
             }
             catch (Exception e)
             {
@@ -240,7 +240,7 @@ namespace Org.Mentalis.Network.ProxySocket
                     0,
                     Buffer.Length,
                     SocketFlags.None,
-                    new AsyncCallback(this.OnReceive),
+                    new AsyncCallback(OnReceive),
                     Server);
             }
             catch (Exception e)
@@ -281,7 +281,7 @@ namespace Org.Mentalis.Network.ProxySocket
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
-                        new AsyncCallback(this.OnReceive),
+                        new AsyncCallback(OnReceive),
                         Server);
                 }
             }

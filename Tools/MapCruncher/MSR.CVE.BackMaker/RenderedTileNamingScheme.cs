@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker
 
         public string GetRenderPath(TileAddress ta)
         {
-            return this.GetFilePrefix() + "\\" + this.GetTileFilename(ta);
+            return GetFilePrefix() + "\\" + GetTileFilename(ta);
         }
 
         public static string GetXMLTag()
@@ -40,21 +40,21 @@ namespace MSR.CVE.BackMaker
 
         internal string GetFilePrefix()
         {
-            return this.filePrefix;
+            return filePrefix;
         }
 
         public string GetFileSuffix()
         {
-            return this.fileSuffix;
+            return fileSuffix;
         }
 
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("TileNamingScheme");
-            writer.WriteAttributeString(this.GetSchemeTag(), this.GetSchemeName());
+            writer.WriteAttributeString(GetSchemeTag(), GetSchemeName());
             writer.WriteAttributeString("FilePath", "");
-            writer.WriteAttributeString("FilePrefix", this.filePrefix);
-            writer.WriteAttributeString("FileSuffix", this.fileSuffix);
+            writer.WriteAttributeString("FilePrefix", filePrefix);
+            writer.WriteAttributeString("FileSuffix", fileSuffix);
             writer.WriteEndElement();
         }
 
@@ -81,11 +81,11 @@ namespace MSR.CVE.BackMaker
         internal void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("RenderedTileNamingScheme(");
-            hash.Accumulate(this.GetSchemeName());
+            hash.Accumulate(GetSchemeName());
             hash.Accumulate(",");
-            hash.Accumulate(this.filePrefix);
+            hash.Accumulate(filePrefix);
             hash.Accumulate(",");
-            hash.Accumulate(this.fileSuffix);
+            hash.Accumulate(fileSuffix);
             hash.Accumulate(")");
         }
     }

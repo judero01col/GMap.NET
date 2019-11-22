@@ -18,7 +18,7 @@ namespace CloudsDemo
                 image = value;
                 if (image != null)
                 {
-                    this.Size = new Size(image.Width, image.Height);
+                    Size = new Size(image.Width, image.Height);
                 }
             }
         }

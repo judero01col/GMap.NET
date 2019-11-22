@@ -231,7 +231,7 @@ namespace GMap.NET.Internals
 
         ~FastResourceLock()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         private void Dispose(bool disposing)
@@ -254,7 +254,7 @@ namespace GMap.NET.Internals
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 

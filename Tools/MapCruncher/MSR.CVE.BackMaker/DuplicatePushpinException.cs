@@ -18,9 +18,9 @@ namespace MSR.CVE.BackMaker
         public override string ToString()
         {
             return string.Format("The new pin has the same {0} location as pin {1} \"{2}\".",
-                this.whichReference,
-                this.existingPinId,
-                this.existingPinName);
+                whichReference,
+                existingPinId,
+                existingPinName);
         }
     }
 }

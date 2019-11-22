@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.p.a;
+                return p.a;
             }
         }
 
@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.p.r;
+                return p.r;
             }
         }
 
@@ -35,7 +35,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.p.g;
+                return p.g;
             }
         }
 
@@ -43,18 +43,18 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.p.b;
+                return p.b;
             }
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            this.p.AccumulateRobustHash(hash);
+            p.AccumulateRobustHash(hash);
         }
 
         public Color ToColor()
         {
-            return this.p.ToColor();
+            return p.ToColor();
         }
 
         public static bool operator ==(Pixel p1, Pixel p2)
@@ -74,51 +74,51 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return this.p.GetHashCode();
+            return p.GetHashCode();
         }
 
         public Pixel()
         {
-            this.p = default(PixelStruct);
+            p = default(PixelStruct);
         }
 
         public Pixel(byte r, byte g, byte b, byte a)
         {
-            this.p.a = a;
-            this.p.r = r;
-            this.p.g = g;
-            this.p.b = b;
+            p.a = a;
+            p.r = r;
+            p.g = g;
+            p.b = b;
         }
 
         public Pixel(Color c)
         {
-            this.p.a = c.A;
-            this.p.r = c.R;
-            this.p.g = c.G;
-            this.p.b = c.B;
+            p.a = c.A;
+            p.r = c.R;
+            p.g = c.G;
+            p.b = c.B;
         }
 
         internal void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("PixelValues");
-            writer.WriteAttributeString("r", this.p.r.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("g", this.p.g.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("b", this.p.b.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString("a", this.p.a.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("r", p.r.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("g", p.g.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("b", p.b.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("a", p.a.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
         }
 
         public Pixel(MashupParseContext context)
         {
-            this.p.r = 0;
-            this.p.g = 0;
-            this.p.b = 0;
-            this.p.a = 0;
+            p.r = 0;
+            p.g = 0;
+            p.b = 0;
+            p.a = 0;
             XMLTagReader xMLTagReader = context.NewTagReader("PixelValues");
-            this.p.r = (byte)byteRange.Parse(context, "r");
-            this.p.g = (byte)byteRange.Parse(context, "g");
-            this.p.b = (byte)byteRange.Parse(context, "b");
-            this.p.a = (byte)byteRange.Parse(context, "a");
+            p.r = (byte)byteRange.Parse(context, "r");
+            p.g = (byte)byteRange.Parse(context, "g");
+            p.b = (byte)byteRange.Parse(context, "b");
+            p.a = (byte)byteRange.Parse(context, "a");
             xMLTagReader.SkipAllSubTags();
         }
 

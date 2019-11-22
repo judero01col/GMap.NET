@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker
 
         public override void ParseFrom(string str)
         {
-            this.value = str;
+            value = str;
         }
     }
 }

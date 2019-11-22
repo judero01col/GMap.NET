@@ -12,31 +12,31 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._outputFolder.myValue;
+                return _outputFolder.myValue;
             }
             set
             {
-                this._outputFolder.myValue = value;
+                _outputFolder.myValue = value;
             }
         }
 
         public RenderToFileOptions(DirtyEvent parentDirtyEvent)
         {
-            this._outputFolder = new DirtyString(parentDirtyEvent);
+            _outputFolder = new DirtyString(parentDirtyEvent);
         }
 
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(xmlTag);
-            writer.WriteAttributeString(OutputFolderAttr, this.outputFolder);
+            writer.WriteAttributeString(OutputFolderAttr, outputFolder);
             writer.WriteEndElement();
         }
 
         public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent, string byTagName)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(byTagName);
-            this._outputFolder = new DirtyString(parentDirtyEvent);
-            this.outputFolder = context.GetRequiredAttribute(OutputFolderAttr);
+            _outputFolder = new DirtyString(parentDirtyEvent);
+            outputFolder = context.GetRequiredAttribute(OutputFolderAttr);
             xMLTagReader.SkipAllSubTags();
         }
 
@@ -48,7 +48,7 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return string.Format("file:{0}", this.outputFolder);
+            return string.Format("file:{0}", outputFolder);
         }
     }
 }

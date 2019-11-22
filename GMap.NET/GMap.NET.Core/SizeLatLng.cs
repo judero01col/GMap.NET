@@ -14,20 +14,20 @@ namespace GMap.NET
 
         public SizeLatLng(SizeLatLng size)
         {
-            this._widthLng = size._widthLng;
-            this._heightLat = size._heightLat;
+            _widthLng = size._widthLng;
+            _heightLat = size._heightLat;
         }
 
         public SizeLatLng(PointLatLng pt)
         {
-            this._heightLat = pt.Lat;
-            this._widthLng = pt.Lng;
+            _heightLat = pt.Lat;
+            _widthLng = pt.Lng;
         }
 
         public SizeLatLng(double heightLat, double widthLng)
         {
-            this._heightLat = heightLat;
-            this._widthLng = widthLng;
+            _heightLat = heightLat;
+            _widthLng = widthLng;
         }
 
         public static SizeLatLng operator +(SizeLatLng sz1, SizeLatLng sz2)
@@ -59,7 +59,7 @@ namespace GMap.NET
         {
             get
             {
-                return this._widthLng == 0d && this._heightLat == 0d;
+                return _widthLng == 0d && _heightLat == 0d;
             }
         }
 
@@ -67,11 +67,11 @@ namespace GMap.NET
         {
             get
             {
-                return this._widthLng;
+                return _widthLng;
             }
             set
             {
-                this._widthLng = value;
+                _widthLng = value;
             }
         }
 
@@ -79,11 +79,11 @@ namespace GMap.NET
         {
             get
             {
-                return this._heightLat;
+                return _heightLat;
             }
             set
             {
-                this._heightLat = value;
+                _heightLat = value;
             }
         }
 
@@ -105,18 +105,18 @@ namespace GMap.NET
             }
 
             SizeLatLng ef = (SizeLatLng)obj;
-            return ef.WidthLng == this.WidthLng && ef.HeightLat == this.HeightLat &&
-                   ef.GetType().Equals(base.GetType());
+            return ef.WidthLng == WidthLng && ef.HeightLat == HeightLat &&
+                   ef.GetType().Equals(GetType());
         }
 
         public override int GetHashCode()
         {
-            if (this.IsEmpty)
+            if (IsEmpty)
             {
                 return 0;
             }
 
-            return this.WidthLng.GetHashCode() ^ this.HeightLat.GetHashCode();
+            return WidthLng.GetHashCode() ^ HeightLat.GetHashCode();
         }
 
         public PointLatLng ToPointLatLng()
@@ -126,8 +126,8 @@ namespace GMap.NET
 
         public override string ToString()
         {
-            return "{WidthLng=" + this._widthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" +
-                   this._heightLat.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{WidthLng=" + _widthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" +
+                   _heightLat.ToString(CultureInfo.CurrentCulture) + "}";
         }
 
         static SizeLatLng()

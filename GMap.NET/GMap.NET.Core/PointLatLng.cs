@@ -17,8 +17,8 @@ namespace GMap.NET
 
         public PointLatLng(double lat, double lng)
         {
-            this._lat = lat;
-            this._lng = lng;
+            _lat = lat;
+            _lng = lng;
             _notEmpty = true;
         }
 
@@ -37,11 +37,11 @@ namespace GMap.NET
         {
             get
             {
-                return this._lat;
+                return _lat;
             }
             set
             {
-                this._lat = value;
+                _lat = value;
                 _notEmpty = true;
             }
         }
@@ -50,11 +50,11 @@ namespace GMap.NET
         {
             get
             {
-                return this._lng;
+                return _lng;
             }
             set
             {
-                this._lng = value;
+                _lng = value;
                 _notEmpty = true;
             }
         }
@@ -102,28 +102,28 @@ namespace GMap.NET
             }
 
             PointLatLng tf = (PointLatLng)obj;
-            return tf.Lng == this.Lng && tf.Lat == this.Lat && tf.GetType().Equals(base.GetType());
+            return tf.Lng == Lng && tf.Lat == Lat && tf.GetType().Equals(GetType());
         }
 
         public void Offset(PointLatLng pos)
         {
-            this.Offset(pos.Lat, pos.Lng);
+            Offset(pos.Lat, pos.Lng);
         }
 
         public void Offset(double lat, double lng)
         {
-            this.Lng += lng;
-            this.Lat -= lat;
+            Lng += lng;
+            Lat -= lat;
         }
 
         public override int GetHashCode()
         {
-            return this.Lng.GetHashCode() ^ this.Lat.GetHashCode();
+            return Lng.GetHashCode() ^ Lat.GetHashCode();
         }
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "{{Lat={0}, Lng={1}}}", this.Lat, this.Lng);
+            return string.Format(CultureInfo.CurrentCulture, "{{Lat={0}, Lng={1}}}", Lat, Lng);
         }
     }
 }

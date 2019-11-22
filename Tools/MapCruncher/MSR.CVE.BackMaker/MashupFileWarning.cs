@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return this.msg;
+            return msg;
         }
     }
 }

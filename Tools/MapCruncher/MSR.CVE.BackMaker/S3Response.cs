@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
             this.response = response;
             Stream responseStream = response.GetResponseStream();
             StreamReader streamReader = new StreamReader(responseStream);
-            this.responseString = streamReader.ReadToEnd();
+            responseString = streamReader.ReadToEnd();
             streamReader.Close();
             responseStream.Close();
             response.Close();

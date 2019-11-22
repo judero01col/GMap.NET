@@ -21,11 +21,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                if (this.m_panelColorTable == null)
+                if (m_panelColorTable == null)
                 {
-                    this.m_panelColorTable = new PanelColorsOffice2007Silver();
+                    m_panelColorTable = new PanelColorsOffice2007Silver();
                 }
-                return this.m_panelColorTable;
+                return m_panelColorTable;
             }
         }
         #endregion

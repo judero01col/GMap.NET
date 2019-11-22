@@ -10,7 +10,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
       public Cross()
       {
          InitializeComponent();
-         this.IsHitTestVisible = false;
+         IsHitTestVisible = false;
       }
    }
 }

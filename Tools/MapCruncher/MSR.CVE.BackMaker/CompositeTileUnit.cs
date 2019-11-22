@@ -34,20 +34,20 @@ namespace MSR.CVE.BackMaker
 
         public void AddSupplier(OneLayerBoundApplier applier)
         {
-            this.singleSourceUnits.AddLast(new SingleSourceUnit(applier,
-                this.address,
-                this.stage,
-                new SingleSourceUnit.NeedThisTileDelegate(this.NeedThisTile)));
+            singleSourceUnits.AddLast(new SingleSourceUnit(applier,
+                address,
+                stage,
+                new SingleSourceUnit.NeedThisTileDelegate(NeedThisTile)));
         }
 
         public TileAddress GetTileAddress()
         {
-            return this.address;
+            return address;
         }
 
         public bool NeedThisTile()
         {
-            return !this.renderOutput.KnowFileExists(this.outputFilename);
+            return !renderOutput.KnowFileExists(outputFilename);
         }
 
         public override bool DoWork(ITileWorkFeedback feedback)
@@ -57,23 +57,23 @@ namespace MSR.CVE.BackMaker
             try
             {
                 D.Sayf(0, "{0} start compositing {1}", new object[] {Clocker.theClock.stamp(), this});
-                if (!this.NeedThisTile())
+                if (!NeedThisTile())
                 {
-                    D.Say(10, "Skipping extant file: " + this.outputFilename);
+                    D.Say(10, "Skipping extant file: " + outputFilename);
                     result = false;
                 }
                 else
                 {
-                    D.Sayf(10, "Compositing {0}", new object[] {this.address});
+                    D.Sayf(10, "Compositing {0}", new object[] {address});
                     Size tileSize = new MercatorCoordinateSystem().GetTileSize();
                     GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(tileSize, "CompositeTileUnit");
-                    D.Say(10, string.Format("Start({0}) sm.count={1}", this.address, this.singleSourceUnits.Count));
-                    foreach (SingleSourceUnit current in this.singleSourceUnits)
+                    D.Say(10, string.Format("Start({0}) sm.count={1}", address, singleSourceUnits.Count));
+                    foreach (SingleSourceUnit current in singleSourceUnits)
                     {
                         current.CompositeImageInto(gDIBigLockedImage);
                     }
 
-                    this.SaveTile(gDIBigLockedImage);
+                    SaveTile(gDIBigLockedImage);
                     result = true;
                 }
             }
@@ -84,7 +84,7 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception arg)
             {
-                feedback.PostMessage(string.Format("Exception compositing tile {0}: {1}", this.address, arg));
+                feedback.PostMessage(string.Format("Exception compositing tile {0}: {1}", address, arg));
                 result = false;
             }
 
@@ -95,27 +95,27 @@ namespace MSR.CVE.BackMaker
         {
             return new RenderWorkUnitComparinator(new IComparable[]
             {
-                this.address.ZoomLevel, this.layer.displayName, this.stage, 1, this.address
+                address.ZoomLevel, layer.displayName, stage, 1, address
             });
         }
 
         public override string ToString()
         {
             return string.Format("CTU layer {0} address {1} stage {2}",
-                this.layer.displayName,
-                this.address,
-                this.stage);
+                layer.displayName,
+                address,
+                stage);
         }
 
         private ImageCodecInfo SelectCodec()
         {
-            if (this.imageCodecInfo == null)
+            if (imageCodecInfo == null)
             {
                 List<ImageCodecInfo> list = new List<ImageCodecInfo>(ImageCodecInfo.GetImageDecoders());
-                this.imageCodecInfo = list.Find((ImageCodecInfo info) => info.FormatDescription == "JPEG");
+                imageCodecInfo = list.Find((ImageCodecInfo info) => info.FormatDescription == "JPEG");
             }
 
-            return this.imageCodecInfo;
+            return imageCodecInfo;
         }
 
         private void SaveTile(GDIBigLockedImage compositeImage)
@@ -130,36 +130,36 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    if (this.outputTileType == OutputTileType.IPIC)
+                    if (outputTileType == OutputTileType.IPIC)
                     {
                         if (transparentness == GDIBigLockedImage.Transparentness.EntirelyOpaque)
                         {
-                            this.outputTileType = OutputTileType.JPG;
+                            outputTileType = OutputTileType.JPG;
                         }
                         else
                         {
-                            this.outputTileType = OutputTileType.PNG;
+                            outputTileType = OutputTileType.PNG;
                         }
                     }
 
                     RenderOutputUtil.SaveImage(imageRef,
-                        this.renderOutput,
-                        this.outputFilename,
-                        this.outputTileType.imageFormat);
+                        renderOutput,
+                        outputFilename,
+                        outputTileType.imageFormat);
                 }
 
-                this.feedback.PostImageResult(imageRef, this.layer, "(composite)", this.address);
+                feedback.PostImageResult(imageRef, layer, "(composite)", address);
                 imageRef.Dispose();
             }
             catch (Exception arg)
             {
-                this.feedback.PostMessage(string.Format("Can't create {0}: {1}", this.outputFilename, arg));
+                feedback.PostMessage(string.Format("Can't create {0}: {1}", outputFilename, arg));
             }
         }
 
         internal IEnumerable<SingleSourceUnit> GetSingleSourceUnits()
         {
-            return this.singleSourceUnits;
+            return singleSourceUnits;
         }
     }
 }

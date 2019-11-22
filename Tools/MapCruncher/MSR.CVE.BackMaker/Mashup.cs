@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._lastView;
+                return _lastView;
             }
         }
 
@@ -33,68 +33,68 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._layerList;
+                return _layerList;
             }
         }
 
         public void SetDirty()
         {
-            this.dirtyEvent.SetDirty();
+            dirtyEvent.SetDirty();
         }
 
         public Mashup()
         {
-            this.dirtyEvent.Add(new DirtyListener(this.SetDirtyFlag));
-            this._layerList = new LayerList(this.dirtyEvent);
-            this.renderOptions = new RenderOptions(this.dirtyEvent);
+            dirtyEvent.Add(new DirtyListener(SetDirtyFlag));
+            _layerList = new LayerList(dirtyEvent);
+            renderOptions = new RenderOptions(dirtyEvent);
         }
 
         private void SetDirtyFlag()
         {
-            this.dirty = true;
-            this.autoSaveDirty = true;
+            dirty = true;
+            autoSaveDirty = true;
         }
 
         public bool IsDirty()
         {
-            return this.dirty;
+            return dirty;
         }
 
         private void ClearDirty()
         {
-            this.dirty = false;
-            this.autoSaveDirty = false;
+            dirty = false;
+            autoSaveDirty = false;
         }
 
         public RenderOptions GetRenderOptions()
         {
-            return this.renderOptions;
+            return renderOptions;
         }
 
         public void SetFilename(string fileName)
         {
             if (File.Exists(GetAutoSaveName(this.fileName)))
             {
-                this.RemoveAutoSaveBackup();
-                this.autoSaveDirty = true;
+                RemoveAutoSaveBackup();
+                autoSaveDirty = true;
             }
 
             this.fileName = fileName;
             D.Assert(Path.GetFullPath(fileName).ToLower().Equals(fileName.ToLower()));
-            if (this.autoSaveDirty)
+            if (autoSaveDirty)
             {
-                this.AutoSaveBackup();
+                AutoSaveBackup();
             }
         }
 
         public string GetFilename()
         {
-            return this.fileName;
+            return fileName;
         }
 
         public string GetDisplayName()
         {
-            string text = this.fileName;
+            string text = fileName;
             if (text == null)
             {
                 text = "Untitled Mashup";
@@ -110,13 +110,13 @@ namespace MSR.CVE.BackMaker
         public string GetPublishedFilename()
         {
             string str;
-            if (this.GetFilename() == null)
+            if (GetFilename() == null)
             {
                 str = "unsaved";
             }
             else
             {
-                str = Path.GetFileName(this.GetFilename());
+                str = Path.GetFileName(GetFilename());
             }
 
             return str + ".xml";
@@ -124,20 +124,20 @@ namespace MSR.CVE.BackMaker
 
         public string GetFilenameContext()
         {
-            if (this.fileName == null)
+            if (fileName == null)
             {
                 return "";
             }
 
-            return Path.GetDirectoryName(this.fileName);
+            return Path.GetDirectoryName(fileName);
         }
 
         public void WriteXML()
         {
-            D.Assert(this.fileName != null);
-            this.WriteXML(this.fileName);
-            this.ClearDirty();
-            this.RemoveAutoSaveBackup();
+            D.Assert(fileName != null);
+            WriteXML(fileName);
+            ClearDirty();
+            RemoveAutoSaveBackup();
         }
 
         public void WriteXML(Stream outStream)
@@ -146,7 +146,7 @@ namespace MSR.CVE.BackMaker
             using (xmlTextWriter)
             {
                 MashupWriteContext wc = new MashupWriteContext(xmlTextWriter);
-                this.WriteXML(wc);
+                WriteXML(wc);
             }
         }
 
@@ -156,7 +156,7 @@ namespace MSR.CVE.BackMaker
             using (xmlTextWriter)
             {
                 MashupWriteContext wc = new MashupWriteContext(xmlTextWriter);
-                this.WriteXML(wc);
+                WriteXML(wc);
             }
         }
 
@@ -167,9 +167,9 @@ namespace MSR.CVE.BackMaker
             writer.WriteStartDocument(true);
             writer.WriteStartElement("MapGrinderMashupFile");
             CurrentSchema.schema.WriteXMLAttribute(writer);
-            this.renderOptions.WriteXML(writer);
-            this._layerList.WriteXML(wc);
-            this.WriteXML_LastView(wc);
+            renderOptions.WriteXML(writer);
+            _layerList.WriteXML(wc);
+            WriteXML_LastView(wc);
             writer.WriteEndElement();
             writer.Close();
         }
@@ -177,9 +177,9 @@ namespace MSR.CVE.BackMaker
         private void WriteXML_LastView(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(LastViewTag);
-            if (this.lastView != null && !(this.lastView is NoView))
+            if (lastView != null && !(lastView is NoView))
             {
-                wc.writer.WriteAttributeString(LastView_TargetIdAttr, wc.GetIdentity(this.lastView.GetViewedObject()));
+                wc.writer.WriteAttributeString(LastView_TargetIdAttr, wc.GetIdentity(lastView.GetViewedObject()));
             }
 
             wc.writer.WriteEndElement();
@@ -195,17 +195,17 @@ namespace MSR.CVE.BackMaker
             {
                 if (context.version != MonolithicMapPositionsSchema.schema && xMLTagReader.TagIs(LayerList.GetXMLTag()))
                 {
-                    this._layerList = new LayerList(context,
-                        new SourceMap.GetFilenameContext(this.GetFilenameContext),
-                        this.dirtyEvent,
-                        this.readyToLockEvent);
+                    _layerList = new LayerList(context,
+                        new SourceMap.GetFilenameContext(GetFilenameContext),
+                        dirtyEvent,
+                        readyToLockEvent);
                 }
                 else
                 {
                     if (context.version == MonolithicMapPositionsSchema.schema &&
                         xMLTagReader.TagIs(SourceMap.GetXMLTag()))
                     {
-                        if (this._layerList != null && this._layerList.Count > 0)
+                        if (_layerList != null && _layerList.Count > 0)
                         {
                             throw new InvalidMashupFile(context,
                                 string.Format("Multiple SourceMaps in Version {0} file.",
@@ -213,19 +213,19 @@ namespace MSR.CVE.BackMaker
                         }
 
                         SourceMap sourceMap = new SourceMap(context,
-                            new SourceMap.GetFilenameContext(this.GetFilenameContext),
-                            this.dirtyEvent,
-                            this.readyToLockEvent);
-                        this._layerList = new LayerList(this.dirtyEvent);
-                        this._layerList.AddNewLayer();
-                        this._layerList.First.Add(sourceMap);
+                            new SourceMap.GetFilenameContext(GetFilenameContext),
+                            dirtyEvent,
+                            readyToLockEvent);
+                        _layerList = new LayerList(dirtyEvent);
+                        _layerList.AddNewLayer();
+                        _layerList.First.Add(sourceMap);
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(RenderOptions.GetXMLTag()))
                         {
-                            this.renderOptions = new RenderOptions(context,
-                                this.dirtyEvent,
+                            renderOptions = new RenderOptions(context,
+                                dirtyEvent,
                                 ref singleMaxZoomForEntireMashupCompatibilityBlob);
                         }
                         else
@@ -241,30 +241,30 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            this._lastView = new NoView();
+            _lastView = new NoView();
             if (text != null)
             {
                 object obj = context.FetchObjectByIdentity(text);
                 if (obj != null && obj is LastViewIfc)
                 {
-                    this._lastView = ((LastViewIfc)obj).lastView;
+                    _lastView = ((LastViewIfc)obj).lastView;
                 }
             }
 
-            if (this.renderOptions == null)
+            if (renderOptions == null)
             {
                 if (context.version != MonolithicMapPositionsSchema.schema)
                 {
                     context.warnings.Add(new MashupFileWarning("RenderOptions tag absent."));
                 }
 
-                this.renderOptions = new RenderOptions(this.dirtyEvent);
+                renderOptions = new RenderOptions(dirtyEvent);
             }
 
             if (singleMaxZoomForEntireMashupCompatibilityBlob != null)
             {
                 D.Assert(context.version == SingleMaxZoomForEntireMashupSchema.schema);
-                foreach (Layer current in this._layerList)
+                foreach (Layer current in _layerList)
                 {
                     foreach (SourceMap current2 in current)
                     {
@@ -319,7 +319,7 @@ namespace MSR.CVE.BackMaker
 
         private Mashup(string fileName, Stream fromStream, out MashupFileWarningList warningList)
         {
-            this.dirtyEvent.Add(new DirtyListener(this.SetDirtyFlag));
+            dirtyEvent.Add(new DirtyListener(SetDirtyFlag));
             this.fileName = fileName;
             D.Assert(fileName == null || Path.GetFullPath(fileName).ToLower().Equals(fileName.ToLower()));
             bool flag = false;
@@ -333,7 +333,7 @@ namespace MSR.CVE.BackMaker
                         mashupParseContext.reader.Name == "MapGrinderMashupFile")
                     {
                         flag = true;
-                        this.ReadXML(mashupParseContext);
+                        ReadXML(mashupParseContext);
                     }
                 }
 
@@ -352,29 +352,29 @@ namespace MSR.CVE.BackMaker
                     string.Format("{0} doesn't appear to be a valid mashup file.", fileName));
             }
 
-            this.ClearDirty();
+            ClearDirty();
         }
 
         internal void AutoSaveBackup()
         {
-            if (!this.autoSaveDirty)
+            if (!autoSaveDirty)
             {
                 return;
             }
 
             try
             {
-                this.WriteXML(GetAutoSaveName(this.fileName));
-                this.autoSaveDirty = false;
-                this.autoSaveFailNotified = false;
+                WriteXML(GetAutoSaveName(fileName));
+                autoSaveDirty = false;
+                autoSaveFailNotified = false;
             }
             catch (Exception ex)
             {
-                if (!this.autoSaveFailNotified)
+                if (!autoSaveFailNotified)
                 {
-                    this.autoSaveFailNotified = true;
+                    autoSaveFailNotified = true;
                     MessageBox.Show(
-                        string.Format("Failed to autosave {0}:\n{1}", GetAutoSaveName(this.fileName), ex.Message),
+                        string.Format("Failed to autosave {0}:\n{1}", GetAutoSaveName(fileName), ex.Message),
                         "AutoSave Failed",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Hand);
@@ -397,7 +397,7 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                File.Delete(GetAutoSaveName(this.fileName));
+                File.Delete(GetAutoSaveName(fileName));
             }
             catch (Exception ex)
             {
@@ -407,17 +407,17 @@ namespace MSR.CVE.BackMaker
 
         internal void Close()
         {
-            this.RemoveAutoSaveBackup();
+            RemoveAutoSaveBackup();
         }
 
         public void SetLastView(ICurrentView lastView)
         {
-            this._lastView = lastView;
+            _lastView = lastView;
         }
 
         internal void AutoSelectMaxZooms(MapTileSourceFactory mapTileSourceFactory)
         {
-            this._layerList.AutoSelectMaxZooms(mapTileSourceFactory);
+            _layerList.AutoSelectMaxZooms(mapTileSourceFactory);
         }
 
         internal Mashup Duplicate()
@@ -425,7 +425,7 @@ namespace MSR.CVE.BackMaker
             MemoryStream memoryStream = new MemoryStream();
             using (memoryStream)
             {
-                this.WriteXML(new MashupWriteContext(new XmlTextWriter(memoryStream, null)));
+                WriteXML(new MashupWriteContext(new XmlTextWriter(memoryStream, null)));
             }
 
             MemoryStream memoryStream3 = new MemoryStream(memoryStream.ToArray());
@@ -433,7 +433,7 @@ namespace MSR.CVE.BackMaker
             using (memoryStream3)
             {
                 MashupFileWarningList mashupFileWarningList;
-                Mashup mashup = new Mashup(this.fileName, memoryStream3, out mashupFileWarningList);
+                Mashup mashup = new Mashup(fileName, memoryStream3, out mashupFileWarningList);
                 D.Assert(mashupFileWarningList == null);
                 result = mashup;
             }
@@ -443,7 +443,7 @@ namespace MSR.CVE.BackMaker
 
         internal bool SomeSourceMapIsReadyToLock()
         {
-            return this.layerList.SomeSourceMapIsReadyToLock();
+            return layerList.SomeSourceMapIsReadyToLock();
         }
     }
 }

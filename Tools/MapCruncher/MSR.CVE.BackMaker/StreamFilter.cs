@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.baseStream.CanRead;
+                return baseStream.CanRead;
             }
         }
 
@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.baseStream.CanSeek;
+                return baseStream.CanSeek;
             }
         }
 
@@ -26,7 +26,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.baseStream.CanWrite;
+                return baseStream.CanWrite;
             }
         }
 
@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.baseStream.Length;
+                return baseStream.Length;
             }
         }
 
@@ -42,11 +42,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.baseStream.Position;
+                return baseStream.Position;
             }
             set
             {
-                this.baseStream.Position = value;
+                baseStream.Position = value;
             }
         }
 
@@ -57,32 +57,32 @@ namespace MSR.CVE.BackMaker
 
         public override void Flush()
         {
-            this.baseStream.Flush();
+            baseStream.Flush();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return this.baseStream.Read(buffer, offset, count);
+            return baseStream.Read(buffer, offset, count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return this.baseStream.Seek(offset, origin);
+            return baseStream.Seek(offset, origin);
         }
 
         public override void SetLength(long value)
         {
-            this.baseStream.SetLength(value);
+            baseStream.SetLength(value);
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            this.baseStream.Write(buffer, offset, count);
+            baseStream.Write(buffer, offset, count);
         }
 
         public override void Close()
         {
-            this.baseStream.Close();
+            baseStream.Close();
         }
     }
 }

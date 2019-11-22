@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         {
             get
             {
-                return this._value;
+                return _value;
             }
         }
 
@@ -29,29 +29,29 @@ namespace MSR.CVE.BackMaker.MCDebug
 
         public void crement(int crement)
         {
-            this._value += crement;
-            if (this.period > 0)
+            _value += crement;
+            if (period > 0)
             {
-                int num = this._value / this.period;
-                if (Math.Abs(this.lastRoundedValue - num) > 1)
+                int num = _value / period;
+                if (Math.Abs(lastRoundedValue - num) > 1)
                 {
-                    D.Sayf(0, "Resource {0} value {1}", new object[] {this.resourceName, this._value});
-                    this.lastRoundedValue = num;
+                    D.Sayf(0, "Resource {0} value {1}", new object[] {resourceName, _value});
+                    lastRoundedValue = num;
                 }
             }
 
-            if (this.notifyDelegate != null)
+            if (notifyDelegate != null)
             {
-                this.notifyDelegate(this);
+                notifyDelegate(this);
             }
         }
 
         internal void SetValue(int newValue)
         {
-            this._value = newValue;
-            if (this.notifyDelegate != null)
+            _value = newValue;
+            if (notifyDelegate != null)
             {
-                this.notifyDelegate(this);
+                notifyDelegate(this);
             }
         }
     }

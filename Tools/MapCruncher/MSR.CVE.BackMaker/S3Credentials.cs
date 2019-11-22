@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._fileName;
+                return _fileName;
             }
         }
 
@@ -28,11 +28,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._accessKeyId;
+                return _accessKeyId;
             }
             set
             {
-                this._accessKeyId = value;
+                _accessKeyId = value;
             }
         }
 
@@ -40,17 +40,17 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._secretAccessKey;
+                return _secretAccessKey;
             }
             set
             {
-                this._secretAccessKey = value;
+                _secretAccessKey = value;
             }
         }
 
         public S3Credentials(string fileName, bool createIfFileAbsent)
         {
-            this._fileName = fileName;
+            _fileName = fileName;
             Stream input;
             try
             {
@@ -60,8 +60,8 @@ namespace MSR.CVE.BackMaker
             {
                 if (createIfFileAbsent)
                 {
-                    this._accessKeyId = "";
-                    this._secretAccessKey = "";
+                    _accessKeyId = "";
+                    _secretAccessKey = "";
                     return;
                 }
 
@@ -80,7 +80,7 @@ namespace MSR.CVE.BackMaker
                         mashupParseContext.reader.Name == "S3Credentials")
                     {
                         flag = true;
-                        this.ReadXML(mashupParseContext);
+                        ReadXML(mashupParseContext);
                     }
                 }
 
@@ -101,31 +101,31 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs("AccessKeyId"))
                 {
-                    context.AssertUnique(this._accessKeyId);
+                    context.AssertUnique(_accessKeyId);
                     XMLTagReader xMLTagReader2 = context.NewTagReader("AccessKeyId");
-                    this._accessKeyId = context.reader.GetAttribute("Value");
+                    _accessKeyId = context.reader.GetAttribute("Value");
                     xMLTagReader2.SkipAllSubTags();
                 }
                 else
                 {
                     if (xMLTagReader.TagIs("SecretAccessKeyTag"))
                     {
-                        context.AssertUnique(this._secretAccessKey);
+                        context.AssertUnique(_secretAccessKey);
                         XMLTagReader xMLTagReader3 = context.NewTagReader("SecretAccessKeyTag");
-                        this._secretAccessKey = context.reader.GetAttribute("Value");
+                        _secretAccessKey = context.reader.GetAttribute("Value");
                         xMLTagReader3.SkipAllSubTags();
                     }
                 }
             }
 
-            context.AssertPresent(this._accessKeyId, "AccessKeyId");
-            context.AssertPresent(this._secretAccessKey, "SecretAccessKeyTag");
+            context.AssertPresent(_accessKeyId, "AccessKeyId");
+            context.AssertPresent(_secretAccessKey, "SecretAccessKeyTag");
         }
 
         public void WriteXML()
         {
-            D.Assert(this._fileName != null);
-            this.WriteXML(this._fileName);
+            D.Assert(_fileName != null);
+            WriteXML(_fileName);
         }
 
         private void WriteXML(string saveName)
@@ -134,7 +134,7 @@ namespace MSR.CVE.BackMaker
             using (xmlTextWriter)
             {
                 MashupWriteContext wc = new MashupWriteContext(xmlTextWriter);
-                this.WriteXML(wc);
+                WriteXML(wc);
             }
         }
 
@@ -146,10 +146,10 @@ namespace MSR.CVE.BackMaker
             writer.WriteStartElement("S3Credentials");
             writer.WriteAttributeString("Version", "1.0");
             writer.WriteStartElement("AccessKeyId");
-            writer.WriteAttributeString("Value", this._accessKeyId);
+            writer.WriteAttributeString("Value", _accessKeyId);
             writer.WriteEndElement();
             writer.WriteStartElement("SecretAccessKeyTag");
-            writer.WriteAttributeString("Value", this._secretAccessKey);
+            writer.WriteAttributeString("Value", _secretAccessKey);
             writer.WriteEndElement();
             writer.WriteEndElement();
             writer.Close();

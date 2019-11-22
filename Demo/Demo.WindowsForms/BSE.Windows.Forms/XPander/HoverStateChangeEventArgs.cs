@@ -26,7 +26,7 @@ namespace BSE.Windows.Forms
         /// </summary>
         public HoverState HoverState
         {
-            get { return this.m_hoverState; }
+            get { return m_hoverState; }
         }
         #endregion
 
@@ -37,7 +37,7 @@ namespace BSE.Windows.Forms
         /// <param name="hoverState">The <see cref="HoverState"/> values.</param>
         public HoverStateChangeEventArgs(HoverState hoverState)
         {
-            this.m_hoverState = hoverState;
+            m_hoverState = hoverState;
         }
         #endregion
     }

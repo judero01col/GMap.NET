@@ -123,14 +123,14 @@ namespace MSR.CVE.BackMaker
 
         private void ToggleLayer()
         {
-            this.menuItem.Checked = !this.menuItem.Checked;
-            if (this.menuItem.Checked)
+            menuItem.Checked = !menuItem.Checked;
+            if (menuItem.Checked)
             {
-                this.viewer.AddAlphaLayer(this.tileSource);
+                viewer.AddAlphaLayer(tileSource);
                 return;
             }
 
-            this.viewer.RemoveAlphaLayer(this.tileSource);
+            viewer.RemoveAlphaLayer(tileSource);
         }
     }
 }

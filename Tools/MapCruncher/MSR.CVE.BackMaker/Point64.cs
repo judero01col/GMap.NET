@@ -11,11 +11,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._x;
+                return _x;
             }
             set
             {
-                this._x = value;
+                _x = value;
             }
         }
 
@@ -23,25 +23,25 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._y;
+                return _y;
             }
             set
             {
-                this._y = value;
+                _y = value;
             }
         }
 
         public Point64(long x, long y)
         {
-            this._x = x;
-            this._y = y;
+            _x = x;
+            _y = y;
         }
 
         public Point ToPoint()
         {
-            D.Assert(this._x <= 2147483647L && this._x >= -2147483648L && this._y <= 2147483647L &&
-                     this._y >= -2147483648L);
-            return new Point((int)this._x, (int)this._y);
+            D.Assert(_x <= 2147483647L && _x >= -2147483648L && _y <= 2147483647L &&
+                     _y >= -2147483648L);
+            return new Point((int)_x, (int)_y);
         }
     }
 }

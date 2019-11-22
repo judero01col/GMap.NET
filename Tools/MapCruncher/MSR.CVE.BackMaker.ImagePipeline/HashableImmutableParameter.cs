@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
-            T value = base.value;
+            T value = this.value;
             value.AccumulateRobustHash(hash);
         }
     }

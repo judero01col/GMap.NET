@@ -28,7 +28,7 @@ namespace BSE.Windows.Forms
         /// </summary>
         public ColorScheme ColorSchema
         {
-            get { return this.m_eColorSchema; }
+            get { return m_eColorSchema; }
         }
         #endregion
 
@@ -39,7 +39,7 @@ namespace BSE.Windows.Forms
         /// <param name="eColorSchema">The color schema which is used for the panel.</param>
         public ColorSchemeChangeEventArgs(ColorScheme eColorSchema)
         {
-            this.m_eColorSchema = eColorSchema;
+            m_eColorSchema = eColorSchema;
         }
 
         #endregion

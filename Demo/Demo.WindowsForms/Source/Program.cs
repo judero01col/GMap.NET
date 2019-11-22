@@ -175,7 +175,7 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return this.tcpRows;
+            return tcpRows;
          }
       }
 
@@ -185,7 +185,7 @@ namespace Demo.WindowsForms
 
       public IEnumerator<TcpRow> GetEnumerator()
       {
-         return this.tcpRows.GetEnumerator();
+         return tcpRows.GetEnumerator();
       }
 
       #endregion
@@ -194,7 +194,7 @@ namespace Demo.WindowsForms
 
       IEnumerator IEnumerable.GetEnumerator()
       {
-         return this.tcpRows.GetEnumerator();
+         return tcpRows.GetEnumerator();
       }
 
       #endregion
@@ -215,16 +215,16 @@ namespace Demo.WindowsForms
 
       public TcpRow(IpHelper.TcpRow tcpRow)
       {
-         this.state = tcpRow.state;
-         this.processId = tcpRow.owningPid;
+         state = tcpRow.state;
+         processId = tcpRow.owningPid;
 
          int localPort = (tcpRow.localPort1 << 8) + (tcpRow.localPort2) + (tcpRow.localPort3 << 24) + (tcpRow.localPort4 << 16);
          long localAddress = tcpRow.localAddr;
-         this.localEndPoint = new IPEndPoint(localAddress, localPort);
+         localEndPoint = new IPEndPoint(localAddress, localPort);
 
          int remotePort = (tcpRow.remotePort1 << 8) + (tcpRow.remotePort2) + (tcpRow.remotePort3 << 24) + (tcpRow.remotePort4 << 16);
          long remoteAddress = tcpRow.remoteAddr;
-         this.remoteEndPoint = new IPEndPoint(remoteAddress, remotePort);
+         remoteEndPoint = new IPEndPoint(remoteAddress, remotePort);
       }
 
       #endregion
@@ -235,7 +235,7 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return this.localEndPoint;
+            return localEndPoint;
          }
       }
 
@@ -243,7 +243,7 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return this.remoteEndPoint;
+            return remoteEndPoint;
          }
       }
 
@@ -251,7 +251,7 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return this.state;
+            return state;
          }
       }
 
@@ -259,7 +259,7 @@ namespace Demo.WindowsForms
       {
          get
          {
-            return this.processId;
+            return processId;
          }
       }
 

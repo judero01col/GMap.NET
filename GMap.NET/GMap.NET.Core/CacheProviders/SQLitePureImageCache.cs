@@ -106,14 +106,14 @@ namespace GMap.NET.CacheProviders
             return null;
         }
 
-        static int ping;
+        static int _ping;
 
         /// <summary>
         ///     triggers dynamic sqlite loading
         /// </summary>
         public static void Ping()
         {
-            if (++ping == 1)
+            if (++_ping == 1)
             {
                 Trace.WriteLine("SQLiteVersion: " + SQLiteConnection.SQLiteVersion + " | " +
                                 SQLiteConnection.SQLiteSourceId + " | " + SQLiteConnection.DefineConstants);
@@ -122,15 +122,15 @@ namespace GMap.NET.CacheProviders
 #endif
 #endif
 
-        string cache;
-        string gtileCache;
-        string dir;
-        string db;
-        bool Created;
+        string _cache;
+        string _gtileCache;
+        string _dir;
+        string _db;
+        bool _created;
 
         public string GtileCache
         {
-            get { return gtileCache; }
+            get { return _gtileCache; }
         }
 
         /// <summary>
@@ -138,19 +138,19 @@ namespace GMap.NET.CacheProviders
         /// </summary>
         public string CacheLocation
         {
-            get { return cache; }
+            get { return _cache; }
             set
             {
-                cache = value;
+                _cache = value;
 
-                gtileCache = Path.Combine(cache, "TileDBv5") + Path.DirectorySeparatorChar;
+                _gtileCache = Path.Combine(_cache, "TileDBv5") + Path.DirectorySeparatorChar;
 
-                dir = gtileCache + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
+                _dir = _gtileCache + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
 
                 // precreate dir
-                if (!Directory.Exists(dir))
+                if (!Directory.Exists(_dir))
                 {
-                    Directory.CreateDirectory(dir);
+                    Directory.CreateDirectory(_dir);
                 }
 
 #if !MONO
@@ -158,15 +158,15 @@ namespace GMap.NET.CacheProviders
 #endif
                 // make empty db
                 {
-                    db = dir + "Data.gmdb";
+                    _db = _dir + "Data.gmdb";
 
-                    if (!File.Exists(db))
+                    if (!File.Exists(_db))
                     {
-                        Created = CreateEmptyDB(db);
+                        _created = CreateEmptyDB(_db);
                     }
                     else
                     {
-                        Created = AlterDBAddTimeColumn(db);
+                        _created = AlterDBAddTimeColumn(_db);
                     }
 
                     CheckPreAllocation();
@@ -179,8 +179,8 @@ namespace GMap.NET.CacheProviders
                     //connBuilder.Pooling = true;
                     //var x = connBuilder.ToString();
 #if !MONO
-                    ConnectionString =
-                        string.Format("Data Source=\"{0}\";Page Size=32768;Pooling=True", db); //;Journal Mode=Wal
+                    _connectionString =
+                        string.Format("Data Source=\"{0}\";Page Size=32768;Pooling=True", _db); //;Journal Mode=Wal
 #else
                ConnectionString =
  string.Format("Version=3,URI=file://{0},FailIfMissing=True,Page Size=32768,Pooling=True", db);
@@ -188,18 +188,18 @@ namespace GMap.NET.CacheProviders
                 }
 
                 // clear old attachments
-                AttachedCaches.Clear();
+                _attachedCaches.Clear();
                 RebuildFinnalSelect();
 
                 // attach all databases from main cache location
 #if !PocketPC
-                var dbs = Directory.GetFiles(dir, "*.gmdb", SearchOption.AllDirectories);
+                var dbs = Directory.GetFiles(_dir, "*.gmdb", SearchOption.AllDirectories);
 #else
             var dbs = Directory.GetFiles(dir, "*.gmdb");
 #endif
                 foreach (var d in dbs)
                 {
-                    if (d != db)
+                    if (d != _db)
                         Attach(d);
                 }
             }
@@ -217,7 +217,7 @@ namespace GMap.NET.CacheProviders
 
                 lock (this)
                 {
-                    using (var dbf = File.Open(db, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var dbf = File.Open(_db, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         dbf.Seek(16, SeekOrigin.Begin);
 
@@ -264,7 +264,7 @@ namespace GMap.NET.CacheProviders
 
                 if (freeMB <= waitUntilMB)
                 {
-                    PreAllocateDB(db, addSizeMB);
+                    PreAllocateDB(_db, addSizeMB);
                 }
             }
         }
@@ -423,7 +423,7 @@ namespace GMap.NET.CacheProviders
                         {
                             using (DbTransaction tr = cn.BeginTransaction())
                             {
-                                bool? NoCacheTimeColumn = null;
+                                bool? noCacheTimeColumn;
 
                                 try
                                 {
@@ -436,14 +436,14 @@ namespace GMap.NET.CacheProviders
                                             rd.Close();
                                         }
 
-                                        NoCacheTimeColumn = false;
+                                        noCacheTimeColumn = false;
                                     }
                                 }
                                 catch (Exception ex)
                                 {
                                     if (ex.Message.Contains("no such column: CacheTime"))
                                     {
-                                        NoCacheTimeColumn = true;
+                                        noCacheTimeColumn = true;
                                     }
                                     else
                                     {
@@ -453,7 +453,7 @@ namespace GMap.NET.CacheProviders
 
                                 try
                                 {
-                                    if (NoCacheTimeColumn.HasValue && NoCacheTimeColumn.Value)
+                                    if (noCacheTimeColumn.HasValue && noCacheTimeColumn.Value)
                                     {
                                         using (DbCommand cmd = cn.CreateCommand())
                                         {
@@ -465,7 +465,6 @@ namespace GMap.NET.CacheProviders
                                         }
 
                                         tr.Commit();
-                                        NoCacheTimeColumn = false;
                                     }
                                 }
                                 catch (Exception exx)
@@ -667,34 +666,34 @@ namespace GMap.NET.CacheProviders
         static readonly string singleSqlInsertLast =
             "INSERT INTO main.TilesData(id, Tile) VALUES((SELECT last_insert_rowid()), @p1)";
 
-        string ConnectionString;
+        string _connectionString;
 
-        readonly List<string> AttachedCaches = new List<string>();
-        string finnalSqlSelect = singleSqlSelect;
-        string attachSqlQuery = string.Empty;
-        string detachSqlQuery = string.Empty;
+        readonly List<string> _attachedCaches = new List<string>();
+        string _finnalSqlSelect = singleSqlSelect;
+        string _attachSqlQuery = string.Empty;
+        string _detachSqlQuery = string.Empty;
 
         void RebuildFinnalSelect()
         {
-            finnalSqlSelect = null;
-            finnalSqlSelect = singleSqlSelect;
+            _finnalSqlSelect = null;
+            _finnalSqlSelect = singleSqlSelect;
 
-            attachSqlQuery = null;
-            attachSqlQuery = string.Empty;
+            _attachSqlQuery = null;
+            _attachSqlQuery = string.Empty;
 
-            detachSqlQuery = null;
-            detachSqlQuery = string.Empty;
+            _detachSqlQuery = null;
+            _detachSqlQuery = string.Empty;
 
             int i = 1;
 
-            foreach (var c in AttachedCaches)
+            foreach (var c in _attachedCaches)
             {
-                finnalSqlSelect +=
+                _finnalSqlSelect +=
                     string.Format(
                         "\nUNION SELECT Tile FROM db{0}.TilesData WHERE id = (SELECT id FROM db{0}.Tiles WHERE X={{0}} AND Y={{1}} AND Zoom={{2}} AND Type={{3}})",
                         i);
-                attachSqlQuery += string.Format("\nATTACH '{0}' as db{1};", c, i);
-                detachSqlQuery += string.Format("\nDETACH DATABASE db{0};", i);
+                _attachSqlQuery += string.Format("\nATTACH '{0}' as db{1};", c, i);
+                _detachSqlQuery += string.Format("\nDETACH DATABASE db{0};", i);
 
                 i++;
             }
@@ -702,18 +701,18 @@ namespace GMap.NET.CacheProviders
 
         public void Attach(string db)
         {
-            if (!AttachedCaches.Contains(db))
+            if (!_attachedCaches.Contains(db))
             {
-                AttachedCaches.Add(db);
+                _attachedCaches.Add(db);
                 RebuildFinnalSelect();
             }
         }
 
         public void Detach(string db)
         {
-            if (AttachedCaches.Contains(db))
+            if (_attachedCaches.Contains(db))
             {
-                AttachedCaches.Remove(db);
+                _attachedCaches.Remove(db);
                 RebuildFinnalSelect();
             }
         }
@@ -726,13 +725,13 @@ namespace GMap.NET.CacheProviders
         {
             bool ret = true;
 
-            if (Created)
+            if (_created)
             {
                 try
                 {
                     using (SQLiteConnection cn = new SQLiteConnection())
                     {
-                        cn.ConnectionString = ConnectionString;
+                        cn.ConnectionString = _connectionString;
                         cn.Open();
                         {
                             using (DbTransaction tr = cn.BeginTransaction())
@@ -805,14 +804,14 @@ namespace GMap.NET.CacheProviders
             {
                 using (SQLiteConnection cn = new SQLiteConnection())
                 {
-                    cn.ConnectionString = ConnectionString;
+                    cn.ConnectionString = _connectionString;
                     cn.Open();
                     {
-                        if (!string.IsNullOrEmpty(attachSqlQuery))
+                        if (!string.IsNullOrEmpty(_attachSqlQuery))
                         {
                             using (DbCommand com = cn.CreateCommand())
                             {
-                                com.CommandText = attachSqlQuery;
+                                com.CommandText = _attachSqlQuery;
                                 int x = com.ExecuteNonQuery();
                                 //Debug.WriteLine("Attach: " + x);                         
                             }
@@ -820,7 +819,7 @@ namespace GMap.NET.CacheProviders
 
                         using (DbCommand com = cn.CreateCommand())
                         {
-                            com.CommandText = string.Format(finnalSqlSelect, pos.X, pos.Y, zoom, type);
+                            com.CommandText = string.Format(_finnalSqlSelect, pos.X, pos.Y, zoom, type);
 
                             using (DbDataReader rd = com.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
                             {
@@ -835,18 +834,17 @@ namespace GMap.NET.CacheProviders
                                             ret = GMapProvider.TileImageProxy.FromArray(tile);
                                         }
                                     }
-                                    tile = null;
                                 }
 
                                 rd.Close();
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(detachSqlQuery))
+                        if (!string.IsNullOrEmpty(_detachSqlQuery))
                         {
                             using (DbCommand com = cn.CreateCommand())
                             {
-                                com.CommandText = detachSqlQuery;
+                                com.CommandText = _detachSqlQuery;
                                 int x = com.ExecuteNonQuery();
                                 //Debug.WriteLine("Detach: " + x);
                             }
@@ -875,7 +873,7 @@ namespace GMap.NET.CacheProviders
             {
                 using (SQLiteConnection cn = new SQLiteConnection())
                 {
-                    cn.ConnectionString = ConnectionString;
+                    cn.ConnectionString = _connectionString;
                     cn.Open();
                     {
                         using (DbCommand com = cn.CreateCommand())

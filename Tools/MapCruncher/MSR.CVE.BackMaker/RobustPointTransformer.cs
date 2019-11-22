@@ -19,12 +19,12 @@ namespace MSR.CVE.BackMaker
             try
             {
                 isApproximate = false;
-                this.flakyPointTransformer.doTransform(p0, p1);
+                flakyPointTransformer.doTransform(p0, p1);
             }
             catch (TransformFailedException)
             {
                 isApproximate = true;
-                this.backupApproximatePointTransformer.doTransform(p0, p1);
+                backupApproximatePointTransformer.doTransform(p0, p1);
             }
         }
 

@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            return new ConstantFuture(paramDict[this.name]);
+            return new ConstantFuture(paramDict[name]);
         }
     }
 }

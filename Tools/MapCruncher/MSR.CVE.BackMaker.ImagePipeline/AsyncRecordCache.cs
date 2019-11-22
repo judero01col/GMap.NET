@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         protected override void Clean()
         {
-            if (this.keepClean)
+            if (keepClean)
             {
                 base.Clean();
             }

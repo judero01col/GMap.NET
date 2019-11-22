@@ -15,10 +15,10 @@ namespace MSR.CVE.BackMaker
         {
             if (obj is FileIdentification)
             {
-                return this.fileLength.CompareTo(((FileIdentification)obj).fileLength);
+                return fileLength.CompareTo(((FileIdentification)obj).fileLength);
             }
 
-            return base.GetType().FullName.CompareTo(obj.GetType().FullName);
+            return GetType().FullName.CompareTo(obj.GetType().FullName);
         }
     }
 }

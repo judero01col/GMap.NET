@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -17,13 +17,13 @@ namespace MSR.CVE.BackMaker
                 throw new Exception("Expected PipeGuid argument");
             }
 
-            this.pipeGuid = args[0];
+            pipeGuid = args[0];
             args.RemoveAt(0);
         }
 
         public int Run()
         {
-            NamedPipeClient namedPipeClient = new NamedPipeClient(this.pipeGuid);
+            NamedPipeClient namedPipeClient = new NamedPipeClient(pipeGuid);
             bool flag = true;
             while (!flag)
             {
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
                 Thread.Sleep(250);
             }
 
-            namedPipeClient.RunServer(new NamedPipeBase.ServerHandler(this.Server));
+            namedPipeClient.RunServer(new NamedPipeBase.ServerHandler(Server));
             return 0;
         }
 
@@ -39,8 +39,8 @@ namespace MSR.CVE.BackMaker
         {
             if (genericRequest is OpenRequest)
             {
-                OpenRequest openRequest = (OpenRequest)genericRequest;
-                if (this.foxitViewer != null)
+                var openRequest = (OpenRequest)genericRequest;
+                if (foxitViewer != null)
                 {
                     reply = new ExceptionMessageRecord("Already open");
                     return true;
@@ -48,8 +48,8 @@ namespace MSR.CVE.BackMaker
 
                 try
                 {
-                    this.foxitViewer = new FoxitViewer(openRequest.filename, openRequest.pageNumber);
-                    reply = new RectangleFRecord(this.foxitViewer.GetPageSize());
+                    foxitViewer = new FoxitViewer(openRequest.filename, openRequest.pageNumber);
+                    reply = new RectangleFRecord(foxitViewer.GetPageSize());
                     bool result = true;
                     return result;
                 }
@@ -64,7 +64,7 @@ namespace MSR.CVE.BackMaker
             if (genericRequest is RenderRequest)
             {
                 RenderRequest renderRequest = (RenderRequest)genericRequest;
-                if (this.foxitViewer == null)
+                if (foxitViewer == null)
                 {
                     reply = new ExceptionMessageRecord("Not open");
                     return true;
@@ -72,7 +72,7 @@ namespace MSR.CVE.BackMaker
 
                 try
                 {
-                    reply = this.foxitViewer.RenderBytes(renderRequest.outputSize,
+                    reply = foxitViewer.RenderBytes(renderRequest.outputSize,
                         renderRequest.topLeft,
                         renderRequest.pageSize,
                         renderRequest.transparentBackground);

@@ -31,14 +31,14 @@ namespace MSR.CVE.BackMaker
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    this.TryOneFetchFormatString();
-                    if (this.formatString != null)
+                    TryOneFetchFormatString();
+                    if (formatString != null)
                     {
                         break;
                     }
                 }
 
-                if (this.formatString == null)
+                if (formatString == null)
                 {
                     D.Sayf(0,
                         "Dynamic VEUrlFormat unavailable at {0}",
@@ -46,14 +46,14 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            if (this.formatString == null)
+            if (formatString == null)
             {
-                this.formatString = "http://{0}{1}.ortho.tiles.virtualearth.net/tiles/{0}{2}.{3}?g={4}";
-                this.generationNumber = 66;
+                formatString = "http://{0}{1}.ortho.tiles.virtualearth.net/tiles/{0}{2}.{3}?g={4}";
+                generationNumber = 66;
             }
 
-            this.UpdateGenerationNumber();
-            this.formatReadyEvent.Set();
+            UpdateGenerationNumber();
+            formatReadyEvent.Set();
         }
 
         private void TryOneFetchFormatString()
@@ -86,8 +86,8 @@ namespace MSR.CVE.BackMaker
                                 mashupParseContext.reader.Name == "VEUrlFormat")
                             {
                                 XMLTagReader xMLTagReader = mashupParseContext.NewTagReader("VEUrlFormat");
-                                this.formatString = mashupParseContext.GetRequiredAttribute("FormatString");
-                                this.generationNumber = mashupParseContext.GetRequiredAttributeInt("GenerationNumber");
+                                formatString = mashupParseContext.GetRequiredAttribute("FormatString");
+                                generationNumber = mashupParseContext.GetRequiredAttributeInt("GenerationNumber");
                                 xMLTagReader.SkipAllSubTags();
                                 break;
                             }
@@ -109,7 +109,7 @@ namespace MSR.CVE.BackMaker
             {
                 try
                 {
-                    this.generationNumber = this.TryOneFetchGenerationNumber();
+                    generationNumber = TryOneFetchGenerationNumber();
                     break;
                 }
                 catch (Exception ex)
@@ -140,13 +140,13 @@ namespace MSR.CVE.BackMaker
 
         public string GetFormatString()
         {
-            this.formatReadyEvent.WaitOne();
-            return this.formatString;
+            formatReadyEvent.WaitOne();
+            return formatString;
         }
 
         public int GetGenerationNumber()
         {
-            return this.generationNumber;
+            return generationNumber;
         }
     }
 }

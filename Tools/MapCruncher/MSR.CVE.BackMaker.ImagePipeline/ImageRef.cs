@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.resource.image;
+                return resource.image;
             }
         }
 
@@ -31,12 +31,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Dispose()
         {
-            this.resource.DropRef(this.refCredit);
+            resource.DropRef(refCredit);
         }
 
         public Present Duplicate(string refCredit)
         {
-            return new ImageRef(this.resource, refCredit);
+            return new ImageRef(resource, refCredit);
         }
 
         public ImageRef Copy()

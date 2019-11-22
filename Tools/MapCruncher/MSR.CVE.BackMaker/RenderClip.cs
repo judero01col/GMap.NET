@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._rect;
+                return _rect;
             }
         }
 
@@ -30,8 +30,8 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs(MapRectangle.GetXMLTag()))
                 {
-                    context.AssertUnique(this._rect);
-                    this._rect = new MapRectangle(context, MercatorCoordinateSystem.theInstance);
+                    context.AssertUnique(_rect);
+                    _rect = new MapRectangle(context, MercatorCoordinateSystem.theInstance);
                 }
             }
         }
@@ -39,9 +39,9 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(GetXMLTag());
-            if (this._rect != null)
+            if (_rect != null)
             {
-                this._rect.WriteXML(wc.writer);
+                _rect.WriteXML(wc.writer);
             }
 
             wc.writer.WriteEndElement();

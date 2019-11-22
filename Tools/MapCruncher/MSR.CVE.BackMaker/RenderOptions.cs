@@ -24,12 +24,12 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._renderToOptions;
+                return _renderToOptions;
             }
             set
             {
-                this._renderToOptions = value;
-                this.dirtyEvent.SetDirty();
+                _renderToOptions = value;
+                dirtyEvent.SetDirty();
             }
         }
 
@@ -37,14 +37,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._publishSourceData;
+                return _publishSourceData;
             }
             set
             {
-                if (value != this._publishSourceData)
+                if (value != _publishSourceData)
                 {
-                    this._publishSourceData = value;
-                    this.dirtyEvent.SetDirty();
+                    _publishSourceData = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
@@ -53,14 +53,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._permitComposition;
+                return _permitComposition;
             }
             set
             {
-                if (value != this._permitComposition)
+                if (value != _permitComposition)
                 {
-                    this._permitComposition = value;
-                    this.dirtyEvent.SetDirty();
+                    _permitComposition = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
@@ -69,14 +69,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._outputTileType;
+                return _outputTileType;
             }
         }
 
         public RenderOptions(DirtyEvent parentDirtyEvent)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirtyEvent);
-            this._renderToOptions = new RenderToFileOptions(parentDirtyEvent);
+            dirtyEvent = new DirtyEvent(parentDirtyEvent);
+            _renderToOptions = new RenderToFileOptions(parentDirtyEvent);
         }
 
         public static string GetXMLTag()
@@ -89,23 +89,23 @@ namespace MSR.CVE.BackMaker
             writer.WriteStartElement(RenderOptionsTag);
             writer.WriteStartElement(PublishSourceDataTag);
             writer.WriteAttributeString(PublishSourceDataValueAttr,
-                this.publishSourceData.ToString(CultureInfo.InvariantCulture));
+                publishSourceData.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
             writer.WriteStartElement(PermitCompositionTag);
             writer.WriteAttributeString(PermitCompositionValueAttr,
-                this.permitComposition.ToString(CultureInfo.InvariantCulture));
+                permitComposition.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
             writer.WriteStartElement(OutputTileTypeTag);
-            writer.WriteAttributeString(OutputTileTypeAttr, this._outputTileType.extn);
+            writer.WriteAttributeString(OutputTileTypeAttr, _outputTileType.extn);
             writer.WriteEndElement();
-            this.renderToOptions.WriteXML(writer);
+            renderToOptions.WriteXML(writer);
             writer.WriteEndElement();
         }
 
         public RenderOptions(MashupParseContext context, DirtyEvent parentDirtyEvent,
             ref SingleMaxZoomForEntireMashupCompatibilityBlob blob)
         {
-            this.dirtyEvent = new DirtyEvent(parentDirtyEvent);
+            dirtyEvent = new DirtyEvent(parentDirtyEvent);
             XMLTagReader xMLTagReader = context.NewTagReader(RenderOptionsTag);
             while (xMLTagReader.FindNextStartTag())
             {
@@ -137,28 +137,28 @@ namespace MSR.CVE.BackMaker
                 {
                     if (xMLTagReader.TagIs(RenderToFileOptions.xmlTag))
                     {
-                        this._renderToOptions = new RenderToFileOptions(context, this.dirtyEvent);
+                        _renderToOptions = new RenderToFileOptions(context, dirtyEvent);
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(compatibility_RenderToFileOutputTag))
                         {
-                            this._renderToOptions = new RenderToFileOptions(context,
-                                this.dirtyEvent,
+                            _renderToOptions = new RenderToFileOptions(context,
+                                dirtyEvent,
                                 compatibility_RenderToFileOutputTag);
                         }
                         else
                         {
                             if (xMLTagReader.TagIs(RenderToS3Options.xmlTag))
                             {
-                                this._renderToOptions = new RenderToS3Options(context, this.dirtyEvent);
+                                _renderToOptions = new RenderToS3Options(context, dirtyEvent);
                             }
                             else
                             {
                                 if (xMLTagReader.TagIs(OutputTileTypeTag))
                                 {
                                     XMLTagReader xMLTagReader3 = context.NewTagReader(OutputTileTypeTag);
-                                    this._outputTileType =
+                                    _outputTileType =
                                         OutputTileType.Parse(context.reader.GetAttribute(OutputTileTypeAttr));
                                     xMLTagReader3.SkipAllSubTags();
                                 }
@@ -167,7 +167,7 @@ namespace MSR.CVE.BackMaker
                                     if (xMLTagReader.TagIs(PublishSourceDataTag))
                                     {
                                         XMLTagReader xMLTagReader4 = context.NewTagReader(PublishSourceDataTag);
-                                        this.publishSourceData =
+                                        publishSourceData =
                                             context.GetRequiredAttributeBoolean(PublishSourceDataValueAttr);
                                         xMLTagReader4.SkipAllSubTags();
                                     }
@@ -176,7 +176,7 @@ namespace MSR.CVE.BackMaker
                                         if (xMLTagReader.TagIs(PermitCompositionTag))
                                         {
                                             XMLTagReader xMLTagReader5 = context.NewTagReader(PermitCompositionTag);
-                                            this.permitComposition =
+                                            permitComposition =
                                                 context.GetRequiredAttributeBoolean(PermitCompositionValueAttr);
                                             xMLTagReader5.SkipAllSubTags();
                                         }
@@ -191,7 +191,7 @@ namespace MSR.CVE.BackMaker
 
         internal string GetOutputTileSuffix()
         {
-            return "." + this.outputTileType.extn;
+            return "." + outputTileType.extn;
         }
     }
 }

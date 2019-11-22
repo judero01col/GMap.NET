@@ -12,14 +12,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Add(AsyncRef aref)
         {
-            this.list.AddLast(aref);
+            list.AddLast(aref);
         }
 
         public void Activate()
         {
             Dictionary<AsyncScheduler, LinkedList<AsyncRef>> dictionary =
                 new Dictionary<AsyncScheduler, LinkedList<AsyncRef>>();
-            foreach (AsyncRef current in this.list)
+            foreach (AsyncRef current in list)
             {
                 AsyncScheduler scheduler = current.asyncRecord.GetScheduler();
                 if (!dictionary.ContainsKey(scheduler))
@@ -35,18 +35,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 current2.Key.Activate(current2.Value);
             }
 
-            globalInterestCounter.crement(this.list.Count);
+            globalInterestCounter.crement(list.Count);
         }
 
         public void Dispose()
         {
-            foreach (AsyncRef current in this.list)
+            foreach (AsyncRef current in list)
             {
                 current.Dispose();
             }
 
-            globalInterestCounter.crement(-this.list.Count);
-            this.list.Clear();
+            globalInterestCounter.crement(-list.Count);
+            list.Clear();
         }
     }
 }

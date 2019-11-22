@@ -10,15 +10,15 @@ namespace MSR.CVE.BackMaker
 
         public NamedPipeServer(string childProcessArguments, string pipeName)
         {
-            this.StartChildProcess(childProcessArguments);
-            this.Initialize(pipeName);
+            StartChildProcess(childProcessArguments);
+            Initialize(pipeName);
         }
 
         private void Initialize(string pipeName)
         {
-            this.pipeHandle =
+            pipeHandle =
                 CreateNamedPipe("\\\\.\\pipe\\" + pipeName, 3u, 6u, 255u, 4096u, 4096u, 0u, new IntPtr(0));
-            if (ConnectNamedPipe(this.pipeHandle, new IntPtr(0)) == 0)
+            if (ConnectNamedPipe(pipeHandle, new IntPtr(0)) == 0)
             {
                 throw new IOException(string.Format("Unable to open pipe: {0}.", GetLastError()));
             }
@@ -26,10 +26,10 @@ namespace MSR.CVE.BackMaker
 
         public void Dispose()
         {
-            this.pipeHandle.Close();
+            pipeHandle.Close();
             try
             {
-                this.childProcess.Kill();
+                childProcess.Kill();
             }
             catch (InvalidOperationException)
             {
@@ -48,7 +48,7 @@ namespace MSR.CVE.BackMaker
 
             processStartInfo.UseShellExecute = true;
             processStartInfo.Arguments = arguments;
-            this.childProcess = Process.Start(processStartInfo);
+            childProcess = Process.Start(processStartInfo);
         }
     }
 }

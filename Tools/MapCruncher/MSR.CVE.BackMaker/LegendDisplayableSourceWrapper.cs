@@ -16,28 +16,28 @@ namespace MSR.CVE.BackMaker
 
         public CoordinateSystemIfc GetDefaultCoordinateSystem()
         {
-            return this.underSource.GetDefaultCoordinateSystem();
+            return underSource.GetDefaultCoordinateSystem();
         }
 
         public string GetRendererCredit()
         {
-            return this.underSource.GetRendererCredit();
+            return underSource.GetRendererCredit();
         }
 
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
             if (latentRegionHolder == null)
             {
-                latentRegionHolder = this.replacementLatentRegionHolder;
+                latentRegionHolder = replacementLatentRegionHolder;
             }
 
-            return this.underSource.GetUserBounds(latentRegionHolder, features);
+            return underSource.GetUserBounds(latentRegionHolder, features);
         }
 
         public IFuturePrototype GetImagePrototype(ImageParameterTypeIfc parameterType, FutureFeatures features)
         {
             FutureFeatures features2 = features & (FutureFeatures)(-9);
-            return this.underSource.GetImagePrototype(parameterType, features2);
+            return underSource.GetImagePrototype(parameterType, features2);
         }
     }
 }

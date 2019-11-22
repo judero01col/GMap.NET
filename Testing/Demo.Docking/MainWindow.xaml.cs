@@ -36,12 +36,12 @@ namespace Sample3
             MapOpenCycle.MapProvider = GMapProviders.OpenCycleMap;
             MapOpenStreetSurfer.MapProvider = GMapProviders.OpenStreetMapQuest;
 
-            this.WindowState = WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
 
         private void OnMapZoomChanged()
         {
-            this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
                 new Action(delegate()
                 {
                     var amap = dockManager.ActiveContent.Content as GMap.NET.WindowsPresentation.GMapControl;
@@ -69,7 +69,7 @@ namespace Sample3
 
         private void OnMapDrag()
         {
-            this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
                 new Action(delegate()
                 {
                     var amap = dockManager.ActiveContent.Content as GMap.NET.WindowsPresentation.GMapControl;

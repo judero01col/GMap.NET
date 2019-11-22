@@ -6,7 +6,7 @@ namespace MSR.CVE.BackMaker
     {
         public void Add(T item)
         {
-            if (!base.ContainsKey(item))
+            if (!ContainsKey(item))
             {
                 base.Add(item, true);
             }

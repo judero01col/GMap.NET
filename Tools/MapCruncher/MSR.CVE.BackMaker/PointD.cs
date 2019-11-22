@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return string.Format("({0}, {1})", this.x, this.y);
+            return string.Format("({0}, {1})", x, y);
         }
 
         public static PointD operator +(PointD p0, PointD p1)
@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
 
         public double Length()
         {
-            return Math.Sqrt(this.x * this.x + this.y * this.y);
+            return Math.Sqrt(x * x + y * y);
         }
     }
 }

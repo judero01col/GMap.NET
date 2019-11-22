@@ -9,18 +9,18 @@ namespace GMap.NET.Internals
 {
     internal class CacheLocator
     {
-        private static string location;
+        private static string _location;
 
         public static string Location
         {
             get
             {
-                if (string.IsNullOrEmpty(location))
+                if (string.IsNullOrEmpty(_location))
                 {
                     Reset();
                 }
 
-                return location;
+                return _location;
             }
             set
             {
@@ -30,12 +30,12 @@ namespace GMap.NET.Internals
                 }
                 else
                 {
-                    location = value;
+                    _location = value;
                 }
 
                 if (Delay)
                 {
-                    Cache.Instance.CacheLocation = location;
+                    Cache.Instance.CacheLocation = _location;
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace GMap.NET.Internals
                 Trace.WriteLine("SQLitePureImageCache, WindowsIdentity.GetCurrent: " + ex);
             }
 
-            string path = string.Empty;
+            string path;
 
             // https://greatmaps.codeplex.com/workitem/16112
             if (isSystem)

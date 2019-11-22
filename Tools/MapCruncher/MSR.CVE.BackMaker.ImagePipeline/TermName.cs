@@ -17,17 +17,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override bool Equals(object obj)
         {
-            return obj is TermName && ((TermName)obj).name == this.name;
+            return obj is TermName && ((TermName)obj).name == name;
         }
 
         public override int GetHashCode()
         {
-            return this.name.GetHashCode();
+            return name.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.name;
+            return name;
         }
     }
 }

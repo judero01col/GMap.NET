@@ -27,14 +27,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             double num = Math.Sin(CoordinateSystemUtilities.DegreesToRadians(p.lat));
             double num2 = 6378137.0 * CoordinateSystemUtilities.DegreesToRadians(p.lon);
             double num3 = 3189068.5 * Math.Log((1.0 + num) / (1.0 - num));
-            double num4 = this.MetersPerPixel(p.zoom);
+            double num4 = MetersPerPixel(p.zoom);
             return new Point64((long)Math.Round((20037508.342789244 + num2) / num4),
                 (long)Math.Round((20037508.342789244 - num3) / num4));
         }
 
         private LatLonZoom PixelToLatLong(Point64 p, int zoomLevel)
         {
-            double num = this.MetersPerPixel(zoomLevel);
+            double num = MetersPerPixel(zoomLevel);
             double num2 = (double)p.X * num - 20037508.342789244;
             double num3 = 20037508.342789244 - (double)p.Y * num;
             return new LatLonZoom(
@@ -46,10 +46,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private LatLonZoom GetUnclippedDraggedView(LatLonZoom centerMapPosition, Point mouseMotion)
         {
-            Point64 point = this.LatLongZoomToPixel(centerMapPosition);
+            Point64 point = LatLongZoomToPixel(centerMapPosition);
             point.X -= (long)mouseMotion.X;
             point.Y -= (long)mouseMotion.Y;
-            return this.PixelToLatLong(point, centerMapPosition.zoom);
+            return PixelToLatLong(point, centerMapPosition.zoom);
         }
 
         public LatLonZoom GetDefaultView()
@@ -59,7 +59,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public LatLonZoom GetTranslationInLatLon(LatLonZoom centerMapPosition, Point mouseMotion)
         {
-            LatLonZoom unclippedDraggedView = this.GetUnclippedDraggedView(centerMapPosition, mouseMotion);
+            LatLonZoom unclippedDraggedView = GetUnclippedDraggedView(centerMapPosition, mouseMotion);
             if (unclippedDraggedView.lon > 180.0)
             {
                 unclippedDraggedView = new LatLonZoom(unclippedDraggedView.lat,
@@ -89,23 +89,23 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public RangeInt GetZoomRange()
         {
-            return this.ZoomRange;
+            return ZoomRange;
         }
 
         public RangeDouble GetLatRange()
         {
-            return this.LatRange;
+            return LatRange;
         }
 
         public RangeDouble GetLonRange()
         {
-            return this.LonRange;
+            return LonRange;
         }
 
         public Point GetTranslationInPixels(LatLonZoom center, LatLon point)
         {
-            Point64 point2 = this.LatLongZoomToPixel(center);
-            Point64 point3 = this.LatLongZoomToPixel(new LatLonZoom(point.lat, point.lon, center.zoom));
+            Point64 point2 = LatLongZoomToPixel(center);
+            Point64 point3 = LatLongZoomToPixel(new LatLonZoom(point.lat, point.lon, center.zoom));
             return new Point((int)(point3.X - point2.X), (int)(point3.Y - point2.Y));
         }
 
@@ -118,12 +118,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             LatLon center = newBounds.GetCenter();
             int i;
-            for (i = this.ZoomRange.max; i >= this.ZoomRange.min; i--)
+            for (i = ZoomRange.max; i >= ZoomRange.min; i--)
             {
                 LatLonZoom p = new LatLonZoom(newBounds.lat0, newBounds.lon0, i);
                 LatLonZoom p2 = new LatLonZoom(newBounds.lat1, newBounds.lon1, i);
-                Point64 point = this.LatLongZoomToPixel(p);
-                Point64 point2 = this.LatLongZoomToPixel(p2);
+                Point64 point = LatLongZoomToPixel(p);
+                Point64 point2 = LatLongZoomToPixel(p2);
                 if (point.Y - point2.Y < (long)size.Height)
                 {
                     break;
@@ -135,7 +135,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private TileAddress GetTileContainingLatLonZoom(LatLonZoom llz)
         {
-            Point64 point = this.LatLongZoomToPixel(llz);
+            Point64 point = LatLongZoomToPixel(llz);
             return new TileAddress((int)Math.Floor((double)point.X / 256.0),
                 (int)Math.Floor((double)point.Y / 256.0),
                 llz.zoom);
@@ -144,34 +144,34 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public LatLon GetLatLonOfTileNW(TileAddress ta)
         {
             Point64 p = new Point64((long)ta.TileX * 256L, (long)ta.TileY * 256L);
-            return this.PixelToLatLong(p, ta.ZoomLevel).latlon;
+            return PixelToLatLong(p, ta.ZoomLevel).latlon;
         }
 
         private MapRectangle GetMapWindow(LatLonZoom centerPosition, Size windowSize)
         {
             return new MapRectangle(
-                this.GetUnclippedDraggedView(centerPosition, new Point(windowSize.Width / 2, windowSize.Height / 2))
+                GetUnclippedDraggedView(centerPosition, new Point(windowSize.Width / 2, windowSize.Height / 2))
                     .latlon,
-                this.GetUnclippedDraggedView(centerPosition,
+                GetUnclippedDraggedView(centerPosition,
                     new Point(-(windowSize.Width / 2 + 1), -(windowSize.Height / 2 + 1))).latlon);
         }
 
         public TileDisplayDescriptorArray GetTileArrayDescriptor(LatLonZoom center, Size windowSize)
         {
             TileDisplayDescriptorArray tileDisplayDescriptorArray = new TileDisplayDescriptorArray();
-            MapRectangle mapWindow = this.GetMapWindow(center, windowSize);
+            MapRectangle mapWindow = GetMapWindow(center, windowSize);
             tileDisplayDescriptorArray.topLeftTile =
-                this.GetTileContainingLatLonZoom(new LatLonZoom(mapWindow.GetNW(), center.zoom));
+                GetTileContainingLatLonZoom(new LatLonZoom(mapWindow.GetNW(), center.zoom));
             TileAddress tileContainingLatLonZoom =
-                this.GetTileContainingLatLonZoom(new LatLonZoom(mapWindow.GetSE(), center.zoom));
+                GetTileContainingLatLonZoom(new LatLonZoom(mapWindow.GetSE(), center.zoom));
             tileDisplayDescriptorArray.tileCountX =
                 tileContainingLatLonZoom.TileX - tileDisplayDescriptorArray.topLeftTile.TileX + 1;
             tileDisplayDescriptorArray.tileCountY =
                 tileContainingLatLonZoom.TileY - tileDisplayDescriptorArray.topLeftTile.TileY + 1;
-            int x = this.GetTranslationInPixels(center, this.GetLatLonOfTileNW(tileDisplayDescriptorArray.topLeftTile))
+            int x = GetTranslationInPixels(center, GetLatLonOfTileNW(tileDisplayDescriptorArray.topLeftTile))
                 .X;
-            int x2 = this.GetTranslationInPixels(center,
-                this.GetLatLonOfTileNW(new TileAddress(
+            int x2 = GetTranslationInPixels(center,
+                GetLatLonOfTileNW(new TileAddress(
                     tileDisplayDescriptorArray.topLeftTile.TileX + tileDisplayDescriptorArray.tileCountX,
                     tileDisplayDescriptorArray.topLeftTile.TileY,
                     tileDisplayDescriptorArray.topLeftTile.ZoomLevel))).X;
@@ -182,9 +182,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 D.Sayf(0, "break", new object[0]);
             }
 
-            tileDisplayDescriptorArray.layout = this.addressLayout;
-            tileDisplayDescriptorArray.tileSize = this.GetTileSize();
-            Point64 point = this.LatLongZoomToPixel(new LatLonZoom(mapWindow.GetNW(), center.zoom));
+            tileDisplayDescriptorArray.layout = addressLayout;
+            tileDisplayDescriptorArray.tileSize = GetTileSize();
+            Point64 point = LatLongZoomToPixel(new LatLonZoom(mapWindow.GetNW(), center.zoom));
             tileDisplayDescriptorArray.topLeftTileOffset =
                 new Point64((long)tileDisplayDescriptorArray.topLeftTile.TileX * 256L - point.X,
                     (long)tileDisplayDescriptorArray.topLeftTile.TileY * 256L - point.Y).ToPoint();
@@ -197,23 +197,23 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public MapRectangle GetUnclippedMapWindow(LatLonZoom centerPosition, Size windowSize)
         {
             return new MapRectangle(
-                this.GetUnclippedDraggedView(centerPosition, new Point(windowSize.Width / 2, windowSize.Height / 2))
+                GetUnclippedDraggedView(centerPosition, new Point(windowSize.Width / 2, windowSize.Height / 2))
                     .latlon,
-                this.GetUnclippedDraggedView(centerPosition,
+                GetUnclippedDraggedView(centerPosition,
                     new Point(-(windowSize.Width / 2 + 1), -(windowSize.Height / 2 + 1))).latlon);
         }
 
         public ITileAddressLayout GetTileAddressLayout()
         {
-            return this.addressLayout;
+            return addressLayout;
         }
 
         public RenderBounds MakeRenderBounds(MapRectangle imageBounds)
         {
             RenderBounds renderBounds = new RenderBounds();
-            renderBounds.MinZoom = this.ZoomRange.min;
-            renderBounds.MaxZoom = this.ZoomRange.max;
-            renderBounds.TileSize = this.GetTileSize();
+            renderBounds.MinZoom = ZoomRange.min;
+            renderBounds.MaxZoom = ZoomRange.max;
+            renderBounds.TileSize = GetTileSize();
             renderBounds.imageBounds = imageBounds;
             renderBounds.tileRectangle = new TileRectangle[renderBounds.MaxZoom + 1];
             for (int i = renderBounds.MinZoom; i <= renderBounds.MaxZoom; i++)
@@ -221,9 +221,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 renderBounds.tileRectangle[i] = new TileRectangle();
                 renderBounds.tileRectangle[i].zoom = i;
                 LatLonZoom llz = new LatLonZoom(imageBounds.GetNW().lat, imageBounds.GetNW().lon, i);
-                renderBounds.tileRectangle[i].TopLeft = this.GetTileContainingLatLonZoom(llz);
+                renderBounds.tileRectangle[i].TopLeft = GetTileContainingLatLonZoom(llz);
                 llz = new LatLonZoom(imageBounds.GetSE().lat, imageBounds.GetSE().lon, i);
-                renderBounds.tileRectangle[i].BottomRight = this.GetTileContainingLatLonZoom(llz);
+                renderBounds.tileRectangle[i].BottomRight = GetTileContainingLatLonZoom(llz);
                 renderBounds.tileRectangle[i].StrideX = 1;
                 renderBounds.tileRectangle[i].StrideY = 1;
             }

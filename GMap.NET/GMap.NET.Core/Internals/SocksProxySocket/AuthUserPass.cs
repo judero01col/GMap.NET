@@ -104,7 +104,7 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
                 0,
                 3 + Username.Length + Password.Length,
                 SocketFlags.None,
-                new AsyncCallback(this.OnSent),
+                new AsyncCallback(OnSent),
                 Server);
             return;
         }
@@ -119,7 +119,7 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
             {
                 Server.EndSend(ar);
                 Buffer = new byte[2];
-                Server.BeginReceive(Buffer, 0, 2, SocketFlags.None, new AsyncCallback(this.OnReceive), Server);
+                Server.BeginReceive(Buffer, 0, 2, SocketFlags.None, new AsyncCallback(OnReceive), Server);
             }
             catch (Exception e)
             {
@@ -146,7 +146,7 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
                         Received,
                         Buffer.Length - Received,
                         SocketFlags.None,
-                        new AsyncCallback(this.OnReceive),
+                        new AsyncCallback(OnReceive),
                         Server);
             }
             catch (Exception e)

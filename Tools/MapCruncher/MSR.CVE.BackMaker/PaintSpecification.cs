@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
 
         public void ResetClip()
         {
-            this.Graphics.SetClip(this.ClipRectangle);
+            Graphics.SetClip(ClipRectangle);
         }
     }
 }

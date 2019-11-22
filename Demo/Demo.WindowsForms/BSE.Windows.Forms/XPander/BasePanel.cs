@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,7 +11,7 @@ namespace BSE.Windows.Forms
    /// <summary>
    /// Base class for the panel or xpanderpanel control. 
    /// </summary>
-   /// <copyright>Copyright � 2006-2008 Uwe Eichkorn
+   /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
    /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
    /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
    /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -135,14 +135,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_ePanelStyle;
+            return m_ePanelStyle;
          }
          set
          {
-            if(value.Equals(this.m_ePanelStyle) == false)
+            if(value.Equals(m_ePanelStyle) == false)
             {
-               this.m_ePanelStyle = value;
-               OnPanelStyleChanged(this, new PanelStyleChangeEventArgs(this.m_ePanelStyle));
+               m_ePanelStyle = value;
+               OnPanelStyleChanged(this, new PanelStyleChangeEventArgs(m_ePanelStyle));
             }
          }
       }
@@ -155,14 +155,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_image;
+            return m_image;
          }
          set
          {
-            if(value != this.m_image)
+            if(value != m_image)
             {
-               this.m_image = value;
-               this.Invalidate(this.CaptionRectangle);
+               m_image = value;
+               Invalidate(CaptionRectangle);
             }
          }
       }
@@ -177,14 +177,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_eColorScheme;
+            return m_eColorScheme;
          }
          set
          {
-            if(value.Equals(this.m_eColorScheme) == false)
+            if(value.Equals(m_eColorScheme) == false)
             {
-               this.m_eColorScheme = value;
-               OnColorSchemeChanged(this, new ColorSchemeChangeEventArgs(this.m_eColorScheme));
+               m_eColorScheme = value;
+               OnColorSchemeChanged(this, new ColorSchemeChangeEventArgs(m_eColorScheme));
             }
          }
       }
@@ -209,7 +209,7 @@ namespace BSE.Windows.Forms
                    System.Globalization.CultureInfo.CurrentUICulture,
                    Resources.IDS_InvalidOperationExceptionInteger, value, "CaptionHeight", Constants.CaptionMinHeight));
             }
-            this.m_iCaptionHeight = value;
+            m_iCaptionHeight = value;
             OnCaptionHeightChanged(this, EventArgs.Empty);
          }
       }
@@ -223,16 +223,16 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_captionFont;
+            return m_captionFont;
          }
          set
          {
             if(value != null)
             {
-               if(value.Equals(this.m_captionFont) == false)
+               if(value.Equals(m_captionFont) == false)
                {
-                  this.m_captionFont = value;
-                  this.Invalidate(this.CaptionRectangle);
+                  m_captionFont = value;
+                  Invalidate(CaptionRectangle);
                }
             }
          }
@@ -248,20 +248,20 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_bExpand;
+            return m_bExpand;
          }
          set
          {
-            if(value.Equals(this.m_bExpand) == false)
+            if(value.Equals(m_bExpand) == false)
             {
-               this.m_bExpand = value;
-               if(this.m_bExpand == true)
+               m_bExpand = value;
+               if(m_bExpand)
                {
-                  OnPanelExpanding(this, new XPanderStateChangeEventArgs(this.m_bExpand));
+                  OnPanelExpanding(this, new XPanderStateChangeEventArgs(m_bExpand));
                }
                else
                {
-                  OnPanelCollapsing(this, new XPanderStateChangeEventArgs(this.m_bExpand));
+                  OnPanelCollapsing(this, new XPanderStateChangeEventArgs(m_bExpand));
                }
             }
          }
@@ -278,14 +278,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_bShowBorder;
+            return m_bShowBorder;
          }
          set
          {
-            if(value.Equals(this.m_bShowBorder) == false)
+            if(value.Equals(m_bShowBorder) == false)
             {
-               this.m_bShowBorder = value;
-               this.Invalidate(false);
+               m_bShowBorder = value;
+               Invalidate(false);
             }
          }
       }
@@ -299,14 +299,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_bShowExpandIcon;
+            return m_bShowExpandIcon;
          }
          set
          {
-            if(value.Equals(this.m_bShowExpandIcon) == false)
+            if(value.Equals(m_bShowExpandIcon) == false)
             {
-               this.m_bShowExpandIcon = value;
-               this.Invalidate(false);
+               m_bShowExpandIcon = value;
+               Invalidate(false);
             }
          }
       }
@@ -324,11 +324,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_strToolTipTextCloseIcon;
+            return m_strToolTipTextCloseIcon;
          }
          set
          {
-            this.m_strToolTipTextCloseIcon = value;
+            m_strToolTipTextCloseIcon = value;
          }
       }
       /// <summary>
@@ -345,11 +345,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_strToolTipTextExpandIconPanelCollapsed;
+            return m_strToolTipTextExpandIconPanelCollapsed;
          }
          set
          {
-            this.m_strToolTipTextExpandIconPanelCollapsed = value;
+            m_strToolTipTextExpandIconPanelCollapsed = value;
          }
       }
       /// <summary>
@@ -366,11 +366,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_strToolTipTextExpandIconPanelExpanded;
+            return m_strToolTipTextExpandIconPanelExpanded;
          }
          set
          {
-            this.m_strToolTipTextExpandIconPanelExpanded = value;
+            m_strToolTipTextExpandIconPanelExpanded = value;
          }
       }
       /// <summary>
@@ -383,14 +383,14 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_bShowCloseIcon;
+            return m_bShowCloseIcon;
          }
          set
          {
-            if(value.Equals(this.m_bShowCloseIcon) == false)
+            if(value.Equals(m_bShowCloseIcon) == false)
             {
-               this.m_bShowCloseIcon = value;
-               this.Invalidate(false);
+               m_bShowCloseIcon = value;
+               Invalidate(false);
             }
          }
       }
@@ -411,11 +411,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_hoverStateCaptionBar;
+            return m_hoverStateCaptionBar;
          }
          set
          {
-            this.m_hoverStateCaptionBar = value;
+            m_hoverStateCaptionBar = value;
          }
       }
       /// <summary>
@@ -425,11 +425,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_hoverStateCloseIcon;
+            return m_hoverStateCloseIcon;
          }
          set
          {
-            this.m_hoverStateCloseIcon = value;
+            m_hoverStateCloseIcon = value;
          }
       }
       /// <summary>
@@ -439,11 +439,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_hoverStateExpandIcon;
+            return m_hoverStateExpandIcon;
          }
          set
          {
-            this.m_hoverStateExpandIcon = value;
+            m_hoverStateExpandIcon = value;
          }
       }
       /// <summary>
@@ -453,11 +453,11 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return this.m_imageSize;
+            return m_imageSize;
          }
          set
          {
-            this.m_imageSize = value;
+            m_imageSize = value;
          }
       }
       /// <summary>
@@ -467,7 +467,7 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            return new Rectangle(0, 0, this.ClientRectangle.Width, this.CaptionHeight);
+            return new Rectangle(0, 0, ClientRectangle.Width, CaptionHeight);
          }
       }
       /// <summary>
@@ -477,15 +477,15 @@ namespace BSE.Windows.Forms
       {
          get
          {
-            if(this.m_imageRectangle == Rectangle.Empty)
+            if(m_imageRectangle == Rectangle.Empty)
             {
-               this.m_imageRectangle = new Rectangle(
+               m_imageRectangle = new Rectangle(
                    CaptionSpacing,
-                   this.CaptionHeight,
-                   this.m_imageSize.Width,
-                   this.m_imageSize.Height);
+                   CaptionHeight,
+                   m_imageSize.Width,
+                   m_imageSize.Height);
             }
-            return this.m_imageRectangle;
+            return m_imageRectangle;
          }
       }
       #endregion
@@ -505,9 +505,9 @@ namespace BSE.Windows.Forms
                 Resources.IDS_ArgumentException,
                 "panelColors"));
          }
-         this.m_panelColors = panelColors;
-         this.ColorScheme = ColorScheme.Professional;
-         this.Invalidate(true);
+         m_panelColors = panelColors;
+         ColorScheme = ColorScheme.Professional;
+         Invalidate(true);
       }
       #endregion
 
@@ -517,19 +517,19 @@ namespace BSE.Windows.Forms
       /// </summary>
       protected BasePanel()
       {
-         this.SetStyle(ControlStyles.ResizeRedraw, true);
-         this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-         this.SetStyle(ControlStyles.UserPaint, true);
-         this.SetStyle(ControlStyles.DoubleBuffer, true);
-         this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-         this.SetStyle(ControlStyles.ContainerControl, true);
-         this.CaptionFont = new Font(SystemFonts.CaptionFont.FontFamily, SystemFonts.CaptionFont.SizeInPoints - 1.0F, FontStyle.Bold);
-         this.CaptionHeight = 25;
-         this.PanelStyle = PanelStyle.Default;
-         this.m_panelColors = new PanelColors(this);
-         this.m_imageSize = new Size(16, 16);
-         this.m_imageRectangle = Rectangle.Empty;
-         this.m_toolTip = new ToolTip();
+         SetStyle(ControlStyles.ResizeRedraw, true);
+         SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+         SetStyle(ControlStyles.UserPaint, true);
+         SetStyle(ControlStyles.DoubleBuffer, true);
+         SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+         SetStyle(ControlStyles.ContainerControl, true);
+         CaptionFont = new Font(SystemFonts.CaptionFont.FontFamily, SystemFonts.CaptionFont.SizeInPoints - 1.0F, FontStyle.Bold);
+         CaptionHeight = 25;
+         PanelStyle = PanelStyle.Default;
+         m_panelColors = new PanelColors(this);
+         m_imageSize = new Size(16, 16);
+         m_imageRectangle = Rectangle.Empty;
+         m_toolTip = new ToolTip();
 
       }
       /// <summary>
@@ -538,7 +538,7 @@ namespace BSE.Windows.Forms
       /// <param name="e">An EventArgs that contains the event data.</param>
       protected override void OnTextChanged(EventArgs e)
       {
-         this.Invalidate(this.CaptionRectangle);
+         Invalidate(CaptionRectangle);
          base.OnTextChanged(e);
       }
       /// <summary>
@@ -548,11 +548,11 @@ namespace BSE.Windows.Forms
       /// <param name="e">A EventArgs that contains the event data.</param>
       protected virtual void OnColorSchemeChanged(object sender, ColorSchemeChangeEventArgs e)
       {
-         this.PanelColors.Clear();
-         this.Invalidate(false);
-         if(this.ColorSchemeChanged != null)
+         PanelColors.Clear();
+         Invalidate(false);
+         if(ColorSchemeChanged != null)
          {
-            this.ColorSchemeChanged(sender, e);
+            ColorSchemeChanged(sender, e);
          }
       }
       /// <summary>
@@ -561,11 +561,11 @@ namespace BSE.Windows.Forms
       /// <param name="e">A MouseEventArgs that contains data about the OnMouseUp event.</param>
       protected override void OnMouseUp(MouseEventArgs e)
       {
-         if((this.ShowExpandIcon == true) && (this.RectangleExpandIcon.Contains(e.X, e.Y) == true))
+         if(ShowExpandIcon && RectangleExpandIcon.Contains(e.X, e.Y))
          {
             OnExpandClick(this, EventArgs.Empty);
          }
-         if((this.ShowCloseIcon == true) && (this.RectangleCloseIcon.Contains(e.X, e.Y) == true))
+         if(ShowCloseIcon && RectangleCloseIcon.Contains(e.X, e.Y))
          {
             OnCloseClick(this, EventArgs.Empty);
          }
@@ -577,55 +577,55 @@ namespace BSE.Windows.Forms
       /// <param name="e">A MouseEventArgs that contains the event data.</param>
       protected override void OnMouseMove(MouseEventArgs e)
       {
-         if(this.CaptionRectangle.Contains(e.X, e.Y) == true)
+         if(CaptionRectangle.Contains(e.X, e.Y))
          {
-            if(this.m_hoverStateCaptionBar == HoverState.None)
+            if(m_hoverStateCaptionBar == HoverState.None)
             {
-               this.m_hoverStateCaptionBar = HoverState.Hover;
-               OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCaptionBar));
+               m_hoverStateCaptionBar = HoverState.Hover;
+               OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCaptionBar));
             }
          }
          else
          {
-            if(this.m_hoverStateCaptionBar == HoverState.Hover)
+            if(m_hoverStateCaptionBar == HoverState.Hover)
             {
-               this.m_hoverStateCaptionBar = HoverState.None;
-               OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCaptionBar));
+               m_hoverStateCaptionBar = HoverState.None;
+               OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCaptionBar));
             }
          }
 
-         if((this.ShowExpandIcon == true) || (this.ShowCloseIcon == true))
+         if(ShowExpandIcon || ShowCloseIcon)
          {
-            if(this.RectangleExpandIcon.Contains(e.X, e.Y) == true)
+            if(RectangleExpandIcon.Contains(e.X, e.Y))
             {
-               if(this.m_hoverStateExpandIcon == HoverState.None)
+               if(m_hoverStateExpandIcon == HoverState.None)
                {
-                  this.m_hoverStateExpandIcon = HoverState.Hover;
-                  OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateExpandIcon));
+                  m_hoverStateExpandIcon = HoverState.Hover;
+                  OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateExpandIcon));
                }
             }
             else
             {
-               if(this.m_hoverStateExpandIcon == HoverState.Hover)
+               if(m_hoverStateExpandIcon == HoverState.Hover)
                {
-                  this.m_hoverStateExpandIcon = HoverState.None;
-                  OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateExpandIcon));
+                  m_hoverStateExpandIcon = HoverState.None;
+                  OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateExpandIcon));
                }
             }
-            if(this.RectangleCloseIcon.Contains(e.X, e.Y) == true)
+            if(RectangleCloseIcon.Contains(e.X, e.Y))
             {
-               if(this.m_hoverStateCloseIcon == HoverState.None)
+               if(m_hoverStateCloseIcon == HoverState.None)
                {
-                  this.m_hoverStateCloseIcon = HoverState.Hover;
-                  OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCloseIcon));
+                  m_hoverStateCloseIcon = HoverState.Hover;
+                  OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCloseIcon));
                }
             }
             else
             {
-               if(this.m_hoverStateCloseIcon == HoverState.Hover)
+               if(m_hoverStateCloseIcon == HoverState.Hover)
                {
-                  this.m_hoverStateCloseIcon = HoverState.None;
-                  OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCloseIcon));
+                  m_hoverStateCloseIcon = HoverState.None;
+                  OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCloseIcon));
                }
             }
          }
@@ -637,20 +637,20 @@ namespace BSE.Windows.Forms
       /// <param name="e">An EventArgs that contains the event data.</param>
       protected override void OnMouseLeave(EventArgs e)
       {
-         if(this.m_hoverStateCaptionBar == HoverState.Hover)
+         if(m_hoverStateCaptionBar == HoverState.Hover)
          {
-            this.m_hoverStateCaptionBar = HoverState.None;
-            OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCaptionBar));
+            m_hoverStateCaptionBar = HoverState.None;
+            OnCaptionBarHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCaptionBar));
          }
-         if(this.m_hoverStateExpandIcon == HoverState.Hover)
+         if(m_hoverStateExpandIcon == HoverState.Hover)
          {
-            this.m_hoverStateExpandIcon = HoverState.None;
-            OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateExpandIcon));
+            m_hoverStateExpandIcon = HoverState.None;
+            OnExpandIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateExpandIcon));
          }
-         if(this.m_hoverStateCloseIcon == HoverState.Hover)
+         if(m_hoverStateCloseIcon == HoverState.Hover)
          {
-            this.m_hoverStateCloseIcon = HoverState.None;
-            OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(this.m_hoverStateCloseIcon));
+            m_hoverStateCloseIcon = HoverState.None;
+            OnCloseIconHoverStateChanged(this, new HoverStateChangeEventArgs(m_hoverStateCloseIcon));
          }
          base.OnMouseLeave(e);
       }
@@ -661,9 +661,9 @@ namespace BSE.Windows.Forms
       /// <param name="e">A XPanderStateChangeEventArgs that contains the event data.</param>
       protected virtual void OnPanelExpanding(object sender, XPanderStateChangeEventArgs e)
       {
-         if(this.PanelExpanding != null)
+         if(PanelExpanding != null)
          {
-            this.PanelExpanding(sender, e);
+            PanelExpanding(sender, e);
          }
       }
       /// <summary>
@@ -673,9 +673,9 @@ namespace BSE.Windows.Forms
       /// <param name="e">A XPanderStateChangeEventArgs that contains the event data.</param>
       protected virtual void OnPanelCollapsing(object sender, XPanderStateChangeEventArgs e)
       {
-         if(this.PanelCollapsing != null)
+         if(PanelCollapsing != null)
          {
-            this.PanelCollapsing(sender, e);
+            PanelCollapsing(sender, e);
          }
       }
       /// <summary>
@@ -696,9 +696,9 @@ namespace BSE.Windows.Forms
             break;
          }
          Invalidate(true);
-         if(this.PanelStyleChanged != null)
+         if(PanelStyleChanged != null)
          {
-            this.PanelStyleChanged(sender, e);
+            PanelStyleChanged(sender, e);
          }
       }
       /// <summary>
@@ -708,9 +708,9 @@ namespace BSE.Windows.Forms
       /// <param name="e">An EventArgs that contains the event data.</param>
       protected virtual void OnCloseClick(object sender, EventArgs e)
       {
-         if(this.CloseClick != null)
+         if(CloseClick != null)
          {
-            this.CloseClick(sender, e);
+            CloseClick(sender, e);
          }
       }
       /// <summary>
@@ -720,10 +720,10 @@ namespace BSE.Windows.Forms
       /// <param name="e">An EventArgs that contains the event data.</param>
       protected virtual void OnExpandClick(object sender, EventArgs e)
       {
-         this.Invalidate(false);
-         if(this.ExpandClick != null)
+         Invalidate(false);
+         if(ExpandClick != null)
          {
-            this.ExpandClick(sender, e);
+            ExpandClick(sender, e);
          }
       }
       /// <summary>
@@ -735,40 +735,40 @@ namespace BSE.Windows.Forms
       {
          if(e.HoverState == HoverState.Hover)
          {
-            if(this.Cursor != Cursors.Hand)
+            if(Cursor != Cursors.Hand)
             {
-               this.Cursor = Cursors.Hand;
-               if(this.Expand == true)
+               Cursor = Cursors.Hand;
+               if(Expand)
                {
                   if(this is Panel)
                   {
-                     if(string.IsNullOrEmpty(this.m_strToolTipTextExpandIconPanelExpanded) == false)
+                     if(string.IsNullOrEmpty(m_strToolTipTextExpandIconPanelExpanded) == false)
                      {
-                        this.m_toolTip.SetToolTip(this, this.m_strToolTipTextExpandIconPanelExpanded);
+                        m_toolTip.SetToolTip(this, m_strToolTipTextExpandIconPanelExpanded);
                      }
                   }
                }
                else
                {
-                  if(string.IsNullOrEmpty(this.m_strToolTipTextExpandIconPanelCollapsed) == false)
+                  if(string.IsNullOrEmpty(m_strToolTipTextExpandIconPanelCollapsed) == false)
                   {
-                     this.m_toolTip.SetToolTip(this, this.m_strToolTipTextExpandIconPanelCollapsed);
+                     m_toolTip.SetToolTip(this, m_strToolTipTextExpandIconPanelCollapsed);
                   }
                }
             }
          }
          else
          {
-            if(this.Cursor == Cursors.Hand)
+            if(Cursor == Cursors.Hand)
             {
-               this.m_toolTip.SetToolTip(this, string.Empty);
-               this.m_toolTip.Hide(this);
-               this.Cursor = Cursors.Default;
+               m_toolTip.SetToolTip(this, string.Empty);
+               m_toolTip.Hide(this);
+               Cursor = Cursors.Default;
             }
          }
-         if(this.ExpandIconHoverStateChanged != null)
+         if(ExpandIconHoverStateChanged != null)
          {
-            this.ExpandIconHoverStateChanged(sender, e);
+            ExpandIconHoverStateChanged(sender, e);
          }
       }
       /// <summary>
@@ -779,10 +779,10 @@ namespace BSE.Windows.Forms
       protected virtual void OnCaptionHeightChanged(object sender, EventArgs e)
       {
          OnLayout(new LayoutEventArgs(this, null));
-         this.Invalidate(false);
-         if(this.CaptionHeightChanged != null)
+         Invalidate(false);
+         if(CaptionHeightChanged != null)
          {
-            this.CaptionHeightChanged(sender, e);
+            CaptionHeightChanged(sender, e);
          }
       }
       /// <summary>
@@ -796,26 +796,26 @@ namespace BSE.Windows.Forms
          {
             if(e.HoverState == HoverState.Hover)
             {
-               if((this.ShowCloseIcon == false) && (this.ShowExpandIcon == false))
+               if((ShowCloseIcon == false) && (ShowExpandIcon == false))
                {
-                  if(this.Cursor != Cursors.Hand)
+                  if(Cursor != Cursors.Hand)
                   {
-                     this.Cursor = Cursors.Hand;
+                     Cursor = Cursors.Hand;
                   }
                }
             }
             else
             {
-               if(this.Cursor == Cursors.Hand)
+               if(Cursor == Cursors.Hand)
                {
-                  this.Cursor = Cursors.Default;
+                  Cursor = Cursors.Default;
                }
             }
-            this.Invalidate(CaptionRectangle);
+            Invalidate(CaptionRectangle);
          }
-         if(this.CaptionBarHoverStateChanged != null)
+         if(CaptionBarHoverStateChanged != null)
          {
-            this.CaptionBarHoverStateChanged(sender, e);
+            CaptionBarHoverStateChanged(sender, e);
          }
       }
       /// <summary>
@@ -827,27 +827,27 @@ namespace BSE.Windows.Forms
       {
          if(e.HoverState == HoverState.Hover)
          {
-            if(this.Cursor != Cursors.Hand)
+            if(Cursor != Cursors.Hand)
             {
-               this.Cursor = Cursors.Hand;
+               Cursor = Cursors.Hand;
             }
-            if(string.IsNullOrEmpty(this.m_strToolTipTextCloseIcon) == false)
+            if(string.IsNullOrEmpty(m_strToolTipTextCloseIcon) == false)
             {
-               this.m_toolTip.SetToolTip(this, this.m_strToolTipTextCloseIcon);
+               m_toolTip.SetToolTip(this, m_strToolTipTextCloseIcon);
             }
          }
          else
          {
-            if(this.Cursor == Cursors.Hand)
+            if(Cursor == Cursors.Hand)
             {
-               this.m_toolTip.SetToolTip(this, string.Empty);
-               this.m_toolTip.Hide(this);
-               this.Cursor = Cursors.Default;
+               m_toolTip.SetToolTip(this, string.Empty);
+               m_toolTip.Hide(this);
+               Cursor = Cursors.Default;
             }
          }
-         if(this.CloseIconHoverStateChanged != null)
+         if(CloseIconHoverStateChanged != null)
          {
-            this.CloseIconHoverStateChanged(sender, e);
+            CloseIconHoverStateChanged(sender, e);
          }
       }
       /// <summary>
@@ -857,14 +857,14 @@ namespace BSE.Windows.Forms
       /// <param name="e">A EventArgs that contains the event data.</param>
       protected virtual void OnCustomColorsChanged(object sender, EventArgs e)
       {
-         if(this.ColorScheme == ColorScheme.Custom)
+         if(ColorScheme == ColorScheme.Custom)
          {
-            this.PanelColors.Clear();
-            this.Invalidate(false);
+            PanelColors.Clear();
+            Invalidate(false);
          }
-         if(this.CustomColorsChanged != null)
+         if(CustomColorsChanged != null)
          {
-            this.CustomColorsChanged(sender, e);
+            CustomColorsChanged(sender, e);
          }
       }
       /// <summary>
@@ -954,7 +954,7 @@ namespace BSE.Windows.Forms
             System.Drawing.Imaging.ColorMap colorMap = new System.Drawing.Imaging.ColorMap();
             colorMap.OldColor = Color.FromArgb(0, 60, 166);
             colorMap.NewColor = foreColorImage;
-            imageAttribute.SetRemapTable(new System.Drawing.Imaging.ColorMap[] { colorMap });
+            imageAttribute.SetRemapTable(new[] { colorMap });
 
             graphics.DrawImage(imgPanelIcon, rectangleIcon, 0, 0, iconWidth, iconHeight, GraphicsUnit.Pixel, imageAttribute);
          }
@@ -1095,21 +1095,21 @@ namespace BSE.Windows.Forms
          }
          else
          {
-            if((bShowCloseIcon == true) && (imageClosePanel != null))
+            if(bShowCloseIcon && (imageClosePanel != null))
             {
                rectangleImageClosePanel = imageRectangle;
                rectangleImageClosePanel.X = imageRectangle.X;
-               if(bIsClosable == true)
+               if(bIsClosable)
                {
                   DrawIcon(graphics, imageClosePanel, rectangleImageClosePanel, foreColorCloseIcon, imageRectangle.Y);
                }
                iTextPositionX1 = rectangleImageClosePanel.X + rectangleImageClosePanel.Width;
             }
-            if((bShowExpandIcon == true) && (imageExandPanel != null))
+            if(bShowExpandIcon && (imageExandPanel != null))
             {
                rectangleImageExandPanel = imageRectangle;
                rectangleImageExandPanel.X = imageRectangle.X;
-               if((bShowCloseIcon == true) && (imageClosePanel != null))
+               if(bShowCloseIcon && (imageClosePanel != null))
                {
                   rectangleImageExandPanel.X = iTextPositionX1 + (iSpacing / 2);
                }
@@ -1125,30 +1125,30 @@ namespace BSE.Windows.Forms
          textRectangle.Width -= iTextPositionX1 + iSpacing;
          if(rightToLeft == RightToLeft.No)
          {
-            if((bShowCloseIcon == true) && (imageClosePanel != null))
+            if(bShowCloseIcon && (imageClosePanel != null))
             {
                rectangleImageClosePanel = imageRectangle;
                rectangleImageClosePanel.X = captionRectangle.Right - iSpacing - imageRectangle.Width;
-               if(bIsClosable == true)
+               if(bIsClosable)
                {
                   DrawIcon(graphics, imageClosePanel, rectangleImageClosePanel, foreColorCloseIcon, imageRectangle.Y);
                }
                iTextPositionX2 = rectangleImageClosePanel.X;
             }
-            if((bShowExpandIcon == true) && (imageExandPanel != null))
+            if(bShowExpandIcon && (imageExandPanel != null))
             {
                rectangleImageExandPanel = imageRectangle;
                rectangleImageExandPanel.X = captionRectangle.Right - iSpacing - imageRectangle.Width;
-               if((bShowCloseIcon == true) && (imageClosePanel != null))
+               if(bShowCloseIcon && (imageClosePanel != null))
                {
                   rectangleImageExandPanel.X = iTextPositionX2 - (iSpacing / 2) - imageRectangle.Width;
                }
                DrawIcon(graphics, imageExandPanel, rectangleImageExandPanel, foreColorExpandIcon, imageRectangle.Y);
                iTextPositionX2 = rectangleImageExandPanel.X;
             }
-            if((bShowCloseIcon == true)
+            if(bShowCloseIcon
                     && (imageClosePanel != null)
-                    && (bShowExpandIcon == true)
+                    && bShowExpandIcon
                     && (imageExandPanel != null))
             {
                iTextPositionX2 -= iSpacing;
@@ -1226,7 +1226,7 @@ namespace BSE.Windows.Forms
          {
             case DockStyle.Left:
             case DockStyle.Right:
-            if(bIsExpanded == true)
+            if(bIsExpanded)
             {
                DrawImagesAndText(
                    graphics,
@@ -1366,8 +1366,8 @@ namespace BSE.Windows.Forms
             if(upperLinearGradientBrush != null)
             {
                Blend blend = new Blend();
-               blend.Positions = new float[] { 0.0F, 1.0F };
-               blend.Factors = new float[] { 0.0F, 0.6F };
+               blend.Positions = new[] { 0.0F, 1.0F };
+               blend.Factors = new[] { 0.0F, 0.6F };
                upperLinearGradientBrush.Blend = blend;
                graphics.FillRectangle(upperLinearGradientBrush, upperRectangle);
             }
@@ -1486,18 +1486,18 @@ namespace BSE.Windows.Forms
       /// <returns></returns>
       protected static LinearGradientBrush GetFlatGradientBackBrush(Rectangle bounds, Color colorGradientBegin, Color colorGradientEnd, bool bHover)
       {
-         LinearGradientBrush linearGradientBrush = null;
+         LinearGradientBrush linearGradientBrush;
          Blend blend = new Blend();
-         blend.Positions = new float[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.5F, 0.6F, 0.7F, 0.8F, 1.0F };
+         blend.Positions = new[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.5F, 0.6F, 0.7F, 0.8F, 1.0F };
          if(bHover == false)
          {
-            blend.Factors = new float[] { 0.0F, 0.0F, 0.2F, 0.4F, 0.6F, 0.4F, 0.2F, 0.0F, 0.0F };
+            blend.Factors = new[] { 0.0F, 0.0F, 0.2F, 0.4F, 0.6F, 0.4F, 0.2F, 0.0F, 0.0F };
          }
          else
          {
-            blend.Factors = new float[] { 0.4F, 0.5F, 0.6F, 0.8F, 1.0F, 0.8F, 0.6F, 0.5F, 0.4F };
+            blend.Factors = new[] { 0.4F, 0.5F, 0.6F, 0.8F, 1.0F, 0.8F, 0.6F, 0.5F, 0.4F };
          }
-         linearGradientBrush = linearGradientBrush = new LinearGradientBrush(bounds, colorGradientBegin, colorGradientEnd, LinearGradientMode.Horizontal);
+         linearGradientBrush = new LinearGradientBrush(bounds, colorGradientBegin, colorGradientEnd, LinearGradientMode.Horizontal);
          if(linearGradientBrush != null)
          {
             linearGradientBrush.Blend = blend;
@@ -1527,7 +1527,7 @@ namespace BSE.Windows.Forms
          {
             Rectangle rectangle1 = bounds;
             Rectangle rectangle2 = bounds;
-            bool flag1 = true;
+            bool flag1;
             if(mode == LinearGradientMode.Horizontal)
             {
                if(flipHorizontal)

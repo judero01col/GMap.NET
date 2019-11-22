@@ -10,13 +10,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._localDocument;
+                return _localDocument;
             }
         }
 
         public SourceDocument(LocalDocumentDescriptor localDocument)
         {
-            this._localDocument = localDocument;
+            _localDocument = localDocument;
         }
 
         public Present Duplicate(string refCredit)

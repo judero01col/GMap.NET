@@ -37,7 +37,7 @@ namespace GMap.NET
         {
             get
             {
-                return new PointLatLng(this.Lat, this.Lng);
+                return new PointLatLng(Lat, Lng);
             }
             set
             {
@@ -50,7 +50,7 @@ namespace GMap.NET
         {
             get
             {
-                var ret = new PointLatLng(this.Lat, this.Lng);
+                var ret = new PointLatLng(Lat, Lng);
                 ret.Offset(HeightLat, WidthLng);
                 return ret;
             }
@@ -60,7 +60,7 @@ namespace GMap.NET
         {
             get
             {
-                var ret = new PointLatLng(this.Lat, this.Lng);
+                var ret = new PointLatLng(Lat, Lng);
                 ret.Offset(HeightLat / 2, WidthLng / 2);
                 return ret;
             }
@@ -70,7 +70,7 @@ namespace GMap.NET
         {
             get
             {
-                return new SizeLatLng(this.HeightLat, this.WidthLng);
+                return new SizeLatLng(HeightLat, WidthLng);
             }
             set
             {
@@ -140,8 +140,8 @@ namespace GMap.NET
             }
 
             var ef = (RectLatLng)obj;
-            return ef.Lng == this.Lng && ef.Lat == this.Lat && ef.WidthLng == this.WidthLng &&
-                   ef.HeightLat == this.HeightLat;
+            return ef.Lng == Lng && ef.Lat == Lat && ef.WidthLng == WidthLng &&
+                   ef.HeightLat == HeightLat;
         }
 
         public static bool operator ==(RectLatLng left, RectLatLng right)
@@ -157,30 +157,30 @@ namespace GMap.NET
 
         public bool Contains(double lat, double lng)
         {
-            return this.Lng <= lng && lng < this.Lng + this.WidthLng && this.Lat >= lat &&
-                   lat > this.Lat - this.HeightLat;
+            return Lng <= lng && lng < Lng + WidthLng && Lat >= lat &&
+                   lat > Lat - HeightLat;
         }
 
         public bool Contains(PointLatLng pt)
         {
-            return this.Contains(pt.Lat, pt.Lng);
+            return Contains(pt.Lat, pt.Lng);
         }
 
         public bool Contains(RectLatLng rect)
         {
-            return this.Lng <= rect.Lng && rect.Lng + rect.WidthLng <= this.Lng + this.WidthLng &&
-                   this.Lat >= rect.Lat && rect.Lat - rect.HeightLat >= this.Lat - this.HeightLat;
+            return Lng <= rect.Lng && rect.Lng + rect.WidthLng <= Lng + WidthLng &&
+                   Lat >= rect.Lat && rect.Lat - rect.HeightLat >= Lat - HeightLat;
         }
 
         public override int GetHashCode()
         {
-            if (this.IsEmpty)
+            if (IsEmpty)
             {
                 return 0;
             }
 
-            return this.Lng.GetHashCode() ^ this.Lat.GetHashCode() ^ this.WidthLng.GetHashCode() ^
-                   this.HeightLat.GetHashCode();
+            return Lng.GetHashCode() ^ Lat.GetHashCode() ^ WidthLng.GetHashCode() ^
+                   HeightLat.GetHashCode();
         }
 
         // from here down need to test each function to be sure they work good
@@ -191,15 +191,15 @@ namespace GMap.NET
 
         public void Inflate(double lat, double lng)
         {
-            this.Lng -= lng;
-            this.Lat += lat;
-            this.WidthLng += 2d * lng;
-            this.HeightLat += 2d * lat;
+            Lng -= lng;
+            Lat += lat;
+            WidthLng += 2d * lng;
+            HeightLat += 2d * lat;
         }
 
         public void Inflate(SizeLatLng size)
         {
-            this.Inflate(size.HeightLat, size.WidthLng);
+            Inflate(size.HeightLat, size.WidthLng);
         }
 
         public static RectLatLng Inflate(RectLatLng rect, double lat, double lng)
@@ -212,10 +212,10 @@ namespace GMap.NET
         public void Intersect(RectLatLng rect)
         {
             RectLatLng ef = Intersect(rect, this);
-            this.Lng = ef.Lng;
-            this.Lat = ef.Lat;
-            this.WidthLng = ef.WidthLng;
-            this.HeightLat = ef.HeightLat;
+            Lng = ef.Lng;
+            Lat = ef.Lat;
+            WidthLng = ef.WidthLng;
+            HeightLat = ef.HeightLat;
         }
 
         // ok ???
@@ -239,7 +239,7 @@ namespace GMap.NET
         // http://greatmaps.codeplex.com/workitem/15981
         public bool IntersectsWith(RectLatLng a)
         {
-            return this.Left < a.Right && this.Top > a.Bottom && this.Right > a.Left && this.Bottom < a.Top;
+            return Left < a.Right && Top > a.Bottom && Right > a.Left && Bottom < a.Top;
         }
 
         // ok ???
@@ -261,21 +261,21 @@ namespace GMap.NET
 
         public void Offset(PointLatLng pos)
         {
-            this.Offset(pos.Lat, pos.Lng);
+            Offset(pos.Lat, pos.Lng);
         }
 
         public void Offset(double lat, double lng)
         {
-            this.Lng += lng;
-            this.Lat -= lat;
+            Lng += lng;
+            Lat -= lat;
         }
 
         public override string ToString()
         {
-            return "{Lat=" + this.Lat.ToString(CultureInfo.CurrentCulture) + ",Lng=" +
-                   this.Lng.ToString(CultureInfo.CurrentCulture) + ",WidthLng=" +
-                   this.WidthLng.ToString(CultureInfo.CurrentCulture) + ",HeightLat=" +
-                   this.HeightLat.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{Lat=" + Lat.ToString(CultureInfo.CurrentCulture) + ",Lng=" +
+                   Lng.ToString(CultureInfo.CurrentCulture) + ",WidthLng=" +
+                   WidthLng.ToString(CultureInfo.CurrentCulture) + ",HeightLat=" +
+                   HeightLat.ToString(CultureInfo.CurrentCulture) + "}";
         }
 
         static RectLatLng()

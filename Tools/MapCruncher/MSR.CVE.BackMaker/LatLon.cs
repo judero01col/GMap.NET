@@ -17,7 +17,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._lat;
+                return _lat;
             }
         }
 
@@ -25,14 +25,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._lon;
+                return _lon;
             }
         }
 
         public LatLon(double lat, double lon)
         {
-            this._lat = lat;
-            this._lon = lon;
+            _lat = lat;
+            _lon = lon;
         }
 
         public static implicit operator PointD(LatLon p)
@@ -58,7 +58,7 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return this._lat.GetHashCode() ^ this._lon.GetHashCode();
+            return _lat.GetHashCode() ^ _lon.GetHashCode();
         }
 
         public static bool operator ==(LatLon ll1, LatLon ll2)
@@ -73,7 +73,7 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return string.Format("{0}N {1}E", this.lat, this.lon);
+            return string.Format("{0}N {1}E", lat, lon);
         }
 
         public static string GetXMLTag()
@@ -84,25 +84,25 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlWriter writer)
         {
             writer.WriteStartElement("LatLon");
-            this.WriteXMLToAttributes(writer);
+            WriteXMLToAttributes(writer);
             writer.WriteEndElement();
         }
 
         public void WriteXMLToAttributes(XmlWriter writer)
         {
             writer.WriteStartAttribute("lat");
-            writer.WriteValue(this.lat.ToString(CultureInfo.InvariantCulture));
+            writer.WriteValue(lat.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndAttribute();
             writer.WriteStartAttribute("lon");
-            writer.WriteValue(this.lon.ToString(CultureInfo.InvariantCulture));
+            writer.WriteValue(lon.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndAttribute();
         }
 
         public LatLon(MashupParseContext context, CoordinateSystemIfc coordSys)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("LatLon");
-            this._lat = coordSys.GetLatRange().Parse(context, "lat");
-            this._lon = coordSys.GetLonRange().Parse(context, "lon");
+            _lat = coordSys.GetLatRange().Parse(context, "lat");
+            _lon = coordSys.GetLonRange().Parse(context, "lon");
             while (xMLTagReader.FindNextStartTag())
             {
             }
@@ -110,8 +110,8 @@ namespace MSR.CVE.BackMaker
 
         public void CheckValid(CoordinateSystemIfc coordSys)
         {
-            coordSys.GetLatRange().CheckValid(this.lat);
-            coordSys.GetLonRange().CheckValid(this.lon);
+            coordSys.GetLatRange().CheckValid(lat);
+            coordSys.GetLonRange().CheckValid(lon);
         }
 
         public static LatLon ReadFromAttributes(MashupParseContext context, CoordinateSystemIfc coordSys)
@@ -162,8 +162,8 @@ namespace MSR.CVE.BackMaker
 
         internal void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(this.lat);
-            hash.Accumulate(this.lon);
+            hash.Accumulate(lat);
+            hash.Accumulate(lon);
         }
 
         public static double DegreesToRadians(double degrees)

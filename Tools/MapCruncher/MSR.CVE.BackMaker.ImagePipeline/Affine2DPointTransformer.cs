@@ -14,18 +14,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public Affine2DPointTransformer(JamaMatrix matrix)
         {
-            this.c0 = matrix.GetElement(0, 0);
-            this.c1 = matrix.GetElement(0, 1);
-            this.c2 = matrix.GetElement(0, 2);
-            this.c3 = matrix.GetElement(1, 0);
-            this.c4 = matrix.GetElement(1, 1);
-            this.c5 = matrix.GetElement(1, 2);
+            c0 = matrix.GetElement(0, 0);
+            c1 = matrix.GetElement(0, 1);
+            c2 = matrix.GetElement(0, 2);
+            c3 = matrix.GetElement(1, 0);
+            c4 = matrix.GetElement(1, 1);
+            c5 = matrix.GetElement(1, 2);
         }
 
         public override void doTransform(PointD p0, PointD p1)
         {
-            p1.x = this.c0 * p0.x + this.c1 * p0.y + this.c2;
-            p1.y = this.c3 * p0.x + this.c4 * p0.y + this.c5;
+            p1.x = c0 * p0.x + c1 * p0.y + c2;
+            p1.y = c3 * p0.x + c4 * p0.y + c5;
         }
 
         public override IPointTransformer getInversePointTransfomer()

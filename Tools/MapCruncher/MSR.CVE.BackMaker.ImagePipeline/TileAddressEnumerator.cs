@@ -17,7 +17,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.current;
+                return current;
             }
         }
 
@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this.Current;
+                return Current;
             }
         }
 
@@ -40,57 +40,57 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         private void SetPaintLocation()
         {
-            this.current.paintLocation = new Rectangle(
-                this.tad.topLeftTileOffset.X + this.tad.tileSize.Width * this.screenTileCountX,
-                this.tad.topLeftTileOffset.Y + this.tad.tileSize.Height * this.screenTileCountY,
-                this.tad.tileSize.Width,
-                this.tad.tileSize.Height);
+            current.paintLocation = new Rectangle(
+                tad.topLeftTileOffset.X + tad.tileSize.Width * screenTileCountX,
+                tad.topLeftTileOffset.Y + tad.tileSize.Height * screenTileCountY,
+                tad.tileSize.Width,
+                tad.tileSize.Height);
         }
 
         public bool MoveNext()
         {
             bool result;
-            if (this.tad.tileCountX <= 0 || this.tad.tileCountY <= 0)
+            if (tad.tileCountX <= 0 || tad.tileCountY <= 0)
             {
                 result = false;
             }
             else
             {
-                if (this.reset)
+                if (reset)
                 {
-                    this.current.tileAddress = new TileAddress(this.tad.topLeftTile);
-                    this.reset = false;
-                    this.screenTileCountX = 0;
-                    this.screenTileCountY = 0;
-                    this.SetPaintLocation();
+                    current.tileAddress = new TileAddress(tad.topLeftTile);
+                    reset = false;
+                    screenTileCountX = 0;
+                    screenTileCountY = 0;
+                    SetPaintLocation();
                     result = true;
                 }
                 else
                 {
-                    if (this.screenTileCountX == this.tad.tileCountX - 1)
+                    if (screenTileCountX == tad.tileCountX - 1)
                     {
-                        if (this.screenTileCountY == this.tad.tileCountY - 1)
+                        if (screenTileCountY == tad.tileCountY - 1)
                         {
                             result = false;
                         }
                         else
                         {
-                            this.current.tileAddress.TileY =
-                                this.tad.layout.YValueOneTileSouth(this.current.tileAddress);
-                            this.screenTileCountY++;
-                            this.current.tileAddress.TileX = this.tad.topLeftTile.TileX;
-                            this.screenTileCountX = 0;
+                            current.tileAddress.TileY =
+                                tad.layout.YValueOneTileSouth(current.tileAddress);
+                            screenTileCountY++;
+                            current.tileAddress.TileX = tad.topLeftTile.TileX;
+                            screenTileCountX = 0;
                             result = true;
                         }
                     }
                     else
                     {
-                        this.current.tileAddress.TileX = this.tad.layout.XValueOneTileEast(this.current.tileAddress);
-                        this.screenTileCountX++;
+                        current.tileAddress.TileX = tad.layout.XValueOneTileEast(current.tileAddress);
+                        screenTileCountX++;
                         result = true;
                     }
 
-                    this.SetPaintLocation();
+                    SetPaintLocation();
                 }
             }
 
@@ -99,7 +99,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public void Reset()
         {
-            this.reset = true;
+            reset = true;
         }
     }
 }

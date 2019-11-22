@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
@@ -31,9 +31,9 @@ namespace BSE.Windows.Forms
 					"graphics"));
 			}
 
-			this.m_graphics = graphics;
-            this.m_textRenderingHint = this.m_graphics.TextRenderingHint;
-            this.m_graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+			m_graphics = graphics;
+            m_textRenderingHint = m_graphics.TextRenderingHint;
+            m_graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
         }
 		/// <summary>
 		/// destructor of the UseClearTypeGridFit class.
@@ -59,10 +59,10 @@ namespace BSE.Windows.Forms
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing == true)
+			if (disposing)
 			{
 				//Revert the TextRenderingHint back to original setting.
-				this.m_graphics.TextRenderingHint = this.m_textRenderingHint;
+				m_graphics.TextRenderingHint = m_textRenderingHint;
 			}
 		}
 		#endregion

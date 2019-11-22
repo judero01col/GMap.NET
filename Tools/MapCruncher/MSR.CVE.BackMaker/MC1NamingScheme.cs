@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker
         public override string GetTileFilename(TileAddress ta)
         {
             return string.Format("z{0}\\y{1}\\x{2}{3}",
-                new object[] {ta.ZoomLevel, ta.TileY, ta.TileX, this.fileSuffix});
+                new object[] {ta.ZoomLevel, ta.TileY, ta.TileX, fileSuffix});
         }
     }
 }

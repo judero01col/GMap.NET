@@ -33,12 +33,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the hover icon in the captionbar on the Panel.")]
         public virtual Color CaptionSelectedGradientBegin
         {
-            get { return this.m_captionSelectedGradientBegin; }
+            get { return m_captionSelectedGradientBegin; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientBegin) == false)
+                if (value.Equals(m_captionSelectedGradientBegin) == false)
                 {
-                    this.m_captionSelectedGradientBegin = value;
+                    m_captionSelectedGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -49,12 +49,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the hover icon in the captionbar on the Panel.")]
         public virtual Color CaptionSelectedGradientEnd
         {
-            get { return this.m_captionSelectedGradientEnd; }
+            get { return m_captionSelectedGradientEnd; }
             set
             {
-                if (value.Equals(this.m_captionSelectedGradientEnd) == false)
+                if (value.Equals(m_captionSelectedGradientEnd) == false)
                 {
-                    this.m_captionSelectedGradientEnd = value;
+                    m_captionSelectedGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -65,12 +65,12 @@ namespace BSE.Windows.Forms
         [Description("The text color of a Panel when it's collapsed.")]
         public virtual Color CollapsedCaptionText
         {
-            get { return this.m_collapsedCaptionText; }
+            get { return m_collapsedCaptionText; }
             set
             {
-                if (value.Equals(this.m_collapsedCaptionText) == false)
+                if (value.Equals(m_collapsedCaptionText) == false)
                 {
-                    this.m_collapsedCaptionText = value;
+                    m_collapsedCaptionText = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -81,12 +81,12 @@ namespace BSE.Windows.Forms
         [Description("The starting color of the gradient used in the Panel.")]
         public virtual Color ContentGradientBegin
         {
-            get { return this.m_contentGradientBegin; }
+            get { return m_contentGradientBegin; }
             set
             {
-                if (value.Equals(this.m_contentGradientBegin) == false)
+                if (value.Equals(m_contentGradientBegin) == false)
                 {
-                    this.m_contentGradientBegin = value;
+                    m_contentGradientBegin = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }
@@ -97,12 +97,12 @@ namespace BSE.Windows.Forms
         [Description("The end color of the gradient used in the Panel.")]
         public virtual Color ContentGradientEnd
         {
-            get { return this.m_contentGradientEnd; }
+            get { return m_contentGradientEnd; }
             set
             {
-                if (value.Equals(this.m_contentGradientEnd) == false)
+                if (value.Equals(m_contentGradientEnd) == false)
                 {
-                    this.m_contentGradientEnd = value;
+                    m_contentGradientEnd = value;
                     OnCustomColorsChanged(this, EventArgs.Empty);
                 }
             }

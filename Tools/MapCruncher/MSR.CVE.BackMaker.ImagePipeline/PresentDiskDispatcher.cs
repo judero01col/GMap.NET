@@ -33,9 +33,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (!(present is ImageRef))
             {
-                if (!this.complainedSet.ContainsKey(present.GetType()))
+                if (!complainedSet.ContainsKey(present.GetType()))
                 {
-                    this.complainedSet[present.GetType()] = true;
+                    complainedSet[present.GetType()] = true;
                     D.Sayf(0, "No support for disk streams for type {0}", new object[] {present.GetType()});
                 }
 
@@ -72,7 +72,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             AssociatedFileType associatedFileType;
             string text;
-            this.ReadAssociatedFileName(path, out associatedFileType, out text, out length);
+            ReadAssociatedFileName(path, out associatedFileType, out text, out length);
             D.Assert(associatedFileType == AssociatedFileType.Image);
             length += FileLength(text);
             GDIBigLockedImage image = GDIBigLockedImage.FromFile(text);
@@ -121,7 +121,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             AssociatedFileType associatedFileType;
             string text;
             long num;
-            this.ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);
+            ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);
             long num2 = 0L;
             if (text != null)
             {
@@ -136,7 +136,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             AssociatedFileType associatedFileType;
             string text;
             long num;
-            this.ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);
+            ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);
             if (text != null)
             {
                 File.Delete(text);

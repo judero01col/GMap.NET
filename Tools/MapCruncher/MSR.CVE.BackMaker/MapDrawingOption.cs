@@ -13,12 +13,12 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.enabled;
+                return enabled;
             }
             set
             {
-                this.enabled = value;
-                this.map.InvalidateView();
+                enabled = value;
+                map.InvalidateView();
             }
         }
 
@@ -26,11 +26,11 @@ namespace MSR.CVE.BackMaker
         {
             this.map = map;
             this.menuItem = menuItem;
-            this.enabled = default_value;
+            enabled = default_value;
             if (this.menuItem != null)
             {
-                this.menuItem.Checked = this.enabled;
-                this.menuItem.Click += new EventHandler(this.menuItem_Click);
+                this.menuItem.Checked = enabled;
+                this.menuItem.Click += new EventHandler(menuItem_Click);
             }
         }
 
@@ -46,8 +46,8 @@ namespace MSR.CVE.BackMaker
 
         private void menuItem_Click(object sender, EventArgs e)
         {
-            this.enabled = this.menuItem.Checked = !this.enabled;
-            this.map.InvalidateView();
+            enabled = menuItem.Checked = !enabled;
+            map.InvalidateView();
         }
     }
 }

@@ -26,22 +26,22 @@ namespace MSR.CVE.BackMaker
 
         public override bool DoWork(ITileWorkFeedback feedback)
         {
-            if (!this.needThisTile())
+            if (!needThisTile())
             {
                 return false;
             }
 
             D.Sayf(10,
                 "SingleSourcing {0} {1}",
-                new object[] {this.applier.source.GetSourceMapDisplayName(), this.address});
-            Present present = this.FetchClippedImage();
+                new object[] {applier.source.GetSourceMapDisplayName(), address});
+            Present present = FetchClippedImage();
             if (present is ImageRef)
             {
                 ImageRef image = (ImageRef)present;
                 feedback.PostImageResult(image,
-                    this.applier.layer,
-                    this.applier.source.GetSourceMapDisplayName(),
-                    this.address);
+                    applier.layer,
+                    applier.source.GetSourceMapDisplayName(),
+                    address);
             }
 
             present.Dispose();
@@ -50,7 +50,7 @@ namespace MSR.CVE.BackMaker
 
         public void CompositeImageInto(GDIBigLockedImage baseImage)
         {
-            Present present = this.FetchClippedImage();
+            Present present = FetchClippedImage();
             if (present is ImageRef)
             {
                 ImageRef imageRef = (ImageRef)present;
@@ -63,7 +63,7 @@ namespace MSR.CVE.BackMaker
                 if (present is PresentFailureCode)
                 {
                     throw new NonredundantRenderComplaint(string.Format("{0}: {1}",
-                        this.applier.DescribeSourceForComplaint(),
+                        applier.DescribeSourceForComplaint(),
                         ((PresentFailureCode)present).exception.Message));
                 }
             }
@@ -73,15 +73,15 @@ namespace MSR.CVE.BackMaker
 
         private Present FetchClippedImage()
         {
-            if (debug_lastZoom != this.address.ZoomLevel)
+            if (debug_lastZoom != address.ZoomLevel)
             {
-                debug_lastZoom = this.address.ZoomLevel;
-                D.Sayf(0, "{0} start zoom level {1}", new object[] {Clocker.theClock.stamp(), this.address.ZoomLevel});
+                debug_lastZoom = address.ZoomLevel;
+                D.Sayf(0, "{0} start zoom level {1}", new object[] {Clocker.theClock.stamp(), address.ZoomLevel});
             }
 
-            IFuture future = this.applier.clippedImageFuture.Curry(new ParamDict(new object[]
+            IFuture future = applier.clippedImageFuture.Curry(new ParamDict(new object[]
             {
-                TermName.TileAddress, this.address
+                TermName.TileAddress, address
             }));
             return future.Realize("ImageRef.FetchClippedImage");
         }
@@ -90,8 +90,8 @@ namespace MSR.CVE.BackMaker
         {
             return new RenderWorkUnitComparinator(new IComparable[]
             {
-                this.address.ZoomLevel, this.applier.layer.displayName, this.stage, 0, this.applier.source,
-                this.address
+                address.ZoomLevel, applier.layer.displayName, stage, 0, applier.source,
+                address
             });
         }
 
@@ -100,8 +100,8 @@ namespace MSR.CVE.BackMaker
             return string.Format("SSU layer {0} sm {1} address {2} stage {3}",
                 new object[]
                 {
-                    this.applier.layer.displayName, this.applier.source.GetSourceMapDisplayName(), this.address,
-                    this.stage
+                    applier.layer.displayName, applier.source.GetSourceMapDisplayName(), address,
+                    stage
                 });
         }
     }

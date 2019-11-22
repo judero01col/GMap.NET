@@ -42,34 +42,34 @@ namespace GMap.NET.WindowsForms.ToolTips
                 st.Height + TextPadding.Height);
             rect.Offset(Offset.X, Offset.Y);
 
-            using (GraphicsPath objGP = new GraphicsPath())
+            using (var objGp = new GraphicsPath())
             {
-                objGP.AddLine(rect.X + 2 * Radius,
+                objGp.AddLine(rect.X + 2 * Radius,
                     rect.Y + rect.Height,
                     rect.X + Radius,
                     rect.Y + rect.Height + Radius);
-                objGP.AddLine(rect.X + Radius, rect.Y + rect.Height + Radius, rect.X + Radius, rect.Y + rect.Height);
+                objGp.AddLine(rect.X + Radius, rect.Y + rect.Height + Radius, rect.X + Radius, rect.Y + rect.Height);
 
-                objGP.AddArc(rect.X, rect.Y + rect.Height - Radius * 2, Radius * 2, Radius * 2, 90, 90);
-                objGP.AddLine(rect.X, rect.Y + rect.Height - Radius * 2, rect.X, rect.Y + Radius);
-                objGP.AddArc(rect.X, rect.Y, Radius * 2, Radius * 2, 180, 90);
-                objGP.AddLine(rect.X + Radius, rect.Y, rect.X + rect.Width - Radius * 2, rect.Y);
-                objGP.AddArc(rect.X + rect.Width - Radius * 2, rect.Y, Radius * 2, Radius * 2, 270, 90);
-                objGP.AddLine(rect.X + rect.Width,
+                objGp.AddArc(rect.X, rect.Y + rect.Height - Radius * 2, Radius * 2, Radius * 2, 90, 90);
+                objGp.AddLine(rect.X, rect.Y + rect.Height - Radius * 2, rect.X, rect.Y + Radius);
+                objGp.AddArc(rect.X, rect.Y, Radius * 2, Radius * 2, 180, 90);
+                objGp.AddLine(rect.X + Radius, rect.Y, rect.X + rect.Width - Radius * 2, rect.Y);
+                objGp.AddArc(rect.X + rect.Width - Radius * 2, rect.Y, Radius * 2, Radius * 2, 270, 90);
+                objGp.AddLine(rect.X + rect.Width,
                     rect.Y + Radius,
                     rect.X + rect.Width,
                     rect.Y + rect.Height - Radius * 2);
-                objGP.AddArc(rect.X + rect.Width - Radius * 2,
+                objGp.AddArc(rect.X + rect.Width - Radius * 2,
                     rect.Y + rect.Height - Radius * 2,
                     Radius * 2,
                     Radius * 2,
                     0,
                     90); // Corner
 
-                objGP.CloseFigure();
+                objGp.CloseFigure();
 
-                g.FillPath(Fill, objGP);
-                g.DrawPath(Stroke, objGP);
+                g.FillPath(Fill, objGp);
+                g.DrawPath(Stroke, objGp);
             }
 
 #if !PocketPC
@@ -83,7 +83,7 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Radius", this.Radius);
+            info.AddValue("Radius", Radius);
 
             base.GetObjectData(info, context);
         }
@@ -91,7 +91,7 @@ namespace GMap.NET.WindowsForms.ToolTips
         protected GMapBaloonToolTip(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            this.Radius = Extensions.GetStruct<float>(info, "Radius", 10f);
+            Radius = Extensions.GetStruct<float>(info, "Radius", 10f);
         }
 
         #endregion

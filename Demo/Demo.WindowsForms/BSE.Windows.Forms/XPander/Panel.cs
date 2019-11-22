@@ -61,11 +61,11 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_associatedSplitter;
+                return m_associatedSplitter;
             }
             set
             {
-                this.m_associatedSplitter = value;
+                m_associatedSplitter = value;
             }
         }
 
@@ -79,7 +79,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_customColors;
+                return m_customColors;
             }
         }
 
@@ -110,14 +110,14 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_linearGradientMode;
+                return m_linearGradientMode;
             }
             set
             {
-                if (value.Equals(this.m_linearGradientMode) == false)
+                if (value.Equals(m_linearGradientMode) == false)
                 {
-                    this.m_linearGradientMode = value;
-                    this.Invalidate(false);
+                    m_linearGradientMode = value;
+                    Invalidate(false);
                 }
             }
         }
@@ -141,14 +141,14 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_bShowCaptionbar;
+                return m_bShowCaptionbar;
             }
             set
             {
-                if (value.Equals(this.m_bShowCaptionbar) == false)
+                if (value.Equals(m_bShowCaptionbar) == false)
                 {
-                    this.m_bShowCaptionbar = value;
-                    this.Invalidate(true);
+                    m_bShowCaptionbar = value;
+                    Invalidate(true);
                 }
             }
         }
@@ -163,14 +163,14 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_bShowTransparentBackground;
+                return m_bShowTransparentBackground;
             }
             set
             {
-                if (value.Equals(this.m_bShowTransparentBackground) == false)
+                if (value.Equals(m_bShowTransparentBackground) == false)
                 {
-                    this.m_bShowTransparentBackground = value;
-                    this.Invalidate(false);
+                    m_bShowTransparentBackground = value;
+                    Invalidate(false);
                 }
             }
         }
@@ -187,14 +187,14 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_bShowXPanderPanelProfessionalStyle;
+                return m_bShowXPanderPanelProfessionalStyle;
             }
             set
             {
-                if (value.Equals(this.m_bShowXPanderPanelProfessionalStyle) == false)
+                if (value.Equals(m_bShowXPanderPanelProfessionalStyle) == false)
                 {
-                    this.m_bShowXPanderPanelProfessionalStyle = value;
-                    this.Invalidate(false);
+                    m_bShowXPanderPanelProfessionalStyle = value;
+                    Invalidate(false);
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.m_restoreBounds;
+                return m_restoreBounds;
             }
         }
 
@@ -225,21 +225,21 @@ namespace BSE.Windows.Forms
         {
             InitializeComponent();
 
-            this.CaptionFont = new Font(SystemFonts.CaptionFont.FontFamily,
+            CaptionFont = new Font(SystemFonts.CaptionFont.FontFamily,
                 SystemFonts.CaptionFont.SizeInPoints + 2.75F,
                 FontStyle.Bold);
-            this.BackColor = Color.Transparent;
-            this.ForeColor = SystemColors.ControlText;
-            this.ShowTransparentBackground = true;
-            this.ShowXPanderPanelProfessionalStyle = false;
-            this.ColorScheme = ColorScheme.Professional;
-            this.LinearGradientMode = LinearGradientMode.Vertical;
-            this.Expand = true;
-            this.CaptionHeight = 27;
-            this.ImageSize = new Size(18, 18);
-            this.m_bShowCaptionbar = true;
-            this.m_customColors = new CustomPanelColors();
-            this.m_customColors.CustomColorsChanged += OnCustomColorsChanged;
+            BackColor = Color.Transparent;
+            ForeColor = SystemColors.ControlText;
+            ShowTransparentBackground = true;
+            ShowXPanderPanelProfessionalStyle = false;
+            ColorScheme = ColorScheme.Professional;
+            LinearGradientMode = LinearGradientMode.Vertical;
+            Expand = true;
+            CaptionHeight = 27;
+            ImageSize = new Size(18, 18);
+            m_bShowCaptionbar = true;
+            m_customColors = new CustomPanelColors();
+            m_customColors.CustomColorsChanged += OnCustomColorsChanged;
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace BSE.Windows.Forms
         /// <param name="panelColors">The PanelColors table</param>
         public override void SetPanelProperties(PanelColors panelColors)
         {
-            this.m_imgHoverBackground = null;
+            m_imgHoverBackground = null;
             base.SetPanelProperties(panelColors);
         }
 
@@ -260,35 +260,35 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                Padding padding = this.Padding;
+                Padding padding = Padding;
                 Rectangle displayRectangle = new Rectangle(
-                    this.ClientRectangle.Left + padding.Left,
-                    this.ClientRectangle.Top + padding.Top,
-                    this.ClientRectangle.Width - padding.Left - padding.Right,
-                    this.ClientRectangle.Height - padding.Top - padding.Bottom);
+                    ClientRectangle.Left + padding.Left,
+                    ClientRectangle.Top + padding.Top,
+                    ClientRectangle.Width - padding.Left - padding.Right,
+                    ClientRectangle.Height - padding.Top - padding.Bottom);
 
-                if (this.m_bShowCaptionbar == true)
+                if (m_bShowCaptionbar)
                 {
-                    if (this.Controls.Count > 0)
+                    if (Controls.Count > 0)
                     {
-                        XPanderPanelList xpanderPanelList = this.Controls[0] as XPanderPanelList;
+                        XPanderPanelList xpanderPanelList = Controls[0] as XPanderPanelList;
                         if (xpanderPanelList != null && xpanderPanelList.Dock == DockStyle.Fill)
                         {
                             displayRectangle = new Rectangle(
                                 padding.Left,
-                                this.CaptionHeight + padding.Top + Constants.BorderThickness,
-                                this.ClientRectangle.Width - padding.Left - padding.Right,
-                                this.ClientRectangle.Height - this.CaptionHeight - padding.Top - padding.Bottom -
+                                CaptionHeight + padding.Top + Constants.BorderThickness,
+                                ClientRectangle.Width - padding.Left - padding.Right,
+                                ClientRectangle.Height - CaptionHeight - padding.Top - padding.Bottom -
                                 2 * Constants.BorderThickness);
                         }
                         else
                         {
                             displayRectangle = new Rectangle(
                                 padding.Left + Constants.BorderThickness,
-                                this.CaptionHeight + padding.Top + Constants.BorderThickness,
-                                this.ClientRectangle.Width - padding.Left - padding.Right -
+                                CaptionHeight + padding.Top + Constants.BorderThickness,
+                                ClientRectangle.Width - padding.Left - padding.Right -
                                 2 * Constants.BorderThickness,
-                                this.ClientRectangle.Height - this.CaptionHeight - padding.Top - padding.Bottom -
+                                ClientRectangle.Height - CaptionHeight - padding.Top - padding.Bottom -
                                 2 * Constants.BorderThickness);
                         }
                     }
@@ -309,7 +309,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An EventArgs that contains the event data.</param>
         protected override void OnExpandClick(object sender, EventArgs e)
         {
-            this.Expand = !this.Expand;
+            Expand = !Expand;
             base.OnExpandClick(sender, e);
         }
 
@@ -320,7 +320,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">A HoverStateChangeEventArgs that contains the event data.</param>
         protected override void OnExpandIconHoverStateChanged(object sender, HoverStateChangeEventArgs e)
         {
-            Invalidate(this.RectangleExpandIcon);
+            Invalidate(RectangleExpandIcon);
             base.OnExpandIconHoverStateChanged(sender, e);
         }
 
@@ -331,7 +331,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">A HoverStateChangeEventArgs that contains the event data.</param>
         protected override void OnCloseIconHoverStateChanged(object sender, HoverStateChangeEventArgs e)
         {
-            Invalidate(this.RectangleCloseIcon);
+            Invalidate(RectangleCloseIcon);
             base.OnCloseIconHoverStateChanged(sender, e);
         }
 
@@ -341,30 +341,30 @@ namespace BSE.Windows.Forms
         /// <param name="pevent">A PaintEventArgs that contains information about the control to paint.</param>
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
-            if (this.ShowTransparentBackground == true)
+            if (ShowTransparentBackground)
             {
                 base.OnPaintBackground(pevent);
-                this.BackColor = Color.Transparent;
+                BackColor = Color.Transparent;
             }
             else
             {
-                Rectangle rectangleBounds = this.ClientRectangle;
-                if (this.m_bShowCaptionbar == true)
+                Rectangle rectangleBounds = ClientRectangle;
+                if (m_bShowCaptionbar)
                 {
-                    this.BackColor = Color.Transparent;
+                    BackColor = Color.Transparent;
                     rectangleBounds = new Rectangle(
-                        this.ClientRectangle.Left,
-                        this.ClientRectangle.Top + this.CaptionHeight,
-                        this.ClientRectangle.Width,
-                        this.ClientRectangle.Height - this.CaptionHeight);
+                        ClientRectangle.Left,
+                        ClientRectangle.Top + CaptionHeight,
+                        ClientRectangle.Width,
+                        ClientRectangle.Height - CaptionHeight);
                 }
 
                 RenderBackgroundGradient(
                     pevent.Graphics,
                     rectangleBounds,
-                    this.PanelColors.PanelContentGradientBegin,
-                    this.PanelColors.PanelContentGradientEnd,
-                    this.LinearGradientMode);
+                    PanelColors.PanelContentGradientBegin,
+                    PanelColors.PanelContentGradientEnd,
+                    LinearGradientMode);
             }
         }
 
@@ -374,8 +374,8 @@ namespace BSE.Windows.Forms
         /// <param name="e">A PaintEventArgs that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            PanelStyle panelStyle = this.PanelStyle;
-            if (this.m_bShowCaptionbar == false)
+            PanelStyle panelStyle = PanelStyle;
+            if (m_bShowCaptionbar == false)
             {
                 return;
             }
@@ -385,44 +385,44 @@ namespace BSE.Windows.Forms
                 Graphics graphics = e.Graphics;
                 using (UseClearTypeGridFit clearTypeGridFit = new UseClearTypeGridFit(graphics))
                 {
-                    Rectangle captionRectangle = this.CaptionRectangle;
-                    Color colorGradientBegin = this.PanelColors.PanelCaptionGradientBegin;
-                    Color colorGradientEnd = this.PanelColors.PanelCaptionGradientEnd;
-                    Color colorGradientMiddle = this.PanelColors.PanelCaptionGradientMiddle;
-                    Color colorText = this.PanelColors.PanelCaptionText;
-                    bool bShowXPanderPanelProfessionalStyle = this.ShowXPanderPanelProfessionalStyle;
-                    ColorScheme colorSchema = this.ColorScheme;
+                    Rectangle captionRectangle = CaptionRectangle;
+                    Color colorGradientBegin = PanelColors.PanelCaptionGradientBegin;
+                    Color colorGradientEnd = PanelColors.PanelCaptionGradientEnd;
+                    Color colorGradientMiddle = PanelColors.PanelCaptionGradientMiddle;
+                    Color colorText = PanelColors.PanelCaptionText;
+                    bool bShowXPanderPanelProfessionalStyle = ShowXPanderPanelProfessionalStyle;
+                    ColorScheme colorSchema = ColorScheme;
 
-                    if (bShowXPanderPanelProfessionalStyle == true
+                    if (bShowXPanderPanelProfessionalStyle
                         && colorSchema == ColorScheme.Professional
                         && panelStyle != PanelStyle.Office2007)
                     {
-                        colorGradientBegin = this.PanelColors.XPanderPanelCaptionGradientBegin;
-                        colorGradientEnd = this.PanelColors.XPanderPanelCaptionGradientEnd;
-                        colorGradientMiddle = this.PanelColors.XPanderPanelCaptionGradientMiddle;
-                        colorText = this.PanelColors.XPanderPanelCaptionText;
+                        colorGradientBegin = PanelColors.XPanderPanelCaptionGradientBegin;
+                        colorGradientEnd = PanelColors.XPanderPanelCaptionGradientEnd;
+                        colorGradientMiddle = PanelColors.XPanderPanelCaptionGradientMiddle;
+                        colorText = PanelColors.XPanderPanelCaptionText;
                     }
 
-                    Image image = this.Image;
-                    RightToLeft rightToLeft = this.RightToLeft;
-                    Font captionFont = this.CaptionFont;
-                    Rectangle clientRectangle = this.ClientRectangle;
-                    string strText = this.Text;
-                    DockStyle dockStyle = this.Dock;
-                    bool bExpand = this.Expand;
-                    if (this.m_imageClosePanel == null)
+                    Image image = Image;
+                    RightToLeft rightToLeft = RightToLeft;
+                    Font captionFont = CaptionFont;
+                    Rectangle clientRectangle = ClientRectangle;
+                    string strText = Text;
+                    DockStyle dockStyle = Dock;
+                    bool bExpand = Expand;
+                    if (m_imageClosePanel == null)
                     {
-                        this.m_imageClosePanel = Resources.closePanel;
+                        m_imageClosePanel = Resources.closePanel;
                     }
 
-                    Color colorCloseIcon = this.PanelColors.PanelCaptionCloseIcon;
+                    Color colorCloseIcon = PanelColors.PanelCaptionCloseIcon;
                     if (colorCloseIcon == Color.Empty)
                     {
                         colorCloseIcon = colorText;
                     }
 
-                    bool bShowExpandIcon = this.ShowExpandIcon;
-                    bool bShowCloseIcon = this.ShowCloseIcon;
+                    bool bShowExpandIcon = ShowExpandIcon;
+                    bool bShowCloseIcon = ShowCloseIcon;
 
                     switch (panelStyle)
                     {
@@ -440,8 +440,8 @@ namespace BSE.Windows.Forms
                         graphics,
                         clientRectangle,
                         captionRectangle,
-                        this.PanelColors.BorderColor,
-                        this.PanelColors.InnerBorderColor);
+                        PanelColors.BorderColor,
+                        PanelColors.InnerBorderColor);
 
                     if (dockStyle == DockStyle.Fill || dockStyle == DockStyle.None ||
                         bShowExpandIcon == false && bShowCloseIcon == false)
@@ -450,7 +450,7 @@ namespace BSE.Windows.Forms
                             graphics,
                             captionRectangle,
                             CaptionSpacing,
-                            this.ImageRectangle,
+                            ImageRectangle,
                             image,
                             rightToLeft,
                             captionFont,
@@ -460,7 +460,7 @@ namespace BSE.Windows.Forms
                         return;
                     }
 
-                    if (bShowExpandIcon == true || bShowCloseIcon == true)
+                    if (bShowExpandIcon || bShowCloseIcon)
                     {
                         Image imageExpandPanel = GetExpandImage(dockStyle, bExpand);
 
@@ -470,54 +470,54 @@ namespace BSE.Windows.Forms
                             CaptionSpacing,
                             captionRectangle,
                             clientRectangle,
-                            this.ImageRectangle,
+                            ImageRectangle,
                             image,
                             rightToLeft,
                             bShowCloseIcon,
-                            this.m_imageClosePanel,
+                            m_imageClosePanel,
                             colorCloseIcon,
-                            ref this.RectangleCloseIcon,
+                            ref RectangleCloseIcon,
                             bShowExpandIcon,
                             bExpand,
                             imageExpandPanel,
                             colorText,
-                            ref this.RectangleExpandIcon,
+                            ref RectangleExpandIcon,
                             captionFont,
                             colorText,
-                            this.PanelColors.PanelCollapsedCaptionText,
+                            PanelColors.PanelCollapsedCaptionText,
                             strText);
 
-                        if (this.m_imgHoverBackground == null)
+                        if (m_imgHoverBackground == null)
                         {
-                            this.m_imgHoverBackground = GetPanelIconBackground(
+                            m_imgHoverBackground = GetPanelIconBackground(
                                 graphics,
-                                this.ImageRectangle,
-                                this.PanelColors.PanelCaptionSelectedGradientBegin,
-                                this.PanelColors.PanelCaptionSelectedGradientEnd);
+                                ImageRectangle,
+                                PanelColors.PanelCaptionSelectedGradientBegin,
+                                PanelColors.PanelCaptionSelectedGradientEnd);
                         }
 
-                        if (this.m_imgHoverBackground != null)
+                        if (m_imgHoverBackground != null)
                         {
-                            Rectangle rectangleCloseIcon = this.RectangleCloseIcon;
+                            Rectangle rectangleCloseIcon = RectangleCloseIcon;
                             if (rectangleCloseIcon != Rectangle.Empty)
                             {
-                                if (this.HoverStateCloseIcon == HoverState.Hover)
+                                if (HoverStateCloseIcon == HoverState.Hover)
                                 {
-                                    graphics.DrawImage(this.m_imgHoverBackground, rectangleCloseIcon);
+                                    graphics.DrawImage(m_imgHoverBackground, rectangleCloseIcon);
                                     DrawIcon(graphics,
-                                        this.m_imageClosePanel,
+                                        m_imageClosePanel,
                                         rectangleCloseIcon,
                                         colorCloseIcon,
                                         rectangleCloseIcon.Y);
                                 }
                             }
 
-                            Rectangle rectangleExpandIcon = this.RectangleExpandIcon;
+                            Rectangle rectangleExpandIcon = RectangleExpandIcon;
                             if (rectangleExpandIcon != Rectangle.Empty)
                             {
-                                if (this.HoverStateExpandIcon == HoverState.Hover)
+                                if (HoverStateExpandIcon == HoverState.Hover)
                                 {
-                                    graphics.DrawImage(this.m_imgHoverBackground, rectangleExpandIcon);
+                                    graphics.DrawImage(m_imgHoverBackground, rectangleExpandIcon);
                                     DrawIcon(graphics,
                                         imageExpandPanel,
                                         rectangleExpandIcon,
@@ -538,32 +538,32 @@ namespace BSE.Windows.Forms
         /// <param name="e">A XPanderStateChangeEventArgs that contains the event data.</param>
         protected override void OnPanelCollapsing(object sender, XPanderStateChangeEventArgs e)
         {
-            if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+            if (Dock == DockStyle.Left || Dock == DockStyle.Right)
             {
-                foreach (Control control in this.Controls)
+                foreach (Control control in Controls)
                 {
                     control.Hide();
                 }
             }
 
-            if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+            if (Dock == DockStyle.Left || Dock == DockStyle.Right)
             {
-                if (this.ClientRectangle.Width > this.CaptionHeight)
+                if (ClientRectangle.Width > CaptionHeight)
                 {
-                    this.m_restoreBounds = this.ClientRectangle;
+                    m_restoreBounds = ClientRectangle;
                 }
 
-                this.Width = this.CaptionHeight;
+                Width = CaptionHeight;
             }
 
-            if (this.Dock == DockStyle.Top || this.Dock == DockStyle.Bottom)
+            if (Dock == DockStyle.Top || Dock == DockStyle.Bottom)
             {
-                if (this.ClientRectangle.Height > this.CaptionHeight)
+                if (ClientRectangle.Height > CaptionHeight)
                 {
-                    this.m_restoreBounds = this.ClientRectangle;
+                    m_restoreBounds = ClientRectangle;
                 }
 
-                this.Height = this.CaptionHeight;
+                Height = CaptionHeight;
             }
 
             base.OnPanelCollapsing(sender, e);
@@ -576,24 +576,24 @@ namespace BSE.Windows.Forms
         /// <param name="e">A XPanderStateChangeEventArgs that contains the event data.</param>
         protected override void OnPanelExpanding(object sender, XPanderStateChangeEventArgs e)
         {
-            if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+            if (Dock == DockStyle.Left || Dock == DockStyle.Right)
             {
-                foreach (Control control in this.Controls)
+                foreach (Control control in Controls)
                 {
                     control.Show();
                 }
 
                 //When ClientRectangle.Width > CaptionHeight the panel size has changed
                 //otherwise the captionclick event was executed
-                if (this.ClientRectangle.Width == this.CaptionHeight)
+                if (ClientRectangle.Width == CaptionHeight)
                 {
-                    this.Width = this.m_restoreBounds.Width;
+                    Width = m_restoreBounds.Width;
                 }
             }
 
-            if (this.Dock == DockStyle.Top || this.Dock == DockStyle.Bottom)
+            if (Dock == DockStyle.Top || Dock == DockStyle.Bottom)
             {
-                this.Height = this.m_restoreBounds.Height;
+                Height = m_restoreBounds.Height;
             }
 
             base.OnPanelExpanding(sender, e);
@@ -615,8 +615,8 @@ namespace BSE.Windows.Forms
         /// </summary>
         protected override void OnCreateControl()
         {
-            this.m_restoreBounds = this.ClientRectangle;
-            this.MinimumSize = new Size(this.CaptionHeight, this.CaptionHeight);
+            m_restoreBounds = ClientRectangle;
+            MinimumSize = new Size(CaptionHeight, CaptionHeight);
             base.OnCreateControl();
         }
 
@@ -626,41 +626,41 @@ namespace BSE.Windows.Forms
         /// <param name="e">An EventArgs that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
-            if (this.ShowExpandIcon == true)
+            if (ShowExpandIcon)
             {
-                if (this.Expand == false)
+                if (Expand == false)
                 {
-                    if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+                    if (Dock == DockStyle.Left || Dock == DockStyle.Right)
                     {
-                        if (this.Width > this.CaptionHeight)
+                        if (Width > CaptionHeight)
                         {
-                            this.Expand = true;
+                            Expand = true;
                         }
                     }
 
-                    if (this.Dock == DockStyle.Top || this.Dock == DockStyle.Bottom)
+                    if (Dock == DockStyle.Top || Dock == DockStyle.Bottom)
                     {
-                        if (this.Height > this.CaptionHeight)
+                        if (Height > CaptionHeight)
                         {
-                            this.Expand = true;
+                            Expand = true;
                         }
                     }
                 }
                 else
                 {
-                    if (this.Dock == DockStyle.Left || this.Dock == DockStyle.Right)
+                    if (Dock == DockStyle.Left || Dock == DockStyle.Right)
                     {
-                        if (this.Width == this.CaptionHeight)
+                        if (Width == CaptionHeight)
                         {
-                            this.Expand = false;
+                            Expand = false;
                         }
                     }
 
-                    if (this.Dock == DockStyle.Top || this.Dock == DockStyle.Bottom)
+                    if (Dock == DockStyle.Top || Dock == DockStyle.Bottom)
                     {
-                        if (this.Height == this.CaptionHeight)
+                        if (Height == CaptionHeight)
                         {
-                            this.Expand = false;
+                            Expand = false;
                         }
                     }
                 }
@@ -675,10 +675,10 @@ namespace BSE.Windows.Forms
         /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
         protected override void OnVisibleChanged(EventArgs e)
         {
-            System.Windows.Forms.Splitter associatedSplitter = this.AssociatedSplitter;
+            System.Windows.Forms.Splitter associatedSplitter = AssociatedSplitter;
             if (associatedSplitter != null)
             {
-                associatedSplitter.Visible = this.Visible;
+                associatedSplitter.Visible = Visible;
             }
 
             base.OnVisibleChanged(e);
@@ -791,7 +791,7 @@ namespace BSE.Windows.Forms
         private static Image GetExpandImage(DockStyle dockStyle, bool bIsExpanded)
         {
             Image image = null;
-            if (dockStyle == DockStyle.Left && bIsExpanded == true)
+            if (dockStyle == DockStyle.Left && bIsExpanded)
             {
                 image = Resources.ChevronLeft;
             }
@@ -799,7 +799,7 @@ namespace BSE.Windows.Forms
             {
                 image = Resources.ChevronRight;
             }
-            else if (dockStyle == DockStyle.Right && bIsExpanded == true)
+            else if (dockStyle == DockStyle.Right && bIsExpanded)
             {
                 image = Resources.ChevronRight;
             }
@@ -807,7 +807,7 @@ namespace BSE.Windows.Forms
             {
                 image = Resources.ChevronLeft;
             }
-            else if (dockStyle == DockStyle.Top && bIsExpanded == true)
+            else if (dockStyle == DockStyle.Top && bIsExpanded)
             {
                 image = Resources.ChevronUp;
             }
@@ -815,7 +815,7 @@ namespace BSE.Windows.Forms
             {
                 image = Resources.ChevronDown;
             }
-            else if (dockStyle == DockStyle.Bottom && bIsExpanded == true)
+            else if (dockStyle == DockStyle.Bottom && bIsExpanded)
             {
                 image = Resources.ChevronDown;
             }
@@ -872,7 +872,7 @@ namespace BSE.Windows.Forms
                 DesignerActionListCollection actionLists = new DesignerActionListCollection();
 
                 // Add custom action list
-                actionLists.Add(new PanelDesignerActionList(this.Component));
+                actionLists.Add(new PanelDesignerActionList(Component));
 
                 // Return to the designer action service
                 return actionLists;
@@ -915,7 +915,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ShowCaptionbar;
+                return Panel.ShowCaptionbar;
             }
             set
             {
@@ -930,7 +930,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ShowTransparentBackground;
+                return Panel.ShowTransparentBackground;
             }
             set
             {
@@ -946,7 +946,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ShowXPanderPanelProfessionalStyle;
+                return Panel.ShowXPanderPanelProfessionalStyle;
             }
             set
             {
@@ -961,7 +961,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ShowExpandIcon;
+                return Panel.ShowExpandIcon;
             }
             set
             {
@@ -976,7 +976,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ShowCloseIcon;
+                return Panel.ShowCloseIcon;
             }
             set
             {
@@ -991,7 +991,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.PanelStyle;
+                return Panel.PanelStyle;
             }
             set
             {
@@ -1006,7 +1006,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return this.Panel.ColorScheme;
+                return Panel.ColorScheme;
             }
             set
             {
@@ -1053,43 +1053,43 @@ namespace BSE.Windows.Forms
                 new DesignerActionPropertyItem(
                     "ShowTransparentBackground",
                     "Show transparent backcolor",
-                    GetCategory(this.Panel, "ShowTransparentBackground")));
+                    GetCategory(Panel, "ShowTransparentBackground")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "ShowXPanderPanelProfessionalStyle",
                     "Show the XPanderPanels professional colorscheme",
-                    GetCategory(this.Panel, "ShowXPanderPanelProfessionalStyle")));
+                    GetCategory(Panel, "ShowXPanderPanelProfessionalStyle")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "ShowCaptionbar",
                     "Show the captionbar on top of the panel",
-                    GetCategory(this.Panel, "ShowCaptionbar")));
+                    GetCategory(Panel, "ShowCaptionbar")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "ShowExpandIcon",
                     "Show the expand panel icon (not at DockStyle.None or DockStyle.Fill)",
-                    GetCategory(this.Panel, "ShowExpandIcon")));
+                    GetCategory(Panel, "ShowExpandIcon")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "ShowCloseIcon",
                     "Show the close panel icon (not at DockStyle.None or DockStyle.Fill)",
-                    GetCategory(this.Panel, "ShowCloseIcon")));
+                    GetCategory(Panel, "ShowCloseIcon")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "PanelStyle",
                     "Select PanelStyle",
-                    GetCategory(this.Panel, "PanelStyle")));
+                    GetCategory(Panel, "PanelStyle")));
 
             actionItems.Add(
                 new DesignerActionPropertyItem(
                     "ColorScheme",
                     "Select ColorScheme",
-                    GetCategory(this.Panel, "ColorScheme")));
+                    GetCategory(Panel, "ColorScheme")));
 
             return actionItems;
         }
@@ -1100,7 +1100,7 @@ namespace BSE.Windows.Forms
         public void ToggleDockStyle()
         {
             // Toggle ClockControl's Dock property
-            if (this.Panel.Dock != DockStyle.Fill)
+            if (Panel.Dock != DockStyle.Fill)
             {
                 SetProperty("Dock", DockStyle.Fill);
             }
@@ -1120,7 +1120,7 @@ namespace BSE.Windows.Forms
         // property value
         private string GetDockStyleText()
         {
-            if (this.Panel.Dock == DockStyle.Fill)
+            if (Panel.Dock == DockStyle.Fill)
             {
                 return "Undock in parent container";
             }
@@ -1134,7 +1134,7 @@ namespace BSE.Windows.Forms
         {
             get
             {
-                return (Panel)this.Component;
+                return (Panel)Component;
             }
         }
 
@@ -1143,9 +1143,9 @@ namespace BSE.Windows.Forms
         {
             // Get property
             PropertyDescriptor property
-                = TypeDescriptor.GetProperties(this.Panel)[propertyName];
+                = TypeDescriptor.GetProperties(Panel)[propertyName];
             // Set property value
-            property.SetValue(this.Panel, value);
+            property.SetValue(Panel, value);
         }
 
         // Helper method to return the Category string from a

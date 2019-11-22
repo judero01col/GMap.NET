@@ -431,7 +431,7 @@ namespace GMap.NET
         void CacheEngineLoop()
         {
             Debug.WriteLine("CacheEngine: start");
-            int left = 0;
+            int left;
 
             if (OnTileCacheStart != null)
             {
@@ -529,8 +529,6 @@ namespace GMap.NET
                             Debug.WriteLine("CacheEngineLoop: skip, tile disposed to early -> " + task.Value);
                         }
 
-                        task = null;
-
                         #endregion
                     }
                     else
@@ -592,10 +590,10 @@ namespace GMap.NET
 
         public string SerializeGPX(gpxType targetInstance)
         {
-            string retVal = string.Empty;
-            using (StringWriterExt writer = new StringWriterExt(CultureInfo.InvariantCulture))
+            string retVal;
+            using (var writer = new StringWriterExt(CultureInfo.InvariantCulture))
             {
-                XmlSerializer serializer = new XmlSerializer(targetInstance.GetType());
+                var serializer = new XmlSerializer(targetInstance.GetType());
                 serializer.Serialize(writer, targetInstance);
                 retVal = writer.ToString();
             }
@@ -605,7 +603,7 @@ namespace GMap.NET
 
         public gpxType DeserializeGPX(string objectXml)
         {
-            gpxType retVal = null;
+            gpxType retVal;
 
             using (StringReader stringReader = new StringReader(objectXml))
             {
@@ -769,7 +767,6 @@ namespace GMap.NET
                                     Debugger.Break();
                                 }
 #endif
-                                m = null;
                             }
                         }
                     }

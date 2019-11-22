@@ -8,12 +8,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public RetryableFailure(Exception ex, string provenance) : base(new PresentFailureCode(ex), provenance)
         {
-            this.retryTime = DateTime.Now.AddSeconds(15.0);
+            retryTime = DateTime.Now.AddSeconds(15.0);
         }
 
         public bool EvictMeNow()
         {
-            return DateTime.Now > this.retryTime;
+            return DateTime.Now > retryTime;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Demo.WindowsForms.CustomMarkers
       //[NonSerialized]
       //public Pen Pen = new Pen(Brushes.Blue, 5);
 
-      static readonly Point[] Arrow = new Point[] { new Point(-7, 7), new Point(0, -22), new Point(7, 7), new Point(0, 2) };
+      static readonly Point[] Arrow = new[] { new Point(-7, 7), new Point(0, -22), new Point(7, 7), new Point(0, 2) };
 
       public float Bearing = 0;
       private float scale = 1;

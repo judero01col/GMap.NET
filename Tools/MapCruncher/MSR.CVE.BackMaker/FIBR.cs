@@ -13,19 +13,19 @@ namespace MSR.CVE.BackMaker
 
         private void Dispose()
         {
-            if (this.sw != null)
+            if (sw != null)
             {
-                this.sw.Close();
-                this.sw = null;
+                sw.Close();
+                sw = null;
             }
         }
 
         private void Write(string message)
         {
-            if (this.sw != null)
+            if (sw != null)
             {
-                this.sw.WriteLine(message);
-                this.sw.Flush();
+                sw.WriteLine(message);
+                sw.Flush();
             }
         }
 

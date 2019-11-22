@@ -32,13 +32,13 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                int num = this.crunchedLayers.FindIndex((CrunchedLayer cl) => cl.displayName == layer.displayName);
+                int num = crunchedLayers.FindIndex((CrunchedLayer cl) => cl.displayName == layer.displayName);
                 if (num == -1)
                 {
                     throw new IndexOutOfRangeException();
                 }
 
-                return this.crunchedLayers[num];
+                return crunchedLayers[num];
             }
         }
 
@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker
         {
             foreach (Layer current in mashup.layerList)
             {
-                this.crunchedLayers.Add(new CrunchedLayer(mashup.GetRenderOptions(),
+                crunchedLayers.Add(new CrunchedLayer(mashup.GetRenderOptions(),
                     current,
                     rangeQueryData[current],
                     mapTileSourceFactory));
@@ -55,7 +55,7 @@ namespace MSR.CVE.BackMaker
 
             this.renderOutput = renderOutput;
             this.sourceMashupFilename = sourceMashupFilename;
-            this.permitComposition = mashup.GetRenderOptions().permitComposition;
+            permitComposition = mashup.GetRenderOptions().permitComposition;
             this.boundsList = boundsList;
         }
 
@@ -71,7 +71,7 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader2.TagIs(CrunchedLayer.GetXMLTag()))
                         {
-                            this.crunchedLayers.Add(new CrunchedLayer(context));
+                            crunchedLayers.Add(new CrunchedLayer(context));
                         }
                     }
                 }
@@ -140,13 +140,13 @@ namespace MSR.CVE.BackMaker
 
         public void WriteXML()
         {
-            Stream w = this.renderOutput.CreateFile(this.GetRelativeFilename(), "text/xml");
+            Stream w = renderOutput.CreateFile(GetRelativeFilename(), "text/xml");
             XmlTextWriter xmlTextWriter = new XmlTextWriter(w, Encoding.UTF8);
             using (xmlTextWriter)
             {
                 xmlTextWriter.Formatting = Formatting.Indented;
                 xmlTextWriter.WriteStartDocument(true);
-                this.WriteXML(xmlTextWriter);
+                WriteXML(xmlTextWriter);
                 xmlTextWriter.Close();
             }
         }
@@ -159,18 +159,18 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString("xmlns:cc", "http://web.resource.org/cc/");
             writer.WriteAttributeString("Version", "1.6");
             writer.WriteAttributeString(renderDateTag, DateTime.Now.ToString());
-            if (this.sourceMashupFilename != null)
+            if (sourceMashupFilename != null)
             {
-                writer.WriteAttributeString(SourceMashupFilenameAttr, this.sourceMashupFilename);
+                writer.WriteAttributeString(SourceMashupFilenameAttr, sourceMashupFilename);
             }
 
-            if (this.permitComposition)
+            if (permitComposition)
             {
-                this.WritePermitCompositionLicense(writer);
+                WritePermitCompositionLicense(writer);
             }
 
             writer.WriteStartElement("BoundsList");
-            foreach (TileRectangle current in this.boundsList)
+            foreach (TileRectangle current in boundsList)
             {
                 writer.WriteStartElement("Bounds");
                 writer.WriteAttributeString("zoom", current.zoom.ToString());
@@ -195,7 +195,7 @@ namespace MSR.CVE.BackMaker
                         MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber)));
             writer.WriteEndElement();
             writer.WriteStartElement(LayerList.GetXMLTag());
-            foreach (CrunchedLayer current2 in this.crunchedLayers)
+            foreach (CrunchedLayer current2 in crunchedLayers)
             {
                 current2.WriteXML(writer);
             }
@@ -232,9 +232,9 @@ namespace MSR.CVE.BackMaker
 
         public void WriteSourceMapLegendFrames()
         {
-            foreach (CrunchedLayer current in this.crunchedLayers)
+            foreach (CrunchedLayer current in crunchedLayers)
             {
-                current.WriteSourceMapLegendFrames(this.renderOutput);
+                current.WriteSourceMapLegendFrames(renderOutput);
             }
         }
     }

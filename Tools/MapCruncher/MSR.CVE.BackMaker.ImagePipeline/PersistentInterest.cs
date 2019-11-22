@@ -6,15 +6,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public PersistentInterest(AsyncRef asyncRef)
         {
-            this.interestList = new InterestList();
-            this.interestList.Add(asyncRef);
-            this.interestList.Activate();
-            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.AsyncCompleteCallback));
+            interestList = new InterestList();
+            interestList.Add(asyncRef);
+            interestList.Activate();
+            asyncRef.AddCallback(new AsyncRecord.CompleteCallback(AsyncCompleteCallback));
         }
 
         public void AsyncCompleteCallback(AsyncRef boundsAsyncRef)
         {
-            this.interestList.Dispose();
+            interestList.Dispose();
         }
     }
 }

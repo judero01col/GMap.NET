@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
         {
             return new PolynomialImageTransformer(registration,
                 interpolationMode,
-                this.getPolynomialDegree(registration.GetAssociationList().Count));
+                getPolynomialDegree(registration.GetAssociationList().Count));
         }
 
         public override int getCorrespondencesRequired()
@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
         public override List<string> getDescriptionStrings(int numCorrespondences)
         {
             List<string> list = new List<string>();
-            if (numCorrespondences >= this.getCorrespondencesRequired())
+            if (numCorrespondences >= getCorrespondencesRequired())
             {
                 list.Add("Ready to lock; add more points to increase accuracy.");
             }

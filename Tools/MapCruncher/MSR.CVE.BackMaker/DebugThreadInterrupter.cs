@@ -13,18 +13,18 @@ namespace MSR.CVE.BackMaker
             {
                 get
                 {
-                    return this._thread;
+                    return _thread;
                 }
             }
 
             public ThreadRec(Thread thread)
             {
-                this._thread = thread;
+                _thread = thread;
             }
 
             public override string ToString()
             {
-                return string.Format("{0} {1}", this._thread.ManagedThreadId, this._thread.Name);
+                return string.Format("{0} {1}", _thread.ManagedThreadId, _thread.Name);
             }
         }
 
@@ -41,8 +41,8 @@ namespace MSR.CVE.BackMaker
 
             public void DoWork()
             {
-                this.threadStart();
-                this.debugThreadInterrupter.UnregisterThread(Thread.CurrentThread);
+                threadStart();
+                debugThreadInterrupter.UnregisterThread(Thread.CurrentThread);
             }
         }
 
@@ -56,7 +56,7 @@ namespace MSR.CVE.BackMaker
 
         public DebugThreadInterrupter()
         {
-            this.AddThread("DebugThreadInterrupter", new ThreadStart(this.DoWork), ThreadPriority.Normal);
+            AddThread("DebugThreadInterrupter", new ThreadStart(DoWork), ThreadPriority.Normal);
         }
 
         public void AddThread(string name, ThreadStart start, ThreadPriority priority)
@@ -65,15 +65,15 @@ namespace MSR.CVE.BackMaker
             Thread thread = new Thread(new ThreadStart(@object.DoWork));
             thread.Priority = priority;
             thread.Name = name;
-            this.RegisterThread(thread);
+            RegisterThread(thread);
             thread.Start();
             D.Sayf(1, "Started thread {0}", new object[] {name});
         }
 
         public void Quit()
         {
-            this.quitFlag = true;
-            this.quitEvent.Set();
+            quitFlag = true;
+            quitEvent.Set();
         }
 
         private void DoWork()
@@ -81,8 +81,8 @@ namespace MSR.CVE.BackMaker
             while (true)
             {
                 int num = -1;
-                this.quitEvent.WaitOne(1000, false);
-                if (this.quitFlag)
+                quitEvent.WaitOne(1000, false);
+                if (quitFlag)
                 {
                     break;
                 }
@@ -93,7 +93,7 @@ namespace MSR.CVE.BackMaker
                 {
                     if (num >= 0)
                     {
-                        threadRec = this.threadDict[num];
+                        threadRec = threadDict[num];
                     }
                 }
                 finally
@@ -113,7 +113,7 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                this.threadDict[thread.ManagedThreadId] = new ThreadRec(thread);
+                threadDict[thread.ManagedThreadId] = new ThreadRec(thread);
             }
             finally
             {
@@ -127,8 +127,8 @@ namespace MSR.CVE.BackMaker
             ThreadRec threadRec;
             try
             {
-                threadRec = this.threadDict[thread.ManagedThreadId];
-                this.threadDict.Remove(thread.ManagedThreadId);
+                threadRec = threadDict[thread.ManagedThreadId];
+                threadDict.Remove(thread.ManagedThreadId);
             }
             finally
             {

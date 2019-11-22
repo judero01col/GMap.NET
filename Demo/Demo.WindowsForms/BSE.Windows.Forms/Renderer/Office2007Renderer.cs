@@ -1,4 +1,4 @@
-/********************************************************************/
+﻿/********************************************************************/
 /*  Office 2007 Renderer Project                                    */
 /*                                                                  */
 /*  Use the Office2007Renderer class as a custom renderer by        */
@@ -38,8 +38,8 @@ namespace BSE.Windows.Forms
             MarginInset = 2;
             // One time creation of the blend for the status strip gradient brush
             StatusStripBlend = new Blend();
-            StatusStripBlend.Positions = new float[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.8F, 1.0F };
-            StatusStripBlend.Factors = new float[] { 0.3F, 0.4F, 0.5F, 1.0F, 0.8F, 0.7F };
+            StatusStripBlend.Positions = new[] { 0.0F, 0.2F, 0.3F, 0.4F, 0.8F, 1.0F };
+            StatusStripBlend.Factors = new[] { 0.3F, 0.4F, 0.5F, 1.0F, 0.8F, 0.7F };
         }
         /// <summary>
         /// Initialize a new instance of the Office2007Renderer class.
@@ -47,7 +47,7 @@ namespace BSE.Windows.Forms
 		public Office2007Renderer()
 			: base(new Office2007BlueColorTable())
 		{
-			this.ColorTable.UseSystemColors = false;
+			ColorTable.UseSystemColors = false;
 		}
         /// <summary>
         /// Initializes a new instance of the Office2007Renderer class.
@@ -160,7 +160,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
         {
-			if (ColorTable.UseSystemColors == true)
+			if (ColorTable.UseSystemColors)
 			{
 				base.OnRenderToolStripBackground(e);
 			}
@@ -197,7 +197,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
         {
-			if (ColorTable.UseSystemColors == true)
+			if (ColorTable.UseSystemColors)
 			{
 				base.OnRenderToolStripBackground(e);
 			}

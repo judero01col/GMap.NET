@@ -26,7 +26,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override string ToString()
         {
             return string.Format("TL {0} Count {1},{2} Layout {3}",
-                new object[] {this.topLeftTile, this.tileCountX, this.tileCountY, this.layout});
+                new object[] {topLeftTile, tileCountX, tileCountY, layout});
         }
     }
 }

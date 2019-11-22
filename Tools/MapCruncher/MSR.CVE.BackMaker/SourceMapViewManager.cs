@@ -27,20 +27,20 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
-                ViewerControlIfc sMViewerControl = this.viewControl.GetSMViewerControl();
+                UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
+                ViewerControlIfc sMViewerControl = viewControl.GetSMViewerControl();
                 bool flag = false;
-                if (this.sourceMap.lastView is SourceMapRegistrationView)
+                if (sourceMap.lastView is SourceMapRegistrationView)
                 {
                     try
                     {
                         SourceMapRegistrationView sourceMapRegistrationView =
-                            (SourceMapRegistrationView)this.sourceMap.lastView;
+                            (SourceMapRegistrationView)sourceMap.lastView;
                         if (sourceMapRegistrationView.locked)
                         {
-                            if (this.sourceMap.ReadyToLock())
+                            if (sourceMap.ReadyToLock())
                             {
-                                this.SetupLockedView();
+                                SetupLockedView();
                                 uIPositionManager.GetVEPos()
                                     .setPosition(sourceMapRegistrationView.GetReferenceMapView());
                                 flag = true;
@@ -48,13 +48,13 @@ namespace MSR.CVE.BackMaker
                         }
                         else
                         {
-                            this.SetupUnlockedView();
+                            SetupUnlockedView();
                             uIPositionManager.GetSMPos().setPosition(sourceMapRegistrationView.GetSourceMapView());
                             uIPositionManager.GetVEPos().setPosition(sourceMapRegistrationView.GetReferenceMapView());
                             flag = true;
                         }
 
-                        this.viewControl.SetVEMapStyle(sourceMapRegistrationView.GetReferenceMapView().style);
+                        viewControl.SetVEMapStyle(sourceMapRegistrationView.GetReferenceMapView().style);
                     }
                     catch (CorrespondencesAreSingularException)
                     {
@@ -66,52 +66,52 @@ namespace MSR.CVE.BackMaker
 
                 if (!flag)
                 {
-                    this.SetupUnlockedView();
+                    SetupUnlockedView();
                     uIPositionManager.GetSMPos().setPosition(new ContinuousCoordinateSystem().GetDefaultView());
-                    uIPositionManager.GetVEPos().setPosition(this.DefaultReferenceMapPosition(this.drv));
+                    uIPositionManager.GetVEPos().setPosition(DefaultReferenceMapPosition(drv));
                 }
 
-                uIPositionManager.SetPositionMemory(this.sourceMap);
-                this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.SourceMapOptions);
-                this.viewControl.GetSourceMapInfoPanel().Configure(this.sourceMap);
-                this.viewControl.GetSourceMapInfoPanel().Enabled = true;
-                this.viewControl.GetTransparencyPanel().Configure(this.sourceMap, sMViewerControl);
-                this.viewControl.GetTransparencyPanel().Enabled = true;
-                this.viewControl.GetSMViewerControl().SetSnapViewStore(new SourceSnapView(this));
-                this.viewControl.GetVEViewerControl().SetSnapViewStore(new RefSnapView(this));
+                uIPositionManager.SetPositionMemory(sourceMap);
+                viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.SourceMapOptions);
+                viewControl.GetSourceMapInfoPanel().Configure(sourceMap);
+                viewControl.GetSourceMapInfoPanel().Enabled = true;
+                viewControl.GetTransparencyPanel().Configure(sourceMap, sMViewerControl);
+                viewControl.GetTransparencyPanel().Enabled = true;
+                viewControl.GetSMViewerControl().SetSnapViewStore(new SourceSnapView(this));
+                viewControl.GetVEViewerControl().SetSnapViewStore(new RefSnapView(this));
                 uIPositionManager.PositionUpdated();
             }
             catch (Exception)
             {
-                this.Dispose();
+                Dispose();
                 throw;
             }
         }
 
         public void Dispose()
         {
-            this.viewControl.GetCachePackage().ClearSchedulers();
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
+            viewControl.GetCachePackage().ClearSchedulers();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
             uIPositionManager.SetPositionMemory(null);
             uIPositionManager.GetSMPos().setPosition(new LatLonZoom(0.0, 0.0, 0));
             uIPositionManager.switchFree();
-            this.viewControl.GetSMViewerControl().ClearLayers();
-            this.viewControl.GetSMViewerControl().SetSnapViewStore(null);
-            this.viewControl.GetVEViewerControl().SetSnapViewStore(null);
-            this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
-            this.viewControl.GetSourceMapInfoPanel().Configure(null);
-            this.viewControl.GetSourceMapInfoPanel().Enabled = false;
-            this.viewControl.GetTransparencyPanel().Configure(null, null);
-            this.viewControl.GetTransparencyPanel().Enabled = false;
-            this.viewControl.setDisplayedRegistration(null);
-            this.sourceMap = null;
+            viewControl.GetSMViewerControl().ClearLayers();
+            viewControl.GetSMViewerControl().SetSnapViewStore(null);
+            viewControl.GetVEViewerControl().SetSnapViewStore(null);
+            viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
+            viewControl.GetSourceMapInfoPanel().Configure(null);
+            viewControl.GetSourceMapInfoPanel().Enabled = false;
+            viewControl.GetTransparencyPanel().Configure(null, null);
+            viewControl.GetTransparencyPanel().Enabled = false;
+            viewControl.setDisplayedRegistration(null);
+            sourceMap = null;
         }
 
         public void LockMaps()
         {
             try
             {
-                this.LockMapsInternal();
+                LockMapsInternal();
             }
             catch (CorrespondencesAreSingularException)
             {
@@ -125,72 +125,72 @@ namespace MSR.CVE.BackMaker
 
         private void LockMapsInternal()
         {
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
                 throw new Exception("uh oh.  trying to lock already-locked maps!");
             }
 
-            this.SetupLockedView();
-            this.sourceMap.AutoSelectMaxZoom(this.mapTileSourceFactory);
-            this.viewControl.GetUIPositionManager().PositionUpdated();
+            SetupLockedView();
+            sourceMap.AutoSelectMaxZoom(mapTileSourceFactory);
+            viewControl.GetUIPositionManager().PositionUpdated();
         }
 
         public void UnlockMaps()
         {
-            if (!this.mapsLocked)
+            if (!mapsLocked)
             {
                 throw new Exception("uh oh.  trying to unlock maps that are already unlocked!");
             }
 
-            this.SetupUnlockedView();
-            ViewerControlIfc sMViewerControl = this.viewControl.GetSMViewerControl();
-            MapRectangle bounds = this.viewControl.GetVEViewerControl().GetBounds();
-            WarpedMapTileSource warpedMapTileSource = this.mapTileSourceFactory.CreateWarpedSource(this.sourceMap);
+            SetupUnlockedView();
+            ViewerControlIfc sMViewerControl = viewControl.GetSMViewerControl();
+            MapRectangle bounds = viewControl.GetVEViewerControl().GetBounds();
+            WarpedMapTileSource warpedMapTileSource = mapTileSourceFactory.CreateWarpedSource(sourceMap);
             IPointTransformer destLatLonToSourceTransformer = warpedMapTileSource.GetDestLatLonToSourceTransformer();
             MapRectangle newBounds = bounds.Transform(destLatLonToSourceTransformer);
             LatLonZoom latLonZoom = sMViewerControl.GetCoordinateSystem()
                 .GetBestViewContaining(newBounds, sMViewerControl.Size);
             latLonZoom = CoordinateSystemUtilities.ConstrainLLZ(ContinuousCoordinateSystem.theInstance, latLonZoom);
-            this.viewControl.GetUIPositionManager().GetSMPos().setPosition(latLonZoom);
-            this.viewControl.GetUIPositionManager().PositionUpdated();
+            viewControl.GetUIPositionManager().GetSMPos().setPosition(latLonZoom);
+            viewControl.GetUIPositionManager().PositionUpdated();
         }
 
         private void SetupLockedView()
         {
-            WarpedMapTileSource warpedMapTileSource = this.mapTileSourceFactory.CreateWarpedSource(this.sourceMap);
-            this.viewControl.GetSMViewerControl().ClearLayers();
-            this.viewControl.GetSMViewerControl().SetBaseLayer(warpedMapTileSource);
-            this.viewControl.GetUIPositionManager().switchSlaved();
-            this.viewControl.setDisplayedRegistration(
-                new RegistrationControlRecord(warpedMapTileSource.ComputeWarpedRegistration(), this.sourceMap));
-            this.mapsLocked = true;
+            WarpedMapTileSource warpedMapTileSource = mapTileSourceFactory.CreateWarpedSource(sourceMap);
+            viewControl.GetSMViewerControl().ClearLayers();
+            viewControl.GetSMViewerControl().SetBaseLayer(warpedMapTileSource);
+            viewControl.GetUIPositionManager().switchSlaved();
+            viewControl.setDisplayedRegistration(
+                new RegistrationControlRecord(warpedMapTileSource.ComputeWarpedRegistration(), sourceMap));
+            mapsLocked = true;
         }
 
         private void SetupUnlockedView()
         {
-            this.viewControl.GetSMViewerControl().ClearLayers();
-            this.viewControl.GetSMViewerControl()
-                .SetBaseLayer(this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap));
-            this.viewControl.GetSMViewerControl().SetLatentRegionHolder(this.sourceMap.latentRegionHolder);
-            this.viewControl.GetUIPositionManager().switchFree();
-            this.viewControl.setDisplayedRegistration(new RegistrationControlRecord(this.sourceMap.registration,
-                this.sourceMap));
-            this.mapsLocked = false;
+            viewControl.GetSMViewerControl().ClearLayers();
+            viewControl.GetSMViewerControl()
+                .SetBaseLayer(mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap));
+            viewControl.GetSMViewerControl().SetLatentRegionHolder(sourceMap.latentRegionHolder);
+            viewControl.GetUIPositionManager().switchFree();
+            viewControl.setDisplayedRegistration(new RegistrationControlRecord(sourceMap.registration,
+                sourceMap));
+            mapsLocked = false;
         }
 
         internal bool MapsLocked()
         {
-            return this.mapsLocked;
+            return mapsLocked;
         }
 
         internal SourceMap GetSourceMap()
         {
-            return this.sourceMap;
+            return sourceMap;
         }
 
         internal LatLonZoom DefaultReferenceMapPosition(DefaultReferenceView drv)
         {
-            return DefaultReferenceMapPosition(this.sourceMap, this.mapTileSourceFactory, this.viewControl, drv);
+            return DefaultReferenceMapPosition(sourceMap, mapTileSourceFactory, viewControl, drv);
         }
 
         internal static LatLonZoom DefaultReferenceMapPosition(SourceMap sourceMap,
@@ -228,101 +228,101 @@ namespace MSR.CVE.BackMaker
 
         internal void PreviewSourceMapZoom()
         {
-            if (!this.mapsLocked && this.sourceMap.ReadyToLock())
+            if (!mapsLocked && sourceMap.ReadyToLock())
             {
                 try
                 {
-                    this.LockMapsInternal();
+                    LockMapsInternal();
                 }
                 catch (Exception)
                 {
                 }
             }
 
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
-                this.viewControl.GetUIPositionManager().GetSMPos()
-                    .setZoom(this.sourceMap.sourceMapRenderOptions.maxZoom);
+                viewControl.GetUIPositionManager().GetSMPos()
+                    .setZoom(sourceMap.sourceMapRenderOptions.maxZoom);
             }
         }
 
         public object GetViewedObject()
         {
-            return this.sourceMap;
+            return sourceMap;
         }
 
         internal void UpdateOverviewWindow(ViewerControl viewerControl)
         {
-            if (this.sourceMap == null)
+            if (sourceMap == null)
             {
                 return;
             }
 
             viewerControl.ClearLayers();
-            viewerControl.SetBaseLayer(this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap));
+            viewerControl.SetBaseLayer(mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap));
             viewerControl.setPinList(new List<PositionAssociationView>());
         }
 
         public void RecordSource(LatLonZoom llz)
         {
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
-                this.RecordRef(llz);
+                RecordRef(llz);
                 return;
             }
 
-            this.sourceMap.sourceSnap = llz;
+            sourceMap.sourceSnap = llz;
         }
 
         public LatLonZoom RestoreSource()
         {
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
-                return this.RestoreRef();
+                return RestoreRef();
             }
 
-            return this.sourceMap.sourceSnap;
+            return sourceMap.sourceSnap;
         }
 
         public void RecordRef(LatLonZoom llz)
         {
-            this.sourceMap.referenceSnap = llz;
+            sourceMap.referenceSnap = llz;
         }
 
         public LatLonZoom RestoreRef()
         {
-            return this.sourceMap.referenceSnap;
+            return sourceMap.referenceSnap;
         }
 
         public void RecordSourceZoom(int zoom)
         {
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
-                this.RecordRefZoom(zoom);
+                RecordRefZoom(zoom);
                 return;
             }
 
-            this.sourceMap.sourceSnapZoom = zoom;
+            sourceMap.sourceSnapZoom = zoom;
         }
 
         public int RestoreSourceZoom()
         {
-            if (this.mapsLocked)
+            if (mapsLocked)
             {
-                return this.RestoreRefZoom();
+                return RestoreRefZoom();
             }
 
-            return this.sourceMap.sourceSnapZoom;
+            return sourceMap.sourceSnapZoom;
         }
 
         public void RecordRefZoom(int zoom)
         {
-            this.sourceMap.referenceSnapZoom = zoom;
+            sourceMap.referenceSnapZoom = zoom;
         }
 
         public int RestoreRefZoom()
         {
-            return this.sourceMap.referenceSnapZoom;
+            return sourceMap.referenceSnapZoom;
         }
     }
 }

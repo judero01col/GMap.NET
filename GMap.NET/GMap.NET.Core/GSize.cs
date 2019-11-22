@@ -84,13 +84,13 @@ namespace GMap.NET
             GSize comp = (GSize)obj;
             // Note value types can't have derived classes, so we don't need to
             //
-            return comp.Width == this.Width &&
-                   comp.Height == this.Height;
+            return comp.Width == Width &&
+                   comp.Height == Height;
         }
 
         public override int GetHashCode()
         {
-            if (this.IsEmpty)
+            if (IsEmpty)
             {
                 return 0;
             }

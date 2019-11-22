@@ -12,18 +12,18 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._layer;
+                return _layer;
             }
         }
 
         public object GetViewedObject()
         {
-            return this.layer;
+            return layer;
         }
 
         public LayerView(Layer layer, MapPosition lockedView)
         {
-            this._layer = layer;
+            _layer = layer;
             this.lockedView = lockedView;
         }
 
@@ -34,14 +34,14 @@ namespace MSR.CVE.BackMaker
 
         public LayerView(Layer layer, MashupParseContext context)
         {
-            this._layer = layer;
+            _layer = layer;
             bool flag = false;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(MapPosition.GetXMLTag(context.version)))
                 {
-                    this.lockedView = new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
+                    lockedView = new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
                     flag = true;
                 }
             }
@@ -55,18 +55,18 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(GetXMLTag());
-            this.lockedView.WriteXML(writer);
+            lockedView.WriteXML(writer);
             writer.WriteEndElement();
         }
 
         public MapPosition GetReferenceMapView()
         {
-            return this.lockedView;
+            return lockedView;
         }
 
         public LatLonZoom GetSourceMapView()
         {
-            return this.lockedView.llz;
+            return lockedView.llz;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
                 else
                 {
-                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(this.GetTileURL(ta));
+                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(GetTileURL(ta));
                     httpWebRequest.Timeout = 9000;
                     HttpWebResponse httpWebResponse;
                     try

@@ -4,7 +4,7 @@ namespace MSR.CVE.BackMaker
     {
         public static string Body(string showDefaultLayerName, string checkboxesHTML, string crunchedFilename)
         {
-            return string.Concat(new string[]
+            return string.Concat(new[]
             {
                 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<head>\r\n\r\n        <title>MapCruncher Mashup Sample Web Page</title>\r\n",
                 string.Format(

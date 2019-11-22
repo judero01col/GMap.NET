@@ -11,14 +11,14 @@ namespace MSR.CVE.BackMaker.MCDebug
         public int make(object o)
         {
             WeakHashableObject key = new WeakHashableObject(o);
-            if (this.objectIDDict.ContainsKey(key))
+            if (objectIDDict.ContainsKey(key))
             {
-                return this.objectIDDict[key];
+                return objectIDDict[key];
             }
 
-            int num = this.nextID;
-            this.nextID++;
-            this.objectIDDict[key] = num;
+            int num = nextID;
+            nextID++;
+            objectIDDict[key] = num;
             return num;
         }
     }

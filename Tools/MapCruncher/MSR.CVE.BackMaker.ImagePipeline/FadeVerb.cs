@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FadeVerb(");
-            this.fadeOptions.AccumulateRobustHash(hash);
+            fadeOptions.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
 
@@ -34,13 +34,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
             ImageRef imageRef = (ImageRef)paramList[0];
             TileAddress tileAddress = (TileAddress)paramList[1];
-            double fadeForZoomLevel = this.fadeOptions.GetFadeForZoomLevel(tileAddress.ZoomLevel);
+            double fadeForZoomLevel = fadeOptions.GetFadeForZoomLevel(tileAddress.ZoomLevel);
             if (fadeForZoomLevel == 1.0)
             {
                 return imageRef;
             }
 
-            return this.FadeTile(imageRef, fadeForZoomLevel);
+            return FadeTile(imageRef, fadeForZoomLevel);
         }
 
         private unsafe Present FadeTile(ImageRef sourceImage, double fadeFactor)

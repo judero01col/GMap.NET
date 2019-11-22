@@ -399,7 +399,7 @@ namespace GMap.NET.Internals
                 invalidator = new BackgroundWorker();
                 invalidator.WorkerSupportsCancellation = true;
                 invalidator.WorkerReportsProgress = true;
-                invalidator.DoWork += new DoWorkEventHandler(invalidatorWatch);
+                invalidator.DoWork += new DoWorkEventHandler(InvalidatorWatch);
                 invalidator.RunWorkerAsync();
 
                 //if(x == 1)
@@ -417,9 +417,9 @@ namespace GMap.NET.Internals
         }
 
         internal readonly object invalidationLock = new object();
-        internal DateTime lastInvalidation = DateTime.Now;
+        internal DateTime LastInvalidation = DateTime.Now;
 
-        void invalidatorWatch(object sender, DoWorkEventArgs e)
+        void InvalidatorWatch(object sender, DoWorkEventArgs e)
         {
             var w = sender as BackgroundWorker;
 
@@ -427,7 +427,7 @@ namespace GMap.NET.Internals
             int spanMs = (int)span.TotalMilliseconds;
             bool skiped = false;
             TimeSpan delta;
-            DateTime now = DateTime.Now;
+            DateTime now;
 
             while (Refresh != null && (!skiped && Refresh.WaitOne() || Refresh.WaitOne(spanMs, false) || true))
             {
@@ -437,14 +437,14 @@ namespace GMap.NET.Internals
                 now = DateTime.Now;
                 lock (invalidationLock)
                 {
-                    delta = now - lastInvalidation;
+                    delta = now - LastInvalidation;
                 }
 
                 if (delta > span)
                 {
                     lock (invalidationLock)
                     {
-                        lastInvalidation = now;
+                        LastInvalidation = now;
                     }
 
                     skiped = false;
@@ -471,8 +471,8 @@ namespace GMap.NET.Internals
 
         public void OnMapSizeChanged(int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
 
             if (IsRotated)
             {
@@ -678,7 +678,7 @@ namespace GMap.NET.Internals
 
             var d = new GPoint(Width / 2, Height / 2);
 
-            this.Drag(d);
+            Drag(d);
         }
 
         public bool MouseWheelZooming = false;
@@ -1338,7 +1338,7 @@ namespace GMap.NET.Internals
                 if (invalidator != null)
                 {
                     invalidator.CancelAsync();
-                    invalidator.DoWork -= new DoWorkEventHandler(invalidatorWatch);
+                    invalidator.DoWork -= new DoWorkEventHandler(InvalidatorWatch);
                     invalidator.Dispose();
                     invalidator = null;
                 }

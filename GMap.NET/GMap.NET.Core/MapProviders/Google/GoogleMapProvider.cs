@@ -336,23 +336,18 @@ namespace GMap.NET.MapProviders
                         {
                             if (RouteResult.routes.Count > 0)
                             {
-                                List<PointLatLng> points = new List<PointLatLng>();
-
                                 if (RouteResult.routes[0].overview_polyline != null &&
                                     RouteResult.routes[0].overview_polyline.points != null)
                                 {
-                                    points = new List<PointLatLng>();
+                                    var points = new List<PointLatLng>();
                                     PureProjection.PolylineDecode(points,
                                         RouteResult.routes[0].overview_polyline.points);
 
-                                    if (points != null)
-                                    {
-                                        ret.Points.Clear();
-                                        ret.Points.AddRange(points);
+                                    ret.Points.Clear();
+                                    ret.Points.AddRange(points);
 
-                                        ret.Duration = RouteResult.routes[0].legs[0].duration.text;
-                                        //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
-                                    }
+                                    ret.Duration = RouteResult.routes[0].legs[0].duration.text;
+                                    //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
                                 }
                             }
                         }
@@ -1345,9 +1340,9 @@ namespace GMap.NET.MapProviders
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            string sec1 = string.Empty; // after &x=...
-            string sec2 = string.Empty; // after &zoom=...
-            GetSecureWords(pos, out sec1, out sec2);
+            // sec1: after &x=...
+            // sec2: after &zoom=...
+            GetSecureWords(pos, out string sec1, out string sec2);
 
             return string.Format(UrlFormat,
                 UrlFormatServer,

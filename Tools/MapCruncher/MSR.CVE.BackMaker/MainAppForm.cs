@@ -48,18 +48,18 @@ namespace MSR.CVE.BackMaker
 
             public void Undo(string message)
             {
-                MessageBox.Show(string.Format("Can't open {0}:\n{1}", this.filename, message),
+                MessageBox.Show(string.Format("Can't open {0}:\n{1}", filename, message),
                     "Can't Open Source Map",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Hand);
-                if (this.addedToLayer != null && this.newSourceMap != null && this.layerControls != null)
+                if (addedToLayer != null && newSourceMap != null && layerControls != null)
                 {
-                    this.addedToLayer.Remove(this.newSourceMap);
-                    this.layerControls.CancelSourceMap(this.addedToLayer, this.newSourceMap);
+                    addedToLayer.Remove(newSourceMap);
+                    layerControls.CancelSourceMap(addedToLayer, newSourceMap);
                 }
 
-                CloseViewDelegate method = new CloseViewDelegate(this.mainAppForm.CloseView);
-                this.mainAppForm.Invoke(method);
+                CloseViewDelegate method = new CloseViewDelegate(mainAppForm.CloseView);
+                mainAppForm.Invoke(method);
             }
         }
 
@@ -163,26 +163,26 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.paintFrozen > 0;
+                return paintFrozen > 0;
             }
             set
             {
-                if (value && base.IsHandleCreated && base.Visible && this.paintFrozen++ == 0)
+                if (value && IsHandleCreated && Visible && paintFrozen++ == 0)
                 {
-                    SendMessage(base.Handle, 11, 0, 0);
+                    SendMessage(Handle, 11, 0, 0);
                 }
 
                 if (!value)
                 {
-                    if (this.paintFrozen == 0)
+                    if (paintFrozen == 0)
                     {
                         return;
                     }
 
-                    if (--this.paintFrozen == 0)
+                    if (--paintFrozen == 0)
                     {
-                        SendMessage(base.Handle, 11, 1, 0);
-                        base.Invalidate(true);
+                        SendMessage(Handle, 11, 1, 0);
+                        Invalidate(true);
                     }
                 }
             }
@@ -199,80 +199,80 @@ namespace MSR.CVE.BackMaker
             try
             {
                 D.SetDebugLevel(BuildConfig.theConfig.debugLevel);
-                this.cachePackage = new CachePackage();
-                this.renderedTileCachePackage = this.cachePackage.DeriveCache("renderedTile");
-                this.InitializeComponent();
-                this.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
-                this.mapTileSourceFactory = new MapTileSourceFactory(this.cachePackage);
+                cachePackage = new CachePackage();
+                renderedTileCachePackage = cachePackage.DeriveCache("renderedTile");
+                InitializeComponent();
+                SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
+                mapTileSourceFactory = new MapTileSourceFactory(cachePackage);
             }
             catch (ConfigurationException)
             {
-                this.UndoConstruction();
+                UndoConstruction();
                 throw;
             }
 
-            this.layerControls.SetLayerControl(this);
-            this.RestoreWindowParameters();
-            this.SetInterfaceNoMashupOpen();
+            layerControls.SetLayerControl(this);
+            RestoreWindowParameters();
+            SetInterfaceNoMashupOpen();
             System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
             timer.Interval = 10000;
-            timer.Tick += new EventHandler(this.saveBackupTimer_Tick);
+            timer.Tick += new EventHandler(saveBackupTimer_Tick);
             timer.Start();
-            this.registrationControls.ShowDMS =
-                new MapDrawingOption(this.registrationControls, this.showDMSMenuItem, false);
-            this.smViewerControl.ShowCrosshairs =
-                new MapDrawingOption(this.smViewerControl, this.showCrosshairsMenuItem, true);
-            this.smViewerControl.ShowTileBoundaries =
-                new MapDrawingOption(this.smViewerControl, this.showTileBoundariesMenuItem, true);
-            this.smViewerControl.ShowPushPins =
-                new MapDrawingOption(this.smViewerControl, this.showPushPinsMenuItem, true);
-            this.smViewerControl.ShowTileNames =
-                new MapDrawingOption(this.smViewerControl, this.showTileNamesMenuItem, false);
-            this.smViewerControl.ShowSourceCrop =
-                new MapDrawingOption(this.smViewerControl, this.showSourceCropToolStripMenuItem, true);
-            this.smViewerControl.ShowDMS = new MapDrawingOption(this.smViewerControl, this.showDMSMenuItem, false);
-            this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
-            this.SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
-            this.veViewerControl.ShowCrosshairs =
-                new MapDrawingOption(this.veViewerControl, this.showCrosshairsMenuItem, true);
-            this.veViewerControl.ShowTileBoundaries =
-                new MapDrawingOption(this.veViewerControl, this.showTileBoundariesMenuItem, false);
-            this.veViewerControl.ShowPushPins =
-                new MapDrawingOption(this.veViewerControl, this.showPushPinsMenuItem, true);
-            this.veViewerControl.ShowTileNames =
-                new MapDrawingOption(this.veViewerControl, this.showTileNamesMenuItem, false);
-            this.veViewerControl.ShowDMS = new MapDrawingOption(this.veViewerControl, this.showDMSMenuItem, false);
-            this.veViewerControl.configureLLZBoxEditable();
-            this.uiPosition = new UIPositionManager(this.smViewerControl, this.veViewerControl);
-            this.uiPosition.GetVEPos().setPosition(this.veViewerControl.GetCoordinateSystem().GetDefaultView());
-            this.recordSnapViewMenuItem.Click += new EventHandler(this.recordSnapViewMenuItem_Click);
-            this.restoreSnapViewMenuItem.Click += new EventHandler(this.restoreSnapViewMenuItem_Click);
-            this.recordSnapZoomMenuItem.Click += new EventHandler(this.recordSnapZoomMenuItem_Click);
-            this.restoreSnapZoomMenuItem.Click += new EventHandler(this.restoreSnapZoomMenuItem_Click);
-            this.registrationControls.setAssociationIfc(this);
-            this.setDisplayedRegistration(null);
-            this.sourceMapInfoPanel.Initialize(
-                new SourceMapInfoPanel.PreviewSourceMapZoomDelegate(this.PreviewSourceMapZoom));
-            BigDebugKnob.theKnob.AddListener(new BigDebugKnob.DebugKnobListener(this.debugKnobChanged));
+            registrationControls.ShowDMS =
+                new MapDrawingOption(registrationControls, showDMSMenuItem, false);
+            smViewerControl.ShowCrosshairs =
+                new MapDrawingOption(smViewerControl, showCrosshairsMenuItem, true);
+            smViewerControl.ShowTileBoundaries =
+                new MapDrawingOption(smViewerControl, showTileBoundariesMenuItem, true);
+            smViewerControl.ShowPushPins =
+                new MapDrawingOption(smViewerControl, showPushPinsMenuItem, true);
+            smViewerControl.ShowTileNames =
+                new MapDrawingOption(smViewerControl, showTileNamesMenuItem, false);
+            smViewerControl.ShowSourceCrop =
+                new MapDrawingOption(smViewerControl, showSourceCropToolStripMenuItem, true);
+            smViewerControl.ShowDMS = new MapDrawingOption(smViewerControl, showDMSMenuItem, false);
+            smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
+            SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
+            veViewerControl.ShowCrosshairs =
+                new MapDrawingOption(veViewerControl, showCrosshairsMenuItem, true);
+            veViewerControl.ShowTileBoundaries =
+                new MapDrawingOption(veViewerControl, showTileBoundariesMenuItem, false);
+            veViewerControl.ShowPushPins =
+                new MapDrawingOption(veViewerControl, showPushPinsMenuItem, true);
+            veViewerControl.ShowTileNames =
+                new MapDrawingOption(veViewerControl, showTileNamesMenuItem, false);
+            veViewerControl.ShowDMS = new MapDrawingOption(veViewerControl, showDMSMenuItem, false);
+            veViewerControl.configureLLZBoxEditable();
+            uiPosition = new UIPositionManager(smViewerControl, veViewerControl);
+            uiPosition.GetVEPos().setPosition(veViewerControl.GetCoordinateSystem().GetDefaultView());
+            recordSnapViewMenuItem.Click += new EventHandler(recordSnapViewMenuItem_Click);
+            restoreSnapViewMenuItem.Click += new EventHandler(restoreSnapViewMenuItem_Click);
+            recordSnapZoomMenuItem.Click += new EventHandler(recordSnapZoomMenuItem_Click);
+            restoreSnapZoomMenuItem.Click += new EventHandler(restoreSnapZoomMenuItem_Click);
+            registrationControls.setAssociationIfc(this);
+            setDisplayedRegistration(null);
+            sourceMapInfoPanel.Initialize(
+                new SourceMapInfoPanel.PreviewSourceMapZoomDelegate(PreviewSourceMapZoom));
+            BigDebugKnob.theKnob.AddListener(new BigDebugKnob.DebugKnobListener(debugKnobChanged));
             BigDebugKnob.theKnob.debugFeaturesEnabled = false;
-            this.enableDebugModeToolStripMenuItem.Visible = BuildConfig.theConfig.debugModeEnabled;
-            this.debugModeToolStripSeparator.Visible = BuildConfig.theConfig.debugModeEnabled;
-            if (this.startDocumentPath != null)
+            enableDebugModeToolStripMenuItem.Visible = BuildConfig.theConfig.debugModeEnabled;
+            debugModeToolStripSeparator.Visible = BuildConfig.theConfig.debugModeEnabled;
+            if (startDocumentPath != null)
             {
-                this.LoadMashup(Path.GetFullPath(this.startDocumentPath));
+                LoadMashup(Path.GetFullPath(startDocumentPath));
             }
             else
             {
-                this.NewMashup();
+                NewMashup();
             }
 
-            if (this.renderOnLaunch)
+            if (renderOnLaunch)
             {
-                this.currentMashup.AutoSelectMaxZooms(this.mapTileSourceFactory);
-                this.LaunchRenderWindow();
-                this.renderWindow.StartRender(
-                    new RenderProgressPanel2.RenderCompleteDelegate(this.LaunchedRenderComplete));
-                base.Shown += new EventHandler(this.MainAppForm_Shown_BringRenderWindowToFront);
+                currentMashup.AutoSelectMaxZooms(mapTileSourceFactory);
+                LaunchRenderWindow();
+                renderWindow.StartRender(
+                    new RenderProgressPanel2.RenderCompleteDelegate(LaunchedRenderComplete));
+                Shown += new EventHandler(MainAppForm_Shown_BringRenderWindowToFront);
             }
         }
 
@@ -280,54 +280,54 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                DKCUI method = new DKCUI(this.debugKnobChanged_UI);
-                base.Invoke(method, new object[] {enabled});
+                DKCUI method = new DKCUI(debugKnobChanged_UI);
+                Invoke(method, new object[] {enabled});
             }
             catch (InvalidOperationException)
             {
-                this.debugKnobChanged_UI(enabled);
+                debugKnobChanged_UI(enabled);
             }
         }
 
         private void debugKnobChanged_UI(bool enabled)
         {
-            this.debugToolStripMenuItem.Visible = enabled;
-            this.enableDebugModeToolStripMenuItem.Checked = enabled;
+            debugToolStripMenuItem.Visible = enabled;
+            enableDebugModeToolStripMenuItem.Checked = enabled;
         }
 
         private void MainAppForm_Shown_BringRenderWindowToFront(object sender, EventArgs e)
         {
-            this.renderWindow.BringToFront();
+            renderWindow.BringToFront();
         }
 
         private void LaunchedRenderComplete(Exception failure)
         {
-            if (!this.alreadyExiting)
+            if (!alreadyExiting)
             {
-                ExitDelegate method = new ExitDelegate(this.LaunchedRenderComplete_ExitApplication);
+                ExitDelegate method = new ExitDelegate(LaunchedRenderComplete_ExitApplication);
                 int num = failure == null ? 0 : 255;
-                base.Invoke(method, new object[] {num});
+                Invoke(method, new object[] {num});
             }
         }
 
         private void LaunchedRenderComplete_ExitApplication(int rc)
         {
             ProgramInstance.SetApplicationResultCode(rc);
-            this.TeardownApplication();
+            TeardownApplication();
             Application.Exit();
         }
 
         private void saveBackupTimer_Tick(object sender, EventArgs e)
         {
-            if (this.currentMashup != null)
+            if (currentMashup != null)
             {
-                this.currentMashup.AutoSaveBackup();
+                currentMashup.AutoSaveBackup();
             }
         }
 
         private int RobustGetFromRegistry(int defaultValue, string registryEntryName)
         {
-            string value = this.backMakerRegistry.GetValue(registryEntryName);
+            string value = backMakerRegistry.GetValue(registryEntryName);
             if (value != null)
             {
                 return int.Parse(value);
@@ -340,21 +340,21 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                this.programName = this.Text;
-                if (this.backMakerRegistry.GetValue("gui_window_width") != null)
+                programName = Text;
+                if (backMakerRegistry.GetValue("gui_window_width") != null)
                 {
-                    Point location = new Point(int.Parse(this.backMakerRegistry.GetValue("gui_window_x")),
-                        int.Parse(this.backMakerRegistry.GetValue("gui_window_y")));
+                    Point location = new Point(int.Parse(backMakerRegistry.GetValue("gui_window_x")),
+                        int.Parse(backMakerRegistry.GetValue("gui_window_y")));
                     if (location.X > 0 && location.Y > 0)
                     {
-                        base.Location = location;
-                        base.Width = this.RobustGetFromRegistry(base.Width, "gui_window_width");
-                        base.Height = this.RobustGetFromRegistry(base.Height, "gui_window_height");
-                        this.controlSplitContainer.SplitterDistance =
-                            this.RobustGetFromRegistry(this.controlSplitContainer.SplitterDistance,
+                        Location = location;
+                        Width = RobustGetFromRegistry(Width, "gui_window_width");
+                        Height = RobustGetFromRegistry(Height, "gui_window_height");
+                        controlSplitContainer.SplitterDistance =
+                            RobustGetFromRegistry(controlSplitContainer.SplitterDistance,
                                 "control_splitter_pos");
-                        this.mapSplitContainer.SplitterDistance =
-                            this.RobustGetFromRegistry(this.mapSplitContainer.SplitterDistance, "gui_splitter_pos");
+                        mapSplitContainer.SplitterDistance =
+                            RobustGetFromRegistry(mapSplitContainer.SplitterDistance, "gui_splitter_pos");
                     }
                 }
             }
@@ -362,15 +362,15 @@ namespace MSR.CVE.BackMaker
             {
             }
 
-            this.recordSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
-            this.recordSnapViewMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
-            this.restoreSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
-            this.restoreSnapViewMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
-            this.recordSnapZoomMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
-            this.recordSnapZoomMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
-            this.restoreSnapZoomMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
-            this.restoreSnapZoomMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
-            this.snapFeaturesToolStripSeparator.Visible = BuildConfig.theConfig.enableSnapFeatures;
+            recordSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
+            recordSnapViewMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
+            restoreSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
+            restoreSnapViewMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
+            recordSnapZoomMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
+            recordSnapZoomMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
+            restoreSnapZoomMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
+            restoreSnapZoomMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
+            snapFeaturesToolStripSeparator.Visible = BuildConfig.theConfig.enableSnapFeatures;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -379,28 +379,28 @@ namespace MSR.CVE.BackMaker
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (!this.CloseMashup())
+            if (!CloseMashup())
             {
                 e.Cancel = true;
                 return;
             }
 
-            this.TeardownApplication();
+            TeardownApplication();
             Application.Exit();
             base.OnClosing(e);
         }
 
         private void TeardownApplication()
         {
-            this.alreadyExiting = true;
-            this.backMakerRegistry.SetValue("gui_window_width", base.Width.ToString());
-            this.backMakerRegistry.SetValue("gui_window_height", base.Height.ToString());
-            this.backMakerRegistry.SetValue("gui_window_x", base.Location.X.ToString());
-            this.backMakerRegistry.SetValue("gui_window_y", base.Location.Y.ToString());
-            this.backMakerRegistry.SetValue("control_splitter_pos",
-                this.controlSplitContainer.SplitterDistance.ToString());
-            this.backMakerRegistry.SetValue("gui_splitter_pos", this.mapSplitContainer.SplitterDistance.ToString());
-            this.UndoConstruction();
+            alreadyExiting = true;
+            backMakerRegistry.SetValue("gui_window_width", Width.ToString());
+            backMakerRegistry.SetValue("gui_window_height", Height.ToString());
+            backMakerRegistry.SetValue("gui_window_x", Location.X.ToString());
+            backMakerRegistry.SetValue("gui_window_y", Location.Y.ToString());
+            backMakerRegistry.SetValue("control_splitter_pos",
+                controlSplitContainer.SplitterDistance.ToString());
+            backMakerRegistry.SetValue("gui_splitter_pos", mapSplitContainer.SplitterDistance.ToString());
+            UndoConstruction();
         }
 
         public void UndoConstruction()
@@ -408,13 +408,13 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                if (!this.undone)
+                if (!undone)
                 {
-                    this.KillRenderWindow();
-                    this.cachePackage.Dispose();
-                    this.renderedTileCachePackage.Dispose();
-                    this.backMakerRegistry.Dispose();
-                    this.undone = true;
+                    KillRenderWindow();
+                    cachePackage.Dispose();
+                    renderedTileCachePackage.Dispose();
+                    backMakerRegistry.Dispose();
+                    undone = true;
                 }
             }
             finally
@@ -430,44 +430,44 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            if (this.uiPosition != null)
+            if (uiPosition != null)
             {
-                this.uiPosition.GetVEPos().setStyle(s);
+                uiPosition.GetVEPos().setStyle(s);
             }
 
-            this.VEroadView.Checked = s == VirtualEarthWebDownloader.RoadStyle;
-            this.VEaerialView.Checked = s == VirtualEarthWebDownloader.AerialStyle;
-            this.VEhybridView.Checked = s == VirtualEarthWebDownloader.HybridStyle;
-            this.veViewerControl.SetBaseLayer(new VETileSource(this.GetCachePackage(), s));
+            VEroadView.Checked = s == VirtualEarthWebDownloader.RoadStyle;
+            VEaerialView.Checked = s == VirtualEarthWebDownloader.AerialStyle;
+            VEhybridView.Checked = s == VirtualEarthWebDownloader.HybridStyle;
+            veViewerControl.SetBaseLayer(new VETileSource(GetCachePackage(), s));
         }
 
         private void roadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
+            SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
         }
 
         private void aerialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.SetVEMapStyle(VirtualEarthWebDownloader.AerialStyle);
+            SetVEMapStyle(VirtualEarthWebDownloader.AerialStyle);
         }
 
         private void hybridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.SetVEMapStyle(VirtualEarthWebDownloader.HybridStyle);
+            SetVEMapStyle(VirtualEarthWebDownloader.HybridStyle);
         }
 
         private void AddRegLayerMenuItem_Click(object sender, EventArgs e)
         {
             RenderedLayerDisplayInfo layerSelector =
-                RenderedLayerSelector.GetLayerSelector(this.veViewerControl, this.renderedTileCachePackage);
+                RenderedLayerSelector.GetLayerSelector(veViewerControl, renderedTileCachePackage);
             if (layerSelector != null)
             {
                 foreach (ToolStripMenuItem current in layerSelector.tsmiList)
                 {
-                    this.mapOptionsToolStripMenuItem2.DropDownItems.Add(current);
+                    mapOptionsToolStripMenuItem2.DropDownItems.Add(current);
                 }
 
-                this.uiPosition.GetVEPos().setPosition(layerSelector.defaultView);
+                uiPosition.GetVEPos().setPosition(layerSelector.defaultView);
             }
         }
 
@@ -490,9 +490,9 @@ namespace MSR.CVE.BackMaker
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.CloseMashup())
+            if (CloseMashup())
             {
-                this.TeardownApplication();
+                TeardownApplication();
                 Application.Exit();
             }
         }
@@ -500,43 +500,43 @@ namespace MSR.CVE.BackMaker
         private void viewRenderedMenuItem_Click(object sender, EventArgs e)
         {
             RenderedMashupViewer renderedMashupViewer =
-                new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
+                new RenderedMashupViewer(renderedTileCachePackage, showDMSMenuItem);
             renderedMashupViewer.Show();
         }
 
         public void AddNewAssociation(string newPinName)
         {
-            D.Assert(!((SourceMapViewManager)this.currentView).MapsLocked());
+            D.Assert(!((SourceMapViewManager)currentView).MapsLocked());
             PositionAssociation positionAssociation = new PositionAssociation(newPinName,
-                this.uiPosition.GetSMPos().llz,
-                this.uiPosition.GetSMPos().llz,
-                this.uiPosition.GetVEPos().llz,
-                this.displayedRegistration.model.dirtyEvent);
-            this.CheckForDuplicatePushpin(positionAssociation, -1);
-            this.displayedRegistration.model.AddAssociation(positionAssociation);
-            this.updateRegistrationDisplay();
+                uiPosition.GetSMPos().llz,
+                uiPosition.GetSMPos().llz,
+                uiPosition.GetVEPos().llz,
+                displayedRegistration.model.dirtyEvent);
+            CheckForDuplicatePushpin(positionAssociation, -1);
+            displayedRegistration.model.AddAssociation(positionAssociation);
+            updateRegistrationDisplay();
         }
 
         public void UpdateAssociation(PositionAssociation assoc, string newName)
         {
             PositionAssociation newAssoc = new PositionAssociation("proposed",
-                this.uiPosition.GetSMPos().llz,
-                this.uiPosition.GetSMPos().llz,
-                this.uiPosition.GetVEPos().llz,
+                uiPosition.GetSMPos().llz,
+                uiPosition.GetSMPos().llz,
+                uiPosition.GetVEPos().llz,
                 new DirtyEvent());
-            this.CheckForDuplicatePushpin(newAssoc, assoc.pinId);
-            assoc.UpdateAssociation(this.uiPosition.GetSMPos().llz, this.uiPosition.GetVEPos().llz);
+            CheckForDuplicatePushpin(newAssoc, assoc.pinId);
+            assoc.UpdateAssociation(uiPosition.GetSMPos().llz, uiPosition.GetVEPos().llz);
             if (newName != null && newName != "")
             {
                 assoc.associationName = newName;
             }
 
-            this.updateRegistrationDisplay();
+            updateRegistrationDisplay();
         }
 
         private void CheckForDuplicatePushpin(PositionAssociation newAssoc, int ignorePinId)
         {
-            foreach (PositionAssociation current in this.displayedRegistration.model.GetAssociationList())
+            foreach (PositionAssociation current in displayedRegistration.model.GetAssociationList())
             {
                 if (ignorePinId == -1 || ignorePinId != current.pinId)
                 {
@@ -572,115 +572,115 @@ namespace MSR.CVE.BackMaker
 
         public void RemoveAssociation(PositionAssociation assoc)
         {
-            this.displayedRegistration.model.RemoveAssociation(assoc);
-            this.updateRegistrationDisplay();
+            displayedRegistration.model.RemoveAssociation(assoc);
+            updateRegistrationDisplay();
         }
 
         public void ViewAssociation(PositionAssociation pa)
         {
-            this.uiPosition.GetSMPos().setPosition(pa.sourcePosition.pinPosition);
-            this.uiPosition.GetVEPos().setPosition(pa.globalPosition.pinPosition);
-            this.SetVEMapStyle(this.uiPosition.GetVEPos().style);
+            uiPosition.GetSMPos().setPosition(pa.sourcePosition.pinPosition);
+            uiPosition.GetVEPos().setPosition(pa.globalPosition.pinPosition);
+            SetVEMapStyle(uiPosition.GetVEPos().style);
         }
 
         public void setDisplayedRegistration(RegistrationControlRecord display)
         {
-            PositionAssociation oldSelectedPA = this.registrationControls.GetSelected();
-            this.displayedRegistration = display;
-            this.updateRegistrationDisplay();
+            PositionAssociation oldSelectedPA = registrationControls.GetSelected();
+            displayedRegistration = display;
+            updateRegistrationDisplay();
             PositionAssociation selected = null;
-            if (oldSelectedPA != null && this.displayedRegistration != null)
+            if (oldSelectedPA != null && displayedRegistration != null)
             {
-                selected = this.displayedRegistration.model.GetAssociationList()
+                selected = displayedRegistration.model.GetAssociationList()
                     .Find((PositionAssociation pa) => pa.pinId == oldSelectedPA.pinId);
             }
 
-            this.registrationControls.SetSelected(selected);
+            registrationControls.SetSelected(selected);
         }
 
         private void updateRegistrationDisplay()
         {
-            if (this.displayedRegistration != null)
+            if (displayedRegistration != null)
             {
                 Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) =>
                     new PositionAssociationView(pa, PositionAssociationView.WhichPosition.global);
-                this.veViewerControl.setPinList(this.displayedRegistration.model.GetAssociationList()
+                veViewerControl.setPinList(displayedRegistration.model.GetAssociationList()
                     .ConvertAll<PositionAssociationView>(converter));
                 Converter<PositionAssociation, PositionAssociationView> converter2 = (PositionAssociation pa) =>
                     new PositionAssociationView(pa, PositionAssociationView.WhichPosition.source);
-                List<PositionAssociationView> pinList = this.displayedRegistration.model.GetAssociationList()
+                List<PositionAssociationView> pinList = displayedRegistration.model.GetAssociationList()
                     .ConvertAll<PositionAssociationView>(converter2);
-                this.smViewerControl.setPinList(pinList);
+                smViewerControl.setPinList(pinList);
             }
             else
             {
-                this.veViewerControl.setPinList(new List<PositionAssociationView>());
-                this.smViewerControl.setPinList(new List<PositionAssociationView>());
+                veViewerControl.setPinList(new List<PositionAssociationView>());
+                smViewerControl.setPinList(new List<PositionAssociationView>());
             }
 
-            this.UpdateOverviewPins();
-            this.registrationControls.DisplayModel(this.displayedRegistration);
+            UpdateOverviewPins();
+            registrationControls.DisplayModel(displayedRegistration);
         }
 
         private void EnableMashupInterfaceItems(bool enable)
         {
-            this.saveMashupMenuItem.Enabled = enable;
-            this.saveMashupAsMenuItem.Enabled = enable;
-            this.closeMashupMenuItem.Enabled = enable;
-            this.addSourceMapMenuItem.Enabled = enable;
-            this.addSourceMapFromUriMenuItem.Enabled = enable;
-            this.controlSplitContainer.Visible = enable;
+            saveMashupMenuItem.Enabled = enable;
+            saveMashupAsMenuItem.Enabled = enable;
+            closeMashupMenuItem.Enabled = enable;
+            addSourceMapMenuItem.Enabled = enable;
+            addSourceMapFromUriMenuItem.Enabled = enable;
+            controlSplitContainer.Visible = enable;
         }
 
         private void updateWindowTitle()
         {
-            if (this.currentMashup == null)
+            if (currentMashup == null)
             {
-                this.Text = this.programName;
+                Text = programName;
                 return;
             }
 
-            this.Text = string.Format("{0} - {1}", this.currentMashup.GetDisplayName(), this.programName);
+            Text = string.Format("{0} - {1}", currentMashup.GetDisplayName(), programName);
         }
 
         private void OpenMashup(Mashup newmash)
         {
-            D.Assert(this.currentMashup == null);
-            this.currentMashup = newmash;
-            this.OpenView(new NothingLayerViewManager(this));
-            this.EnableMashupInterfaceItems(true);
-            this.updateWindowTitle();
-            this.layerControls.SetMashup(this.currentMashup);
-            this.currentMashup.readyToLockEvent.Add(new DirtyListener(this.ReadyToLockChangedHandler));
-            this.ReadyToLockChanged();
+            D.Assert(currentMashup == null);
+            currentMashup = newmash;
+            OpenView(new NothingLayerViewManager(this));
+            EnableMashupInterfaceItems(true);
+            updateWindowTitle();
+            layerControls.SetMashup(currentMashup);
+            currentMashup.readyToLockEvent.Add(new DirtyListener(ReadyToLockChangedHandler));
+            ReadyToLockChanged();
         }
 
         private void ReadyToLockChangedHandler()
         {
-            ReadyToLockChangedDelegate method = new ReadyToLockChangedDelegate(this.ReadyToLockChanged);
-            base.Invoke(method);
+            ReadyToLockChangedDelegate method = new ReadyToLockChangedDelegate(ReadyToLockChanged);
+            Invoke(method);
         }
 
         private void ReadyToLockChanged()
         {
-            this.RenderLaunchButton.Enabled = this.currentMashup.SomeSourceMapIsReadyToLock();
+            RenderLaunchButton.Enabled = currentMashup.SomeSourceMapIsReadyToLock();
         }
 
         private bool SaveMashup()
         {
-            if (this.currentMashup.GetFilename() == null)
+            if (currentMashup.GetFilename() == null)
             {
-                return this.SaveMashupAs();
+                return SaveMashupAs();
             }
 
             try
             {
-                this.currentMashup.WriteXML();
+                currentMashup.WriteXML();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    string.Format("Can't save mashup {0}:\n{1}", this.currentMashup.GetFilename(), ex.Message),
+                    string.Format("Can't save mashup {0}:\n{1}", currentMashup.GetFilename(), ex.Message),
                     "Error Writing Mashup",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Hand);
@@ -692,7 +692,7 @@ namespace MSR.CVE.BackMaker
 
         private void saveMashupMenuItem_Click(object sender, EventArgs e)
         {
-            this.SaveMashup();
+            SaveMashup();
         }
 
         private bool SaveMashupAs()
@@ -708,15 +708,15 @@ namespace MSR.CVE.BackMaker
                 saveFileDialog.CheckFileExists = false;
                 saveFileDialog.CheckPathExists = true;
                 saveFileDialog.OverwritePrompt = false;
-                if (this.currentMashup.GetFilename() != null)
+                if (currentMashup.GetFilename() != null)
                 {
-                    saveFileDialog.FileName = this.currentMashup.GetDisplayName();
+                    saveFileDialog.FileName = currentMashup.GetDisplayName();
                 }
                 else
                 {
-                    if (this.currentMashup.layerList.Count > 0 && this.currentMashup.layerList.First.Count > 0)
+                    if (currentMashup.layerList.Count > 0 && currentMashup.layerList.First.Count > 0)
                     {
-                        saveFileDialog.FileName = this.currentMashup.layerList.First.First.GetDisplayName() + ".yum";
+                        saveFileDialog.FileName = currentMashup.layerList.First.First.GetDisplayName() + ".yum";
                     }
                 }
 
@@ -758,15 +758,15 @@ namespace MSR.CVE.BackMaker
                 }
 
                 IL_15C:
-                if (this.currentMashup.GetFilename() != null && this.SaveMashup())
+                if (currentMashup.GetFilename() != null && SaveMashup())
                 {
                     return true;
                 }
 
                 continue;
                 IL_14A:
-                this.currentMashup.SetFilename(text);
-                this.updateWindowTitle();
+                currentMashup.SetFilename(text);
+                updateWindowTitle();
                 goto IL_15C;
             }
 
@@ -775,26 +775,26 @@ namespace MSR.CVE.BackMaker
 
         private void saveMashupAsMenuItem_Click(object sender, EventArgs e)
         {
-            this.SaveMashupAs();
+            SaveMashupAs();
         }
 
         private bool CloseMashup()
         {
-            if (this.currentMashup == null)
+            if (currentMashup == null)
             {
                 return true;
             }
 
-            if (this.currentMashup.IsDirty())
+            if (currentMashup.IsDirty())
             {
                 string text;
-                if (this.currentMashup.GetFilename() == null)
+                if (currentMashup.GetFilename() == null)
                 {
                     text = "Save untitled mashup?";
                 }
                 else
                 {
-                    text = string.Format("Save changes to mashup {0}?", this.currentMashup.GetFilename());
+                    text = string.Format("Save changes to mashup {0}?", currentMashup.GetFilename());
                 }
 
                 DialogResult dialogResult = MessageBox.Show(text,
@@ -806,26 +806,26 @@ namespace MSR.CVE.BackMaker
                     return false;
                 }
 
-                if (dialogResult == DialogResult.Yes && !this.SaveMashup())
+                if (dialogResult == DialogResult.Yes && !SaveMashup())
                 {
                     return false;
                 }
             }
 
-            this.currentMashup.Close();
-            this.currentMashup = null;
-            this.SetInterfaceNoMashupOpen();
+            currentMashup.Close();
+            currentMashup = null;
+            SetInterfaceNoMashupOpen();
             return true;
         }
 
         private void SetInterfaceNoMashupOpen()
         {
-            this.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
-            this.KillRenderWindow();
-            this.layerControls.SetMashup(null);
-            this.CloseView();
-            this.EnableMashupInterfaceItems(false);
-            this.updateWindowTitle();
+            SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
+            KillRenderWindow();
+            layerControls.SetMashup(null);
+            CloseView();
+            EnableMashupInterfaceItems(false);
+            updateWindowTitle();
         }
 
         private void LoadMashup(string fileName)
@@ -865,7 +865,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            this.OpenMashup(mashup);
+            OpenMashup(mashup);
         }
 
         private void openMashupMenuItem_Click(object sender, EventArgs e)
@@ -881,43 +881,43 @@ namespace MSR.CVE.BackMaker
                 return;
             }
 
-            if (!this.CloseMashup())
+            if (!CloseMashup())
             {
                 return;
             }
 
-            this.LoadMashup(openFileDialog.FileName);
+            LoadMashup(openFileDialog.FileName);
         }
 
         private void NewMashup()
         {
-            if (!this.CloseMashup())
+            if (!CloseMashup())
             {
                 return;
             }
 
-            this.OpenMashup(new Mashup());
+            OpenMashup(new Mashup());
         }
 
         private void newMashupMenuItem_Click(object sender, EventArgs e)
         {
-            this.NewMashup();
+            NewMashup();
         }
 
         private void closeMashupMenuItem_Click(object sender, EventArgs e)
         {
-            this.CloseMashup();
+            CloseMashup();
         }
 
         public void CloseView()
         {
-            if (this.currentView != null)
+            if (currentView != null)
             {
-                this.currentView.Dispose();
-                this.currentView = null;
-                if (this.currentMashup != null)
+                currentView.Dispose();
+                currentView = null;
+                if (currentMashup != null)
                 {
-                    this.currentMashup.SetLastView(new NoView());
+                    currentMashup.SetLastView(new NoView());
                 }
             }
         }
@@ -927,36 +927,36 @@ namespace MSR.CVE.BackMaker
             try
             {
                 Opening obj;
-                Monitor.Enter(obj = this.opening);
+                Monitor.Enter(obj = opening);
                 try
                 {
-                    if (this.opening.opening)
+                    if (opening.opening)
                     {
                         D.Sayf(0, "Warning: recursive open", new object[0]);
                         return;
                     }
 
-                    this.opening.opening = true;
+                    opening.opening = true;
                 }
                 finally
                 {
                     Monitor.Exit(obj);
                 }
 
-                this.CloseView();
-                this.ResetOverviewWindow();
-                D.Assert(this.currentView == null);
-                this.currentView = newView;
-                this.currentView.Activate();
-                this.layerControls.SelectObject(newView.GetViewedObject());
+                CloseView();
+                ResetOverviewWindow();
+                D.Assert(currentView == null);
+                currentView = newView;
+                currentView.Activate();
+                layerControls.SelectObject(newView.GetViewedObject());
             }
             finally
             {
                 Opening obj2;
-                Monitor.Enter(obj2 = this.opening);
+                Monitor.Enter(obj2 = opening);
                 try
                 {
-                    this.opening.opening = false;
+                    opening.opening = false;
                 }
                 finally
                 {
@@ -970,11 +970,11 @@ namespace MSR.CVE.BackMaker
 
         public void OpenSourceMap(SourceMap sourceMap)
         {
-            this.FreezePainting = true;
+            FreezePainting = true;
             DefaultReferenceView drv;
-            if (this.currentView != null)
+            if (currentView != null)
             {
-                drv = new DefaultReferenceView(this.uiPosition.GetVEPos().llz);
+                drv = new DefaultReferenceView(uiPosition.GetVEPos().llz);
             }
             else
             {
@@ -982,40 +982,40 @@ namespace MSR.CVE.BackMaker
             }
 
             SourceMapViewManager sourceMapViewManager =
-                new SourceMapViewManager(sourceMap, this.mapTileSourceFactory, this, drv);
-            this.OpenView(sourceMapViewManager);
-            this.FreezePainting = false;
-            this.currentMashup.SetLastView(sourceMap.lastView);
-            this.SetupOverviewWindow(sourceMapViewManager);
+                new SourceMapViewManager(sourceMap, mapTileSourceFactory, this, drv);
+            OpenView(sourceMapViewManager);
+            FreezePainting = false;
+            currentMashup.SetLastView(sourceMap.lastView);
+            SetupOverviewWindow(sourceMapViewManager);
         }
 
         public void OpenLayer(Layer layer)
         {
-            this.OpenView(new DynamicallyCompositingLayerViewManager(layer, this.mapTileSourceFactory, this));
-            this.currentMashup.SetLastView(layer.lastView);
+            OpenView(new DynamicallyCompositingLayerViewManager(layer, mapTileSourceFactory, this));
+            currentMashup.SetLastView(layer.lastView);
         }
 
         public void OpenLegend(Legend legend)
         {
-            this.OpenView(new LegendViewManager(legend, this.mapTileSourceFactory, this));
-            this.currentMashup.SetLastView(legend.lastView);
+            OpenView(new LegendViewManager(legend, mapTileSourceFactory, this));
+            currentMashup.SetLastView(legend.lastView);
         }
 
         private void addSourceMapMenuItem_Click(object sender, EventArgs e)
         {
-            this.AddSourceMap();
+            AddSourceMap();
         }
 
         private void addSourceMapFromUriMenuItem_Click(object sender, EventArgs e)
         {
-            this.AddSourceMapFromUri();
+            AddSourceMapFromUri();
         }
 
         public void AddSourceMap()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             string arg = string.Join(";",
-                Array.ConvertAll<string, string>(this.mapTileSourceFactory.GetKnownFileTypes(),
+                Array.ConvertAll<string, string>(mapTileSourceFactory.GetKnownFileTypes(),
                     (string ext) => "*" + ext));
             string filter = string.Format("Supported Sources ({0})|{0}" + BuildConfig.theConfig.allFilesOption, arg);
             openFileDialog.Filter = filter;
@@ -1042,19 +1042,19 @@ namespace MSR.CVE.BackMaker
                     FileShare.ReadWrite);
                 fileStream.Close();
                 SourceMap sourceMap = new SourceMap(new FutureDocumentFromFilesystem(openFileDialog.FileName, 0),
-                    new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext),
-                    this.currentMashup.dirtyEvent,
-                    this.currentMashup.readyToLockEvent);
-                Layer addedToLayer = this.layerControls.AddSourceMap(sourceMap);
+                    new SourceMap.GetFilenameContext(currentMashup.GetFilenameContext),
+                    currentMashup.dirtyEvent,
+                    currentMashup.readyToLockEvent);
+                Layer addedToLayer = layerControls.AddSourceMap(sourceMap);
                 undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName,
                     sourceMap,
                     addedToLayer,
-                    this.layerControls,
+                    layerControls,
                     this);
                 new InsaneSourceMapRemover(sourceMap,
-                    this.mapTileSourceFactory,
+                    mapTileSourceFactory,
                     new InsaneSourceMapRemover.UndoAdddSourceMapDelegate(undoAddSourceMap.Undo));
-                this.OpenSourceMap(sourceMap);
+                OpenSourceMap(sourceMap);
             }
             catch (Exception ex)
             {
@@ -1066,208 +1066,208 @@ namespace MSR.CVE.BackMaker
         {
             SourceMap sourceMap = new SourceMap(
                 new FutureDocumentFromUri(new Uri("http://www.srh.noaa.gov/ridge/lite/NCR/ATX_0.png"), 0),
-                new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext),
-                this.currentMashup.dirtyEvent,
-                this.currentMashup.readyToLockEvent);
-            this.layerControls.AddSourceMap(sourceMap);
-            this.OpenSourceMap(sourceMap);
+                new SourceMap.GetFilenameContext(currentMashup.GetFilenameContext),
+                currentMashup.dirtyEvent,
+                currentMashup.readyToLockEvent);
+            layerControls.AddSourceMap(sourceMap);
+            OpenSourceMap(sourceMap);
         }
 
         public void RemoveSourceMap(SourceMap sourceMap)
         {
-            this.currentMashup.layerList.RemoveSourceMap(sourceMap);
+            currentMashup.layerList.RemoveSourceMap(sourceMap);
         }
 
         public void LaunchRenderedBrowser(Uri uri)
         {
             RenderedMashupViewer renderedMashupViewer =
-                new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
+                new RenderedMashupViewer(renderedTileCachePackage, showDMSMenuItem);
             renderedMashupViewer.AddLayersFromUri(uri);
             renderedMashupViewer.Show();
         }
 
         public UIPositionManager GetUIPositionManager()
         {
-            return this.uiPosition;
+            return uiPosition;
         }
 
         public ViewerControlIfc GetSMViewerControl()
         {
-            return this.smViewerControl;
+            return smViewerControl;
         }
 
         public ViewerControl GetVEViewerControl()
         {
-            return this.veViewerControl;
+            return veViewerControl;
         }
 
         public SourceMapInfoPanel GetSourceMapInfoPanel()
         {
-            return this.sourceMapInfoPanel;
+            return sourceMapInfoPanel;
         }
 
         public TransparencyPanel GetTransparencyPanel()
         {
-            return this.transparencyPanel;
+            return transparencyPanel;
         }
 
         public LegendOptionsPanel GetLegendPanel()
         {
-            return this.legendOptionsPanel1;
+            return legendOptionsPanel1;
         }
 
         public void SetOptionsPanelVisibility(OptionsPanelVisibility optionsPanelVisibility)
         {
             if (optionsPanelVisibility == OptionsPanelVisibility.Nothing)
             {
-                this.synergyExplorer.Visible = false;
+                synergyExplorer.Visible = false;
                 return;
             }
 
             if (optionsPanelVisibility == OptionsPanelVisibility.SourceMapOptions)
             {
-                this.synergyExplorer.TabPages.Clear();
-                this.synergyExplorer.TabPages.Add(this.correspondencesTab);
-                this.synergyExplorer.TabPages.Add(this.sourceInfoTab);
-                this.synergyExplorer.TabPages.Add(this.transparencyTab);
-                this.synergyExplorer.Visible = true;
+                synergyExplorer.TabPages.Clear();
+                synergyExplorer.TabPages.Add(correspondencesTab);
+                synergyExplorer.TabPages.Add(sourceInfoTab);
+                synergyExplorer.TabPages.Add(transparencyTab);
+                synergyExplorer.Visible = true;
                 return;
             }
 
             if (optionsPanelVisibility == OptionsPanelVisibility.LegendOptions)
             {
-                this.synergyExplorer.TabPages.Clear();
-                this.synergyExplorer.TabPages.Add(this.legendTabPage);
-                this.synergyExplorer.Visible = true;
+                synergyExplorer.TabPages.Clear();
+                synergyExplorer.TabPages.Add(legendTabPage);
+                synergyExplorer.Visible = true;
             }
         }
 
         public CachePackage GetCachePackage()
         {
-            return this.cachePackage;
+            return cachePackage;
         }
 
         public void LockMaps()
         {
-            ((SourceMapViewManager)this.currentView).LockMaps();
-            this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.LatLon);
+            ((SourceMapViewManager)currentView).LockMaps();
+            smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.LatLon);
         }
 
         public void UnlockMaps()
         {
-            ((SourceMapViewManager)this.currentView).UnlockMaps();
-            this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
+            ((SourceMapViewManager)currentView).UnlockMaps();
+            smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
         }
 
         public void SetDocumentMutable(bool mutable)
         {
-            this.documentIsMutable = mutable;
-            this.synergyExplorer.Enabled = mutable;
+            documentIsMutable = mutable;
+            synergyExplorer.Enabled = mutable;
         }
 
         public bool GetDocumentMutable()
         {
-            return this.documentIsMutable;
+            return documentIsMutable;
         }
 
         private void PreviewSourceMapZoom(SourceMap sourceMap)
         {
-            if (this.currentView is SourceMapViewManager &&
-                ((SourceMapViewManager)this.currentView).GetSourceMap() == sourceMap)
+            if (currentView is SourceMapViewManager &&
+                ((SourceMapViewManager)currentView).GetSourceMap() == sourceMap)
             {
-                ((SourceMapViewManager)this.currentView).PreviewSourceMapZoom();
+                ((SourceMapViewManager)currentView).PreviewSourceMapZoom();
             }
         }
 
         private void LaunchRenderWindow()
         {
-            if (this.renderWindow == null)
+            if (renderWindow == null)
             {
-                this.renderWindow = new RenderWindow();
-                this.renderWindow.Disposed += new EventHandler(this.renderWindow_Disposed);
+                renderWindow = new RenderWindow();
+                renderWindow.Disposed += new EventHandler(renderWindow_Disposed);
             }
 
-            this.renderWindow.Setup(this.currentMashup.GetRenderOptions(),
-                this.currentMashup,
-                this.mapTileSourceFactory,
-                new RenderProgressPanel2.LaunchRenderedBrowserDelegate(this.LaunchRenderedBrowser),
-                new RenderState.FlushRenderedTileCachePackageDelegate(this.flushRenderedTileCachePackage));
-            this.renderWindow.Visible = true;
+            renderWindow.Setup(currentMashup.GetRenderOptions(),
+                currentMashup,
+                mapTileSourceFactory,
+                new RenderProgressPanel2.LaunchRenderedBrowserDelegate(LaunchRenderedBrowser),
+                new RenderState.FlushRenderedTileCachePackageDelegate(flushRenderedTileCachePackage));
+            renderWindow.Visible = true;
         }
 
         private void flushRenderedTileCachePackage()
         {
-            this.renderedTileCachePackage.Flush();
+            renderedTileCachePackage.Flush();
         }
 
         private void renderWindow_Disposed(object sender, EventArgs e)
         {
-            this.renderWindow = null;
+            renderWindow = null;
         }
 
         private void KillRenderWindow()
         {
-            if (this.renderWindow != null)
+            if (renderWindow != null)
             {
-                this.renderWindow.UndoConstruction();
+                renderWindow.UndoConstruction();
             }
         }
 
         private void RenderLaunchButton_Click(object sender, EventArgs e)
         {
-            if (this.renderWindow == null)
+            if (renderWindow == null)
             {
-                this.LaunchRenderWindow();
+                LaunchRenderWindow();
             }
 
-            this.renderWindow.BringToFront();
+            renderWindow.BringToFront();
         }
 
         private void showSourceMapOverviewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             bool @checked = ((ToolStripMenuItem)sender).Checked;
-            if (@checked && this.sourceMapOverviewWindow == null)
+            if (@checked && sourceMapOverviewWindow == null)
             {
-                this.sourceMapOverviewWindow = new SourceMapOverviewWindow();
-                this.sourceMapOverviewWindow.Initialize(
-                    new SourceMapOverviewWindow.ClosedDelegate(this.SourceMapOverviewWindowClosed),
-                    new MapDrawingOption(this.veViewerControl, this.showDMSMenuItem, false));
-                this.sourceMapOverviewWindow.viewerControl.ShowPushPins =
-                    new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showPushPinsMenuItem, true);
-                this.sourceMapOverviewWindow.viewerControl.ShowSourceCrop = new MapDrawingOption(
-                    this.sourceMapOverviewWindow.viewerControl,
-                    this.showSourceCropToolStripMenuItem,
+                sourceMapOverviewWindow = new SourceMapOverviewWindow();
+                sourceMapOverviewWindow.Initialize(
+                    new SourceMapOverviewWindow.ClosedDelegate(SourceMapOverviewWindowClosed),
+                    new MapDrawingOption(veViewerControl, showDMSMenuItem, false));
+                sourceMapOverviewWindow.viewerControl.ShowPushPins =
+                    new MapDrawingOption(sourceMapOverviewWindow.viewerControl, showPushPinsMenuItem, true);
+                sourceMapOverviewWindow.viewerControl.ShowSourceCrop = new MapDrawingOption(
+                    sourceMapOverviewWindow.viewerControl,
+                    showSourceCropToolStripMenuItem,
                     true);
-                this.sourceMapOverviewWindow.viewerControl.ShowDMS =
-                    new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showDMSMenuItem, false);
-                this.sourceMapOverviewWindow.Show();
-                if (this.currentView is SourceMapViewManager)
+                sourceMapOverviewWindow.viewerControl.ShowDMS =
+                    new MapDrawingOption(sourceMapOverviewWindow.viewerControl, showDMSMenuItem, false);
+                sourceMapOverviewWindow.Show();
+                if (currentView is SourceMapViewManager)
                 {
-                    this.SetupOverviewWindow((SourceMapViewManager)this.currentView);
+                    SetupOverviewWindow((SourceMapViewManager)currentView);
                     return;
                 }
             }
             else
             {
-                if (!@checked && this.sourceMapOverviewWindow != null)
+                if (!@checked && sourceMapOverviewWindow != null)
                 {
-                    this.sourceMapOverviewWindow.Close();
-                    this.sourceMapOverviewWindow = null;
+                    sourceMapOverviewWindow.Close();
+                    sourceMapOverviewWindow = null;
                 }
             }
         }
 
         private void UpdateOverviewPins()
         {
-            if (this.sourceMapOverviewWindow != null)
+            if (sourceMapOverviewWindow != null)
             {
                 List<PositionAssociationView> pinList;
-                if (this.displayedRegistration != null)
+                if (displayedRegistration != null)
                 {
                     Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) =>
                         new PositionAssociationView(pa, PositionAssociationView.WhichPosition.image);
-                    pinList = new RegistrationDefinition(this.displayedRegistration.model, new DirtyEvent())
+                    pinList = new RegistrationDefinition(displayedRegistration.model, new DirtyEvent())
                     {
                         isLocked = false
                     }.GetAssociationList().ConvertAll<PositionAssociationView>(converter);
@@ -1277,57 +1277,57 @@ namespace MSR.CVE.BackMaker
                     pinList = new List<PositionAssociationView>();
                 }
 
-                this.sourceMapOverviewWindow.viewerControl.setPinList(pinList);
+                sourceMapOverviewWindow.viewerControl.setPinList(pinList);
             }
         }
 
         private void ResetOverviewWindow()
         {
-            if (this.sourceMapOverviewWindow != null)
+            if (sourceMapOverviewWindow != null)
             {
-                this.sourceMapOverviewWindow.viewerControl.ClearLayers();
-                this.sourceMapOverviewWindow.viewerControl.setPinList(new List<PositionAssociationView>());
+                sourceMapOverviewWindow.viewerControl.ClearLayers();
+                sourceMapOverviewWindow.viewerControl.setPinList(new List<PositionAssociationView>());
             }
         }
 
         private void SetupOverviewWindow(SourceMapViewManager smvm)
         {
-            if (this.sourceMapOverviewWindow != null)
+            if (sourceMapOverviewWindow != null)
             {
-                smvm.UpdateOverviewWindow(this.sourceMapOverviewWindow.viewerControl);
+                smvm.UpdateOverviewWindow(sourceMapOverviewWindow.viewerControl);
             }
 
-            this.updateRegistrationDisplay();
+            updateRegistrationDisplay();
         }
 
         public void SourceMapOverviewWindowClosed()
         {
-            this.sourceMapOverviewWindow = null;
-            this.showSourceMapOverviewMenuItem.Checked = false;
+            sourceMapOverviewWindow = null;
+            showSourceMapOverviewMenuItem.Checked = false;
         }
 
         private void recordSnapViewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
-            this.smViewerControl.RecordSnapView();
+            smViewerControl.RecordSnapView();
         }
 
         private void restoreSnapViewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
-            this.smViewerControl.RestoreSnapView();
+            smViewerControl.RestoreSnapView();
         }
 
         private void recordSnapZoomMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
-            this.smViewerControl.RecordSnapZoom();
+            smViewerControl.RecordSnapZoom();
         }
 
         private void restoreSnapZoomMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
-            this.smViewerControl.RestoreSnapZoom();
+            smViewerControl.RestoreSnapZoom();
         }
 
         private void showDiagnosticsUIToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -1342,9 +1342,9 @@ namespace MSR.CVE.BackMaker
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
+            if (disposing && components != null)
             {
-                this.components.Dispose();
+                components.Dispose();
             }
 
             base.Dispose(disposing);
@@ -1352,620 +1352,620 @@ namespace MSR.CVE.BackMaker
 
         private void InitializeComponent()
         {
-            this.menuStrip1 = new MenuStrip();
-            this.fileToolStripMenuItem = new ToolStripMenuItem();
-            this.newMashupMenuItem = new ToolStripMenuItem();
-            this.openMashupMenuItem = new ToolStripMenuItem();
-            this.saveMashupMenuItem = new ToolStripMenuItem();
-            this.saveMashupAsMenuItem = new ToolStripMenuItem();
-            this.closeMashupMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator1 = new ToolStripSeparator();
-            this.addSourceMapMenuItem = new ToolStripMenuItem();
-            this.addSourceMapFromUriMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator4 = new ToolStripSeparator();
-            this.viewRenderedMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator2 = new ToolStripSeparator();
-            this.exitToolStripMenuItem = new ToolStripMenuItem();
-            this.mapOptionsToolStripMenuItem2 = new ToolStripMenuItem();
-            this.VEroadView = new ToolStripMenuItem();
-            this.VEaerialView = new ToolStripMenuItem();
-            this.VEhybridView = new ToolStripMenuItem();
-            this.toolStripSeparator3 = new ToolStripSeparator();
-            this.showCrosshairsMenuItem = new ToolStripMenuItem();
-            this.showPushPinsMenuItem = new ToolStripMenuItem();
-            this.showDMSMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator8 = new ToolStripSeparator();
-            this.AddRegLayerMenuItem = new ToolStripMenuItem();
-            this.showSourceMapOverviewMenuItem = new ToolStripMenuItem();
-            this.snapFeaturesToolStripSeparator = new ToolStripSeparator();
-            this.restoreSnapViewMenuItem = new ToolStripMenuItem();
-            this.recordSnapViewMenuItem = new ToolStripMenuItem();
-            this.restoreSnapZoomMenuItem = new ToolStripMenuItem();
-            this.recordSnapZoomMenuItem = new ToolStripMenuItem();
-            this.debugModeToolStripSeparator = new ToolStripSeparator();
-            this.enableDebugModeToolStripMenuItem = new ToolStripMenuItem();
-            this.helpToolStripMenuItem = new ToolStripMenuItem();
-            this.viewMapCruncherTutorialToolStripMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator7 = new ToolStripSeparator();
-            this.aboutMSRBackMakerToolStripMenuItem = new ToolStripMenuItem();
-            this.debugToolStripMenuItem = new ToolStripMenuItem();
-            this.showTileNamesMenuItem = new ToolStripMenuItem();
-            this.showSourceCropToolStripMenuItem = new ToolStripMenuItem();
-            this.showTileBoundariesMenuItem = new ToolStripMenuItem();
-            this.showDiagnosticsUIToolStripMenuItem = new ToolStripMenuItem();
-            this.mapSplitContainer = new SplitContainer();
-            this.smViewerControl = new ViewerControl();
-            this.veViewerControl = new ViewerControl();
-            this.controlSplitContainer = new SplitContainer();
-            this.panel1 = new Panel();
-            this.RenderLaunchButton = new Button();
-            this.controlsSplitContainer = new SplitContainer();
-            this.layerControls = new LayerControls();
-            this.synergyExplorer = new TabControl();
-            this.correspondencesTab = new TabPage();
-            this.registrationControls = new registrationControls();
-            this.transparencyTab = new TabPage();
-            this.transparencyPanel = new TransparencyPanel();
-            this.sourceInfoTab = new TabPage();
-            this.sourceMapInfoPanel = new SourceMapInfoPanel();
-            this.legendTabPage = new TabPage();
-            this.legendOptionsPanel1 = new LegendOptionsPanel();
-            this.menuStrip1.SuspendLayout();
-            ((ISupportInitialize)this.mapSplitContainer).BeginInit();
-            this.mapSplitContainer.Panel1.SuspendLayout();
-            this.mapSplitContainer.Panel2.SuspendLayout();
-            this.mapSplitContainer.SuspendLayout();
-            ((ISupportInitialize)this.controlSplitContainer).BeginInit();
-            this.controlSplitContainer.Panel1.SuspendLayout();
-            this.controlSplitContainer.Panel2.SuspendLayout();
-            this.controlSplitContainer.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((ISupportInitialize)this.controlsSplitContainer).BeginInit();
-            this.controlsSplitContainer.Panel1.SuspendLayout();
-            this.controlsSplitContainer.Panel2.SuspendLayout();
-            this.controlsSplitContainer.SuspendLayout();
-            this.synergyExplorer.SuspendLayout();
-            this.correspondencesTab.SuspendLayout();
-            this.transparencyTab.SuspendLayout();
-            this.sourceInfoTab.SuspendLayout();
-            this.legendTabPage.SuspendLayout();
-            this.SuspendLayout();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            newMashupMenuItem = new ToolStripMenuItem();
+            openMashupMenuItem = new ToolStripMenuItem();
+            saveMashupMenuItem = new ToolStripMenuItem();
+            saveMashupAsMenuItem = new ToolStripMenuItem();
+            closeMashupMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            addSourceMapMenuItem = new ToolStripMenuItem();
+            addSourceMapFromUriMenuItem = new ToolStripMenuItem();
+            toolStripSeparator4 = new ToolStripSeparator();
+            viewRenderedMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            exitToolStripMenuItem = new ToolStripMenuItem();
+            mapOptionsToolStripMenuItem2 = new ToolStripMenuItem();
+            VEroadView = new ToolStripMenuItem();
+            VEaerialView = new ToolStripMenuItem();
+            VEhybridView = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            showCrosshairsMenuItem = new ToolStripMenuItem();
+            showPushPinsMenuItem = new ToolStripMenuItem();
+            showDMSMenuItem = new ToolStripMenuItem();
+            toolStripSeparator8 = new ToolStripSeparator();
+            AddRegLayerMenuItem = new ToolStripMenuItem();
+            showSourceMapOverviewMenuItem = new ToolStripMenuItem();
+            snapFeaturesToolStripSeparator = new ToolStripSeparator();
+            restoreSnapViewMenuItem = new ToolStripMenuItem();
+            recordSnapViewMenuItem = new ToolStripMenuItem();
+            restoreSnapZoomMenuItem = new ToolStripMenuItem();
+            recordSnapZoomMenuItem = new ToolStripMenuItem();
+            debugModeToolStripSeparator = new ToolStripSeparator();
+            enableDebugModeToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            viewMapCruncherTutorialToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator7 = new ToolStripSeparator();
+            aboutMSRBackMakerToolStripMenuItem = new ToolStripMenuItem();
+            debugToolStripMenuItem = new ToolStripMenuItem();
+            showTileNamesMenuItem = new ToolStripMenuItem();
+            showSourceCropToolStripMenuItem = new ToolStripMenuItem();
+            showTileBoundariesMenuItem = new ToolStripMenuItem();
+            showDiagnosticsUIToolStripMenuItem = new ToolStripMenuItem();
+            mapSplitContainer = new SplitContainer();
+            smViewerControl = new ViewerControl();
+            veViewerControl = new ViewerControl();
+            controlSplitContainer = new SplitContainer();
+            panel1 = new Panel();
+            RenderLaunchButton = new Button();
+            controlsSplitContainer = new SplitContainer();
+            layerControls = new LayerControls();
+            synergyExplorer = new TabControl();
+            correspondencesTab = new TabPage();
+            registrationControls = new registrationControls();
+            transparencyTab = new TabPage();
+            transparencyPanel = new TransparencyPanel();
+            sourceInfoTab = new TabPage();
+            sourceMapInfoPanel = new SourceMapInfoPanel();
+            legendTabPage = new TabPage();
+            legendOptionsPanel1 = new LegendOptionsPanel();
+            menuStrip1.SuspendLayout();
+            ((ISupportInitialize)mapSplitContainer).BeginInit();
+            mapSplitContainer.Panel1.SuspendLayout();
+            mapSplitContainer.Panel2.SuspendLayout();
+            mapSplitContainer.SuspendLayout();
+            ((ISupportInitialize)controlSplitContainer).BeginInit();
+            controlSplitContainer.Panel1.SuspendLayout();
+            controlSplitContainer.Panel2.SuspendLayout();
+            controlSplitContainer.SuspendLayout();
+            panel1.SuspendLayout();
+            ((ISupportInitialize)controlsSplitContainer).BeginInit();
+            controlsSplitContainer.Panel1.SuspendLayout();
+            controlsSplitContainer.Panel2.SuspendLayout();
+            controlsSplitContainer.SuspendLayout();
+            synergyExplorer.SuspendLayout();
+            correspondencesTab.SuspendLayout();
+            transparencyTab.SuspendLayout();
+            sourceInfoTab.SuspendLayout();
+            legendTabPage.SuspendLayout();
+            SuspendLayout();
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new ToolStripItem[]
+            menuStrip1.Items.AddRange(new ToolStripItem[]
             {
-                this.fileToolStripMenuItem, this.mapOptionsToolStripMenuItem2, this.helpToolStripMenuItem,
-                this.debugToolStripMenuItem
+                fileToolStripMenuItem, mapOptionsToolStripMenuItem2, helpToolStripMenuItem,
+                debugToolStripMenuItem
             });
-            this.menuStrip1.Location = new Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new Size(1028, 36);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1028, 36);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.newMashupMenuItem, this.openMashupMenuItem, this.saveMashupMenuItem, this.saveMashupAsMenuItem,
-                this.closeMashupMenuItem, this.toolStripSeparator1, this.addSourceMapMenuItem,
-                this.addSourceMapFromUriMenuItem, this.toolStripSeparator4, this.viewRenderedMenuItem,
-                this.toolStripSeparator2, this.exitToolStripMenuItem
+                newMashupMenuItem, openMashupMenuItem, saveMashupMenuItem, saveMashupAsMenuItem,
+                closeMashupMenuItem, toolStripSeparator1, addSourceMapMenuItem,
+                addSourceMapFromUriMenuItem, toolStripSeparator4, viewRenderedMenuItem,
+                toolStripSeparator2, exitToolStripMenuItem
             });
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new Size(54, 32);
-            this.fileToolStripMenuItem.Text = "&File";
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(54, 32);
+            fileToolStripMenuItem.Text = "&File";
             // 
             // newMashupMenuItem
             // 
-            this.newMashupMenuItem.Name = "newMashupMenuItem";
-            this.newMashupMenuItem.Size = new Size(306, 32);
-            this.newMashupMenuItem.Text = "&New Mashup";
-            this.newMashupMenuItem.Click += new EventHandler(this.newMashupMenuItem_Click);
+            newMashupMenuItem.Name = "newMashupMenuItem";
+            newMashupMenuItem.Size = new Size(306, 32);
+            newMashupMenuItem.Text = "&New Mashup";
+            newMashupMenuItem.Click += new EventHandler(newMashupMenuItem_Click);
             // 
             // openMashupMenuItem
             // 
-            this.openMashupMenuItem.Name = "openMashupMenuItem";
-            this.openMashupMenuItem.Size = new Size(306, 32);
-            this.openMashupMenuItem.Text = "&Open Mashup...";
-            this.openMashupMenuItem.Click += new EventHandler(this.openMashupMenuItem_Click);
+            openMashupMenuItem.Name = "openMashupMenuItem";
+            openMashupMenuItem.Size = new Size(306, 32);
+            openMashupMenuItem.Text = "&Open Mashup...";
+            openMashupMenuItem.Click += new EventHandler(openMashupMenuItem_Click);
             // 
             // saveMashupMenuItem
             // 
-            this.saveMashupMenuItem.Enabled = false;
-            this.saveMashupMenuItem.Name = "saveMashupMenuItem";
-            this.saveMashupMenuItem.Size = new Size(306, 32);
-            this.saveMashupMenuItem.Text = "&Save Mashup";
-            this.saveMashupMenuItem.Click += new EventHandler(this.saveMashupMenuItem_Click);
+            saveMashupMenuItem.Enabled = false;
+            saveMashupMenuItem.Name = "saveMashupMenuItem";
+            saveMashupMenuItem.Size = new Size(306, 32);
+            saveMashupMenuItem.Text = "&Save Mashup";
+            saveMashupMenuItem.Click += new EventHandler(saveMashupMenuItem_Click);
             // 
             // saveMashupAsMenuItem
             // 
-            this.saveMashupAsMenuItem.Enabled = false;
-            this.saveMashupAsMenuItem.Name = "saveMashupAsMenuItem";
-            this.saveMashupAsMenuItem.Size = new Size(306, 32);
-            this.saveMashupAsMenuItem.Text = "Save Mashup &As...";
-            this.saveMashupAsMenuItem.Click += new EventHandler(this.saveMashupAsMenuItem_Click);
+            saveMashupAsMenuItem.Enabled = false;
+            saveMashupAsMenuItem.Name = "saveMashupAsMenuItem";
+            saveMashupAsMenuItem.Size = new Size(306, 32);
+            saveMashupAsMenuItem.Text = "Save Mashup &As...";
+            saveMashupAsMenuItem.Click += new EventHandler(saveMashupAsMenuItem_Click);
             // 
             // closeMashupMenuItem
             // 
-            this.closeMashupMenuItem.Enabled = false;
-            this.closeMashupMenuItem.Name = "closeMashupMenuItem";
-            this.closeMashupMenuItem.Size = new Size(306, 32);
-            this.closeMashupMenuItem.Text = "&Close Mashup";
-            this.closeMashupMenuItem.Click += new EventHandler(this.closeMashupMenuItem_Click);
+            closeMashupMenuItem.Enabled = false;
+            closeMashupMenuItem.Name = "closeMashupMenuItem";
+            closeMashupMenuItem.Size = new Size(306, 32);
+            closeMashupMenuItem.Text = "&Close Mashup";
+            closeMashupMenuItem.Click += new EventHandler(closeMashupMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new Size(303, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(303, 6);
             // 
             // addSourceMapMenuItem
             // 
-            this.addSourceMapMenuItem.Enabled = false;
-            this.addSourceMapMenuItem.Name = "addSourceMapMenuItem";
-            this.addSourceMapMenuItem.Size = new Size(306, 32);
-            this.addSourceMapMenuItem.Text = "Add Source &Map...";
-            this.addSourceMapMenuItem.Click += new EventHandler(this.addSourceMapMenuItem_Click);
+            addSourceMapMenuItem.Enabled = false;
+            addSourceMapMenuItem.Name = "addSourceMapMenuItem";
+            addSourceMapMenuItem.Size = new Size(306, 32);
+            addSourceMapMenuItem.Text = "Add Source &Map...";
+            addSourceMapMenuItem.Click += new EventHandler(addSourceMapMenuItem_Click);
             // 
             // addSourceMapFromUriMenuItem
             // 
-            this.addSourceMapFromUriMenuItem.Enabled = false;
-            this.addSourceMapFromUriMenuItem.Name = "addSourceMapFromUriMenuItem";
-            this.addSourceMapFromUriMenuItem.Size = new Size(306, 32);
-            this.addSourceMapFromUriMenuItem.Text = "Add Map From &Uri...";
-            this.addSourceMapFromUriMenuItem.Visible = false;
-            this.addSourceMapFromUriMenuItem.Click += new EventHandler(this.addSourceMapFromUriMenuItem_Click);
+            addSourceMapFromUriMenuItem.Enabled = false;
+            addSourceMapFromUriMenuItem.Name = "addSourceMapFromUriMenuItem";
+            addSourceMapFromUriMenuItem.Size = new Size(306, 32);
+            addSourceMapFromUriMenuItem.Text = "Add Map From &Uri...";
+            addSourceMapFromUriMenuItem.Visible = false;
+            addSourceMapFromUriMenuItem.Click += new EventHandler(addSourceMapFromUriMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new Size(303, 6);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(303, 6);
             // 
             // viewRenderedMenuItem
             // 
-            this.viewRenderedMenuItem.Name = "viewRenderedMenuItem";
-            this.viewRenderedMenuItem.Size = new Size(306, 32);
-            this.viewRenderedMenuItem.Text = "Launch Mashup &Browser...";
-            this.viewRenderedMenuItem.Click += new EventHandler(this.viewRenderedMenuItem_Click);
+            viewRenderedMenuItem.Name = "viewRenderedMenuItem";
+            viewRenderedMenuItem.Size = new Size(306, 32);
+            viewRenderedMenuItem.Text = "Launch Mashup &Browser...";
+            viewRenderedMenuItem.Click += new EventHandler(viewRenderedMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new Size(303, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(303, 6);
             // 
             // exitToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new Size(306, 32);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new EventHandler(this.exitToolStripMenuItem_Click);
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(306, 32);
+            exitToolStripMenuItem.Text = "E&xit";
+            exitToolStripMenuItem.Click += new EventHandler(exitToolStripMenuItem_Click);
             // 
             // mapOptionsToolStripMenuItem2
             // 
-            this.mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[]
+            mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.VEroadView, this.VEaerialView, this.VEhybridView, this.toolStripSeparator3,
-                this.showCrosshairsMenuItem, this.showPushPinsMenuItem, this.showDMSMenuItem,
-                this.toolStripSeparator8, this.AddRegLayerMenuItem, this.showSourceMapOverviewMenuItem,
-                this.snapFeaturesToolStripSeparator, this.restoreSnapViewMenuItem, this.recordSnapViewMenuItem,
-                this.restoreSnapZoomMenuItem, this.recordSnapZoomMenuItem, this.debugModeToolStripSeparator,
-                this.enableDebugModeToolStripMenuItem
+                VEroadView, VEaerialView, VEhybridView, toolStripSeparator3,
+                showCrosshairsMenuItem, showPushPinsMenuItem, showDMSMenuItem,
+                toolStripSeparator8, AddRegLayerMenuItem, showSourceMapOverviewMenuItem,
+                snapFeaturesToolStripSeparator, restoreSnapViewMenuItem, recordSnapViewMenuItem,
+                restoreSnapZoomMenuItem, recordSnapZoomMenuItem, debugModeToolStripSeparator,
+                enableDebugModeToolStripMenuItem
             });
-            this.mapOptionsToolStripMenuItem2.Name = "mapOptionsToolStripMenuItem2";
-            this.mapOptionsToolStripMenuItem2.Size = new Size(65, 32);
-            this.mapOptionsToolStripMenuItem2.Text = "&View";
+            mapOptionsToolStripMenuItem2.Name = "mapOptionsToolStripMenuItem2";
+            mapOptionsToolStripMenuItem2.Size = new Size(65, 32);
+            mapOptionsToolStripMenuItem2.Text = "&View";
             // 
             // VEroadView
             // 
-            this.VEroadView.Name = "VEroadView";
-            this.VEroadView.Size = new Size(334, 32);
-            this.VEroadView.Text = "&Roads";
-            this.VEroadView.Click += new EventHandler(this.roadToolStripMenuItem_Click);
+            VEroadView.Name = "VEroadView";
+            VEroadView.Size = new Size(334, 32);
+            VEroadView.Text = "&Roads";
+            VEroadView.Click += new EventHandler(roadToolStripMenuItem_Click);
             // 
             // VEaerialView
             // 
-            this.VEaerialView.Name = "VEaerialView";
-            this.VEaerialView.Size = new Size(334, 32);
-            this.VEaerialView.Text = "&Aerial Photos";
-            this.VEaerialView.Click += new EventHandler(this.aerialToolStripMenuItem_Click);
+            VEaerialView.Name = "VEaerialView";
+            VEaerialView.Size = new Size(334, 32);
+            VEaerialView.Text = "&Aerial Photos";
+            VEaerialView.Click += new EventHandler(aerialToolStripMenuItem_Click);
             // 
             // VEhybridView
             // 
-            this.VEhybridView.Name = "VEhybridView";
-            this.VEhybridView.Size = new Size(334, 32);
-            this.VEhybridView.Text = "&Hybrid";
-            this.VEhybridView.Click += new EventHandler(this.hybridToolStripMenuItem_Click);
+            VEhybridView.Name = "VEhybridView";
+            VEhybridView.Size = new Size(334, 32);
+            VEhybridView.Text = "&Hybrid";
+            VEhybridView.Click += new EventHandler(hybridToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new Size(331, 6);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(331, 6);
             // 
             // showCrosshairsMenuItem
             // 
-            this.showCrosshairsMenuItem.Name = "showCrosshairsMenuItem";
-            this.showCrosshairsMenuItem.Size = new Size(334, 32);
-            this.showCrosshairsMenuItem.Text = "Show &Crosshairs";
+            showCrosshairsMenuItem.Name = "showCrosshairsMenuItem";
+            showCrosshairsMenuItem.Size = new Size(334, 32);
+            showCrosshairsMenuItem.Text = "Show &Crosshairs";
             // 
             // showPushPinsMenuItem
             // 
-            this.showPushPinsMenuItem.Name = "showPushPinsMenuItem";
-            this.showPushPinsMenuItem.Size = new Size(334, 32);
-            this.showPushPinsMenuItem.Text = "Show &PushPins";
+            showPushPinsMenuItem.Name = "showPushPinsMenuItem";
+            showPushPinsMenuItem.Size = new Size(334, 32);
+            showPushPinsMenuItem.Text = "Show &PushPins";
             // 
             // showDMSMenuItem
             // 
-            this.showDMSMenuItem.Name = "showDMSMenuItem";
-            this.showDMSMenuItem.Size = new Size(334, 32);
-            this.showDMSMenuItem.Text = "Show locations in d°m\'s\"";
+            showDMSMenuItem.Name = "showDMSMenuItem";
+            showDMSMenuItem.Size = new Size(334, 32);
+            showDMSMenuItem.Text = "Show locations in d°m\'s\"";
             // 
             // toolStripSeparator8
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new Size(331, 6);
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new Size(331, 6);
             // 
             // AddRegLayerMenuItem
             // 
-            this.AddRegLayerMenuItem.Name = "AddRegLayerMenuItem";
-            this.AddRegLayerMenuItem.Size = new Size(334, 32);
-            this.AddRegLayerMenuItem.Text = "Show Rendered &Layer...";
-            this.AddRegLayerMenuItem.Click += new EventHandler(this.AddRegLayerMenuItem_Click);
+            AddRegLayerMenuItem.Name = "AddRegLayerMenuItem";
+            AddRegLayerMenuItem.Size = new Size(334, 32);
+            AddRegLayerMenuItem.Text = "Show Rendered &Layer...";
+            AddRegLayerMenuItem.Click += new EventHandler(AddRegLayerMenuItem_Click);
             // 
             // showSourceMapOverviewMenuItem
             // 
-            this.showSourceMapOverviewMenuItem.Name = "showSourceMapOverviewMenuItem";
-            this.showSourceMapOverviewMenuItem.Size = new Size(334, 32);
-            this.showSourceMapOverviewMenuItem.Text = "Show Source Map Overview";
-            this.showSourceMapOverviewMenuItem.Click += new EventHandler(this.showSourceMapOverviewMenuItem_Click);
+            showSourceMapOverviewMenuItem.Name = "showSourceMapOverviewMenuItem";
+            showSourceMapOverviewMenuItem.Size = new Size(334, 32);
+            showSourceMapOverviewMenuItem.Text = "Show Source Map Overview";
+            showSourceMapOverviewMenuItem.Click += new EventHandler(showSourceMapOverviewMenuItem_Click);
             // 
             // snapFeaturesToolStripSeparator
             // 
-            this.snapFeaturesToolStripSeparator.Name = "snapFeaturesToolStripSeparator";
-            this.snapFeaturesToolStripSeparator.Size = new Size(331, 6);
+            snapFeaturesToolStripSeparator.Name = "snapFeaturesToolStripSeparator";
+            snapFeaturesToolStripSeparator.Size = new Size(331, 6);
             // 
             // restoreSnapViewMenuItem
             // 
-            this.restoreSnapViewMenuItem.Name = "restoreSnapViewMenuItem";
-            this.restoreSnapViewMenuItem.ShortcutKeyDisplayString = "F5";
-            this.restoreSnapViewMenuItem.ShortcutKeys = Keys.F5;
-            this.restoreSnapViewMenuItem.Size = new Size(334, 32);
-            this.restoreSnapViewMenuItem.Text = "Restore SnapView";
+            restoreSnapViewMenuItem.Name = "restoreSnapViewMenuItem";
+            restoreSnapViewMenuItem.ShortcutKeyDisplayString = "F5";
+            restoreSnapViewMenuItem.ShortcutKeys = Keys.F5;
+            restoreSnapViewMenuItem.Size = new Size(334, 32);
+            restoreSnapViewMenuItem.Text = "Restore SnapView";
             // 
             // recordSnapViewMenuItem
             // 
-            this.recordSnapViewMenuItem.Name = "recordSnapViewMenuItem";
-            this.recordSnapViewMenuItem.ShortcutKeyDisplayString = "Shift+F5";
-            this.recordSnapViewMenuItem.Size = new Size(334, 32);
-            this.recordSnapViewMenuItem.Text = "Record SnapView";
+            recordSnapViewMenuItem.Name = "recordSnapViewMenuItem";
+            recordSnapViewMenuItem.ShortcutKeyDisplayString = "Shift+F5";
+            recordSnapViewMenuItem.Size = new Size(334, 32);
+            recordSnapViewMenuItem.Text = "Record SnapView";
             // 
             // restoreSnapZoomMenuItem
             // 
-            this.restoreSnapZoomMenuItem.Name = "restoreSnapZoomMenuItem";
-            this.restoreSnapZoomMenuItem.ShortcutKeyDisplayString = "F6";
-            this.restoreSnapZoomMenuItem.Size = new Size(334, 32);
-            this.restoreSnapZoomMenuItem.Text = "Restore SnapZoom";
+            restoreSnapZoomMenuItem.Name = "restoreSnapZoomMenuItem";
+            restoreSnapZoomMenuItem.ShortcutKeyDisplayString = "F6";
+            restoreSnapZoomMenuItem.Size = new Size(334, 32);
+            restoreSnapZoomMenuItem.Text = "Restore SnapZoom";
             // 
             // recordSnapZoomMenuItem
             // 
-            this.recordSnapZoomMenuItem.Name = "recordSnapZoomMenuItem";
-            this.recordSnapZoomMenuItem.ShortcutKeyDisplayString = "Shift+F6";
-            this.recordSnapZoomMenuItem.Size = new Size(334, 32);
-            this.recordSnapZoomMenuItem.Text = "Record SnapZoom";
+            recordSnapZoomMenuItem.Name = "recordSnapZoomMenuItem";
+            recordSnapZoomMenuItem.ShortcutKeyDisplayString = "Shift+F6";
+            recordSnapZoomMenuItem.Size = new Size(334, 32);
+            recordSnapZoomMenuItem.Text = "Record SnapZoom";
             // 
             // debugModeToolStripSeparator
             // 
-            this.debugModeToolStripSeparator.Name = "debugModeToolStripSeparator";
-            this.debugModeToolStripSeparator.Size = new Size(331, 6);
+            debugModeToolStripSeparator.Name = "debugModeToolStripSeparator";
+            debugModeToolStripSeparator.Size = new Size(331, 6);
             // 
             // enableDebugModeToolStripMenuItem
             // 
-            this.enableDebugModeToolStripMenuItem.Name = "enableDebugModeToolStripMenuItem";
-            this.enableDebugModeToolStripMenuItem.Size = new Size(334, 32);
-            this.enableDebugModeToolStripMenuItem.Text = "Enable Debug Mode";
-            this.enableDebugModeToolStripMenuItem.Click +=
-                new EventHandler(this.enableDebugModeToolStripMenuItem_Click);
+            enableDebugModeToolStripMenuItem.Name = "enableDebugModeToolStripMenuItem";
+            enableDebugModeToolStripMenuItem.Size = new Size(334, 32);
+            enableDebugModeToolStripMenuItem.Text = "Enable Debug Mode";
+            enableDebugModeToolStripMenuItem.Click +=
+                new EventHandler(enableDebugModeToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.viewMapCruncherTutorialToolStripMenuItem, this.toolStripSeparator7,
-                this.aboutMSRBackMakerToolStripMenuItem
+                viewMapCruncherTutorialToolStripMenuItem, toolStripSeparator7,
+                aboutMSRBackMakerToolStripMenuItem
             });
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new Size(65, 32);
-            this.helpToolStripMenuItem.Text = "&Help";
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(65, 32);
+            helpToolStripMenuItem.Text = "&Help";
             // 
             // viewMapCruncherTutorialToolStripMenuItem
             // 
-            this.viewMapCruncherTutorialToolStripMenuItem.Name = "viewMapCruncherTutorialToolStripMenuItem";
-            this.viewMapCruncherTutorialToolStripMenuItem.Size = new Size(536, 32);
-            this.viewMapCruncherTutorialToolStripMenuItem.Text = "MapCruncher for Microsoft Virtual Earth Help";
-            this.viewMapCruncherTutorialToolStripMenuItem.Click +=
-                new EventHandler(this.viewMapCruncherTutorialToolStripMenuItem_Click);
+            viewMapCruncherTutorialToolStripMenuItem.Name = "viewMapCruncherTutorialToolStripMenuItem";
+            viewMapCruncherTutorialToolStripMenuItem.Size = new Size(536, 32);
+            viewMapCruncherTutorialToolStripMenuItem.Text = "MapCruncher for Microsoft Virtual Earth Help";
+            viewMapCruncherTutorialToolStripMenuItem.Click +=
+                new EventHandler(viewMapCruncherTutorialToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new Size(533, 6);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(533, 6);
             // 
             // aboutMSRBackMakerToolStripMenuItem
             // 
-            this.aboutMSRBackMakerToolStripMenuItem.Name = "aboutMSRBackMakerToolStripMenuItem";
-            this.aboutMSRBackMakerToolStripMenuItem.Size = new Size(536, 32);
-            this.aboutMSRBackMakerToolStripMenuItem.Text = "&About MapCruncher Beta for Microsoft Virtual Earth";
-            this.aboutMSRBackMakerToolStripMenuItem.Click +=
-                new EventHandler(this.aboutMSRBackMakerToolStripMenuItem_Click);
+            aboutMSRBackMakerToolStripMenuItem.Name = "aboutMSRBackMakerToolStripMenuItem";
+            aboutMSRBackMakerToolStripMenuItem.Size = new Size(536, 32);
+            aboutMSRBackMakerToolStripMenuItem.Text = "&About MapCruncher Beta for Microsoft Virtual Earth";
+            aboutMSRBackMakerToolStripMenuItem.Click +=
+                new EventHandler(aboutMSRBackMakerToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.showTileNamesMenuItem, this.showSourceCropToolStripMenuItem, this.showTileBoundariesMenuItem,
-                this.showDiagnosticsUIToolStripMenuItem
+                showTileNamesMenuItem, showSourceCropToolStripMenuItem, showTileBoundariesMenuItem,
+                showDiagnosticsUIToolStripMenuItem
             });
-            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new Size(83, 32);
-            this.debugToolStripMenuItem.Text = "&Debug";
+            debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            debugToolStripMenuItem.Size = new Size(83, 32);
+            debugToolStripMenuItem.Text = "&Debug";
             // 
             // showTileNamesMenuItem
             // 
-            this.showTileNamesMenuItem.Name = "showTileNamesMenuItem";
-            this.showTileNamesMenuItem.Size = new Size(269, 32);
-            this.showTileNamesMenuItem.Text = "Show Tile &Names";
+            showTileNamesMenuItem.Name = "showTileNamesMenuItem";
+            showTileNamesMenuItem.Size = new Size(269, 32);
+            showTileNamesMenuItem.Text = "Show Tile &Names";
             // 
             // showSourceCropToolStripMenuItem
             // 
-            this.showSourceCropToolStripMenuItem.Name = "showSourceCropToolStripMenuItem";
-            this.showSourceCropToolStripMenuItem.Size = new Size(269, 32);
-            this.showSourceCropToolStripMenuItem.Text = "Show Source Crop";
+            showSourceCropToolStripMenuItem.Name = "showSourceCropToolStripMenuItem";
+            showSourceCropToolStripMenuItem.Size = new Size(269, 32);
+            showSourceCropToolStripMenuItem.Text = "Show Source Crop";
             // 
             // showTileBoundariesMenuItem
             // 
-            this.showTileBoundariesMenuItem.Name = "showTileBoundariesMenuItem";
-            this.showTileBoundariesMenuItem.Size = new Size(269, 32);
-            this.showTileBoundariesMenuItem.Text = "Show Tile &Boundaries";
+            showTileBoundariesMenuItem.Name = "showTileBoundariesMenuItem";
+            showTileBoundariesMenuItem.Size = new Size(269, 32);
+            showTileBoundariesMenuItem.Text = "Show Tile &Boundaries";
             // 
             // showDiagnosticsUIToolStripMenuItem
             // 
-            this.showDiagnosticsUIToolStripMenuItem.Name = "showDiagnosticsUIToolStripMenuItem";
-            this.showDiagnosticsUIToolStripMenuItem.Size = new Size(269, 32);
-            this.showDiagnosticsUIToolStripMenuItem.Text = "Show DiagnosticsUI";
-            this.showDiagnosticsUIToolStripMenuItem.Click +=
-                new EventHandler(this.showDiagnosticsUIToolStripMenuItem_Click_1);
+            showDiagnosticsUIToolStripMenuItem.Name = "showDiagnosticsUIToolStripMenuItem";
+            showDiagnosticsUIToolStripMenuItem.Size = new Size(269, 32);
+            showDiagnosticsUIToolStripMenuItem.Text = "Show DiagnosticsUI";
+            showDiagnosticsUIToolStripMenuItem.Click +=
+                new EventHandler(showDiagnosticsUIToolStripMenuItem_Click_1);
             // 
             // mapSplitContainer
             // 
-            this.mapSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+            mapSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
                                                                             | AnchorStyles.Left
                                                                             | AnchorStyles.Right);
-            this.mapSplitContainer.Location = new Point(3, 3);
-            this.mapSplitContainer.Name = "mapSplitContainer";
+            mapSplitContainer.Location = new Point(3, 3);
+            mapSplitContainer.Name = "mapSplitContainer";
             // 
             // mapSplitContainer.Panel1
             // 
-            this.mapSplitContainer.Panel1.Controls.Add(this.smViewerControl);
-            this.mapSplitContainer.Panel1MinSize = 100;
+            mapSplitContainer.Panel1.Controls.Add(smViewerControl);
+            mapSplitContainer.Panel1MinSize = 100;
             // 
             // mapSplitContainer.Panel2
             // 
-            this.mapSplitContainer.Panel2.Controls.Add(this.veViewerControl);
-            this.mapSplitContainer.Panel2MinSize = 100;
-            this.mapSplitContainer.Size = new Size(691, 647);
-            this.mapSplitContainer.SplitterDistance = 337;
-            this.mapSplitContainer.TabIndex = 6;
+            mapSplitContainer.Panel2.Controls.Add(veViewerControl);
+            mapSplitContainer.Panel2MinSize = 100;
+            mapSplitContainer.Size = new Size(691, 647);
+            mapSplitContainer.SplitterDistance = 337;
+            mapSplitContainer.TabIndex = 6;
             // 
             // smViewerControl
             // 
-            this.smViewerControl.Dock = DockStyle.Fill;
-            this.smViewerControl.Location = new Point(0, 0);
-            this.smViewerControl.Margin = new Padding(4, 4, 4, 4);
-            this.smViewerControl.Name = "smViewerControl";
-            this.smViewerControl.Size = new Size(337, 647);
-            this.smViewerControl.TabIndex = 0;
+            smViewerControl.Dock = DockStyle.Fill;
+            smViewerControl.Location = new Point(0, 0);
+            smViewerControl.Margin = new Padding(4, 4, 4, 4);
+            smViewerControl.Name = "smViewerControl";
+            smViewerControl.Size = new Size(337, 647);
+            smViewerControl.TabIndex = 0;
             // 
             // veViewerControl
             // 
-            this.veViewerControl.Dock = DockStyle.Fill;
-            this.veViewerControl.Location = new Point(0, 0);
-            this.veViewerControl.Margin = new Padding(4, 4, 4, 4);
-            this.veViewerControl.Name = "veViewerControl";
-            this.veViewerControl.Size = new Size(350, 647);
-            this.veViewerControl.TabIndex = 0;
+            veViewerControl.Dock = DockStyle.Fill;
+            veViewerControl.Location = new Point(0, 0);
+            veViewerControl.Margin = new Padding(4, 4, 4, 4);
+            veViewerControl.Name = "veViewerControl";
+            veViewerControl.Size = new Size(350, 647);
+            veViewerControl.TabIndex = 0;
             // 
             // controlSplitContainer
             // 
-            this.controlSplitContainer.Dock = DockStyle.Fill;
-            this.controlSplitContainer.Location = new Point(0, 36);
-            this.controlSplitContainer.Name = "controlSplitContainer";
+            controlSplitContainer.Dock = DockStyle.Fill;
+            controlSplitContainer.Location = new Point(0, 36);
+            controlSplitContainer.Name = "controlSplitContainer";
             // 
             // controlSplitContainer.Panel1
             // 
-            this.controlSplitContainer.Panel1.Controls.Add(this.panel1);
-            this.controlSplitContainer.Panel1.Controls.Add(this.controlsSplitContainer);
+            controlSplitContainer.Panel1.Controls.Add(panel1);
+            controlSplitContainer.Panel1.Controls.Add(controlsSplitContainer);
             // 
             // controlSplitContainer.Panel2
             // 
-            this.controlSplitContainer.Panel2.Controls.Add(this.mapSplitContainer);
-            this.controlSplitContainer.Size = new Size(1028, 650);
-            this.controlSplitContainer.SplitterDistance = 330;
-            this.controlSplitContainer.TabIndex = 7;
+            controlSplitContainer.Panel2.Controls.Add(mapSplitContainer);
+            controlSplitContainer.Size = new Size(1028, 650);
+            controlSplitContainer.SplitterDistance = 330;
+            controlSplitContainer.TabIndex = 7;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.RenderLaunchButton);
-            this.panel1.Dock = DockStyle.Bottom;
-            this.panel1.Location = new Point(0, 608);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new Size(330, 42);
-            this.panel1.TabIndex = 9;
+            panel1.Controls.Add(RenderLaunchButton);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 608);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(330, 42);
+            panel1.TabIndex = 9;
             // 
             // RenderLaunchButton
             // 
-            this.RenderLaunchButton.Location = new Point(3, 4);
-            this.RenderLaunchButton.Name = "RenderLaunchButton";
-            this.RenderLaunchButton.Size = new Size(125, 30);
-            this.RenderLaunchButton.TabIndex = 9;
-            this.RenderLaunchButton.Text = "Render...";
-            this.RenderLaunchButton.UseVisualStyleBackColor = true;
-            this.RenderLaunchButton.Click += new EventHandler(this.RenderLaunchButton_Click);
+            RenderLaunchButton.Location = new Point(3, 4);
+            RenderLaunchButton.Name = "RenderLaunchButton";
+            RenderLaunchButton.Size = new Size(125, 30);
+            RenderLaunchButton.TabIndex = 9;
+            RenderLaunchButton.Text = "Render...";
+            RenderLaunchButton.UseVisualStyleBackColor = true;
+            RenderLaunchButton.Click += new EventHandler(RenderLaunchButton_Click);
             // 
             // controlsSplitContainer
             // 
-            this.controlsSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+            controlsSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
                                                                                  | AnchorStyles.Left
                                                                                  | AnchorStyles.Right);
-            this.controlsSplitContainer.Location = new Point(0, 0);
-            this.controlsSplitContainer.Name = "controlsSplitContainer";
-            this.controlsSplitContainer.Orientation = Orientation.Horizontal;
+            controlsSplitContainer.Location = new Point(0, 0);
+            controlsSplitContainer.Name = "controlsSplitContainer";
+            controlsSplitContainer.Orientation = Orientation.Horizontal;
             // 
             // controlsSplitContainer.Panel1
             // 
-            this.controlsSplitContainer.Panel1.Controls.Add(this.layerControls);
+            controlsSplitContainer.Panel1.Controls.Add(layerControls);
             // 
             // controlsSplitContainer.Panel2
             // 
-            this.controlsSplitContainer.Panel2.Controls.Add(this.synergyExplorer);
-            this.controlsSplitContainer.Size = new Size(327, 606);
-            this.controlsSplitContainer.SplitterDistance = 130;
-            this.controlsSplitContainer.TabIndex = 8;
+            controlsSplitContainer.Panel2.Controls.Add(synergyExplorer);
+            controlsSplitContainer.Size = new Size(327, 606);
+            controlsSplitContainer.SplitterDistance = 130;
+            controlsSplitContainer.TabIndex = 8;
             // 
             // layerControls
             // 
-            this.layerControls.Dock = DockStyle.Fill;
-            this.layerControls.Location = new Point(0, 0);
-            this.layerControls.Margin = new Padding(4, 4, 4, 4);
-            this.layerControls.Name = "layerControls";
-            this.layerControls.Size = new Size(327, 130);
-            this.layerControls.TabIndex = 10;
+            layerControls.Dock = DockStyle.Fill;
+            layerControls.Location = new Point(0, 0);
+            layerControls.Margin = new Padding(4, 4, 4, 4);
+            layerControls.Name = "layerControls";
+            layerControls.Size = new Size(327, 130);
+            layerControls.TabIndex = 10;
             // 
             // synergyExplorer
             // 
-            this.synergyExplorer.Controls.Add(this.correspondencesTab);
-            this.synergyExplorer.Controls.Add(this.transparencyTab);
-            this.synergyExplorer.Controls.Add(this.sourceInfoTab);
-            this.synergyExplorer.Controls.Add(this.legendTabPage);
-            this.synergyExplorer.Dock = DockStyle.Fill;
-            this.synergyExplorer.Location = new Point(0, 0);
-            this.synergyExplorer.Multiline = true;
-            this.synergyExplorer.Name = "synergyExplorer";
-            this.synergyExplorer.SelectedIndex = 0;
-            this.synergyExplorer.ShowToolTips = true;
-            this.synergyExplorer.Size = new Size(327, 472);
-            this.synergyExplorer.TabIndex = 7;
+            synergyExplorer.Controls.Add(correspondencesTab);
+            synergyExplorer.Controls.Add(transparencyTab);
+            synergyExplorer.Controls.Add(sourceInfoTab);
+            synergyExplorer.Controls.Add(legendTabPage);
+            synergyExplorer.Dock = DockStyle.Fill;
+            synergyExplorer.Location = new Point(0, 0);
+            synergyExplorer.Multiline = true;
+            synergyExplorer.Name = "synergyExplorer";
+            synergyExplorer.SelectedIndex = 0;
+            synergyExplorer.ShowToolTips = true;
+            synergyExplorer.Size = new Size(327, 472);
+            synergyExplorer.TabIndex = 7;
             // 
             // correspondencesTab
             // 
-            this.correspondencesTab.Controls.Add(this.registrationControls);
-            this.correspondencesTab.Location = new Point(4, 46);
-            this.correspondencesTab.Name = "correspondencesTab";
-            this.correspondencesTab.Padding = new Padding(3);
-            this.correspondencesTab.Size = new Size(319, 422);
-            this.correspondencesTab.TabIndex = 1;
-            this.correspondencesTab.Text = "Correspondences";
-            this.correspondencesTab.UseVisualStyleBackColor = true;
+            correspondencesTab.Controls.Add(registrationControls);
+            correspondencesTab.Location = new Point(4, 46);
+            correspondencesTab.Name = "correspondencesTab";
+            correspondencesTab.Padding = new Padding(3);
+            correspondencesTab.Size = new Size(319, 422);
+            correspondencesTab.TabIndex = 1;
+            correspondencesTab.Text = "Correspondences";
+            correspondencesTab.UseVisualStyleBackColor = true;
             // 
             // registrationControls
             // 
-            this.registrationControls.Dock = DockStyle.Fill;
-            this.registrationControls.Location = new Point(3, 3);
-            this.registrationControls.Margin = new Padding(4, 4, 4, 4);
-            this.registrationControls.Name = "registrationControls";
-            this.registrationControls.Size = new Size(313, 416);
-            this.registrationControls.TabIndex = 9;
+            registrationControls.Dock = DockStyle.Fill;
+            registrationControls.Location = new Point(3, 3);
+            registrationControls.Margin = new Padding(4, 4, 4, 4);
+            registrationControls.Name = "registrationControls";
+            registrationControls.Size = new Size(313, 416);
+            registrationControls.TabIndex = 9;
             // 
             // transparencyTab
             // 
-            this.transparencyTab.Controls.Add(this.transparencyPanel);
-            this.transparencyTab.Location = new Point(4, 46);
-            this.transparencyTab.Name = "transparencyTab";
-            this.transparencyTab.Size = new Size(319, 412);
-            this.transparencyTab.TabIndex = 4;
-            this.transparencyTab.Text = "Transparency";
-            this.transparencyTab.UseVisualStyleBackColor = true;
+            transparencyTab.Controls.Add(transparencyPanel);
+            transparencyTab.Location = new Point(4, 46);
+            transparencyTab.Name = "transparencyTab";
+            transparencyTab.Size = new Size(319, 412);
+            transparencyTab.TabIndex = 4;
+            transparencyTab.Text = "Transparency";
+            transparencyTab.UseVisualStyleBackColor = true;
             // 
             // transparencyPanel
             // 
-            this.transparencyPanel.Dock = DockStyle.Fill;
-            this.transparencyPanel.Location = new Point(0, 0);
-            this.transparencyPanel.Margin = new Padding(4, 4, 4, 4);
-            this.transparencyPanel.Name = "transparencyPanel";
-            this.transparencyPanel.Size = new Size(319, 412);
-            this.transparencyPanel.TabIndex = 0;
+            transparencyPanel.Dock = DockStyle.Fill;
+            transparencyPanel.Location = new Point(0, 0);
+            transparencyPanel.Margin = new Padding(4, 4, 4, 4);
+            transparencyPanel.Name = "transparencyPanel";
+            transparencyPanel.Size = new Size(319, 412);
+            transparencyPanel.TabIndex = 0;
             // 
             // sourceInfoTab
             // 
-            this.sourceInfoTab.Controls.Add(this.sourceMapInfoPanel);
-            this.sourceInfoTab.Location = new Point(4, 46);
-            this.sourceInfoTab.Name = "sourceInfoTab";
-            this.sourceInfoTab.Padding = new Padding(3);
-            this.sourceInfoTab.Size = new Size(319, 412);
-            this.sourceInfoTab.TabIndex = 3;
-            this.sourceInfoTab.Text = "Source Info";
-            this.sourceInfoTab.UseVisualStyleBackColor = true;
+            sourceInfoTab.Controls.Add(sourceMapInfoPanel);
+            sourceInfoTab.Location = new Point(4, 46);
+            sourceInfoTab.Name = "sourceInfoTab";
+            sourceInfoTab.Padding = new Padding(3);
+            sourceInfoTab.Size = new Size(319, 412);
+            sourceInfoTab.TabIndex = 3;
+            sourceInfoTab.Text = "Source Info";
+            sourceInfoTab.UseVisualStyleBackColor = true;
             // 
             // sourceMapInfoPanel
             // 
-            this.sourceMapInfoPanel.Dock = DockStyle.Fill;
-            this.sourceMapInfoPanel.Location = new Point(3, 3);
-            this.sourceMapInfoPanel.Margin = new Padding(4, 4, 4, 4);
-            this.sourceMapInfoPanel.Name = "sourceMapInfoPanel";
-            this.sourceMapInfoPanel.Size = new Size(313, 406);
-            this.sourceMapInfoPanel.TabIndex = 0;
+            sourceMapInfoPanel.Dock = DockStyle.Fill;
+            sourceMapInfoPanel.Location = new Point(3, 3);
+            sourceMapInfoPanel.Margin = new Padding(4, 4, 4, 4);
+            sourceMapInfoPanel.Name = "sourceMapInfoPanel";
+            sourceMapInfoPanel.Size = new Size(313, 406);
+            sourceMapInfoPanel.TabIndex = 0;
             // 
             // legendTabPage
             // 
-            this.legendTabPage.Controls.Add(this.legendOptionsPanel1);
-            this.legendTabPage.Location = new Point(4, 46);
-            this.legendTabPage.Name = "legendTabPage";
-            this.legendTabPage.Padding = new Padding(3);
-            this.legendTabPage.Size = new Size(319, 412);
-            this.legendTabPage.TabIndex = 5;
-            this.legendTabPage.Text = "Legend Options";
-            this.legendTabPage.UseVisualStyleBackColor = true;
+            legendTabPage.Controls.Add(legendOptionsPanel1);
+            legendTabPage.Location = new Point(4, 46);
+            legendTabPage.Name = "legendTabPage";
+            legendTabPage.Padding = new Padding(3);
+            legendTabPage.Size = new Size(319, 412);
+            legendTabPage.TabIndex = 5;
+            legendTabPage.Text = "Legend Options";
+            legendTabPage.UseVisualStyleBackColor = true;
             // 
             // legendOptionsPanel1
             // 
-            this.legendOptionsPanel1.Dock = DockStyle.Fill;
-            this.legendOptionsPanel1.Location = new Point(3, 3);
-            this.legendOptionsPanel1.Margin = new Padding(4, 4, 4, 4);
-            this.legendOptionsPanel1.Name = "legendOptionsPanel1";
-            this.legendOptionsPanel1.Size = new Size(313, 406);
-            this.legendOptionsPanel1.TabIndex = 10;
+            legendOptionsPanel1.Dock = DockStyle.Fill;
+            legendOptionsPanel1.Location = new Point(3, 3);
+            legendOptionsPanel1.Margin = new Padding(4, 4, 4, 4);
+            legendOptionsPanel1.Name = "legendOptionsPanel1";
+            legendOptionsPanel1.Size = new Size(313, 406);
+            legendOptionsPanel1.TabIndex = 10;
             // 
             // MainAppForm
             // 
-            this.AutoScaleMode = AutoScaleMode.Inherit;
-            this.ClientSize = new Size(1028, 686);
-            this.Controls.Add(this.controlSplitContainer);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "MainAppForm";
-            this.Text = "MapCruncher Beta for Microsoft Virtual Earth";
-            this.Load += new EventHandler(this.Form1_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.mapSplitContainer.Panel1.ResumeLayout(false);
-            this.mapSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)this.mapSplitContainer).EndInit();
-            this.mapSplitContainer.ResumeLayout(false);
-            this.controlSplitContainer.Panel1.ResumeLayout(false);
-            this.controlSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)this.controlSplitContainer).EndInit();
-            this.controlSplitContainer.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.controlsSplitContainer.Panel1.ResumeLayout(false);
-            this.controlsSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)this.controlsSplitContainer).EndInit();
-            this.controlsSplitContainer.ResumeLayout(false);
-            this.synergyExplorer.ResumeLayout(false);
-            this.correspondencesTab.ResumeLayout(false);
-            this.transparencyTab.ResumeLayout(false);
-            this.sourceInfoTab.ResumeLayout(false);
-            this.legendTabPage.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Inherit;
+            ClientSize = new Size(1028, 686);
+            Controls.Add(controlSplitContainer);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
+            Name = "MainAppForm";
+            Text = "MapCruncher Beta for Microsoft Virtual Earth";
+            Load += new EventHandler(Form1_Load);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            mapSplitContainer.Panel1.ResumeLayout(false);
+            mapSplitContainer.Panel2.ResumeLayout(false);
+            ((ISupportInitialize)mapSplitContainer).EndInit();
+            mapSplitContainer.ResumeLayout(false);
+            controlSplitContainer.Panel1.ResumeLayout(false);
+            controlSplitContainer.Panel2.ResumeLayout(false);
+            ((ISupportInitialize)controlSplitContainer).EndInit();
+            controlSplitContainer.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            controlsSplitContainer.Panel1.ResumeLayout(false);
+            controlsSplitContainer.Panel2.ResumeLayout(false);
+            ((ISupportInitialize)controlsSplitContainer).EndInit();
+            controlsSplitContainer.ResumeLayout(false);
+            synergyExplorer.ResumeLayout(false);
+            correspondencesTab.ResumeLayout(false);
+            transparencyTab.ResumeLayout(false);
+            sourceInfoTab.ResumeLayout(false);
+            legendTabPage.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

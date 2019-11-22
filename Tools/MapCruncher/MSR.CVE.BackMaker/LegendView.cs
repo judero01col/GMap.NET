@@ -17,7 +17,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._legend;
+                return _legend;
             }
         }
 
@@ -25,29 +25,29 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._showingPreview;
+                return _showingPreview;
             }
         }
 
         public object GetViewedObject()
         {
-            return this.legend;
+            return legend;
         }
 
         public LegendView(Legend legend, bool showingPreview, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
-            this._legend = legend;
-            this._showingPreview = showingPreview;
+            _legend = legend;
+            _showingPreview = showingPreview;
             this.sourceMapView = sourceMapView;
             this.referenceMapView = referenceMapView;
         }
 
         public LegendView(Legend legend, MashupParseContext context)
         {
-            this._legend = legend;
+            _legend = legend;
             object obj = null;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
-            this._showingPreview = context.GetRequiredAttributeBoolean(previewAttr);
+            _showingPreview = context.GetRequiredAttributeBoolean(previewAttr);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(sourceMapViewTag))
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader2.TagIs(LatLonZoom.GetXMLTag()))
                         {
-                            this.sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
+                            sourceMapView = new LatLonZoom(context, ContinuousCoordinateSystem.theInstance);
                             context.AssertUnique(obj);
                             obj = new object();
                         }
@@ -67,13 +67,13 @@ namespace MSR.CVE.BackMaker
                 {
                     if (xMLTagReader.TagIs(referenceMapViewTag))
                     {
-                        context.AssertUnique(this.referenceMapView);
+                        context.AssertUnique(referenceMapView);
                         XMLTagReader xMLTagReader3 = context.NewTagReader(referenceMapViewTag);
                         while (xMLTagReader3.FindNextStartTag())
                         {
                             if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
                             {
-                                this.referenceMapView =
+                                referenceMapView =
                                     new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
                             }
                         }
@@ -82,7 +82,7 @@ namespace MSR.CVE.BackMaker
             }
 
             context.AssertPresent(obj, sourceMapViewTag);
-            context.AssertPresent(this.referenceMapView, referenceMapViewTag);
+            context.AssertPresent(referenceMapView, referenceMapViewTag);
         }
 
         public static string GetXMLTag()
@@ -93,24 +93,24 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(GetXMLTag());
-            wc.writer.WriteAttributeString(previewAttr, this._showingPreview.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteAttributeString(previewAttr, _showingPreview.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteStartElement(sourceMapViewTag);
-            this.sourceMapView.WriteXML(wc.writer);
+            sourceMapView.WriteXML(wc.writer);
             wc.writer.WriteEndElement();
             wc.writer.WriteStartElement(referenceMapViewTag);
-            this.referenceMapView.WriteXML(wc.writer);
+            referenceMapView.WriteXML(wc.writer);
             wc.writer.WriteEndElement();
             wc.writer.WriteEndElement();
         }
 
         public MapPosition GetReferenceMapView()
         {
-            return this.referenceMapView;
+            return referenceMapView;
         }
 
         public LatLonZoom GetSourceMapView()
         {
-            return this.sourceMapView;
+            return sourceMapView;
         }
     }
 }

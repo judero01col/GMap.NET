@@ -16,20 +16,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public GDIOpenDocument(string sourceFilename)
         {
             this.sourceFilename = sourceFilename;
-            this.loadedImage = GDIBigLockedImage.FromFile(sourceFilename);
+            loadedImage = GDIBigLockedImage.FromFile(sourceFilename);
             D.Sayf(0, "GDIOpenDocument Image.FromFile({0})", new object[] {sourceFilename});
-            this.actualBoundingBox = new RectangleF(default(PointF), this.loadedImage.Size);
-            this.boundingBox = SourceMapRendererTools.ToSquare(this.actualBoundingBox);
+            actualBoundingBox = new RectangleF(default(PointF), loadedImage.Size);
+            boundingBox = SourceMapRendererTools.ToSquare(actualBoundingBox);
             if (sourceFilename.EndsWith("emf") || sourceFilename.EndsWith("wmf"))
             {
-                this.hackRectangleAdjust = 1;
+                hackRectangleAdjust = 1;
             }
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("GDIOpenDocument");
-            hash.Accumulate(this.sourceFilename);
+            hash.Accumulate(sourceFilename);
         }
 
         public Present Duplicate(string refCredit)
@@ -42,15 +42,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.loadedImage.Dispose();
-                this.loadedImage = null;
+                loadedImage.Dispose();
+                loadedImage = null;
             }
             finally
             {
                 Monitor.Exit(this);
             }
 
-            D.Sayf(0, "GDIOpenDocument Dispose({0})", new object[] {this.sourceFilename});
+            D.Sayf(0, "GDIOpenDocument Dispose({0})", new object[] {sourceFilename});
         }
 
         internal Present Render(MapRectangle mapRect, Size size, bool useDocumentTransparency, bool exactColors)
@@ -59,12 +59,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                RectangleD rectangleD = new RectangleD(mapRect.lon0 * (double)this.boundingBox.Width - 0.5,
-                    -mapRect.lat1 * (double)this.boundingBox.Height + (double)this.actualBoundingBox.Height - 0.5,
-                    (mapRect.lon1 - mapRect.lon0) * (double)this.boundingBox.Width + (double)this.hackRectangleAdjust,
-                    (mapRect.lat1 - mapRect.lat0) * (double)this.boundingBox.Height + (double)this.hackRectangleAdjust);
+                RectangleD rectangleD = new RectangleD(mapRect.lon0 * (double)boundingBox.Width - 0.5,
+                    -mapRect.lat1 * (double)boundingBox.Height + (double)actualBoundingBox.Height - 0.5,
+                    (mapRect.lon1 - mapRect.lon0) * (double)boundingBox.Width + (double)hackRectangleAdjust,
+                    (mapRect.lat1 - mapRect.lat0) * (double)boundingBox.Height + (double)hackRectangleAdjust);
                 RectangleD rectangleD2 = new RectangleD(0.0, 0.0, (double)size.Width, (double)size.Height);
-                this.Reclip(this.actualBoundingBox, ref rectangleD, ref rectangleD2);
+                Reclip(actualBoundingBox, ref rectangleD, ref rectangleD2);
                 D.Say(10, string.Format("Rendering {0} from {1}", mapRect, rectangleD));
                 GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(size, "GDIVerb");
                 if (exactColors)
@@ -76,7 +76,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     gDIBigLockedImage.SetInterpolationMode(InterpolationMode.HighQualityBicubic);
                 }
 
-                gDIBigLockedImage.DrawImageOntoThis(this.loadedImage,
+                gDIBigLockedImage.DrawImageOntoThis(loadedImage,
                     rectangleD2.ToRectangleF(),
                     rectangleD.ToRectangleF());
                 result = new ImageRef(new ImageRefCounted(gDIBigLockedImage));
@@ -177,20 +177,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return new BoundsPresent(new RenderRegion(new MapRectangle(0.0,
                     0.0,
-                    (double)(this.actualBoundingBox.Height / this.boundingBox.Height),
-                    (double)(this.actualBoundingBox.Width / this.boundingBox.Width)),
+                    (double)(actualBoundingBox.Height / boundingBox.Height),
+                    (double)(actualBoundingBox.Width / boundingBox.Width)),
                 new DirtyEvent()));
         }
 
         public long GetSize()
         {
-            return (long)(this.actualBoundingBox.Width * this.actualBoundingBox.Height * 4f);
+            return (long)(actualBoundingBox.Width * actualBoundingBox.Height * 4f);
         }
 
         internal Present ImageDetail(Size assumedDisplaySize)
         {
-            double num = Math.Max((double)this.loadedImage.Width / (double)assumedDisplaySize.Width,
-                (double)this.loadedImage.Height / (double)assumedDisplaySize.Height);
+            double num = Math.Max((double)loadedImage.Width / (double)assumedDisplaySize.Width,
+                (double)loadedImage.Height / (double)assumedDisplaySize.Height);
             num = Math.Max(num, 1.0);
             int num2 = 1 + (int)Math.Ceiling(Math.Log(num) / Math.Log(2.0));
             D.Assert(num2 >= 0);
@@ -213,19 +213,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     SizeParameter sizeParameter = (SizeParameter)paramList[2];
                     BoolParameter boolParameter = (BoolParameter)paramList[3];
                     BoolParameter boolParameter2 = (BoolParameter)paramList[4];
-                    return this.Render(mapRectangleParameter.value,
+                    return Render(mapRectangleParameter.value,
                         sizeParameter.value,
                         boolParameter.value,
                         boolParameter2.value);
                 }
                 case 1:
                     D.Assert(paramList.Length == 1);
-                    return this.FetchBounds();
+                    return FetchBounds();
                 case 2:
                 {
                     D.Assert(paramList.Length == 2);
                     SizeParameter sizeParameter2 = (SizeParameter)paramList[1];
-                    return this.ImageDetail(sizeParameter2.value);
+                    return ImageDetail(sizeParameter2.value);
                 }
                 case 3:
                     D.Assert(paramList.Length == 1);

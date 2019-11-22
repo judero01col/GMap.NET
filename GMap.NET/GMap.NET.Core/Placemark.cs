@@ -32,7 +32,7 @@
 
         internal Placemark(string address)
         {
-            this.Address = address;
+            Address = address;
 
             Accuracy = 0;
             HouseNo = string.Empty;

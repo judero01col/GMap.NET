@@ -60,7 +60,7 @@ namespace MSR.CVE.BackMaker
         protected byte[] Serialize(ISerializable obj)
         {
             MemoryStream memoryStream = new MemoryStream();
-            this.binaryFormatter.Serialize(memoryStream, obj);
+            binaryFormatter.Serialize(memoryStream, obj);
             byte[] array = new byte[memoryStream.Length];
             Array.Copy(memoryStream.GetBuffer(), array, memoryStream.Length);
             return array;
@@ -69,17 +69,17 @@ namespace MSR.CVE.BackMaker
         protected object Deserialize(byte[] buffer)
         {
             MemoryStream serializationStream = new MemoryStream(buffer);
-            return this.binaryFormatter.Deserialize(serializationStream);
+            return binaryFormatter.Deserialize(serializationStream);
         }
 
         protected void SendMessage(ISerializable request)
         {
-            byte[] array = this.Serialize(request);
+            byte[] array = Serialize(request);
             LengthRecord obj = new LengthRecord(array.Length);
-            byte[] array2 = this.Serialize(obj);
+            byte[] array2 = Serialize(obj);
             D.Assert(array2.Length == 147);
-            this.WriteBuffer(array2, array2.Length);
-            this.WriteBuffer(array, array.Length);
+            WriteBuffer(array2, array2.Length);
+            WriteBuffer(array, array.Length);
         }
 
         protected byte[] ReadBuffer(int len)
@@ -90,7 +90,7 @@ namespace MSR.CVE.BackMaker
             int i = 0;
             while (i < len)
             {
-                if (!ReadFile(this.pipeHandle.DangerousGetHandle(), array2, (uint)(len - i), array, 0u))
+                if (!ReadFile(pipeHandle.DangerousGetHandle(), array2, (uint)(len - i), array, 0u))
                 {
                     if ((long)GetLastError() == 109L)
                     {
@@ -115,7 +115,7 @@ namespace MSR.CVE.BackMaker
             byte[] array = new byte[4];
             for (int i = 0; i < len; i = 0)
             {
-                if (!WriteFile(this.pipeHandle.DangerousGetHandle(), buffer, (uint)(len - i), array, 0u))
+                if (!WriteFile(pipeHandle.DangerousGetHandle(), buffer, (uint)(len - i), array, 0u))
                 {
                     throw new IOException(string.Format("ReadBuffer sees error {0}", GetLastError()));
                 }
@@ -125,21 +125,21 @@ namespace MSR.CVE.BackMaker
                 len -= i;
             }
 
-            FlushFileBuffers(this.pipeHandle.DangerousGetHandle());
+            FlushFileBuffers(pipeHandle.DangerousGetHandle());
         }
 
         protected object ReadMessage()
         {
-            byte[] buffer = this.ReadBuffer(147);
-            LengthRecord lengthRecord = (LengthRecord)this.Deserialize(buffer);
-            byte[] buffer2 = this.ReadBuffer(lengthRecord.length);
-            return this.Deserialize(buffer2);
+            byte[] buffer = ReadBuffer(147);
+            LengthRecord lengthRecord = (LengthRecord)Deserialize(buffer);
+            byte[] buffer2 = ReadBuffer(lengthRecord.length);
+            return Deserialize(buffer2);
         }
 
         public object RPC(ISerializable request)
         {
-            this.SendMessage(request);
-            return this.ReadMessage();
+            SendMessage(request);
+            return ReadMessage();
         }
 
         public void RunServer(ServerHandler serverHandler)
@@ -150,7 +150,7 @@ namespace MSR.CVE.BackMaker
                 object request;
                 try
                 {
-                    request = this.ReadMessage();
+                    request = ReadMessage();
                 }
                 catch (EndOfStreamException)
                 {
@@ -159,7 +159,7 @@ namespace MSR.CVE.BackMaker
 
                 ISerializable request2 = null;
                 flag = serverHandler(request, ref request2);
-                this.SendMessage(request2);
+                SendMessage(request2);
             }
         }
     }

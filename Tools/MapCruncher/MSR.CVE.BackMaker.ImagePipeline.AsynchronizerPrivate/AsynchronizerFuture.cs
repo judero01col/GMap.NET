@@ -13,13 +13,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline.AsynchronizerPrivate
 
         public override Present Realize(string refCredit)
         {
-            return new AsyncRef(new AsyncRecord(this.scheduler, this, this.innerFuture), refCredit);
+            return new AsyncRef(new AsyncRecord(scheduler, this, innerFuture), refCredit);
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("AsynchronizerFuture(");
-            this.innerFuture.AccumulateRobustHash(hash);
+            innerFuture.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
     }

@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._invokeImageInterpolationMode;
+                return _invokeImageInterpolationMode;
             }
         }
 
@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._warpInterpolationMode;
+                return _warpInterpolationMode;
             }
         }
 
@@ -46,7 +46,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._hackyWarperAntialiasFactor;
+                return _hackyWarperAntialiasFactor;
             }
         }
 
@@ -54,9 +54,9 @@ namespace MSR.CVE.BackMaker
             InterpolationMode warpInterpolationMode, double hackyWarperAntialiasFactor)
         {
             this._styleName = _styleName;
-            this._invokeImageInterpolationMode = invokeImageInterpolationMode;
-            this._warpInterpolationMode = warpInterpolationMode;
-            this._hackyWarperAntialiasFactor = hackyWarperAntialiasFactor;
+            _invokeImageInterpolationMode = invokeImageInterpolationMode;
+            _warpInterpolationMode = warpInterpolationMode;
+            _hackyWarperAntialiasFactor = hackyWarperAntialiasFactor;
         }
     }
 }

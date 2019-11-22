@@ -33,22 +33,22 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(foxitMutex = FoxitMutex);
             try
             {
-                if (this.foxitLib == null)
+                if (foxitLib == null)
                 {
                     throw FoxitLibManager.theInstance.loadException;
                 }
 
                 this.filename = filename;
-                this.foxitLib.UnlockDLL("SDKRDYX1645", "3A6DE5356500929A15F3E6517416F91635E336C0");
-                if ((this.docHandle = this.foxitLib.LoadDocument(filename, null)) == 0)
+                foxitLib.UnlockDLL("SDKRDYX1645", "3A6DE5356500929A15F3E6517416F91635E336C0");
+                if ((docHandle = foxitLib.LoadDocument(filename, null)) == 0)
                 {
                     throw new Exception("Can't open " + filename);
                 }
 
-                this.numPages = this.foxitLib.GetPageCount(this.docHandle);
-                if ((this.pageHandle = this.foxitLib.LoadPage(this.docHandle, pageNumber)) == 0)
+                numPages = foxitLib.GetPageCount(docHandle);
+                if ((pageHandle = foxitLib.LoadPage(docHandle, pageNumber)) == 0)
                 {
-                    this.foxitLib.CloseDocument(this.docHandle);
+                    foxitLib.CloseDocument(docHandle);
                     throw new Exception("Can't open first page of " + filename);
                 }
 
@@ -70,9 +70,9 @@ namespace MSR.CVE.BackMaker
             try
             {
                 RectangleF rectangleF = default(RectangleF);
-                double num = this.foxitLib.GetPageWidth(this.pageHandle);
+                double num = foxitLib.GetPageWidth(pageHandle);
                 rectangleF.Width = (float)num;
-                num = this.foxitLib.GetPageHeight(this.pageHandle);
+                num = foxitLib.GetPageHeight(pageHandle);
                 rectangleF.Height = (float)num;
                 FIBR.Announce("FoxitViewer.GetPageSize", new object[] {MakeObjectID.Maker.make(this)});
                 result = rectangleF;
@@ -93,23 +93,23 @@ namespace MSR.CVE.BackMaker
             GDIBigLockedImage result;
             try
             {
-                int bitmap = this.foxitLib.Bitmap_Create(outSize.Width, outSize.Height, 1);
-                this.foxitLib.Bitmap_FillRect(bitmap, 0, 0, outSize.Width, outSize.Height, 255, 255, 255, alpha);
-                this.foxitLib.RenderPageBitmap(bitmap,
-                    this.pageHandle,
+                int bitmap = foxitLib.Bitmap_Create(outSize.Width, outSize.Height, 1);
+                foxitLib.Bitmap_FillRect(bitmap, 0, 0, outSize.Width, outSize.Height, 255, 255, 255, alpha);
+                foxitLib.RenderPageBitmap(bitmap,
+                    pageHandle,
                     topleft.X,
                     topleft.Y,
                     pagesize.Width,
                     pagesize.Height,
                     0,
                     0);
-                IntPtr scan = this.foxitLib.Bitmap_GetBuffer(bitmap);
+                IntPtr scan = foxitLib.Bitmap_GetBuffer(bitmap);
                 Bitmap bitmap2 = new Bitmap(outSize.Width,
                     outSize.Height,
                     outSize.Width * 4,
                     PixelFormat.Format32bppArgb,
                     scan);
-                this.foxitLib.Bitmap_Destroy(bitmap);
+                foxitLib.Bitmap_Destroy(bitmap);
                 GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(bitmap2);
                 result = gDIBigLockedImage;
             }
@@ -129,21 +129,21 @@ namespace MSR.CVE.BackMaker
             RenderReply result;
             try
             {
-                int bitmap = this.foxitLib.Bitmap_Create(outSize.Width, outSize.Height, 1);
-                this.foxitLib.Bitmap_FillRect(bitmap, 0, 0, outSize.Width, outSize.Height, 255, 255, 255, alpha);
-                this.foxitLib.RenderPageBitmap(bitmap,
-                    this.pageHandle,
+                int bitmap = foxitLib.Bitmap_Create(outSize.Width, outSize.Height, 1);
+                foxitLib.Bitmap_FillRect(bitmap, 0, 0, outSize.Width, outSize.Height, 255, 255, 255, alpha);
+                foxitLib.RenderPageBitmap(bitmap,
+                    pageHandle,
                     topleft.X,
                     topleft.Y,
                     pagesize.Width,
                     pagesize.Height,
                     0,
                     0);
-                IntPtr source = this.foxitLib.Bitmap_GetBuffer(bitmap);
+                IntPtr source = foxitLib.Bitmap_GetBuffer(bitmap);
                 int num = outSize.Width * 4;
                 byte[] array = new byte[outSize.Height * num];
                 Marshal.Copy(source, array, 0, array.Length);
-                this.foxitLib.Bitmap_Destroy(bitmap);
+                foxitLib.Bitmap_Destroy(bitmap);
                 result = new RenderReply(array, outSize.Width * 4);
             }
             finally
@@ -160,8 +160,8 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(foxitMutex = FoxitMutex);
             try
             {
-                this.foxitLib.ClosePage(this.pageHandle);
-                this.foxitLib.CloseDocument(this.docHandle);
+                foxitLib.ClosePage(pageHandle);
+                foxitLib.CloseDocument(docHandle);
                 FIBR.Announce("FoxitViewer.Dispose", new object[] {MakeObjectID.Maker.make(this)});
                 foxitResourceCounter.crement(-1);
             }

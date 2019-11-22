@@ -16,8 +16,8 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("RangeDescriptor");
-            this.tileAddress.WriteXMLToAttributes(writer);
-            string quadKey = VENamingScheme.GetQuadKey(this.tileAddress);
+            tileAddress.WriteXMLToAttributes(writer);
+            string quadKey = VENamingScheme.GetQuadKey(tileAddress);
             writer.WriteAttributeString("QuadTreeLocation", quadKey);
             FodderSupport.WriteQuadTreeFodderString(writer, FodderSupport.DigitsToLetters(quadKey));
             writer.WriteEndElement();

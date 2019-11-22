@@ -30,17 +30,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 IFuture openDocumentFuture = openDocumentSensitivePrioritizedFuture.GetOpenDocumentFuture();
                 if (openDocumentFuture != null)
                 {
-                    if (!this.docToFuturesDict.ContainsKey(openDocumentFuture))
+                    if (!docToFuturesDict.ContainsKey(openDocumentFuture))
                     {
-                        this.docToFuturesDict[openDocumentFuture] = new ODSPFutureSet();
+                        docToFuturesDict[openDocumentFuture] = new ODSPFutureSet();
                     }
 
-                    D.Assert(!this.docToFuturesDict[openDocumentFuture]
+                    D.Assert(!docToFuturesDict[openDocumentFuture]
                         .ContainsKey(openDocumentSensitivePrioritizedFuture.identity));
-                    this.docToFuturesDict[openDocumentFuture][openDocumentSensitivePrioritizedFuture.identity] =
+                    docToFuturesDict[openDocumentFuture][openDocumentSensitivePrioritizedFuture.identity] =
                         openDocumentSensitivePrioritizedFuture;
                     openDocumentSensitivePrioritizedFuture.DocumentStateChanged(
-                        this.openDocumentCache.Contains(openDocumentFuture));
+                        openDocumentCache.Contains(openDocumentFuture));
                 }
             }
             finally
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 IFuture openDocumentFuture = openDocumentSensitivePrioritizedFuture.GetOpenDocumentFuture();
                 if (openDocumentFuture != null)
                 {
-                    bool condition = this.docToFuturesDict[openDocumentFuture]
+                    bool condition = docToFuturesDict[openDocumentFuture]
                         .Remove(openDocumentSensitivePrioritizedFuture.identity);
                     D.Assert(condition);
                 }
@@ -73,9 +73,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.docToFuturesDict.ContainsKey(documentFuture))
+                if (docToFuturesDict.ContainsKey(documentFuture))
                 {
-                    foreach (OpenDocumentSensitivePrioritizedFuture current in this.docToFuturesDict[documentFuture]
+                    foreach (OpenDocumentSensitivePrioritizedFuture current in docToFuturesDict[documentFuture]
                         .Values)
                     {
                         current.DocumentStateChanged(isOpen);

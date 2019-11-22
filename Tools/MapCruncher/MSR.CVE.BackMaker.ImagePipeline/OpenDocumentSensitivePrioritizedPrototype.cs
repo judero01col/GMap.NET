@@ -16,9 +16,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture Curry(ParamDict paramDict)
         {
-            return new OpenDocumentSensitivePrioritizedFuture(this.prioritizer,
-                this.prototype.Curry(paramDict),
-                this.openDocumentFuture);
+            return new OpenDocumentSensitivePrioritizedFuture(prioritizer,
+                prototype.Curry(paramDict),
+                openDocumentFuture);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.inputStream.Length;
+                return inputStream.Length;
             }
         }
 
@@ -60,7 +60,7 @@ namespace MSR.CVE.BackMaker
 
         public override void Close()
         {
-            this.outputStream.Close();
+            outputStream.Close();
             base.Close();
         }
 
@@ -71,10 +71,10 @@ namespace MSR.CVE.BackMaker
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int num = this.inputStream.Read(buffer, offset, count);
+            int num = inputStream.Read(buffer, offset, count);
             if (num > 0)
             {
-                this.outputStream.Write(buffer, offset, num);
+                outputStream.Write(buffer, offset, num);
             }
 
             return num;

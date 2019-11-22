@@ -9,13 +9,13 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._minZoom;
+                return _minZoom;
             }
             set
             {
-                if (value != this._minZoom)
+                if (value != _minZoom)
                 {
-                    this._minZoom = value;
+                    _minZoom = value;
                 }
             }
         }
@@ -24,13 +24,13 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._maxZoom;
+                return _maxZoom;
             }
             set
             {
-                if (value != this._maxZoom)
+                if (value != _maxZoom)
                 {
-                    this._maxZoom = value;
+                    _maxZoom = value;
                 }
             }
         }

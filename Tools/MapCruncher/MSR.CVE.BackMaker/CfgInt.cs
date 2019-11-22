@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
 
         public override void ParseFrom(string str)
         {
-            this.value = Convert.ToInt32(str);
+            value = Convert.ToInt32(str);
         }
     }
 }

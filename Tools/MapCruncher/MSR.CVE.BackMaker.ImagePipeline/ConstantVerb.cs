@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public ConstantVerb()
         {
-            this.constantPresent = new PresentFailureCode(new Exception("Null ConstantVerb"));
+            constantPresent = new PresentFailureCode(new Exception("Null ConstantVerb"));
         }
 
         public ConstantVerb(Present constantPresent)
@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public Present Evaluate(Present[] paramList)
         {
-            return this.constantPresent;
+            return constantPresent;
         }
 
         public void AccumulateRobustHash(IRobustHash hash)

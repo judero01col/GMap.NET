@@ -1,5 +1,4 @@
-using System.Drawing;
-using System.Drawing.Text;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -25,14 +24,15 @@ namespace BSE.Windows.Forms
             
             // One time creation of the blend for the button gradient brush
             ButtonBlend = new Blend();
-            ButtonBlend.Positions = new float[] { 0.0F, 0.1F, 0.2F, 0.5F, 1.0F };
-            ButtonBlend.Factors = new float[] { 0.6F, 0.7F, 0.8F, 1.0F, 1.0F };
+            ButtonBlend.Positions = new[] { 0.0F, 0.1F, 0.2F, 0.5F, 1.0F };
+            ButtonBlend.Factors = new[] { 0.6F, 0.7F, 0.8F, 1.0F, 1.0F };
+
             // One time creation of the blend for the menuitem gradient brush
             MenuItemBlend = new Blend();
-            MenuItemBlend.Positions = new float[] { 0.0F, 0.1F, 0.2F, 0.5F, 1.0F };
-            MenuItemBlend.Factors = new float[] { 0.7F, 0.8F, 0.9F, 1.0F, 1.0F };
+            MenuItemBlend.Positions = new[] { 0.0F, 0.1F, 0.2F, 0.5F, 1.0F };
+            MenuItemBlend.Factors = new[] { 0.7F, 0.8F, 0.9F, 1.0F, 1.0F };
 
-            baseSizeGripRectangles = new Rectangle[] { new Rectangle(8, 0, 2, 2), new Rectangle(8, 4, 2, 2), new Rectangle(8, 8, 2, 2), new Rectangle(4, 4, 2, 2), new Rectangle(4, 8, 2, 2), new Rectangle(0, 8, 2, 2) };
+            baseSizeGripRectangles = new[] { new Rectangle(8, 0, 2, 2), new Rectangle(8, 4, 2, 2), new Rectangle(8, 8, 2, 2), new Rectangle(4, 4, 2, 2), new Rectangle(4, 8, 2, 2), new Rectangle(0, 8, 2, 2) };
         }
         /// <summary>
         /// Initialize a new instance of the BseRenderer class.
@@ -40,7 +40,7 @@ namespace BSE.Windows.Forms
         public BseRenderer()
             : base(new ColorTableBlack())
         {
-			this.ColorTable.UseSystemColors = false;
+			ColorTable.UseSystemColors = false;
 		}
         /// <summary>
         /// Initializes a new instance of the BseRenderer class.
@@ -59,14 +59,14 @@ namespace BSE.Windows.Forms
         /// <param name="e">A <see cref="System.Windows.Forms.ToolStripArrowRenderEventArgs"/> that contains the event data.</param>
         protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
         {
-            if (ColorTable.UseSystemColors == true)
+            if (ColorTable.UseSystemColors)
             {
                 base.OnRenderArrow(e);
             }
             else
             {
                 ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
-                if ((colorTable != null) && (e.Item.Enabled == true))
+                if ((colorTable != null) && e.Item.Enabled)
                 {
                     if (e.Item.Owner is MenuStrip)
                     {
@@ -93,7 +93,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">A <see cref="System.Windows.Forms.ToolStripItemRenderEventArgs"/> that contains the event data.</param>
         protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
         {
-            if (ColorTable.UseSystemColors == true)
+            if (ColorTable.UseSystemColors)
             {
                 base.OnRenderDropDownButtonBackground(e);
             }
@@ -101,7 +101,7 @@ namespace BSE.Windows.Forms
             {
                 ToolStripButton item = e.Item as ToolStripButton;
                 Rectangle buttonBounds = new Rectangle(Point.Empty, item.Size);
-                if (IsZeroWidthOrHeight(buttonBounds) == true)
+                if (IsZeroWidthOrHeight(buttonBounds))
                 {
                     return;
                 }
@@ -113,12 +113,12 @@ namespace BSE.Windows.Forms
                     {
                         Rectangle buttonRectangle = GetButtonRectangle(buttonBounds);
 
-                        if (item.Checked == true)
+                        if (item.Checked)
                         {
                             //Draws the border of the button for the checked ToolStripButton control
                             DrawButtonBorder(graphics, buttonRectangle, colorTable.ButtonPressedBorder);
                         }
-                        if ((item.Selected == true) && (item.Pressed == false))
+                        if (item.Selected && (item.Pressed == false))
                         {
                             //Renders the upper button part of the selected ToolStripButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemTopLevelSelectedGradientBegin);
@@ -126,7 +126,7 @@ namespace BSE.Windows.Forms
                             DrawButtonBorder(graphics, buttonRectangle, colorTable.ButtonSelectedHighlightBorder);
                             //DrawButtonBorder(graphics, buttonRectangle, Color.FromArgb(196, 194, 196));
                         }
-                        if (item.Pressed == true)
+                        if (item.Pressed)
                         {
                             //Renders the upper button part of the pressed ToolStripButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemPressedGradientBegin);
@@ -149,7 +149,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">A <see cref="System.Windows.Forms.ToolStripItemRenderEventArgs"/> that contains the event data.</param>
         protected override void OnRenderDropDownButtonBackground(ToolStripItemRenderEventArgs e)
         {
-            if (ColorTable.UseSystemColors == true)
+            if (ColorTable.UseSystemColors)
             {
                 base.OnRenderDropDownButtonBackground(e);
             }
@@ -157,7 +157,7 @@ namespace BSE.Windows.Forms
             {
                 ToolStripDropDownButton item = e.Item as ToolStripDropDownButton;
                 Rectangle buttonBounds = new Rectangle(Point.Empty, item.Size);
-                if (IsZeroWidthOrHeight(buttonBounds) == true)
+                if (IsZeroWidthOrHeight(buttonBounds))
                 {
                     return;
                 }
@@ -169,14 +169,14 @@ namespace BSE.Windows.Forms
                     using (UseAntiAlias antiAlias = new UseAntiAlias(graphics))
                     {
                         Rectangle buttonRectangle = GetButtonRectangle(buttonBounds);
-                        if ((item.Selected == true) && (item.Pressed == false))
+                        if (item.Selected && (item.Pressed == false))
                         {
                             //Renders the upper button part of the selected ToolStripDropDownButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemTopLevelSelectedGradientBegin);
                             //Draws the border of the button for the selected ToolStripDropDownButton control
                             DrawButtonBorder(graphics, buttonRectangle, colorTable.ButtonSelectedHighlightBorder);
                         }
-                        if (item.Pressed == true)
+                        if (item.Pressed)
                         {
                             //Renders the upper button part of the pressed ToolStripDropDownButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemPressedGradientBegin);
@@ -199,7 +199,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">A <see cref="System.Windows.Forms.ToolStripItemRenderEventArgs"/> that contains the event data.</param>
         protected override void OnRenderSplitButtonBackground(ToolStripItemRenderEventArgs e)
         {
-            if (ColorTable.UseSystemColors == true)
+            if (ColorTable.UseSystemColors)
             {
                 base.OnRenderDropDownButtonBackground(e);
             }
@@ -207,7 +207,7 @@ namespace BSE.Windows.Forms
             {
                 ToolStripSplitButton item = e.Item as ToolStripSplitButton;
                 Rectangle buttonBounds = new Rectangle(Point.Empty, item.ButtonBounds.Size);
-                if (IsZeroWidthOrHeight(buttonBounds) == true)
+                if (IsZeroWidthOrHeight(buttonBounds))
                 {
                     return;
                 }
@@ -221,7 +221,7 @@ namespace BSE.Windows.Forms
                         Rectangle dropDownButtonBounds = new Rectangle(item.DropDownButtonBounds.Location, item.DropDownButtonBounds.Size);
                         Rectangle dropDownButtonRectangle = GetButtonRectangle(dropDownButtonBounds);
 
-                        if ((item.Selected == true) && (item.Pressed == false) && (item.ButtonPressed == false))
+                        if (item.Selected && (item.Pressed == false) && (item.ButtonPressed == false))
                         {
                             //Renders the upper button part of the selected ToolStripSplitButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemTopLevelSelectedGradientBegin);
@@ -232,7 +232,7 @@ namespace BSE.Windows.Forms
                             //Draws the border of the dropDownButton part for the selected ToolStripSplitButton control
                             DrawButtonBorder(graphics, dropDownButtonRectangle, colorTable.ButtonSelectedHighlightBorder);
                         }
-                        if (item.ButtonPressed == true)
+                        if (item.ButtonPressed)
                         {
                             //Renders the upper button part of the pressed ToolStripSplitButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemPressedGradientBegin);
@@ -247,7 +247,7 @@ namespace BSE.Windows.Forms
                             //Draws the outer border of the dropDownButton part for the pressed ToolStripSplitButton control
                             DrawButtonBorder(graphics, dropDownButtonRectangle, colorTable.MenuBorder);
                         }
-                        if (item.DropDownButtonPressed == true)
+                        if (item.DropDownButtonPressed)
                         {
                             //Renders the upper button part of the pressed ToolStripSplitButton control
                             RenderButton(graphics, buttonRectangle, colorTable.MenuItemTopLevelSelectedGradientBegin);
@@ -260,15 +260,15 @@ namespace BSE.Windows.Forms
                         }
                         if (e.Item.Owner is MenuStrip)
                         {
-                            base.DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.MenuItemText, ArrowDirection.Down));
+                            DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.MenuItemText, ArrowDirection.Down));
                         }
                         if (e.Item.Owner is StatusStrip)
                         {
-                            base.DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.StatusStripText, ArrowDirection.Down));
+                            DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.StatusStripText, ArrowDirection.Down));
                         }
                         if (e.Item.Owner is ToolStrip)
                         {
-                            base.DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.ToolStripText, ArrowDirection.Down));
+                            DrawArrow(new ToolStripArrowRenderEventArgs(graphics, item, dropDownButtonBounds, colorTable.ToolStripText, ArrowDirection.Down));
                         }
                     }
                 }
@@ -286,7 +286,7 @@ namespace BSE.Windows.Forms
         {
             ToolStripMenuItem item = e.Item as ToolStripMenuItem;
             Rectangle bounds = new Rectangle(Point.Empty, item.Size);
-            if (IsZeroWidthOrHeight(bounds) == true)
+            if (IsZeroWidthOrHeight(bounds))
             {
                 return;
             }
@@ -298,12 +298,12 @@ namespace BSE.Windows.Forms
                 {
                     if (e.ToolStrip is MenuStrip)
                     {
-                        if ((item.Selected == true) && (item.Pressed == false))
+                        if (item.Selected && (item.Pressed == false))
                         {
                             RenderMenuItem(graphics, bounds, colorTable.MenuItemTopLevelSelectedGradientBegin);
                             ControlPaint.DrawBorder(e.Graphics, bounds, colorTable.MenuItemTopLevelSelectedBorder, ButtonBorderStyle.Solid);
                         }
-                        if (item.Pressed == true)
+                        if (item.Pressed)
                         {
                             RenderButton(graphics, bounds, ColorTable.MenuItemPressedGradientBegin);
                             Rectangle innerBorderRectangle = bounds;
@@ -404,7 +404,7 @@ namespace BSE.Windows.Forms
                     bool bRightToLeft = item.RightToLeft == RightToLeft.Yes;
 
                     bool bOrientation = e.ToolStrip.Orientation == Orientation.Horizontal;
-                    Rectangle arrowRectangle = Rectangle.Empty;
+                    Rectangle arrowRectangle;
                     if (bRightToLeft)
                     {
                         arrowRectangle = new Rectangle(0, item.Height - 8, 9, 5);
@@ -495,7 +495,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
         {
-            if (ColorTable.UseSystemColors == true)
+            if (ColorTable.UseSystemColors)
             {
                 base.OnRenderToolStripBackground(e);
             }
@@ -602,7 +602,7 @@ namespace BSE.Windows.Forms
         /// <param name="e">An ToolStripRenderEventArgs containing the event data.</param>
         protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
         {
-			if (ColorTable.UseSystemColors == true)
+			if (ColorTable.UseSystemColors)
 			{
 				base.OnRenderToolStripBackground(e);
 			}
@@ -732,23 +732,23 @@ namespace BSE.Windows.Forms
         {
             Point point = new Point(dropDownRectangle.Left + (dropDownRectangle.Width / 2), dropDownRectangle.Top + (dropDownRectangle.Height / 2));
             point.X += dropDownRectangle.Width % 2;
-            Point[] points = null;
+            Point[] points;
             switch (direction)
             {
                 case ArrowDirection.Left:
-                    points = new Point[] { new Point(point.X + 2, point.Y - 3), new Point(point.X + 2, point.Y + 3), new Point(point.X - 1, point.Y) };
+                    points = new[] { new Point(point.X + 2, point.Y - 3), new Point(point.X + 2, point.Y + 3), new Point(point.X - 1, point.Y) };
                     break;
 
                 case ArrowDirection.Up:
-                    points = new Point[] { new Point(point.X - 2, point.Y + 1), new Point(point.X + 3, point.Y + 1), new Point(point.X, point.Y - 2) };
+                    points = new[] { new Point(point.X - 2, point.Y + 1), new Point(point.X + 3, point.Y + 1), new Point(point.X, point.Y - 2) };
                     break;
 
                 case ArrowDirection.Right:
-                    points = new Point[] { new Point(point.X - 2, point.Y - 3), new Point(point.X - 2, point.Y + 3), new Point(point.X + 1, point.Y) };
+                    points = new[] { new Point(point.X - 2, point.Y - 3), new Point(point.X - 2, point.Y + 3), new Point(point.X + 1, point.Y) };
                     break;
 
                 default:
-                    points = new Point[] { new Point(point.X - 2, point.Y - 1), new Point(point.X + 3, point.Y - 1), new Point(point.X, point.Y + 2) };
+                    points = new[] { new Point(point.X - 2, point.Y - 1), new Point(point.X + 3, point.Y - 1), new Point(point.X, point.Y + 2) };
                     break;
             }
             using (SolidBrush backBrush = new SolidBrush(color))

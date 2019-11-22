@@ -116,7 +116,7 @@ namespace GMap.NET.Internals
                                 var rq = request.Split(' ');
                                 if (rq.Length >= 2)
                                 {
-                                    var ids = rq[1].Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                                    var ids = rq[1].Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
                                     if (ids.Length == 4)
                                     {
                                         int dbId = int.Parse(ids[0]);

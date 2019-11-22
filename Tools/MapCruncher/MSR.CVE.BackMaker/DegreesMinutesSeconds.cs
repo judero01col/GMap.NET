@@ -28,7 +28,7 @@ namespace MSR.CVE.BackMaker
             {
             }
 
-            Match match = this.dmsRegex.Match(str);
+            Match match = dmsRegex.Match(str);
             if (match.Success)
             {
                 double num = match.Groups["Sign"].Length > 0 ? -1.0 : 1.0;
@@ -59,7 +59,7 @@ namespace MSR.CVE.BackMaker
         public string FormatLatLon(double value)
         {
             string result;
-            if (this.outputMode == OutputMode.DMS)
+            if (outputMode == OutputMode.DMS)
             {
                 int num = 1;
                 double num2 = value;
@@ -78,7 +78,7 @@ namespace MSR.CVE.BackMaker
             }
             else
             {
-                if (this.outputMode == OutputMode.DecimalDegrees)
+                if (outputMode == OutputMode.DecimalDegrees)
                 {
                     result = string.Format("{0:###.00000000}", value);
                 }

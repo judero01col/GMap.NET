@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._identity;
+                return _identity;
             }
         }
 
@@ -32,7 +32,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(obj = nextIdentityMutex);
             try
             {
-                this._identity = nextIdentity;
+                _identity = nextIdentity;
                 nextIdentity++;
             }
             finally
@@ -47,18 +47,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present result;
             try
             {
-                if (this.activeAsyncRef != null)
+                if (activeAsyncRef != null)
                 {
-                    result = this.activeAsyncRef.Duplicate(refCredit);
+                    result = activeAsyncRef.Duplicate(refCredit);
                 }
                 else
                 {
-                    D.Assert(!this.realizing);
-                    this.realizing = true;
-                    this.activeAsyncRef = (AsyncRef)this.future.Realize("ODSPF");
-                    AsyncRef asyncRef = (AsyncRef)this.activeAsyncRef.Duplicate(refCredit);
-                    this.prioritizer.Realizing(this);
-                    this.activeAsyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.AsyncCompleteCallback));
+                    D.Assert(!realizing);
+                    realizing = true;
+                    activeAsyncRef = (AsyncRef)future.Realize("ODSPF");
+                    AsyncRef asyncRef = (AsyncRef)activeAsyncRef.Duplicate(refCredit);
+                    prioritizer.Realizing(this);
+                    activeAsyncRef.AddCallback(new AsyncRecord.CompleteCallback(AsyncCompleteCallback));
                     result = asyncRef;
                 }
             }
@@ -73,7 +73,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("ODSPF(");
-            this.future.AccumulateRobustHash(hash);
+            future.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
 
@@ -82,10 +82,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                this.realizing = false;
-                this.prioritizer.Complete(this);
-                this.activeAsyncRef.Dispose();
-                this.activeAsyncRef = null;
+                realizing = false;
+                prioritizer.Complete(this);
+                activeAsyncRef.Dispose();
+                activeAsyncRef = null;
             }
             finally
             {
@@ -95,12 +95,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal IFuture GetOpenDocumentFuture()
         {
-            return this.openDocumentFuture;
+            return openDocumentFuture;
         }
 
         internal void DocumentStateChanged(bool isOpen)
         {
-            this.activeAsyncRef.SetInterest(isOpen ? 524291 : 0);
+            activeAsyncRef.SetInterest(isOpen ? 524291 : 0);
         }
 
         public void Dispose()
@@ -108,10 +108,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.activeAsyncRef != null)
+                if (activeAsyncRef != null)
                 {
-                    this.activeAsyncRef.Dispose();
-                    this.activeAsyncRef = null;
+                    activeAsyncRef.Dispose();
+                    activeAsyncRef = null;
                 }
             }
             finally

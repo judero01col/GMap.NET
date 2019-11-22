@@ -20,7 +20,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._pinPosition;
+                return _pinPosition;
             }
         }
 
@@ -28,17 +28,17 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._invertError;
+                return _invertError;
             }
             set
             {
-                this._invertError = value;
+                _invertError = value;
             }
         }
 
         public DisplayablePosition(LatLonZoom position)
         {
-            this._pinPosition = position;
+            _pinPosition = position;
         }
 
         public static string GetXMLTag(MashupXMLSchemaVersion version)
@@ -56,31 +56,31 @@ namespace MSR.CVE.BackMaker
             if (context.version == MonolithicMapPositionsSchema.schema)
             {
                 MapPosition mapPosition = new MapPosition(context, null, coordSys);
-                this._pinPosition = mapPosition.llz;
+                _pinPosition = mapPosition.llz;
                 return;
             }
 
-            this._pinPosition = new LatLonZoom(context, coordSys);
+            _pinPosition = new LatLonZoom(context, coordSys);
         }
 
         public ErrorPosition GetErrorPosition(ErrorMarker errorMarker)
         {
-            return this._errorPositions[(int)errorMarker];
+            return _errorPositions[(int)errorMarker];
         }
 
         public void SetErrorPosition(ErrorMarker errorMarker, LatLon errorPosition)
         {
-            this._errorPositions[(int)errorMarker] = new ErrorPosition(errorPosition);
+            _errorPositions[(int)errorMarker] = new ErrorPosition(errorPosition);
         }
 
         public void WriteXML(XmlTextWriter writer)
         {
-            this._pinPosition.WriteXML(writer);
+            _pinPosition.WriteXML(writer);
         }
 
         public override int GetHashCode()
         {
-            return this._pinPosition.GetHashCode();
+            return _pinPosition.GetHashCode();
         }
     }
 }

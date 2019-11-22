@@ -15,12 +15,12 @@ namespace MSR.CVE.BackMaker
 
         public LengthRecord(SerializationInfo info, StreamingContext context)
         {
-            this.length = (int)info.GetValue("Length", typeof(int));
+            length = (int)info.GetValue("Length", typeof(int));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Length", this.length);
+            info.AddValue("Length", length);
         }
     }
 }

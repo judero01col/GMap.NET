@@ -28,7 +28,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._latentRegionHolder;
+                return _latentRegionHolder;
             }
         }
 
@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._lastView;
+                return _lastView;
             }
         }
 
@@ -44,7 +44,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._sourceMap;
+                return _sourceMap;
             }
         }
 
@@ -52,14 +52,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._renderedSize;
+                return _renderedSize;
             }
             set
             {
-                if (value != this._renderedSize)
+                if (value != _renderedSize)
                 {
-                    this._renderedSize = value;
-                    this.dirtyEvent.SetDirty();
+                    _renderedSize = value;
+                    dirtyEvent.SetDirty();
                 }
             }
         }
@@ -68,21 +68,21 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._displayName;
+                return _displayName;
             }
             set
             {
-                this._displayName = value;
-                this.dirtyEvent.SetDirty();
+                _displayName = value;
+                dirtyEvent.SetDirty();
             }
         }
 
         public Legend(SourceMap sourceMap, DirtyEvent parentEvent, DirtyEvent parentBoundsChangedEvent)
         {
-            this._sourceMap = sourceMap;
-            this.dirtyEvent = new DirtyEvent(parentEvent);
-            this._latentRegionHolder = new LatentRegionHolder(this.dirtyEvent, parentBoundsChangedEvent);
-            this._displayName = "legend";
+            _sourceMap = sourceMap;
+            dirtyEvent = new DirtyEvent(parentEvent);
+            _latentRegionHolder = new LatentRegionHolder(dirtyEvent, parentBoundsChangedEvent);
+            _displayName = "legend";
         }
 
         public static string GetXMLTag()
@@ -93,10 +93,10 @@ namespace MSR.CVE.BackMaker
         public Legend(SourceMap sourceMap, MashupParseContext context, DirtyEvent parentEvent,
             DirtyEvent parentBoundsChangedEvent)
         {
-            this._sourceMap = sourceMap;
-            this.dirtyEvent = new DirtyEvent(parentEvent);
-            this._latentRegionHolder = new LatentRegionHolder(this.dirtyEvent, parentBoundsChangedEvent);
-            this._displayName = context.GetRequiredAttribute("DisplayName");
+            _sourceMap = sourceMap;
+            dirtyEvent = new DirtyEvent(parentEvent);
+            _latentRegionHolder = new LatentRegionHolder(dirtyEvent, parentBoundsChangedEvent);
+            _displayName = context.GetRequiredAttribute("DisplayName");
             string attribute = context.reader.GetAttribute("RenderedSize");
             if (attribute != null)
             {
@@ -109,16 +109,16 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs(RenderRegion.GetXMLTag()))
                 {
-                    context.AssertUnique(this._latentRegionHolder.renderRegion);
-                    this._latentRegionHolder.renderRegion = new RenderRegion(context,
-                        this.dirtyEvent,
+                    context.AssertUnique(_latentRegionHolder.renderRegion);
+                    _latentRegionHolder.renderRegion = new RenderRegion(context,
+                        dirtyEvent,
                         ContinuousCoordinateSystem.theInstance);
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(LegendView.GetXMLTag()))
                     {
-                        this._lastView = new LegendView(this, context);
+                        _lastView = new LegendView(this, context);
                     }
                 }
             }
@@ -128,17 +128,17 @@ namespace MSR.CVE.BackMaker
         {
             context.writer.WriteStartElement(GetXMLTag());
             context.WriteIdentityAttr(this);
-            context.writer.WriteAttributeString("DisplayName", this._displayName);
+            context.writer.WriteAttributeString("DisplayName", _displayName);
             context.writer.WriteAttributeString("RenderedSize",
-                this.renderedSize.ToString(CultureInfo.InvariantCulture));
-            if (this._latentRegionHolder.renderRegion != null)
+                renderedSize.ToString(CultureInfo.InvariantCulture));
+            if (_latentRegionHolder.renderRegion != null)
             {
-                this._latentRegionHolder.renderRegion.WriteXML(context.writer);
+                _latentRegionHolder.renderRegion.WriteXML(context.writer);
             }
 
-            if (this._lastView != null)
+            if (_lastView != null)
             {
-                this._lastView.WriteXML(context);
+                _lastView.WriteXML(context);
             }
 
             context.writer.WriteEndElement();
@@ -146,19 +146,19 @@ namespace MSR.CVE.BackMaker
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            hash.Accumulate(this._displayName);
-            this._latentRegionHolder.renderRegion.AccumulateRobustHash(hash);
+            hash.Accumulate(_displayName);
+            _latentRegionHolder.renderRegion.AccumulateRobustHash(hash);
         }
 
         internal LegendView GetLastView()
         {
-            return this._lastView;
+            return _lastView;
         }
 
         public void NotePositionUnlocked(LatLonZoom sourceMapPosition, MapPosition referenceMapPosition)
         {
             bool showingPreview = false;
-            this._lastView = new LegendView(this, showingPreview, sourceMapPosition, referenceMapPosition);
+            _lastView = new LegendView(this, showingPreview, sourceMapPosition, referenceMapPosition);
         }
 
         public void NotePositionLocked(MapPosition referenceMapPosition)
@@ -168,17 +168,17 @@ namespace MSR.CVE.BackMaker
 
         public string GetDisplayName()
         {
-            return this.displayName;
+            return displayName;
         }
 
         public void SetDisplayName(string value)
         {
-            this.displayName = value;
+            displayName = value;
         }
 
         public IFuture GetRenderedLegendFuture(IDisplayableSource displayableSource, FutureFeatures features)
         {
-            RenderRegion renderRegion = this.latentRegionHolder.renderRegion;
+            RenderRegion renderRegion = latentRegionHolder.renderRegion;
             if (renderRegion == null)
             {
                 throw new RenderFailedException("Region unavailable");
@@ -186,7 +186,7 @@ namespace MSR.CVE.BackMaker
 
             renderRegion = renderRegion.Copy(new DirtyEvent());
             MapRectangleParameter mapRectangleParameter = new MapRectangleParameter(renderRegion.GetBoundingBox());
-            Size outputSize = this.OutputSizeFromRenderRegion(renderRegion);
+            Size outputSize = OutputSizeFromRenderRegion(renderRegion);
             IFuturePrototype imagePrototype =
                 displayableSource.GetImagePrototype(new ImageParameterFromRawBounds(outputSize), features);
             return imagePrototype.Curry(new ParamDict(new object[] {TermName.ImageBounds, mapRectangleParameter}));
@@ -195,12 +195,12 @@ namespace MSR.CVE.BackMaker
         private Size OutputSizeFromRenderRegion(RenderRegion renderRegion)
         {
             MapRectangleParameter mapRectangleParameter = new MapRectangleParameter(renderRegion.GetBoundingBox());
-            return mapRectangleParameter.value.SizeWithAspectRatio(this.renderedSize);
+            return mapRectangleParameter.value.SizeWithAspectRatio(renderedSize);
         }
 
         public ImageRef RenderLegend(IDisplayableSource displayableSource)
         {
-            Present present = this.GetRenderedLegendFuture(displayableSource, FutureFeatures.Cached)
+            Present present = GetRenderedLegendFuture(displayableSource, FutureFeatures.Cached)
                 .Realize("Legend.RenderLegend");
             if (!(present is ImageRef))
             {
@@ -213,8 +213,8 @@ namespace MSR.CVE.BackMaker
         internal Size GetOutputSizeSynchronously(IFuture synchronousUserBoundsFuture)
         {
             RenderRegion renderRegionSynchronously =
-                this.latentRegionHolder.GetRenderRegionSynchronously(synchronousUserBoundsFuture);
-            return this.OutputSizeFromRenderRegion(renderRegionSynchronously);
+                latentRegionHolder.GetRenderRegionSynchronously(synchronousUserBoundsFuture);
+            return OutputSizeFromRenderRegion(renderRegionSynchronously);
         }
     }
 }

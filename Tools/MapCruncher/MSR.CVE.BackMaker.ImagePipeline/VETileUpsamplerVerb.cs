@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             TileAddress tileAddress = (TileAddress)paramList[0];
             if (tileAddress.ZoomLevel <= 19)
             {
-                return this.veTileFetch.Curry(new ParamDict(new object[] {TermName.TileAddress, tileAddress}))
+                return veTileFetch.Curry(new ParamDict(new object[] {TermName.TileAddress, tileAddress}))
                     .Realize("VETileUpsamplerVerb");
             }
 
@@ -59,7 +59,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         TileAddress tileAddress3 = new TileAddress(tileAddress2.TileX + i,
                             tileAddress2.TileY + j,
                             tileAddress2.ZoomLevel);
-                        Present present = this.veTileFetch
+                        Present present = veTileFetch
                             .Curry(new ParamDict(new object[] {TermName.TileAddress, tileAddress3}))
                             .Realize("VETileUpsamplerVerb");
                         try
@@ -117,7 +117,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("VETileUpsamplerVerb(");
-            this.veTileFetch.Curry(new ParamDict(new object[] {TermName.TileAddress, new DummyTerm()}))
+            veTileFetch.Curry(new ParamDict(new object[] {TermName.TileAddress, new DummyTerm()}))
                 .AccumulateRobustHash(hash);
             hash.Accumulate("(");
         }

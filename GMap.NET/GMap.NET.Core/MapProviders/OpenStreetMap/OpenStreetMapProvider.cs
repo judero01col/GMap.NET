@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -384,14 +384,14 @@ namespace GMap.NET.MapProviders
                                 {
                                     var nn = n.Attributes["place_rank"];
 
-                                    int rank = 0;
+                                    int rank;
 #if !PocketPC
-                                    if (nn != null && Int32.TryParse(nn.Value, out rank))
+                                    if (nn != null && int.TryParse(nn.Value, out rank))
                                     {
 #else
-                           if(nn != null && !string.IsNullOrEmpty(nn.Value))
-                           {
-                              rank = int.Parse(nn.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+                                    if(nn != null && !string.IsNullOrEmpty(nn.Value))
+                                    {
+                                        rank = int.Parse(nn.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
 #endif
                                         if (rank < MinExpectedRank)
                                             continue;

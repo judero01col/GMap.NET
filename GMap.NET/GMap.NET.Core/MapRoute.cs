@@ -222,9 +222,9 @@ namespace GMap.NET
         /// </exception>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Name", this.Name);
-            info.AddValue("Tag", this.Tag);
-            info.AddValue("Points", this.Points.ToArray());
+            info.AddValue("Name", Name);
+            info.AddValue("Tag", Tag);
+            info.AddValue("Points", Points.ToArray());
         }
 
         /// <summary>
@@ -234,10 +234,10 @@ namespace GMap.NET
         /// <param name="context">The context.</param>
         protected MapRoute(SerializationInfo info, StreamingContext context)
         {
-            this.Name = info.GetString("Name");
-            this.Tag = Extensions.GetValue<object>(info, "Tag", null);
-            this.deserializedPoints = Extensions.GetValue<PointLatLng[]>(info, "Points");
-            this.Points = new List<PointLatLng>();
+            Name = info.GetString("Name");
+            Tag = Extensions.GetValue<object>(info, "Tag", null);
+            deserializedPoints = Extensions.GetValue<PointLatLng[]>(info, "Points");
+            Points = new List<PointLatLng>();
         }
 
         #endregion

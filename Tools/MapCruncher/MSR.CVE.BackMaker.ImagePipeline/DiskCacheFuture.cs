@@ -13,13 +13,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override Present Realize(string refCredit)
         {
-            return this.cache.Get(this.future, refCredit);
+            return cache.Get(future, refCredit);
         }
 
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("DiskCache(");
-            this.future.AccumulateRobustHash(hash);
+            future.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
     }

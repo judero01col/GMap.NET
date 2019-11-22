@@ -16,14 +16,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this._encodableHash;
+                return _encodableHash;
             }
         }
 
         public LayerMetadataFile(RenderOutputMethod renderOutputMethod, EncodableHash encodableHash)
         {
             this.renderOutputMethod = renderOutputMethod;
-            this._encodableHash = encodableHash;
+            _encodableHash = encodableHash;
         }
 
         public static LayerMetadataFile Read(RenderOutputMethod outputMethod)
@@ -66,23 +66,23 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs("StrongHash"))
                 {
-                    context.AssertUnique(this._encodableHash);
-                    this._encodableHash = new EncodableHash(context);
+                    context.AssertUnique(_encodableHash);
+                    _encodableHash = new EncodableHash(context);
                 }
             }
 
-            context.AssertPresent(this._encodableHash, "StrongHash");
+            context.AssertPresent(_encodableHash, "StrongHash");
         }
 
         public void Write()
         {
             XmlTextWriter xmlTextWriter =
-                new XmlTextWriter(this.renderOutputMethod.CreateFile("LayerMetadata.xml", "text/xml"), Encoding.UTF8);
+                new XmlTextWriter(renderOutputMethod.CreateFile("LayerMetadata.xml", "text/xml"), Encoding.UTF8);
             using (xmlTextWriter)
             {
                 xmlTextWriter.Formatting = Formatting.Indented;
                 xmlTextWriter.WriteStartDocument(true);
-                this.WriteXML(xmlTextWriter);
+                WriteXML(xmlTextWriter);
                 xmlTextWriter.Close();
             }
         }
@@ -90,7 +90,7 @@ namespace MSR.CVE.BackMaker
         private void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(LayerMetadataTag);
-            this._encodableHash.WriteXML(writer);
+            _encodableHash.WriteXML(writer);
             writer.WriteEndElement();
         }
     }

@@ -566,8 +566,6 @@ namespace GMap.NET.MapProviders
                                 data.Dispose();
                             }
                         }
-
-                        data = null;
                     }
                 }
                 else
@@ -640,7 +638,7 @@ namespace GMap.NET.MapProviders
                 }
             }
 #endif
-            WebResponse response = null;
+            WebResponse response;
 
             try
             {
@@ -788,11 +786,11 @@ namespace GMap.NET.MapProviders
         {
             get
             {
-                return this.m_credentials;
+                return m_credentials;
             }
             set
             {
-                this.m_credentials = value;
+                m_credentials = value;
             }
         }
 

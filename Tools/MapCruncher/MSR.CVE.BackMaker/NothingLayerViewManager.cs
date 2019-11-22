@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
 
         public void Activate()
         {
-            UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
+            UIPositionManager uIPositionManager = viewControl.GetUIPositionManager();
             uIPositionManager.switchFree();
             uIPositionManager.GetSMPos().setPosition(ContinuousCoordinateSystem.theInstance.GetDefaultView());
             uIPositionManager.GetVEPos().setPosition(MercatorCoordinateSystem.theInstance.GetDefaultView());

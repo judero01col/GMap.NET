@@ -60,7 +60,7 @@ namespace Demo.WindowsForms
             }
          }
 
-         this.Text = "Static Map maker";
+         Text = "Static Map maker";
          progressBar1.Value = 0;
          button1.Enabled = true;
          numericUpDown1.Enabled = true;
@@ -72,7 +72,7 @@ namespace Demo.WindowsForms
          progressBar1.Value = e.ProgressPercentage;
 
          GPoint p = (GPoint)e.UserState;
-         this.Text = "Static Map maker: Downloading[" + p + "]: " + tileArea.IndexOf(p) + " of " + tileArea.Count;
+         Text = "Static Map maker: Downloading[" + p + "]: " + tileArea.IndexOf(p) + " of " + tileArea.Count;
       }
 
       void bg_DoWork(object sender, DoWorkEventArgs e)
@@ -399,7 +399,7 @@ namespace Demo.WindowsForms
 
       private void button1_Click(object sender, EventArgs e)
       {
-         RectLatLng? area = null;
+         RectLatLng? area;
 
          if(checkBoxRoutes.Checked)
          {
@@ -460,7 +460,7 @@ namespace Demo.WindowsForms
          this.Area = Area;
          this.Zoom = Zoom;
          this.Type = Type;
-         this.MakeWorldFile = makeWorldFile;
+         MakeWorldFile = makeWorldFile;
          this.MakeKmz = MakeKmz;
       }
    }

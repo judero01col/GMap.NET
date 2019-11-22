@@ -23,7 +23,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._cacheKeyToEvict;
+                return _cacheKeyToEvict;
             }
         }
 
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._future;
+                return _future;
             }
         }
 
@@ -39,19 +39,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return this._present;
+                return _present;
             }
         }
 
         public AsyncRecord(AsyncScheduler scheduler, IFuture cacheKeyToEvict, IFuture future)
         {
-            this._cacheKeyToEvict = cacheKeyToEvict;
-            this._future = future;
+            _cacheKeyToEvict = cacheKeyToEvict;
+            _future = future;
             this.scheduler = scheduler;
-            this._present = null;
-            this.asyncState = AsyncState.Prequeued;
-            this.queuePriority = 0;
-            this.qtpRef = new AsyncRef(this, "qRef");
+            _present = null;
+            asyncState = AsyncState.Prequeued;
+            queuePriority = 0;
+            qtpRef = new AsyncRef(this, "qRef");
         }
 
         public void AddCallback(CompleteCallback callback)
@@ -59,7 +59,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.present != null)
+                if (present != null)
                 {
                     AsyncRef asyncRef = new AsyncRef(this, "AsyncRecord.AddCallback");
                     callback(asyncRef);
@@ -67,7 +67,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
                 else
                 {
-                    this.callbackEvent = (CompleteCallback)Delegate.Combine(this.callbackEvent, callback);
+                    callbackEvent = (CompleteCallback)Delegate.Combine(callbackEvent, callback);
                 }
             }
             finally
@@ -79,21 +79,21 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void Dispose()
         {
             D.Sayf(10, "Disposed({0})", new object[] {this});
-            this._present.Dispose();
+            _present.Dispose();
         }
 
         public void ChangePriority(int crement)
         {
-            this.queuePriority += crement;
-            if (this.qtpRef != null)
+            queuePriority += crement;
+            if (qtpRef != null)
             {
-                this.scheduler.ChangePriority(this.qtpRef);
+                scheduler.ChangePriority(qtpRef);
             }
         }
 
         public AsyncRef GetQTPRef()
         {
-            return this.qtpRef;
+            return qtpRef;
         }
 
         public void AddRef()
@@ -101,8 +101,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                D.Assert(!this.disposed);
-                this.refs++;
+                D.Assert(!disposed);
+                refs++;
             }
             finally
             {
@@ -115,12 +115,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                D.Assert(!this.disposed);
-                this.refs--;
-                if (this.refs == 0)
+                D.Assert(!disposed);
+                refs--;
+                if (refs == 0)
                 {
-                    this.Dispose();
-                    this.disposed = true;
+                    Dispose();
+                    disposed = true;
                 }
             }
             finally
@@ -135,13 +135,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             bool result;
             try
             {
-                if (this.asyncState != AsyncState.Prequeued)
+                if (asyncState != AsyncState.Prequeued)
                 {
                     result = false;
                 }
                 else
                 {
-                    this.asyncState = AsyncState.Queued;
+                    asyncState = AsyncState.Queued;
                     result = true;
                 }
             }
@@ -155,34 +155,34 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal int GetPriority()
         {
-            return this.queuePriority;
+            return queuePriority;
         }
 
         internal AsyncScheduler GetScheduler()
         {
-            return this.scheduler;
+            return scheduler;
         }
 
         internal void DoWork()
         {
-            D.Assert(this._present == null);
+            D.Assert(_present == null);
             Present presentValue;
             try
             {
-                presentValue = this._future.Realize("AsyncRecord.DoWork");
+                presentValue = _future.Realize("AsyncRecord.DoWork");
             }
             catch (Exception ex)
             {
                 presentValue = new PresentFailureCode(ex);
             }
 
-            this.Notify(presentValue);
+            Notify(presentValue);
         }
 
         internal void DeQueued()
         {
             D.Say(10, string.Format("DeQueued({0})", this));
-            this.Notify(new RequestCanceledPresent());
+            Notify(new RequestCanceledPresent());
         }
 
         private void Notify(Present presentValue)
@@ -190,10 +190,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                D.Assert(this._present == null);
-                this._present = presentValue;
-                this.notificationRef = new AsyncRef(this, "callback");
-                this.qtpRef = null;
+                D.Assert(_present == null);
+                _present = presentValue;
+                notificationRef = new AsyncRef(this, "callback");
+                qtpRef = null;
             }
             finally
             {
@@ -201,19 +201,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
 
             DebugThreadInterrupter.theInstance.AddThread("AsyncRecord.NotifyThread",
-                new ThreadStart(this.NotifyThread),
+                new ThreadStart(NotifyThread),
                 ThreadPriority.Normal);
         }
 
         private void NotifyThread()
         {
-            this.callbackEvent(this.notificationRef);
-            this.notificationRef.Dispose();
+            callbackEvent(notificationRef);
+            notificationRef.Dispose();
         }
 
         public override string ToString()
         {
-            return "AsyncRecord:" + RobustHashTools.DebugString(this._future);
+            return "AsyncRecord:" + RobustHashTools.DebugString(_future);
         }
 
         internal void ProcessSynchronously()
@@ -221,20 +221,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                if (this.asyncState == AsyncState.Queued)
+                if (asyncState == AsyncState.Queued)
                 {
                     return;
                 }
 
-                D.Assert(this.asyncState == AsyncState.Prequeued);
-                this.asyncState = AsyncState.Queued;
+                D.Assert(asyncState == AsyncState.Prequeued);
+                asyncState = AsyncState.Queued;
             }
             finally
             {
                 Monitor.Exit(this);
             }
 
-            this.DoWork();
+            DoWork();
         }
     }
 }

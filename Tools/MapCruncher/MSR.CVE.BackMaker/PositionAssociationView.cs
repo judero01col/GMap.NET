@@ -18,14 +18,14 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                switch (this.whichPosition)
+                switch (whichPosition)
                 {
                     case WhichPosition.image:
-                        return this.assoc.imagePosition;
+                        return assoc.imagePosition;
                     case WhichPosition.source:
-                        return this.assoc.sourcePosition;
+                        return assoc.sourcePosition;
                     case WhichPosition.global:
-                        return this.assoc.globalPosition;
+                        return assoc.globalPosition;
                     default:
                         throw new Exception("booogus.");
                 }
@@ -36,7 +36,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.assoc.associationName;
+                return assoc.associationName;
             }
         }
 
@@ -44,7 +44,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return this.assoc.pinId;
+                return assoc.pinId;
             }
         }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
@@ -33,9 +33,9 @@ namespace BSE.Windows.Forms
                "graphics"));
          }
 
-         this.m_graphics = graphics;
-         this.m_smoothingMode = m_graphics.SmoothingMode;
-         this.m_graphics.SmoothingMode = SmoothingMode.AntiAlias;
+         m_graphics = graphics;
+         m_smoothingMode = m_graphics.SmoothingMode;
+         m_graphics.SmoothingMode = SmoothingMode.AntiAlias;
       }
       /// <summary>
       /// destructor of the UseAntiAlias class.
@@ -61,10 +61,10 @@ namespace BSE.Windows.Forms
       /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
       protected virtual void Dispose(bool disposing)
       {
-         if(disposing == true)
+         if(disposing)
          {
             //Revert the SmoothingMode back to original setting.
-            this.m_graphics.SmoothingMode = this.m_smoothingMode;
+            m_graphics.SmoothingMode = m_smoothingMode;
          }
       }
       #endregion

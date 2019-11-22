@@ -43,7 +43,7 @@ namespace MvcMapFusion
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            BackgroundWorker w = (BackgroundWorker)base.Application.Get("BackgroundWorker");
+            BackgroundWorker w = (BackgroundWorker)Application.Get("BackgroundWorker");
             if (w != null && worker == null)
             {
                 worker = w;
@@ -57,7 +57,7 @@ namespace MvcMapFusion
                 worker.WorkerSupportsCancellation = true;
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
 
-                base.Application.Set("BackgroundWorker", worker);
+                Application.Set("BackgroundWorker", worker);
             }
 
             worker.RunWorkerAsync();
@@ -65,7 +65,7 @@ namespace MvcMapFusion
 
         void Application_End()
         {
-            BackgroundWorker w = (BackgroundWorker)base.Application.Get("BackgroundWorker");
+            BackgroundWorker w = (BackgroundWorker)Application.Get("BackgroundWorker");
             if (w != null)
             {
                 w.CancelAsync();
