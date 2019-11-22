@@ -100,10 +100,10 @@ namespace MSR.CVE.BackMaker
             this.p.b = 0;
             this.p.a = 0;
             XMLTagReader xMLTagReader = context.NewTagReader("PixelValues");
-            this.p.r = (byte)Pixel.byteRange.Parse(context, "r");
-            this.p.g = (byte)Pixel.byteRange.Parse(context, "g");
-            this.p.b = (byte)Pixel.byteRange.Parse(context, "b");
-            this.p.a = (byte)Pixel.byteRange.Parse(context, "a");
+            this.p.r = (byte)byteRange.Parse(context, "r");
+            this.p.g = (byte)byteRange.Parse(context, "g");
+            this.p.b = (byte)byteRange.Parse(context, "b");
+            this.p.a = (byte)byteRange.Parse(context, "a");
             xMLTagReader.SkipAllSubTags();
         }
         public static string GetXMLTag()

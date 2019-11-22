@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         private bool _debugFeaturesEnabled;
         public static BigDebugKnob theKnob = new BigDebugKnob();
 
-        private event BigDebugKnob.DebugKnobListener listeners;
+        private event DebugKnobListener listeners;
 
         public bool debugFeaturesEnabled
         {
@@ -22,9 +22,9 @@ namespace MSR.CVE.BackMaker.MCDebug
                 this.listeners(this._debugFeaturesEnabled);
             }
         }
-        public void AddListener(BigDebugKnob.DebugKnobListener listener)
+        public void AddListener(DebugKnobListener listener)
         {
-            this.listeners = (BigDebugKnob.DebugKnobListener)Delegate.Combine(this.listeners, listener);
+            this.listeners = (DebugKnobListener)Delegate.Combine(this.listeners, listener);
         }
     }
 }

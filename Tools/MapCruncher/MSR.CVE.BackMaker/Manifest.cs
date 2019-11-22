@@ -17,13 +17,13 @@ namespace MSR.CVE.BackMaker
             private const string FileExistsAttr = "FileExists";
             private const string FileLengthAttr = "FileLength";
             private const string IndirectManifestBlockIdAttr = "IndirectManifestBlockId";
-            private Manifest.ManifestBlock _block;
+            private ManifestBlock _block;
             private string _path;
             private bool _fileExists;
             private long _fileLength;
             private int _indirectManifestBlockId;
-            private static Manifest.ManifestRecord _tailRecord;
-            public Manifest.ManifestBlock block
+            private static ManifestRecord _tailRecord;
+            public ManifestBlock block
             {
                 get
                 {
@@ -68,15 +68,15 @@ namespace MSR.CVE.BackMaker
                     return this._indirectManifestBlockId;
                 }
             }
-            public static Manifest.ManifestRecord TailRecord
+            public static ManifestRecord TailRecord
             {
                 get
                 {
-                    if (Manifest.ManifestRecord._tailRecord == null)
+                    if (_tailRecord == null)
                     {
-                        Manifest.ManifestRecord._tailRecord = new Manifest.ManifestRecord(null, null, false, -1L, -1);
+                        _tailRecord = new ManifestRecord(null, null, false, -1L, -1);
                     }
-                    return Manifest.ManifestRecord._tailRecord;
+                    return _tailRecord;
                 }
             }
             public bool IsTailRecord
@@ -86,7 +86,7 @@ namespace MSR.CVE.BackMaker
                     return this.path == null;
                 }
             }
-            public ManifestRecord(Manifest.ManifestBlock block, string path, bool fileExists, long fileLength, int indirectManifestBlockId)
+            public ManifestRecord(ManifestBlock block, string path, bool fileExists, long fileLength, int indirectManifestBlockId)
             {
                 this._block = block;
                 this._path = path;
@@ -104,7 +104,7 @@ namespace MSR.CVE.BackMaker
                 xtw.WriteAttributeString("IndirectManifestBlockId", this.indirectManifestBlockId.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteEndElement();
             }
-            public ManifestRecord(MashupParseContext context, Manifest.ManifestBlock block)
+            public ManifestRecord(MashupParseContext context, ManifestBlock block)
             {
                 this._block = block;
                 XMLTagReader xMLTagReader = context.NewTagReader("ManifestRecord");
@@ -122,13 +122,13 @@ namespace MSR.CVE.BackMaker
             {
                 return string.Format("MR({0}, {1})", this.path, this.fileExists);
             }
-            internal Manifest.ManifestRecord ReplaceBlock(Manifest.ManifestBlock manifestBlock)
+            internal ManifestRecord ReplaceBlock(ManifestBlock manifestBlock)
             {
-                return new Manifest.ManifestRecord(manifestBlock, this.path, this.fileExists, this.fileLength, this.indirectManifestBlockId);
+                return new ManifestRecord(manifestBlock, this.path, this.fileExists, this.fileLength, this.indirectManifestBlockId);
             }
-            internal Manifest.ManifestRecord ReplaceIndirect(int newIndirectBlockId)
+            internal ManifestRecord ReplaceIndirect(int newIndirectBlockId)
             {
-                return new Manifest.ManifestRecord(this.block, this.path, this.fileExists, this.fileLength, newIndirectBlockId);
+                return new ManifestRecord(this.block, this.path, this.fileExists, this.fileLength, newIndirectBlockId);
             }
         }
         public class ManifestSuperBlock
@@ -137,7 +137,7 @@ namespace MSR.CVE.BackMaker
             private const string SplitThresholdAttr = "SplitThreshold";
             private int _splitThreshold = 2000;
             private int _nextUnassignedBlockId;
-            private Manifest.TellManifestDirty tellDirty;
+            private TellManifestDirty tellDirty;
             public int splitThreshold
             {
                 get
@@ -162,22 +162,22 @@ namespace MSR.CVE.BackMaker
                     this.tellDirty();
                 }
             }
-            public ManifestSuperBlock(int nextUnassignedBlockId, Manifest.TellManifestDirty tellDirty)
+            public ManifestSuperBlock(int nextUnassignedBlockId, TellManifestDirty tellDirty)
             {
                 this._nextUnassignedBlockId = nextUnassignedBlockId;
                 this.tellDirty = tellDirty;
             }
-            public ManifestSuperBlock(MashupParseContext context, Manifest.TellManifestDirty tellDirty)
+            public ManifestSuperBlock(MashupParseContext context, TellManifestDirty tellDirty)
             {
                 this.tellDirty = tellDirty;
-                XMLTagReader xMLTagReader = context.NewTagReader(Manifest.ManifestSuperBlock.GetXmlTag());
+                XMLTagReader xMLTagReader = context.NewTagReader(GetXmlTag());
                 this._nextUnassignedBlockId = context.GetRequiredAttributeInt("NextUnassignedBlockId");
                 this._splitThreshold = context.GetRequiredAttributeInt("SplitThreshold");
                 xMLTagReader.SkipAllSubTags();
             }
             internal void WriteXML(XmlTextWriter xtw)
             {
-                xtw.WriteStartElement(Manifest.ManifestSuperBlock.GetXmlTag());
+                xtw.WriteStartElement(GetXmlTag());
                 xtw.WriteAttributeString("NextUnassignedBlockId", this._nextUnassignedBlockId.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteAttributeString("SplitThreshold", this._splitThreshold.ToString(CultureInfo.InvariantCulture));
                 xtw.WriteEndElement();
@@ -187,17 +187,17 @@ namespace MSR.CVE.BackMaker
                 return "SuperBlock";
             }
         }
-        public class ManifestBlock : IEnumerable<Manifest.ManifestRecord>, IEnumerable
+        public class ManifestBlock : IEnumerable<ManifestRecord>, IEnumerable
         {
-            public delegate Manifest.ManifestBlock CreateBlock();
+            public delegate ManifestBlock CreateBlock();
             private const string ManifestsDir = "manifests";
             private const string ManifestBlockTag = "ManifestBlock";
-            private List<Manifest.ManifestRecord> recordList = new List<Manifest.ManifestRecord>();
-            private Manifest.ManifestSuperBlock _superBlock;
+            private List<ManifestRecord> recordList = new List<ManifestRecord>();
+            private ManifestSuperBlock _superBlock;
             public int blockId;
             private bool dirty;
-            private Manifest.TellManifestDirty tellManifestDirty;
-            public Manifest.ManifestSuperBlock superBlock
+            private TellManifestDirty tellManifestDirty;
+            public ManifestSuperBlock superBlock
             {
                 get
                 {
@@ -242,7 +242,7 @@ namespace MSR.CVE.BackMaker
                     {
                         this._superBlock.WriteXML(xmlTextWriter);
                     }
-                    foreach (Manifest.ManifestRecord current in this)
+                    foreach (ManifestRecord current in this)
                     {
                         current.WriteXML(xmlTextWriter);
                     }
@@ -250,7 +250,7 @@ namespace MSR.CVE.BackMaker
                     xmlTextWriter.Close();
                 }
             }
-            public ManifestBlock(Manifest.TellManifestDirty tellManifestDirty, RenderOutputMethod outputMethod, int blockId)
+            public ManifestBlock(TellManifestDirty tellManifestDirty, RenderOutputMethod outputMethod, int blockId)
             {
                 this.tellManifestDirty = tellManifestDirty;
                 this.blockId = blockId;
@@ -268,15 +268,15 @@ namespace MSR.CVE.BackMaker
                                 XMLTagReader xMLTagReader = mashupParseContext.NewTagReader("ManifestBlock");
                                 while (xMLTagReader.FindNextStartTag())
                                 {
-                                    if (xMLTagReader.TagIs(Manifest.ManifestRecord.GetXmlTag()))
+                                    if (xMLTagReader.TagIs(ManifestRecord.GetXmlTag()))
                                     {
-                                        this.recordList.Add(new Manifest.ManifestRecord(mashupParseContext, this));
+                                        this.recordList.Add(new ManifestRecord(mashupParseContext, this));
                                     }
                                     else
                                     {
-                                        if (xMLTagReader.TagIs(Manifest.ManifestSuperBlock.GetXmlTag()))
+                                        if (xMLTagReader.TagIs(ManifestSuperBlock.GetXmlTag()))
                                         {
-                                            this._superBlock = new Manifest.ManifestSuperBlock(mashupParseContext, new Manifest.TellManifestDirty(this.SetDirty));
+                                            this._superBlock = new ManifestSuperBlock(mashupParseContext, new TellManifestDirty(this.SetDirty));
                                         }
                                     }
                                 }
@@ -293,11 +293,11 @@ namespace MSR.CVE.BackMaker
                 {
                     if (blockId == 0 && this._superBlock == null)
                     {
-                        this._superBlock = new Manifest.ManifestSuperBlock(1, new Manifest.TellManifestDirty(this.SetDirty));
+                        this._superBlock = new ManifestSuperBlock(1, new TellManifestDirty(this.SetDirty));
                     }
                 }
             }
-            public void Insert(Manifest.ManifestRecord newRecord, Manifest.ManifestRecord afterRecord)
+            public void Insert(ManifestRecord newRecord, ManifestRecord afterRecord)
             {
                 D.Assert(afterRecord.IsTailRecord || afterRecord.block == this);
                 D.Assert(newRecord.block == this);
@@ -307,11 +307,11 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    this.recordList.Insert(this.recordList.FindIndex((Manifest.ManifestRecord mrb) => mrb.path == afterRecord.path), newRecord);
+                    this.recordList.Insert(this.recordList.FindIndex((ManifestRecord mrb) => mrb.path == afterRecord.path), newRecord);
                 }
                 this.SetDirty();
             }
-            public IEnumerator<Manifest.ManifestRecord> GetEnumerator()
+            public IEnumerator<ManifestRecord> GetEnumerator()
             {
                 return this.recordList.GetEnumerator();
             }
@@ -319,16 +319,16 @@ namespace MSR.CVE.BackMaker
             {
                 return this.recordList.GetEnumerator();
             }
-            internal void Split(Manifest.ManifestBlock.CreateBlock createBlock)
+            internal void Split(CreateBlock createBlock)
             {
                 int num = 2;
-                Manifest.ManifestBlock[] subBlocks = new Manifest.ManifestBlock[num];
+                ManifestBlock[] subBlocks = new ManifestBlock[num];
                 for (int j = 0; j < num; j++)
                 {
                     subBlocks[j] = createBlock();
                 }
-                List<Manifest.ManifestRecord> list = new List<Manifest.ManifestRecord>();
-                Converter<Manifest.ManifestRecord, Manifest.ManifestRecord> converter = null;
+                List<ManifestRecord> list = new List<ManifestRecord>();
+                Converter<ManifestRecord, ManifestRecord> converter = null;
                 for (int i = 0; i < num; i++)
                 {
                     int index = (int)((((double)i) / ((double)num)) * this.recordList.Count);
@@ -337,8 +337,8 @@ namespace MSR.CVE.BackMaker
                     {
                         converter = mr => mr.ReplaceBlock(subBlocks[i]);
                     }
-                    subBlocks[i].recordList = this.recordList.GetRange(index, num4 - index).ConvertAll<Manifest.ManifestRecord>(converter);
-                    Manifest.ManifestRecord item = this.recordList[index].ReplaceIndirect(subBlocks[i].blockId);
+                    subBlocks[i].recordList = this.recordList.GetRange(index, num4 - index).ConvertAll<ManifestRecord>(converter);
+                    ManifestRecord item = this.recordList[index].ReplaceIndirect(subBlocks[i].blockId);
                     list.Add(item);
                     subBlocks[i].SetDirty();
                 }
@@ -349,8 +349,8 @@ namespace MSR.CVE.BackMaker
 
         private delegate bool StopHere(string recP);
         private RenderOutputMethod storageMethod;
-        private Manifest.ManifestBlock rootBlock;
-        internal Dictionary<int, Manifest.ManifestBlock> blockCache = new Dictionary<int, Manifest.ManifestBlock>();
+        private ManifestBlock rootBlock;
+        internal Dictionary<int, ManifestBlock> blockCache = new Dictionary<int, ManifestBlock>();
         private int dirtyCount;
         public Manifest(RenderOutputMethod storageMethod)
         {
@@ -361,25 +361,25 @@ namespace MSR.CVE.BackMaker
         {
             this.rootBlock.superBlock.splitThreshold = splitThreshold;
         }
-        private Manifest.ManifestBlock FetchBlock(int blockId)
+        private ManifestBlock FetchBlock(int blockId)
         {
             if (this.blockCache.ContainsKey(blockId))
             {
                 return this.blockCache[blockId];
             }
-            Manifest.ManifestBlock manifestBlock = new Manifest.ManifestBlock(new Manifest.TellManifestDirty(this.SetDirty), this.storageMethod, blockId);
+            ManifestBlock manifestBlock = new ManifestBlock(new TellManifestDirty(this.SetDirty), this.storageMethod, blockId);
             this.blockCache[blockId] = manifestBlock;
             return manifestBlock;
         }
-        private Manifest.ManifestBlock CreateBlock()
+        private ManifestBlock CreateBlock()
         {
-            Manifest.ManifestBlock manifestBlock = new Manifest.ManifestBlock(new Manifest.TellManifestDirty(this.SetDirty), this.storageMethod, this.rootBlock.superBlock.nextUnassignedBlockId);
+            ManifestBlock manifestBlock = new ManifestBlock(new TellManifestDirty(this.SetDirty), this.storageMethod, this.rootBlock.superBlock.nextUnassignedBlockId);
             this.rootBlock.superBlock.nextUnassignedBlockId++;
             D.Assert(!this.blockCache.ContainsKey(manifestBlock.blockId));
             this.blockCache[manifestBlock.blockId] = manifestBlock;
             return manifestBlock;
         }
-        private Manifest.ManifestRecord Search(Manifest.StopHere stopHere)
+        private ManifestRecord Search(StopHere stopHere)
         {
             ManifestBlock rootBlock = this.rootBlock;
             ManifestRecord tailRecord = ManifestRecord.TailRecord;
@@ -408,43 +408,43 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
-        internal Manifest.ManifestRecord FindFirstGreaterThan(string p)
+        internal ManifestRecord FindFirstGreaterThan(string p)
         {
             return this.Search((string recP) => recP == null || recP.CompareTo(p) > 0);
         }
-        internal Manifest.ManifestRecord FindFirstGreaterEqual(string p)
+        internal ManifestRecord FindFirstGreaterEqual(string p)
         {
             return this.Search((string recP) => recP == null || recP.CompareTo(p) >= 0);
         }
-        internal Manifest.ManifestRecord FindFirstEqual(string path)
+        internal ManifestRecord FindFirstEqual(string path)
         {
-            Manifest.ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
+            ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
             if (manifestRecord.path == path)
             {
                 return manifestRecord;
             }
-            return Manifest.ManifestRecord.TailRecord;
+            return ManifestRecord.TailRecord;
         }
         internal void Add(string path, long fileLength)
         {
-            Manifest.ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
+            ManifestRecord manifestRecord = this.FindFirstGreaterEqual(path);
             if (manifestRecord.path == path)
             {
                 manifestRecord.fileExists = true;
                 manifestRecord.fileLength = fileLength;
                 return;
             }
-            Manifest.ManifestBlock manifestBlock = (manifestRecord.block == null) ? this.rootBlock : manifestRecord.block;
-            Manifest.ManifestRecord newRecord = new Manifest.ManifestRecord(manifestBlock, path, true, fileLength, -1);
+            ManifestBlock manifestBlock = (manifestRecord.block == null) ? this.rootBlock : manifestRecord.block;
+            ManifestRecord newRecord = new ManifestRecord(manifestBlock, path, true, fileLength, -1);
             manifestBlock.Insert(newRecord, manifestRecord);
             if (manifestBlock.Count > this.rootBlock.superBlock.splitThreshold)
             {
-                manifestBlock.Split(new Manifest.ManifestBlock.CreateBlock(this.CreateBlock));
+                manifestBlock.Split(new ManifestBlock.CreateBlock(this.CreateBlock));
             }
         }
         public void Remove(string p)
         {
-            Manifest.ManifestRecord manifestRecord = this.FindFirstEqual(p);
+            ManifestRecord manifestRecord = this.FindFirstEqual(p);
             if (manifestRecord.IsTailRecord)
             {
                 return;
@@ -454,7 +454,7 @@ namespace MSR.CVE.BackMaker
         }
         public void CommitChanges()
         {
-            foreach (Manifest.ManifestBlock current in this.blockCache.Values)
+            foreach (ManifestBlock current in this.blockCache.Values)
             {
                 current.CommitChanges(this);
             }

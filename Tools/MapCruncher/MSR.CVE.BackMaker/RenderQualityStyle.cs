@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker
         public static RenderQualityStyle highQuality = new RenderQualityStyle("highQuality", InterpolationMode.HighQualityBicubic, InterpolationMode.Bilinear, 1.0);
         public static RenderQualityStyle exactColors = new RenderQualityStyle("exactColors", InterpolationMode.NearestNeighbor, InterpolationMode.NearestNeighbor, 1.0);
         public static RenderQualityStyle foxit = new RenderQualityStyle("FoxIT", InterpolationMode.HighQualityBicubic, InterpolationMode.Bilinear, 2.0);
-        public static RenderQualityStyle theStyle = RenderQualityStyle.foxit;
+        public static RenderQualityStyle theStyle = foxit;
         public InterpolationMode invokeImageInterpolationMode
         {
             get

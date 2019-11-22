@@ -8,11 +8,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (ViewsNotAsWellPreservedSchema._schema == null)
+                if (_schema == null)
                 {
-                    ViewsNotAsWellPreservedSchema._schema = new ViewsNotAsWellPreservedSchema();
+                    _schema = new ViewsNotAsWellPreservedSchema();
                 }
-                return ViewsNotAsWellPreservedSchema._schema;
+                return _schema;
             }
         }
         private ViewsNotAsWellPreservedSchema() : base("1.5")

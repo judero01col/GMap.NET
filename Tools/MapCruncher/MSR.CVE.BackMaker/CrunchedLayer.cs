@@ -105,7 +105,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(CrunchedLayer.GetXMLTag());
+            writer.WriteStartElement(GetXMLTag());
             writer.WriteAttributeString(Layer.GetLayerDisplayNameTag(), this.displayName);
             writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(this.displayName));
             this.namingScheme.WriteXML(writer);

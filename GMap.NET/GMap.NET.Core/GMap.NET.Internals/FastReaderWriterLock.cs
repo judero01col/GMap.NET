@@ -1,8 +1,7 @@
-﻿using System;
-
-#if !MONO && !PocketPC
+﻿#if !MONO && !PocketPC
 #define UseFastResourceLock
 #endif
+using System;
 
 namespace GMap.NET.Internals
 {

@@ -63,7 +63,7 @@ namespace MSR.CVE.BackMaker
         }
         public void SetFilename(string fileName)
         {
-            if (File.Exists(Mashup.GetAutoSaveName(this.fileName)))
+            if (File.Exists(GetAutoSaveName(this.fileName)))
             {
                 this.RemoveAutoSaveBackup();
                 this.autoSaveDirty = true;
@@ -153,10 +153,10 @@ namespace MSR.CVE.BackMaker
         }
         private void WriteXML_LastView(MashupWriteContext wc)
         {
-            wc.writer.WriteStartElement(Mashup.LastViewTag);
+            wc.writer.WriteStartElement(LastViewTag);
             if (this.lastView != null && !(this.lastView is NoView))
             {
-                wc.writer.WriteAttributeString(Mashup.LastView_TargetIdAttr, wc.GetIdentity(this.lastView.GetViewedObject()));
+                wc.writer.WriteAttributeString(LastView_TargetIdAttr, wc.GetIdentity(this.lastView.GetViewedObject()));
             }
             wc.writer.WriteEndElement();
         }
@@ -193,10 +193,10 @@ namespace MSR.CVE.BackMaker
                         }
                         else
                         {
-                            if (xMLTagReader.TagIs(Mashup.LastViewTag))
+                            if (xMLTagReader.TagIs(LastViewTag))
                             {
-                                XMLTagReader xMLTagReader2 = context.NewTagReader(Mashup.LastViewTag);
-                                text = context.reader.GetAttribute(Mashup.LastView_TargetIdAttr);
+                                XMLTagReader xMLTagReader2 = context.NewTagReader(LastViewTag);
+                                text = context.reader.GetAttribute(LastView_TargetIdAttr);
                                 xMLTagReader2.SkipAllSubTags();
                             }
                         }
@@ -234,23 +234,23 @@ namespace MSR.CVE.BackMaker
         }
         public static Mashup OpenMashupInteractive(string fileName, out MashupFileWarningList warningList)
         {
-            if (File.Exists(Mashup.GetAutoSaveName(fileName)))
+            if (File.Exists(GetAutoSaveName(fileName)))
             {
                 RecoverAutoSavedFileDialog recoverAutoSavedFileDialog = new RecoverAutoSavedFileDialog();
-                recoverAutoSavedFileDialog.Initialize(Mashup.GetAutoSaveName(fileName));
+                recoverAutoSavedFileDialog.Initialize(GetAutoSaveName(fileName));
                 DialogResult dialogResult = recoverAutoSavedFileDialog.ShowDialog();
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Mashup mashup = new Mashup(Mashup.GetAutoSaveName(fileName), out warningList);
+                    Mashup mashup = new Mashup(GetAutoSaveName(fileName), out warningList);
                     mashup.fileName = Path.Combine(Path.GetDirectoryName(fileName), "Copy of " + Path.GetFileName(fileName));
                     mashup.SetDirty();
                     mashup.AutoSaveBackup();
-                    File.Delete(Mashup.GetAutoSaveName(fileName));
+                    File.Delete(GetAutoSaveName(fileName));
                     return mashup;
                 }
                 if (dialogResult == DialogResult.Ignore)
                 {
-                    File.Delete(Mashup.GetAutoSaveName(fileName));
+                    File.Delete(GetAutoSaveName(fileName));
                 }
                 else
                 {
@@ -306,7 +306,7 @@ namespace MSR.CVE.BackMaker
             }
             try
             {
-                this.WriteXML(Mashup.GetAutoSaveName(this.fileName));
+                this.WriteXML(GetAutoSaveName(this.fileName));
                 this.autoSaveDirty = false;
                 this.autoSaveFailNotified = false;
             }
@@ -315,7 +315,7 @@ namespace MSR.CVE.BackMaker
                 if (!this.autoSaveFailNotified)
                 {
                     this.autoSaveFailNotified = true;
-                    MessageBox.Show(string.Format("Failed to autosave {0}:\n{1}", Mashup.GetAutoSaveName(this.fileName), ex.Message), "AutoSave Failed", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    MessageBox.Show(string.Format("Failed to autosave {0}:\n{1}", GetAutoSaveName(this.fileName), ex.Message), "AutoSave Failed", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 }
             }
         }
@@ -332,7 +332,7 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                File.Delete(Mashup.GetAutoSaveName(this.fileName));
+                File.Delete(GetAutoSaveName(this.fileName));
             }
             catch (Exception ex)
             {

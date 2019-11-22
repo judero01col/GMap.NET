@@ -87,13 +87,13 @@ namespace MSR.CVE.BackMaker
         }
         private void CrementCounter(int crement)
         {
-            GDIBigLockedImage.allImageCounter.crement(crement);
+            allImageCounter.crement(crement);
             D.Assert(this.sourceLabel != null);
-            if (!GDIBigLockedImage.fineGrainedImageCounter.ContainsKey(this.sourceLabel))
+            if (!fineGrainedImageCounter.ContainsKey(this.sourceLabel))
             {
-                GDIBigLockedImage.fineGrainedImageCounter[this.sourceLabel] = DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBLI-" + this.sourceLabel, 10);
+                fineGrainedImageCounter[this.sourceLabel] = DiagnosticUI.theDiagnostics.fetchResourceCounter("GDIBLI-" + this.sourceLabel, 10);
             }
-            GDIBigLockedImage.fineGrainedImageCounter[this.sourceLabel].crement(crement);
+            fineGrainedImageCounter[this.sourceLabel].crement(crement);
         }
         public GDIBigLockedImage(Bitmap bitmap)
         {
@@ -310,7 +310,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
-        public unsafe GDIBigLockedImage.Transparentness GetTransparentness()
+        public unsafe Transparentness GetTransparentness()
         {
             Transparentness entirelyTransparent;
             lock (this)

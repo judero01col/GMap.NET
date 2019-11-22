@@ -29,14 +29,14 @@ namespace MSR.CVE.BackMaker
         {
             this.dirty = dirty;
             XMLTagReader xMLTagReader = context.NewTagReader("FadeOptions");
-            this._fadeBase = FadeOptions.FadeRange.Parse(context, "DefaultValue");
+            this._fadeBase = FadeRange.Parse(context, "DefaultValue");
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs("FadeAtZoom"))
                 {
                     XMLTagReader xMLTagReader2 = context.NewTagReader("FadeAtZoom");
                     int requiredAttributeInt = context.GetRequiredAttributeInt("ZoomLevel");
-                    double value = FadeOptions.FadeRange.Parse(context, "FadeValue");
+                    double value = FadeRange.Parse(context, "FadeValue");
                     if (this._zoomToFadeMap.ContainsKey(requiredAttributeInt))
                     {
                         throw new InvalidMashupFile(context, string.Format("Fade specified twice for zoom level {0}", requiredAttributeInt));

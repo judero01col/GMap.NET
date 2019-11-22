@@ -52,14 +52,14 @@ namespace MSR.CVE.BackMaker
         public SourceMapRegistrationView(SourceMap sourceMap, MashupParseContext context)
         {
             this._sourceMap = sourceMap;
-            XMLTagReader xMLTagReader = context.NewTagReader(SourceMapRegistrationView.GetXMLTag());
-            this._locked = context.GetRequiredAttributeBoolean(SourceMapRegistrationView.lockedAttribute);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            this._locked = context.GetRequiredAttributeBoolean(lockedAttribute);
             bool flag = false;
             while (xMLTagReader.FindNextStartTag())
             {
-                if (xMLTagReader.TagIs(SourceMapRegistrationView.sourceMapViewTag))
+                if (xMLTagReader.TagIs(sourceMapViewTag))
                 {
-                    XMLTagReader xMLTagReader2 = context.NewTagReader(SourceMapRegistrationView.sourceMapViewTag);
+                    XMLTagReader xMLTagReader2 = context.NewTagReader(sourceMapViewTag);
                     while (xMLTagReader2.FindNextStartTag())
                     {
                         if (xMLTagReader2.TagIs(LatLonZoom.GetXMLTag()))
@@ -71,9 +71,9 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    if (xMLTagReader.TagIs(SourceMapRegistrationView.referenceMapViewTag))
+                    if (xMLTagReader.TagIs(referenceMapViewTag))
                     {
-                        XMLTagReader xMLTagReader3 = context.NewTagReader(SourceMapRegistrationView.referenceMapViewTag);
+                        XMLTagReader xMLTagReader3 = context.NewTagReader(referenceMapViewTag);
                         while (xMLTagReader3.FindNextStartTag())
                         {
                             if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
@@ -86,24 +86,24 @@ namespace MSR.CVE.BackMaker
             }
             if (this.referenceMapView == null)
             {
-                throw new InvalidMashupFile(context, "No " + SourceMapRegistrationView.referenceMapViewTag + " tag in LayerView.");
+                throw new InvalidMashupFile(context, "No " + referenceMapViewTag + " tag in LayerView.");
             }
             if (flag == this._locked)
             {
-                throw new InvalidMashupFile(context, "locked flag disagrees with " + SourceMapRegistrationView.sourceMapViewTag + " element.");
+                throw new InvalidMashupFile(context, "locked flag disagrees with " + sourceMapViewTag + " element.");
             }
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(SourceMapRegistrationView.GetXMLTag());
-            writer.WriteAttributeString(SourceMapRegistrationView.lockedAttribute, this.locked.ToString(CultureInfo.InvariantCulture));
+            writer.WriteStartElement(GetXMLTag());
+            writer.WriteAttributeString(lockedAttribute, this.locked.ToString(CultureInfo.InvariantCulture));
             if (!this.locked)
             {
-                writer.WriteStartElement(SourceMapRegistrationView.sourceMapViewTag);
+                writer.WriteStartElement(sourceMapViewTag);
                 this.sourceMapView.WriteXML(writer);
                 writer.WriteEndElement();
             }
-            writer.WriteStartElement(SourceMapRegistrationView.referenceMapViewTag);
+            writer.WriteStartElement(referenceMapViewTag);
             this.referenceMapView.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteEndElement();

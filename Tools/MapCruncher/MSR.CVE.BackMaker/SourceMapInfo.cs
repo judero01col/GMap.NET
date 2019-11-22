@@ -81,7 +81,7 @@ namespace MSR.CVE.BackMaker
         public SourceMapInfo(MashupParseContext context, DirtyEvent parentDirty)
         {
             this.dirtyEvent = new DirtyEvent(parentDirty);
-            XMLTagReader xMLTagReader = context.NewTagReader(SourceMapInfo.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs("MapFileURL"))

@@ -13,7 +13,7 @@ namespace MSR.CVE.BackMaker
         private RBTreeNode<T> Right;
         private T value;
         private RBTreeNode<T> Parent;
-        private RBTreeNode<T>.COLOR Color = RBTreeNode<T>.COLOR.RED;
+        private COLOR Color = COLOR.RED;
         public T Data
         {
             get
@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
             this.value = value;
             this.Left = null;
             this.Right = null;
-            this.Color = RBTreeNode<T>.COLOR.RED;
+            this.Color = COLOR.RED;
             this.Parent = null;
         }
         internal static RBTreeNode<T> MakeRootNode(RedBlackTree<T> tree)
@@ -48,7 +48,7 @@ namespace MSR.CVE.BackMaker
         internal static RBTreeNode<T> MakeNilNode(RedBlackTree<T> tree)
         {
             RBTreeNode<T> rBTreeNode = new RBTreeNode<T>(tree);
-            rBTreeNode.Color = RBTreeNode<T>.COLOR.BLACK;
+            rBTreeNode.Color = COLOR.BLACK;
             rBTreeNode.Left = (rBTreeNode.Right = (rBTreeNode.Parent = rBTreeNode));
             return rBTreeNode;
         }
@@ -66,19 +66,19 @@ namespace MSR.CVE.BackMaker
         }
         private bool IsRed(RBTreeNode<T> T)
         {
-            return T.Color == RBTreeNode<T>.COLOR.RED;
+            return T.Color == COLOR.RED;
         }
         private bool IsBlack(RBTreeNode<T> T)
         {
-            return T.Color == RBTreeNode<T>.COLOR.BLACK;
+            return T.Color == COLOR.BLACK;
         }
         public bool IsRed()
         {
-            return this.Color == RBTreeNode<T>.COLOR.RED;
+            return this.Color == COLOR.RED;
         }
         public bool IsBlack()
         {
-            return this.Color == RBTreeNode<T>.COLOR.BLACK;
+            return this.Color == COLOR.BLACK;
         }
         private RBTreeNode<T> GetGrandFather()
         {
@@ -186,14 +186,14 @@ namespace MSR.CVE.BackMaker
         {
             return this.Parent == null;
         }
-        private void ColorGrandFather(RBTreeNode<T>.COLOR c)
+        private void ColorGrandFather(COLOR c)
         {
             if (this.Parent.Parent != null)
             {
                 this.Parent.Parent.Color = c;
             }
         }
-        private void ColorFather(RBTreeNode<T>.COLOR c)
+        private void ColorFather(COLOR c)
         {
             if (this.Parent != null)
             {
@@ -209,9 +209,9 @@ namespace MSR.CVE.BackMaker
                     RBTreeNode<T> rightUncle = this.GetRightUncle();
                     if (rightUncle != this.tree.NIL && rightUncle != null && rightUncle.IsRed())
                     {
-                        this.ColorGrandFather(RBTreeNode<T>.COLOR.RED);
-                        rightUncle.Color = RBTreeNode<T>.COLOR.BLACK;
-                        this.Parent.Color = RBTreeNode<T>.COLOR.BLACK;
+                        this.ColorGrandFather(COLOR.RED);
+                        rightUncle.Color = COLOR.BLACK;
+                        this.Parent.Color = COLOR.BLACK;
                         RBTreeNode<T> grandFather = this.GetGrandFather();
                         if (grandFather != null)
                         {
@@ -224,8 +224,8 @@ namespace MSR.CVE.BackMaker
                         {
                             this.RotateLeft(this.Parent);
                         }
-                        this.ColorFather(RBTreeNode<T>.COLOR.BLACK);
-                        this.ColorGrandFather(RBTreeNode<T>.COLOR.RED);
+                        this.ColorFather(COLOR.BLACK);
+                        this.ColorGrandFather(COLOR.RED);
                         if (this.Parent.Parent != null)
                         {
                             this.RotateRight(this.Parent.Parent);
@@ -237,9 +237,9 @@ namespace MSR.CVE.BackMaker
                     RBTreeNode<T> leftUncle = this.GetLeftUncle();
                     if (leftUncle != this.tree.NIL && leftUncle != null && leftUncle.IsRed())
                     {
-                        this.ColorGrandFather(RBTreeNode<T>.COLOR.RED);
-                        leftUncle.Color = RBTreeNode<T>.COLOR.BLACK;
-                        this.Parent.Color = RBTreeNode<T>.COLOR.BLACK;
+                        this.ColorGrandFather(COLOR.RED);
+                        leftUncle.Color = COLOR.BLACK;
+                        this.Parent.Color = COLOR.BLACK;
                         RBTreeNode<T> grandFather2 = this.GetGrandFather();
                         if (grandFather2 != null)
                         {
@@ -252,8 +252,8 @@ namespace MSR.CVE.BackMaker
                         {
                             this.RotateRight(this.Parent);
                         }
-                        this.ColorFather(RBTreeNode<T>.COLOR.BLACK);
-                        this.ColorGrandFather(RBTreeNode<T>.COLOR.RED);
+                        this.ColorFather(COLOR.BLACK);
+                        this.ColorGrandFather(COLOR.RED);
                         if (this.Parent.Parent != null)
                         {
                             this.RotateLeft(this.Parent.Parent);
@@ -261,7 +261,7 @@ namespace MSR.CVE.BackMaker
                     }
                 }
             }
-            this.tree.root.Color = RBTreeNode<T>.COLOR.BLACK;
+            this.tree.root.Color = COLOR.BLACK;
         }
         private RBTreeNode<T> TreeMinimum(RBTreeNode<T> T)
         {
@@ -349,7 +349,7 @@ namespace MSR.CVE.BackMaker
             if (this.tree.comparer.Compare(newValue, rBTreeNode.value) <= 0)
             {
                 RBTreeNode<T> rBTreeNode2 = new RBTreeNode<T>(this.tree, newValue);
-                rBTreeNode2.Color = RBTreeNode<T>.COLOR.RED;
+                rBTreeNode2.Color = COLOR.RED;
                 rBTreeNode.Left = rBTreeNode2;
                 rBTreeNode2.Parent = rBTreeNode;
                 rBTreeNode2.Left = (rBTreeNode2.Right = this.tree.NIL);
@@ -358,7 +358,7 @@ namespace MSR.CVE.BackMaker
             else
             {
                 RBTreeNode<T> rBTreeNode3 = new RBTreeNode<T>(this.tree, newValue);
-                rBTreeNode3.Color = RBTreeNode<T>.COLOR.RED;
+                rBTreeNode3.Color = COLOR.RED;
                 rBTreeNode.Right = rBTreeNode3;
                 rBTreeNode3.Parent = rBTreeNode;
                 rBTreeNode3.Left = (rBTreeNode3.Right = this.tree.NIL);
@@ -425,28 +425,28 @@ namespace MSR.CVE.BackMaker
                     RBTreeNode<T> right = x.Parent.Right;
                     if (right.IsRed())
                     {
-                        right.Color = RBTreeNode<T>.COLOR.BLACK;
-                        x.Parent.Color = RBTreeNode<T>.COLOR.RED;
+                        right.Color = COLOR.BLACK;
+                        x.Parent.Color = COLOR.RED;
                         this.RotateLeft(x.Parent);
                         right = x.Parent.Right;
                     }
                     if (right.Left.IsBlack() && right.Right.IsBlack())
                     {
-                        right.Color = RBTreeNode<T>.COLOR.RED;
+                        right.Color = COLOR.RED;
                         x = x.Parent;
                     }
                     else
                     {
                         if (right.Right.IsBlack())
                         {
-                            right.Left.Color = RBTreeNode<T>.COLOR.BLACK;
-                            right.Color = RBTreeNode<T>.COLOR.RED;
+                            right.Left.Color = COLOR.BLACK;
+                            right.Color = COLOR.RED;
                             this.RotateRight(right);
                             right = x.Parent.Right;
                         }
                         right.Color = x.Parent.Color;
-                        x.Parent.Color = RBTreeNode<T>.COLOR.BLACK;
-                        right.Right.Color = RBTreeNode<T>.COLOR.BLACK;
+                        x.Parent.Color = COLOR.BLACK;
+                        right.Right.Color = COLOR.BLACK;
                         this.RotateLeft(x.Parent);
                         x = this.tree.root;
                     }
@@ -456,34 +456,34 @@ namespace MSR.CVE.BackMaker
                     RBTreeNode<T> left = x.Parent.Left;
                     if (left.IsRed())
                     {
-                        left.Color = RBTreeNode<T>.COLOR.BLACK;
-                        x.Parent.Color = RBTreeNode<T>.COLOR.RED;
+                        left.Color = COLOR.BLACK;
+                        x.Parent.Color = COLOR.RED;
                         this.RotateRight(x.Parent);
                         left = x.Parent.Left;
                     }
                     if (left.Right.IsBlack() && left.Left.IsBlack())
                     {
-                        left.Color = RBTreeNode<T>.COLOR.RED;
+                        left.Color = COLOR.RED;
                         x = x.Parent;
                     }
                     else
                     {
                         if (left.Left.IsBlack())
                         {
-                            left.Right.Color = RBTreeNode<T>.COLOR.BLACK;
-                            left.Color = RBTreeNode<T>.COLOR.RED;
+                            left.Right.Color = COLOR.BLACK;
+                            left.Color = COLOR.RED;
                             this.RotateRight(left);
                             left = x.Parent.Left;
                         }
                         left.Color = x.Parent.Color;
-                        x.Parent.Color = RBTreeNode<T>.COLOR.BLACK;
-                        left.Left.Color = RBTreeNode<T>.COLOR.BLACK;
+                        x.Parent.Color = COLOR.BLACK;
+                        left.Left.Color = COLOR.BLACK;
                         this.RotateRight(x.Parent);
                         x = this.tree.root;
                     }
                 }
             }
-            x.Color = RBTreeNode<T>.COLOR.BLACK;
+            x.Color = COLOR.BLACK;
         }
         public void Print(int depth, bool Tab)
         {
@@ -508,7 +508,7 @@ namespace MSR.CVE.BackMaker
             if (Cursor.Right != null)
             {
                 Cursor = Cursor.Right;
-                RBTreeNode<T>.GetMaxRight(ref Cursor);
+                GetMaxRight(ref Cursor);
             }
             return Cursor;
         }
@@ -521,8 +521,8 @@ namespace MSR.CVE.BackMaker
                     root = null;
                     return;
                 }
-                RBTreeNode<T>.MakeNull(ref root.Left);
-                RBTreeNode<T>.MakeNull(ref root.Right);
+                MakeNull(ref root.Left);
+                MakeNull(ref root.Right);
             }
         }
     }

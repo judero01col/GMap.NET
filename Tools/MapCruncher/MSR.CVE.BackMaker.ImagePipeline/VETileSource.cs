@@ -37,12 +37,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 new UnevaluatedTerm(TermName.TileAddress)
             });
-            futurePrototype = VETileSource.AddFeatures(futurePrototype, FutureFeatures.Cached & features, this.cachePackage);
+            futurePrototype = AddFeatures(futurePrototype, FutureFeatures.Cached & features, this.cachePackage);
             IFuturePrototype prototype = new ApplyPrototype(new VETileUpsamplerVerb(futurePrototype), new IFuturePrototype[]
             {
                 new UnevaluatedTerm(TermName.TileAddress)
             });
-            return VETileSource.AddFeatures(prototype, features, this.cachePackage);
+            return AddFeatures(prototype, features, this.cachePackage);
         }
         public static IFuturePrototype AddFeatures(IFuturePrototype prototype, FutureFeatures features, CachePackage cachePackage)
         {

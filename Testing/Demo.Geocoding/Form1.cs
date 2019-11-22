@@ -19,9 +19,9 @@ namespace Demo.Geocoding
     {
         GMapOverlay objects = new GMapOverlay("objects");
 
-        int Exito = 0;
-        int Falla = 0;
-        int Total = 0;
+        int Exito;
+        int Falla;
+        int Total;
 
         public FormMainMap()
         {

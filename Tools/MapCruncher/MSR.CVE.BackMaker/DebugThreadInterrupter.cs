@@ -39,7 +39,7 @@ namespace MSR.CVE.BackMaker
                 this.debugThreadInterrupter.UnregisterThread(Thread.CurrentThread);
             }
         }
-        private SortedDictionary<int, DebugThreadInterrupter.ThreadRec> threadDict = new SortedDictionary<int, DebugThreadInterrupter.ThreadRec>();
+        private SortedDictionary<int, ThreadRec> threadDict = new SortedDictionary<int, ThreadRec>();
         private bool quitFlag;
         private EventWaitHandle quitEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "DebugThreadInterrupter");
         public static DebugThreadInterrupter theInstance = new DebugThreadInterrupter();
@@ -49,7 +49,7 @@ namespace MSR.CVE.BackMaker
         }
         public void AddThread(string name, ThreadStart start, ThreadPriority priority)
         {
-            DebugThreadInterrupter.ThreadWrapper @object = new DebugThreadInterrupter.ThreadWrapper(start, this);
+            ThreadWrapper @object = new ThreadWrapper(start, this);
             Thread thread = new Thread(new ThreadStart(@object.DoWork));
             thread.Priority = priority;
             thread.Name = name;
@@ -75,7 +75,7 @@ namespace MSR.CVE.BackMaker
                 {
                     break;
                 }
-                DebugThreadInterrupter.ThreadRec threadRec = null;
+                ThreadRec threadRec = null;
                 Monitor.Enter(this);
                 try
                 {
@@ -99,7 +99,7 @@ namespace MSR.CVE.BackMaker
             Monitor.Enter(this);
             try
             {
-                this.threadDict[thread.ManagedThreadId] = new DebugThreadInterrupter.ThreadRec(thread);
+                this.threadDict[thread.ManagedThreadId] = new ThreadRec(thread);
             }
             finally
             {
@@ -109,7 +109,7 @@ namespace MSR.CVE.BackMaker
         internal void UnregisterThread(Thread thread)
         {
             Monitor.Enter(this);
-            DebugThreadInterrupter.ThreadRec threadRec;
+            ThreadRec threadRec;
             try
             {
                 threadRec = this.threadDict[thread.ManagedThreadId];

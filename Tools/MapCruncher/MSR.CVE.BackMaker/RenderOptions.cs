@@ -75,19 +75,19 @@ namespace MSR.CVE.BackMaker
         }
         public static string GetXMLTag()
         {
-            return RenderOptions.RenderOptionsTag;
+            return RenderOptionsTag;
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RenderOptions.RenderOptionsTag);
-            writer.WriteStartElement(RenderOptions.PublishSourceDataTag);
-            writer.WriteAttributeString(RenderOptions.PublishSourceDataValueAttr, this.publishSourceData.ToString(CultureInfo.InvariantCulture));
+            writer.WriteStartElement(RenderOptionsTag);
+            writer.WriteStartElement(PublishSourceDataTag);
+            writer.WriteAttributeString(PublishSourceDataValueAttr, this.publishSourceData.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
-            writer.WriteStartElement(RenderOptions.PermitCompositionTag);
-            writer.WriteAttributeString(RenderOptions.PermitCompositionValueAttr, this.permitComposition.ToString(CultureInfo.InvariantCulture));
+            writer.WriteStartElement(PermitCompositionTag);
+            writer.WriteAttributeString(PermitCompositionValueAttr, this.permitComposition.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
-            writer.WriteStartElement(RenderOptions.OutputTileTypeTag);
-            writer.WriteAttributeString(RenderOptions.OutputTileTypeAttr, this._outputTileType.extn);
+            writer.WriteStartElement(OutputTileTypeTag);
+            writer.WriteAttributeString(OutputTileTypeAttr, this._outputTileType.extn);
             writer.WriteEndElement();
             this.renderToOptions.WriteXML(writer);
             writer.WriteEndElement();
@@ -95,7 +95,7 @@ namespace MSR.CVE.BackMaker
         public RenderOptions(MashupParseContext context, DirtyEvent parentDirtyEvent, ref SingleMaxZoomForEntireMashupCompatibilityBlob blob)
         {
             this.dirtyEvent = new DirtyEvent(parentDirtyEvent);
-            XMLTagReader xMLTagReader = context.NewTagReader(RenderOptions.RenderOptionsTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(RenderOptionsTag);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (context.version == SingleMaxZoomForEntireMashupSchema.schema && xMLTagReader.TagIs(SingleMaxZoomForEntireMashupSchema.ZoomLevelsTag))
@@ -121,9 +121,9 @@ namespace MSR.CVE.BackMaker
                     }
                     else
                     {
-                        if (xMLTagReader.TagIs(RenderOptions.compatibility_RenderToFileOutputTag))
+                        if (xMLTagReader.TagIs(compatibility_RenderToFileOutputTag))
                         {
-                            this._renderToOptions = new RenderToFileOptions(context, this.dirtyEvent, RenderOptions.compatibility_RenderToFileOutputTag);
+                            this._renderToOptions = new RenderToFileOptions(context, this.dirtyEvent, compatibility_RenderToFileOutputTag);
                         }
                         else
                         {
@@ -133,26 +133,26 @@ namespace MSR.CVE.BackMaker
                             }
                             else
                             {
-                                if (xMLTagReader.TagIs(RenderOptions.OutputTileTypeTag))
+                                if (xMLTagReader.TagIs(OutputTileTypeTag))
                                 {
-                                    XMLTagReader xMLTagReader3 = context.NewTagReader(RenderOptions.OutputTileTypeTag);
-                                    this._outputTileType = OutputTileType.Parse(context.reader.GetAttribute(RenderOptions.OutputTileTypeAttr));
+                                    XMLTagReader xMLTagReader3 = context.NewTagReader(OutputTileTypeTag);
+                                    this._outputTileType = OutputTileType.Parse(context.reader.GetAttribute(OutputTileTypeAttr));
                                     xMLTagReader3.SkipAllSubTags();
                                 }
                                 else
                                 {
-                                    if (xMLTagReader.TagIs(RenderOptions.PublishSourceDataTag))
+                                    if (xMLTagReader.TagIs(PublishSourceDataTag))
                                     {
-                                        XMLTagReader xMLTagReader4 = context.NewTagReader(RenderOptions.PublishSourceDataTag);
-                                        this.publishSourceData = context.GetRequiredAttributeBoolean(RenderOptions.PublishSourceDataValueAttr);
+                                        XMLTagReader xMLTagReader4 = context.NewTagReader(PublishSourceDataTag);
+                                        this.publishSourceData = context.GetRequiredAttributeBoolean(PublishSourceDataValueAttr);
                                         xMLTagReader4.SkipAllSubTags();
                                     }
                                     else
                                     {
-                                        if (xMLTagReader.TagIs(RenderOptions.PermitCompositionTag))
+                                        if (xMLTagReader.TagIs(PermitCompositionTag))
                                         {
-                                            XMLTagReader xMLTagReader5 = context.NewTagReader(RenderOptions.PermitCompositionTag);
-                                            this.permitComposition = context.GetRequiredAttributeBoolean(RenderOptions.PermitCompositionValueAttr);
+                                            XMLTagReader xMLTagReader5 = context.NewTagReader(PermitCompositionTag);
+                                            this.permitComposition = context.GetRequiredAttributeBoolean(PermitCompositionValueAttr);
                                             xMLTagReader5.SkipAllSubTags();
                                         }
                                     }

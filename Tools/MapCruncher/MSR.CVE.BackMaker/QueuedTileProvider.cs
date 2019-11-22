@@ -11,10 +11,10 @@ namespace MSR.CVE.BackMaker
             private static int uniqueIDallocator;
             public QueueRequestIfc qr;
             public int queuedInterest;
-            private int uniqueID = QueuedTileProvider.QueueRequestCell.uniqueIDallocator++;
+            private int uniqueID = uniqueIDallocator++;
             public int CompareTo(object o)
             {
-                QueuedTileProvider.QueueRequestCell queueRequestCell = (QueuedTileProvider.QueueRequestCell)o;
+                QueueRequestCell queueRequestCell = (QueueRequestCell)o;
                 int num = -this.queuedInterest.CompareTo(queueRequestCell.queuedInterest);
                 if (num != 0)
                 {
@@ -29,8 +29,8 @@ namespace MSR.CVE.BackMaker
         }
         private class PriQueue
         {
-            private Dictionary<QueueRequestIfc, QueuedTileProvider.QueueRequestCell> cellMap = new Dictionary<QueueRequestIfc, QueuedTileProvider.QueueRequestCell>();
-            private BiSortedDictionary<QueuedTileProvider.QueueRequestCell, QueueRequestIfc> queue = new BiSortedDictionary<QueuedTileProvider.QueueRequestCell, QueueRequestIfc>();
+            private Dictionary<QueueRequestIfc, QueueRequestCell> cellMap = new Dictionary<QueueRequestIfc, QueueRequestCell>();
+            private BiSortedDictionary<QueueRequestCell, QueueRequestIfc> queue = new BiSortedDictionary<QueueRequestCell, QueueRequestIfc>();
             private ListUIIfc listUI;
             public PriQueue()
             {
@@ -42,13 +42,13 @@ namespace MSR.CVE.BackMaker
             }
             public void TruncateQueue(int targetCount)
             {
-                List<QueuedTileProvider.QueueRequestCell> list = new List<QueuedTileProvider.QueueRequestCell>();
+                List<QueueRequestCell> list = new List<QueueRequestCell>();
                 Monitor.Enter(this);
                 try
                 {
                     while (this.queue.Count > targetCount)
                     {
-                        QueuedTileProvider.QueueRequestCell lastKey = this.queue.LastKey;
+                        QueueRequestCell lastKey = this.queue.LastKey;
                         this.cellMap.Remove(lastKey.qr);
                         this.queue.Remove(lastKey);
                         list.Add(lastKey);
@@ -59,7 +59,7 @@ namespace MSR.CVE.BackMaker
                 {
                     Monitor.Exit(this);
                 }
-                foreach (QueuedTileProvider.QueueRequestCell current in list)
+                foreach (QueueRequestCell current in list)
                 {
                     current.qr.DeQueued();
                 }
@@ -69,7 +69,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Enter(this);
                 try
                 {
-                    QueuedTileProvider.QueueRequestCell queueRequestCell = new QueuedTileProvider.QueueRequestCell();
+                    QueueRequestCell queueRequestCell = new QueueRequestCell();
                     queueRequestCell.qr = qr;
                     queueRequestCell.queuedInterest = qr.GetInterest();
                     this.cellMap.Add(qr, queueRequestCell);
@@ -87,7 +87,7 @@ namespace MSR.CVE.BackMaker
                 QueueRequestIfc result;
                 try
                 {
-                    QueuedTileProvider.QueueRequestCell firstKey = this.queue.FirstKey;
+                    QueueRequestCell firstKey = this.queue.FirstKey;
                     if (firstKey == null)
                     {
                         result = null;
@@ -113,7 +113,7 @@ namespace MSR.CVE.BackMaker
                 {
                     if (this.cellMap.ContainsKey(qr))
                     {
-                        QueuedTileProvider.QueueRequestCell key = this.cellMap[qr];
+                        QueueRequestCell key = this.cellMap[qr];
                         this.queue.Remove(key);
                         this.cellMap.Remove(qr);
                         this.Enqueue(qr);
@@ -148,7 +148,7 @@ namespace MSR.CVE.BackMaker
                 {
                     int num = 10;
                     string text = "";
-                    foreach (QueuedTileProvider.QueueRequestCell current in this.queue.Keys)
+                    foreach (QueueRequestCell current in this.queue.Keys)
                     {
                         if (num == 0)
                         {
@@ -172,7 +172,7 @@ namespace MSR.CVE.BackMaker
                 try
                 {
                     D.Sayf(0, "Queue status:", new object[0]);
-                    foreach (QueuedTileProvider.QueueRequestCell current in this.queue)
+                    foreach (QueueRequestCell current in this.queue)
                     {
                         D.Sayf(0, "interest {0} {1}", new object[]
                         {
@@ -190,7 +190,7 @@ namespace MSR.CVE.BackMaker
             {
                 int num = 10;
                 List<object> list = new List<object>();
-                foreach (QueuedTileProvider.QueueRequestCell current in this.queue)
+                foreach (QueueRequestCell current in this.queue)
                 {
                     list.Add(current);
                     if (list.Count >= num)
@@ -205,7 +205,7 @@ namespace MSR.CVE.BackMaker
         private static int QueueSizeReportPeriod = 10;
         private int numWorkerThreads;
         private string debugName;
-        private QueuedTileProvider.PriQueue priQueue = new QueuedTileProvider.PriQueue();
+        private PriQueue priQueue = new PriQueue();
         private EventWaitHandle queueNonemptyEvent = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "QueuedTileProvider.queueNonemptyEvent");
         private int previousBucket = -1;
         public QueuedTileProvider(int numWorkerThreads, string debugName)
@@ -228,7 +228,7 @@ namespace MSR.CVE.BackMaker
         public void Dispose()
         {
             D.Say(1, "QTP Disposal in progress");
-            QueuedTileProvider.PriQueue obj;
+            PriQueue obj;
             Monitor.Enter(obj = this.priQueue);
             try
             {
@@ -249,7 +249,7 @@ namespace MSR.CVE.BackMaker
         }
         public void enqueueTileRequests(QueueRequestIfc[] qrlist)
         {
-            QueuedTileProvider.PriQueue obj;
+            PriQueue obj;
             Monitor.Enter(obj = this.priQueue);
             try
             {
@@ -259,7 +259,7 @@ namespace MSR.CVE.BackMaker
                     D.Say(10, string.Format("Queueing req {0}", queueRequestIfc.ToString()));
                     this.priQueue.Enqueue(queueRequestIfc);
                 }
-                this.priQueue.TruncateQueue(QueuedTileProvider.MAX_QLEN);
+                this.priQueue.TruncateQueue(MAX_QLEN);
                 this.queueNonemptyEvent.Set();
             }
             finally
@@ -276,7 +276,7 @@ namespace MSR.CVE.BackMaker
         }
         private QueueRequestIfc Dequeue()
         {
-            QueuedTileProvider.PriQueue obj;
+            PriQueue obj;
             Monitor.Enter(obj = this.priQueue);
             QueueRequestIfc result;
             try
@@ -335,7 +335,7 @@ namespace MSR.CVE.BackMaker
         }
         private void QueueLenStatus(string eventName)
         {
-            int num = this.priQueue.Count() / QueuedTileProvider.QueueSizeReportPeriod;
+            int num = this.priQueue.Count() / QueueSizeReportPeriod;
             if (num != this.previousBucket)
             {
                 this.previousBucket = num;

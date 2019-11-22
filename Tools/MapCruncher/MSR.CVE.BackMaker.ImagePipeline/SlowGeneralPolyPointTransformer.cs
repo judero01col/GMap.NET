@@ -15,7 +15,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             JamaMatrix jamaMatrix = new JamaMatrix(1, 2);
             jamaMatrix.SetElement(0, 0, p0.x);
             jamaMatrix.SetElement(0, 1, p0.y);
-            JamaMatrix jamaMatrix2 = IPolyPointTransformer.Polynomialize(jamaMatrix, this.polynomialDegree).times(this.matrix);
+            JamaMatrix jamaMatrix2 = Polynomialize(jamaMatrix, this.polynomialDegree).times(this.matrix);
             p1.x = jamaMatrix2.GetElement(0, 0);
             p1.y = jamaMatrix2.GetElement(1, 0);
         }

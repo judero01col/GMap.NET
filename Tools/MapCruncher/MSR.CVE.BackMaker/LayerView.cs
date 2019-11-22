@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
         {
             this._layer = layer;
             bool flag = false;
-            XMLTagReader xMLTagReader = context.NewTagReader(LayerView.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(MapPosition.GetXMLTag(context.version)))
@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(LayerView.GetXMLTag());
+            writer.WriteStartElement(GetXMLTag());
             this.lockedView.WriteXML(writer);
             writer.WriteEndElement();
         }

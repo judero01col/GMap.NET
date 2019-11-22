@@ -106,11 +106,11 @@ namespace MSR.CVE.BackMaker
         }
         public static string GetXMLTag()
         {
-            return RegistrationDefinition.RegistrationDefinitionTag;
+            return RegistrationDefinitionTag;
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RegistrationDefinition.RegistrationDefinitionTag);
+            writer.WriteStartElement(RegistrationDefinitionTag);
             this.warpStyle.WriteXML(writer);
             foreach (PositionAssociation current in this.GetAssociationList())
             {
@@ -121,7 +121,7 @@ namespace MSR.CVE.BackMaker
         public RegistrationDefinition(MashupParseContext context, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = new DirtyEvent(dirtyEvent);
-            XMLTagReader xMLTagReader = context.NewTagReader(RegistrationDefinition.RegistrationDefinitionTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(RegistrationDefinitionTag);
             this.warpStyle = TransformationStyleFactory.ReadFromXMLAttribute(context);
             while (xMLTagReader.FindNextStartTag())
             {

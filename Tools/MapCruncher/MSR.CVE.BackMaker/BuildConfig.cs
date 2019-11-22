@@ -259,7 +259,7 @@ namespace MSR.CVE.BackMaker
                 string name = "MapCruncherAppConfig.xml";
                 try
                 {
-                    inStream = BuildConfig.OpenConfigFile(name);
+                    inStream = OpenConfigFile(name);
                 }
                 catch (Exception)
                 {
@@ -271,11 +271,11 @@ namespace MSR.CVE.BackMaker
                 BuildConfig buildConfig;
                 if (value == "MSR" || value == "Development")
                 {
-                    buildConfig = BuildConfig.MSRConfig(value);
+                    buildConfig = MSRConfig(value);
                 }
                 else
                 {
-                    buildConfig = BuildConfig.VEConfig();
+                    buildConfig = VEConfig();
                 }
                 foreach (XmlNode xmlNode2 in xmlDocument.GetElementsByTagName("Parameter"))
                 {
@@ -308,17 +308,17 @@ namespace MSR.CVE.BackMaker
                 {
                     buildConfig.autoMaxZoomOffset = Convert.ToInt32(xmlNode.Attributes["AutoMaxZoomOffset"].Value, CultureInfo.InvariantCulture);
                 }
-                BuildConfig.theConfig = buildConfig;
+                theConfig = buildConfig;
             }
             catch (Exception)
             {
                 if (AppDomain.CurrentDomain.SetupInformation.ApplicationName.EndsWith(".vshost.exe"))
                 {
-                    BuildConfig.theConfig = BuildConfig.MSRConfig("Development");
+                    theConfig = MSRConfig("Development");
                 }
                 else
                 {
-                    BuildConfig.theConfig = BuildConfig.VEConfig();
+                    theConfig = VEConfig();
                 }
             }
         }

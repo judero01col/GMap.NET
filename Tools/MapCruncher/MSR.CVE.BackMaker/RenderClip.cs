@@ -21,7 +21,7 @@ namespace MSR.CVE.BackMaker
         }
         public RenderClip(MashupParseContext context)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(RenderClip.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(MapRectangle.GetXMLTag()))
@@ -33,7 +33,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(MashupWriteContext wc)
         {
-            wc.writer.WriteStartElement(RenderClip.GetXMLTag());
+            wc.writer.WriteStartElement(GetXMLTag());
             if (this._rect != null)
             {
                 this._rect.WriteXML(wc.writer);

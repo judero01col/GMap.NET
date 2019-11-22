@@ -24,7 +24,7 @@ namespace MSR.CVE.BackMaker
             this._sourceMap = sourceMap;
             this.dirtyEvent = new DirtyEvent(parentEvent);
             this.parentBoundsChangedEvent = parentEvent;
-            XMLTagReader xMLTagReader = context.NewTagReader(LegendList.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(Legend.GetXMLTag()))
@@ -39,7 +39,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(MashupWriteContext context)
         {
-            context.writer.WriteStartElement(LegendList.GetXMLTag());
+            context.writer.WriteStartElement(GetXMLTag());
             foreach (Legend current in this)
             {
                 current.WriteXML(context);

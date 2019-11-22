@@ -19,14 +19,14 @@ namespace MSR.CVE.BackMaker
         }
         public static void WriteAppFodderString(XmlTextWriter writer, string appName, string s)
         {
-            writer.WriteStartElement(FodderSupport.searchFodderTag);
-            writer.WriteString(FodderSupport.CanonicalMercatorQuadTreeString + s);
+            writer.WriteStartElement(searchFodderTag);
+            writer.WriteString(CanonicalMercatorQuadTreeString + s);
             writer.WriteEndElement();
         }
         public static void WriteQuadTreeFodderString(XmlTextWriter writer, string s)
         {
-            writer.WriteStartElement(FodderSupport.searchFodderTag);
-            writer.WriteString(FodderSupport.CanonicalMercatorQuadTreeString + s);
+            writer.WriteStartElement(searchFodderTag);
+            writer.WriteString(CanonicalMercatorQuadTreeString + s);
             writer.WriteEndElement();
         }
         public static string ExtractDigits(string input)

@@ -7,7 +7,7 @@ namespace BSE.Windows.Forms
     /// <summary>
     /// Baseclass for a colortable for the <see cref="Office2007Renderer"/>
     /// </summary>
-    public class OfficeColorTable : BSE.Windows.Forms.ProfessionalColorTable
+    public class OfficeColorTable : ProfessionalColorTable
     {
     }
 }

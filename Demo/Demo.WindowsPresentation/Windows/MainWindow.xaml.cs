@@ -70,8 +70,8 @@ namespace Demo.WindowsPresentation
          MainMap.OnTileLoadComplete += new TileLoadComplete(MainMap_OnTileLoadComplete);
          MainMap.OnTileLoadStart += new TileLoadStart(MainMap_OnTileLoadStart);
          MainMap.OnMapTypeChanged += new MapTypeChanged(MainMap_OnMapTypeChanged);
-         MainMap.MouseMove += new System.Windows.Input.MouseEventHandler(MainMap_MouseMove);
-         MainMap.MouseLeftButtonDown += new System.Windows.Input.MouseButtonEventHandler(MainMap_MouseLeftButtonDown);
+         MainMap.MouseMove += new MouseEventHandler(MainMap_MouseMove);
+         MainMap.MouseLeftButtonDown += new MouseButtonEventHandler(MainMap_MouseLeftButtonDown);
          MainMap.MouseEnter += new MouseEventHandler(MainMap_MouseEnter);
 
          // get map types
@@ -111,7 +111,7 @@ namespace Demo.WindowsPresentation
          currentMarker = new GMapMarker(MainMap.Position);
          {
             currentMarker.Shape = new CustomMarkerRed(this, currentMarker, "custom position marker");
-            currentMarker.Offset = new System.Windows.Point(-15, -15);
+            currentMarker.Offset = new Point(-15, -15);
             currentMarker.ZIndex = int.MaxValue;
             MainMap.Markers.Add(currentMarker);
          }
@@ -198,7 +198,7 @@ namespace Demo.WindowsPresentation
          obj.Margin = new Thickness(0, 0, margin.Right - margin.Left, margin.Bottom - margin.Top);
 
          // Get the size of canvas
-         System.Windows.Size size = new System.Windows.Size(obj.Width, obj.Height);
+         Size size = new Size(obj.Width, obj.Height);
 
          // force control to Update
          obj.Measure(size);
@@ -226,7 +226,7 @@ namespace Demo.WindowsPresentation
 
       Random r = new Random();
 
-      int tt = 0;
+      int tt;
       void timer_Tick(object sender, EventArgs e)
       {
          var pos = new PointLatLng(NextDouble(r, MainMap.ViewArea.Top, MainMap.ViewArea.Bottom), NextDouble(r, MainMap.ViewArea.Left, MainMap.ViewArea.Right));
@@ -240,15 +240,15 @@ namespace Demo.WindowsPresentation
                image.Stretch = Stretch.None;
                image.Opacity = s.Opacity;
 
-               image.MouseEnter += new System.Windows.Input.MouseEventHandler(image_MouseEnter);
-               image.MouseLeave += new System.Windows.Input.MouseEventHandler(image_MouseLeave);
+               image.MouseEnter += new MouseEventHandler(image_MouseEnter);
+               image.MouseLeave += new MouseEventHandler(image_MouseLeave);
 
                image.Source = ToImageSource(s);
             }
 
             m.Shape = image;
 
-            m.Offset = new System.Windows.Point(-s.Width, -s.Height);
+            m.Offset = new Point(-s.Width, -s.Height);
          }
          MainMap.Markers.Add(m);
 
@@ -259,13 +259,13 @@ namespace Demo.WindowsPresentation
          }
       }
 
-      void image_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+      void image_MouseLeave(object sender, MouseEventArgs e)
       {
          Image img = sender as Image;
          img.RenderTransform = null;
       }
 
-      void image_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+      void image_MouseEnter(object sender, MouseEventArgs e)
       {
          Image img = sender as Image;
          img.RenderTransform = new ScaleTransform(1.2, 1.2, 12.5, 12.5);
@@ -375,12 +375,12 @@ namespace Demo.WindowsPresentation
             {
                lock(trolleybus)
                {
-                  Stuff.GetVilniusTransportData(Demo.WindowsForms.TransportType.TrolleyBus, string.Empty, trolleybus);
+                  Stuff.GetVilniusTransportData(WindowsForms.TransportType.TrolleyBus, string.Empty, trolleybus);
                }
 
                lock(bus)
                {
-                  Stuff.GetVilniusTransportData(Demo.WindowsForms.TransportType.Bus, string.Empty, bus);
+                  Stuff.GetVilniusTransportData(WindowsForms.TransportType.Bus, string.Empty, bus);
                }
 
                transport.ReportProgress(100);
@@ -459,7 +459,7 @@ namespace Demo.WindowsPresentation
 
          c.Width = 55 + pxCircleRadius * 2;
          c.Height = 55 + pxCircleRadius * 2;
-         (c.Tag as GMapMarker).Offset = new System.Windows.Point(-c.Width / 2, -c.Height / 2);
+         (c.Tag as GMapMarker).Offset = new Point(-c.Width / 2, -c.Height / 2);
       }
 
       void MainMap_OnMapTypeChanged(GMapProvider type)
@@ -468,18 +468,18 @@ namespace Demo.WindowsPresentation
          sliderZoom.Maximum = MainMap.MaxZoom;
       }
 
-      void MainMap_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+      void MainMap_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
       {
-         System.Windows.Point p = e.GetPosition(MainMap);
+         Point p = e.GetPosition(MainMap);
          currentMarker.Position = MainMap.FromLocalToLatLng((int)p.X, (int)p.Y);
       }
 
       // move current marker with left holding
-      void MainMap_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+      void MainMap_MouseMove(object sender, MouseEventArgs e)
       {
-         if(e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+         if(e.LeftButton == MouseButtonState.Pressed)
          {
-            System.Windows.Point p = e.GetPosition(MainMap);
+            Point p = e.GetPosition(MainMap);
             currentMarker.Position = MainMap.FromLocalToLatLng((int)p.X, (int)p.Y);
          }
       }
@@ -595,7 +595,7 @@ namespace Demo.WindowsPresentation
       }
 
       // goto by geocoder
-      private void textBoxGeo_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+      private void textBoxGeo_KeyUp(object sender, KeyEventArgs e)
       {
          if(e.Key == Key.Enter)
          {
@@ -740,7 +740,7 @@ namespace Demo.WindowsPresentation
                // Save document
                string filename = dlg.FileName;
 
-               using(System.IO.Stream st = System.IO.File.OpenWrite(filename))
+               using(Stream st = File.OpenWrite(filename))
                {
                   en.Save(st);
                }
@@ -862,7 +862,7 @@ namespace Demo.WindowsPresentation
          MainMap.ShowTileGridLines = false;
       }
 
-      private void Window_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+      private void Window_KeyUp(object sender, KeyEventArgs e)
       {
          int offset = 22;
 
@@ -944,7 +944,7 @@ namespace Demo.WindowsPresentation
 
    public class MapValidationRule : ValidationRule
    {
-      bool UserAcceptedLicenseOnce = false;
+      bool UserAcceptedLicenseOnce;
       internal MainWindow Window;
 
       public override ValidationResult Validate(object value, CultureInfo cultureInfo)
@@ -959,7 +959,7 @@ namespace Demo.WindowsPresentation
                   int li = ctn.IndexOf("License");
                   string txt = ctn.Substring(li);
 
-                  var d = new Demo.WindowsPresentation.Windows.Message();
+                  var d = new Windows.Message();
                   d.richTextBox1.Text = txt;
 
                   if(true == d.ShowDialog())

@@ -5,7 +5,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
     {
         public int XValueOneTileEast(TileAddress ta)
         {
-            return VEAddressLayout.WrapLongitude(ta.TileX + 1, ta.ZoomLevel);
+            return WrapLongitude(ta.TileX + 1, ta.ZoomLevel);
         }
         public static int WrapLongitude(int TileX, int ZoomLevel)
         {

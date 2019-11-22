@@ -16,6 +16,7 @@
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
+    <RootNamespace>GMap.NET</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">

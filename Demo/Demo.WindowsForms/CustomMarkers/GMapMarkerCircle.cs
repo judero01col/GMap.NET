@@ -57,9 +57,9 @@ namespace Demo.WindowsForms.CustomMarkers
 
          if(IsFilled)
          {
-            g.FillEllipse(Fill, new System.Drawing.Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
+            g.FillEllipse(Fill, new Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
          }
-         g.DrawEllipse(Stroke, new System.Drawing.Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
+         g.DrawEllipse(Stroke, new Rectangle(LocalPosition.X - R / 2, LocalPosition.Y - R / 2, R, R));
       }
 
       public override void Dispose()

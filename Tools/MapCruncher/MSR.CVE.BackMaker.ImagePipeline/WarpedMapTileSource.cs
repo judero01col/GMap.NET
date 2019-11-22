@@ -52,7 +52,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 futureFeatures |= FutureFeatures.MemoryCached;
             }
-            IFuturePrototype futurePrototype = new ApplyPrototype(new WarpImageVerb(this.imageTransformer, this.GetImageBounds(FutureFeatures.Cached), this.unwarpedMapTileSource.GetImagePrototype(new ImageParameterFromRawBounds(WarpedMapTileSource.sourceImageOversampleSize), futureFeatures)), new IFuturePrototype[]
+            IFuturePrototype futurePrototype = new ApplyPrototype(new WarpImageVerb(this.imageTransformer, this.GetImageBounds(FutureFeatures.Cached), this.unwarpedMapTileSource.GetImagePrototype(new ImageParameterFromRawBounds(sourceImageOversampleSize), futureFeatures)), new IFuturePrototype[]
             {
                 parameterType.GetBoundsParameter(),
                 parameterType.GetSizeParameter()

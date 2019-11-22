@@ -31,8 +31,8 @@ namespace Demo.WindowsForms.CustomMarkers
          {
             scale = value;
 
-            Size = new System.Drawing.Size((int)(14*scale), (int)(14*scale));
-            Offset = new System.Drawing.Point(-Size.Width / 2, (int)(-Size.Height / 1.4));
+            Size = new Size((int)(14*scale), (int)(14*scale));
+            Offset = new Point(-Size.Width / 2, (int)(-Size.Height / 1.4));
          }
       } 
 

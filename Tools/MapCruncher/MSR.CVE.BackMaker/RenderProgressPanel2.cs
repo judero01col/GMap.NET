@@ -14,10 +14,10 @@ namespace MSR.CVE.BackMaker
         public delegate void NotifyDelegate();
         private Mashup mashup;
         private MapTileSourceFactory mapTileSourceFactory;
-        private RenderProgressPanel2.LaunchRenderedBrowserDelegate launchRenderedBrowser;
+        private LaunchRenderedBrowserDelegate launchRenderedBrowser;
         private RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage;
         private RenderState renderState;
-        private RenderProgressPanel2.RenderCompleteDelegate renderCompleteDelegate;
+        private RenderCompleteDelegate renderCompleteDelegate;
         private bool updateRequired;
         private ImageRef previewImage;
         private IContainer components;
@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker
         {
             base.Invalidate();
         }
-        public void Setup(Mashup mashup, MapTileSourceFactory mapTileSourceFactory, RenderProgressPanel2.LaunchRenderedBrowserDelegate launchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
+        public void Setup(Mashup mashup, MapTileSourceFactory mapTileSourceFactory, LaunchRenderedBrowserDelegate launchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
         {
             this.flushRenderedTileCachePackage = flushRenderedTileCachePackage;
             this.ReplacePreviewImage(null);
@@ -115,7 +115,7 @@ namespace MSR.CVE.BackMaker
         {
             this.renderState.RenderClick();
         }
-        public void StartRender(RenderProgressPanel2.RenderCompleteDelegate renderCompleteDelegate)
+        public void StartRender(RenderCompleteDelegate renderCompleteDelegate)
         {
             this.renderCompleteDelegate = renderCompleteDelegate;
             this.renderState.StartRender();
@@ -193,7 +193,7 @@ namespace MSR.CVE.BackMaker
             }
             if (failure == null)
             {
-                RenderProgressPanel2.NotifyDelegate method = new RenderProgressPanel2.NotifyDelegate(this.ModalNotifyRenderComplete);
+                NotifyDelegate method = new NotifyDelegate(this.ModalNotifyRenderComplete);
                 base.Invoke(method);
             }
         }

@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
         public delegate void PreviewSourceMapZoomDelegate(SourceMap sourceMap);
         private SourceMap sourceMap;
         private bool needUpdate;
-        private SourceMapInfoPanel.PreviewSourceMapZoomDelegate previewSourceMapZoom;
+        private PreviewSourceMapZoomDelegate previewSourceMapZoom;
         private IContainer components;
         private Label label1;
         private TextBox mapFileURLTextBox;
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
             this.closestZoomUpDown.Minimum = mercatorCoordinateSystem.GetZoomRange().min;
             this.closestZoomUpDown.Maximum = mercatorCoordinateSystem.GetZoomRange().max;
         }
-        public void Initialize(SourceMapInfoPanel.PreviewSourceMapZoomDelegate previewSourceMapZoom)
+        public void Initialize(PreviewSourceMapZoomDelegate previewSourceMapZoom)
         {
             this.previewSourceMapZoom = previewSourceMapZoom;
         }

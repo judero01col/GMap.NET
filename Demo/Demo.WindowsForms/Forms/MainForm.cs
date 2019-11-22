@@ -41,9 +41,9 @@ namespace Demo.WindowsForms
         // etc
         readonly Random rnd = new Random();
         readonly DescendingComparer ComparerIpStatus = new DescendingComparer();
-        GMapMarkerRect CurentRectMarker = null;
+        GMapMarkerRect CurentRectMarker;
         string mobileGpsLog = string.Empty;
-        bool isMouseDown = false;
+        bool isMouseDown;
         PointLatLng start;
         PointLatLng end;
 
@@ -306,7 +306,7 @@ namespace Demo.WindowsForms
 
         public T DeepClone<T>(T obj)
         {
-            using (var ms = new System.IO.MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 
@@ -335,7 +335,7 @@ namespace Demo.WindowsForms
             return min + (rng.NextDouble() * (max - min));
         }
 
-        int tt = 0;
+        int tt;
         void timer_Tick(object sender, EventArgs e)
         {
             var pos = new PointLatLng(NextDouble(rnd, MainMap.ViewArea.Top, MainMap.ViewArea.Bottom), NextDouble(rnd, MainMap.ViewArea.Left, MainMap.ViewArea.Right));
@@ -605,7 +605,7 @@ namespace Demo.WindowsForms
         readonly List<string> TcpStateNeedLocationInfo = new List<string>();
         readonly Queue<string> TcpStateNeedtraceInfo = new Queue<string>();
 
-        volatile bool TryTraceConnection = false;
+        volatile bool TryTraceConnection;
         GMapMarker lastTcpmarker;
 #if SQLite
         readonly SQLiteIpCache IpCache = new SQLiteIpCache();
@@ -1066,10 +1066,10 @@ namespace Demo.WindowsForms
 
                                                         route.Stroke = new Pen(GetRandomColor());
                                                         route.Stroke.Width = 4;
-                                                        route.Stroke.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                                                        route.Stroke.DashStyle = DashStyle.DashDot;
 
                                                         route.Stroke.StartCap = LineCap.NoAnchor;
-                                                        route.Stroke.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                                        route.Stroke.EndCap = LineCap.ArrowAnchor;
                                                         route.Stroke.LineJoin = LineJoin.Round;
 
                                                         routes.Routes.Add(route);
@@ -1240,7 +1240,7 @@ namespace Demo.WindowsForms
                     ret.Clear();
                     try
                     {
-                        HttpWebRequest httpReq = HttpWebRequest.Create(reqUrl) as HttpWebRequest;
+                        HttpWebRequest httpReq = WebRequest.Create(reqUrl) as HttpWebRequest;
                         {
                             string result = string.Empty;
                             using (HttpWebResponse response = httpReq.GetResponse() as HttpWebResponse)
@@ -1489,7 +1489,7 @@ namespace Demo.WindowsForms
 
                 if (!string.IsNullOrEmpty(launch))
                 {
-                    System.Diagnostics.Process.Start(launch);
+                    Process.Start(launch);
                 }
             }
             catch (Exception ex)
@@ -1595,7 +1595,7 @@ namespace Demo.WindowsForms
             Debug.WriteLine("OnMarkerEnter: " + item.Position);
         }
 
-        GMapPolygon currentPolygon = null;
+        GMapPolygon currentPolygon;
         void MainMap_OnPolygonLeave(GMapPolygon item)
         {
             currentPolygon = null;
@@ -1610,7 +1610,7 @@ namespace Demo.WindowsForms
             Debug.WriteLine("OnPolygonEnter: " + item.Name);
         }
 
-        GMapRoute currentRoute = null;
+        GMapRoute currentRoute;
         void MainMap_OnRouteLeave(GMapRoute item)
         {
             currentRoute = null;
@@ -1723,7 +1723,7 @@ namespace Demo.WindowsForms
         // click on some marker
         void MainMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 if (item is GMapMarkerRect)
                 {
@@ -1840,7 +1840,7 @@ namespace Demo.WindowsForms
 
         #region -- ui events --
 
-        bool UserAcceptedLicenseOnce = false;
+        bool UserAcceptedLicenseOnce;
 
         // change map type
         private void comboBoxMapType_DropDownClosed(object sender, EventArgs e)
@@ -2473,7 +2473,7 @@ namespace Demo.WindowsForms
                                     {
                                         rt.Stroke = new Pen(Color.FromArgb(144, Color.Red));
                                         rt.Stroke.Width = 5;
-                                        rt.Stroke.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                                        rt.Stroke.DashStyle = DashStyle.DashDot;
                                     }
                                     routes.Routes.Add(rt);
                                 }
@@ -2516,7 +2516,7 @@ namespace Demo.WindowsForms
             try
             {
                 string argument = "/select, \"" + MainMap.CacheLocation + "TileDBv5\"";
-                System.Diagnostics.Process.Start("explorer.exe", argument);
+                Process.Start("explorer.exe", argument);
             }
             catch (Exception ex)
             {

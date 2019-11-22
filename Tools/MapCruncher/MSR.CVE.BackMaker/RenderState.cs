@@ -88,10 +88,10 @@ namespace MSR.CVE.BackMaker
         private Mashup _mashupDocument_UseScratchCopy;
         private Mashup mashupScratchCopy;
         private RenderUIIfc renderUI;
-        private RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage;
+        private FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage;
         private MapTileSourceFactory mapTileSourceFactory;
         private bool disposeFlag;
-        private RenderState.States _state;
+        private States _state;
         private bool pauseRenderingFlag;
         private EventWaitHandle startRenderEvent = new CountedEventWaitHandle(false, EventResetMode.AutoReset, "RenderState.startRenderEvent");
         private MercatorCoordinateSystem mercatorCoordinateSystem = new MercatorCoordinateSystem();
@@ -114,7 +114,7 @@ namespace MSR.CVE.BackMaker
         private string[] lastRenderedImageLabel = new string[0];
         private StreamWriter logWriter;
         public static string SourceDataDirName = "SourceData";
-        private RenderState.States state
+        private States state
         {
             get
             {
@@ -126,7 +126,7 @@ namespace MSR.CVE.BackMaker
                 this.renderUI.uiChanged();
             }
         }
-        public RenderState(Mashup mashupDocument, RenderUIIfc renderUI, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage, MapTileSourceFactory mapTileSourceFactory)
+        public RenderState(Mashup mashupDocument, RenderUIIfc renderUI, FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage, MapTileSourceFactory mapTileSourceFactory)
         {
             this._mashupDocument_UseScratchCopy = mashupDocument;
             this.renderUI = renderUI;
@@ -162,12 +162,12 @@ namespace MSR.CVE.BackMaker
         {
             switch (this.state)
             {
-            case RenderState.States.ReadyToRender:
-            case RenderState.States.Paused:
+            case States.ReadyToRender:
+            case States.Paused:
                 this.startRenderEvent.Set();
                 this.renderUI.uiChanged();
                 return;
-            case RenderState.States.Rendering:
+            case States.Rendering:
                 this.pauseRenderingFlag = true;
                 this.renderUI.uiChanged();
                 return;
@@ -179,23 +179,23 @@ namespace MSR.CVE.BackMaker
         {
             switch (this.state)
             {
-            case RenderState.States.ReadyToRender:
+            case States.ReadyToRender:
                 renderControlButton.Text = "Start";
                 renderControlButton.Enabled = true;
                 return;
-            case RenderState.States.Rendering:
+            case States.Rendering:
                 renderControlButton.Text = "Pause";
                 renderControlButton.Enabled = true;
                 return;
-            case RenderState.States.Paused:
+            case States.Paused:
                 renderControlButton.Text = "Resume";
                 renderControlButton.Enabled = true;
                 return;
-            case RenderState.States.Aborted:
+            case States.Aborted:
                 renderControlButton.Text = "Render Aborted.";
                 renderControlButton.Enabled = false;
                 return;
-            case RenderState.States.DoneRendering:
+            case States.DoneRendering:
                 renderControlButton.Text = "Render Complete.";
                 renderControlButton.Enabled = false;
                 return;
@@ -207,7 +207,7 @@ namespace MSR.CVE.BackMaker
         public void StartRender()
         {
             this.OpenLog();
-            if (this.state != RenderState.States.ReadyToRender)
+            if (this.state != States.ReadyToRender)
             {
                 throw new Exception("I kind of imagined that you'd only call this to implement renderOnLaunch.");
             }
@@ -290,7 +290,7 @@ namespace MSR.CVE.BackMaker
                 this.PostMessage(string.Format("Didn't expect to see an exception here: {0}", arg));
             }
             Exception failure = null;
-            if (this.state != RenderState.States.DoneRendering)
+            if (this.state != States.DoneRendering)
             {
                 failure = new Exception("Rendering incomplete.");
             }
@@ -300,15 +300,15 @@ namespace MSR.CVE.BackMaker
         {
             if (this.disposeFlag)
             {
-                throw new RenderState.RenderDisposed();
+                throw new RenderDisposed();
             }
             if (this.pauseRenderingFlag)
             {
-                this.state = RenderState.States.Paused;
+                this.state = States.Paused;
                 this.pauseRenderingFlag = false;
                 this.renderUI.uiChanged();
                 this.startRenderEvent.WaitOne();
-                this.state = RenderState.States.Rendering;
+                this.state = States.Rendering;
                 this.renderUI.uiChanged();
             }
         }
@@ -322,7 +322,7 @@ namespace MSR.CVE.BackMaker
                 }
                 this.startRenderEvent.WaitOne();
                 this.CheckSignal();
-                this.state = RenderState.States.Rendering;
+                this.state = States.Rendering;
                 this._mashupDocument_UseScratchCopy.AutoSelectMaxZooms(this.mapTileSourceFactory);
                 this.CheckSignal();
                 this.mashupScratchCopy = this.DuplicateMashupDocumentForRender();
@@ -367,20 +367,20 @@ namespace MSR.CVE.BackMaker
                 }
                 this.CommitManifest();
                 this.PostStatus("Render complete.");
-                this.state = RenderState.States.DoneRendering;
+                this.state = States.DoneRendering;
                 this.renderUI.uiChanged();
             }
-            catch (RenderState.RenderDisposed)
+            catch (RenderDisposed)
             {
             }
-            catch (RenderState.RenderAborted)
+            catch (RenderAborted)
             {
-                this.state = RenderState.States.Aborted;
+                this.state = States.Aborted;
             }
             catch (Exception ex)
             {
                 this.PostMessage(string.Format("Something broke: {0}", ex.Message));
-                this.state = RenderState.States.Aborted;
+                this.state = States.Aborted;
             }
         }
         private Mashup DuplicateMashupDocumentForRender()
@@ -402,7 +402,7 @@ namespace MSR.CVE.BackMaker
         }
         private void EstimateOuterLoop()
         {
-            this.state = RenderState.States.Rendering;
+            this.state = States.Rendering;
             D.Say(0, "EstimateOuterLoop starts");
             this.estimateProgressLayerCount = 0;
             this.renderQueue.Clear();
@@ -419,12 +419,12 @@ namespace MSR.CVE.BackMaker
                     {
                         list2 = this.EstimateOneLayer(current, this.boundsList);
                     }
-                    catch (RenderState.RenderAborted)
+                    catch (RenderAborted)
                     {
                         flag = false;
                         break;
                     }
-                    catch (RenderState.RenderDisposed)
+                    catch (RenderDisposed)
                     {
                         throw;
                     }
@@ -473,9 +473,9 @@ namespace MSR.CVE.BackMaker
                 D.Say(0, "EstimateOuterLoop ends");
                 return;
             }
-            this.state = RenderState.States.Aborted;
+            this.state = States.Aborted;
             this.PostStatus("Estimation canceled.");
-            throw new RenderState.RenderAborted();
+            throw new RenderAborted();
         }
         private void SetupRenderOutput()
         {
@@ -488,7 +488,7 @@ namespace MSR.CVE.BackMaker
                     RenderToFileOptions renderToFileOptions = (RenderToFileOptions)renderToOptions;
                     if (renderToFileOptions.outputFolder == "")
                     {
-                        throw new RenderState.SetupFailed(true, "Please select an output folder.");
+                        throw new SetupFailed(true, "Please select an output folder.");
                     }
                     FileOutputMethod fileOutputMethod = new FileOutputMethod(renderToFileOptions.outputFolder);
                     this.PostStatus(string.Format("Creating {0}", renderToFileOptions.outputFolder));
@@ -498,7 +498,7 @@ namespace MSR.CVE.BackMaker
                     }
                     catch (Exception ex)
                     {
-                        throw new RenderState.SetupFailed(true, ex.Message);
+                        throw new SetupFailed(true, ex.Message);
                     }
                     baseMethod = fileOutputMethod;
                 }
@@ -516,7 +516,7 @@ namespace MSR.CVE.BackMaker
                     }
                     catch (Exception arg)
                     {
-                        throw new RenderState.SetupFailed(false, string.Format("Can't load credentials file {0}: {1}", renderToS3Options.s3credentialsFilename, arg));
+                        throw new SetupFailed(false, string.Format("Can't load credentials file {0}: {1}", renderToS3Options.s3credentialsFilename, arg));
                     }
                     S3Adaptor s3adaptor = new S3Adaptor(s3Credentials.accessKeyId, s3Credentials.secretAccessKey);
                     S3OutputMethod s3OutputMethod = new S3OutputMethod(s3adaptor, renderToS3Options.s3bucket, renderToS3Options.s3pathPrefix);
@@ -531,13 +531,13 @@ namespace MSR.CVE.BackMaker
                     this.renderOutput = baseMethod;
                 }
             }
-            catch (RenderState.SetupFailed setupFailed)
+            catch (SetupFailed setupFailed)
             {
                 this.PostMessage(setupFailed.ToString());
                 this.PostStatus(setupFailed.ToString());
                 MessageBox.Show(setupFailed.ToString(), "Render Setup Failed");
-                this.state = RenderState.States.Aborted;
-                throw new RenderState.RenderAborted();
+                this.state = States.Aborted;
+                throw new RenderAborted();
             }
         }
         private void CommitManifest()
@@ -566,8 +566,8 @@ namespace MSR.CVE.BackMaker
             }
             this.EstimateLayer_SetupUI(layer);
             int spillCountBefore = this.EstimateLayer_PrepareToSelectRenderingStrategy();
-            List<RenderState.SourceMapRenderInfo> sourceMapRenderInfosBackToFront = this.EstimateLayer_MakeSourceMapList(layer);
-            RenderState.ProposedTileSet proposedTileSet = this.EstimateLayer_MakeProposedTileSet(layer, boundsList, sourceMapRenderInfosBackToFront);
+            List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront = this.EstimateLayer_MakeSourceMapList(layer);
+            ProposedTileSet proposedTileSet = this.EstimateLayer_MakeProposedTileSet(layer, boundsList, sourceMapRenderInfosBackToFront);
             bool useStagedRendering = this.EstimateLayer_SelectRenderingStrategy(layer, spillCountBefore);
             List<CompositeTileUnit> list = new List<CompositeTileUnit>(proposedTileSet.Values);
             list.Sort();
@@ -588,14 +588,14 @@ namespace MSR.CVE.BackMaker
             this.mapTileSourceFactory.PurgeOpenSourceDocumentCache();
             return this.mapTileSourceFactory.GetOpenSourceDocumentCacheSpillCount();
         }
-        private List<RenderState.SourceMapRenderInfo> EstimateLayer_MakeSourceMapList(Layer layer)
+        private List<SourceMapRenderInfo> EstimateLayer_MakeSourceMapList(Layer layer)
         {
-            List<RenderState.SourceMapRenderInfo> list = new List<RenderState.SourceMapRenderInfo>();
+            List<SourceMapRenderInfo> list = new List<SourceMapRenderInfo>();
             foreach (SourceMap current in layer.GetBackToFront())
             {
                 this.CheckSignal();
                 this.PostStatus(string.Format("(opening {0})", current.displayName));
-                RenderState.SourceMapRenderInfo sourceMapRenderInfo = new RenderState.SourceMapRenderInfo();
+                SourceMapRenderInfo sourceMapRenderInfo = new SourceMapRenderInfo();
                 sourceMapRenderInfo.sourceMap = current;
                 if (!current.ReadyToLock())
                 {
@@ -619,12 +619,12 @@ namespace MSR.CVE.BackMaker
             }
             return list;
         }
-        private RenderState.ProposedTileSet EstimateLayer_MakeProposedTileSet(Layer layer, List<TileRectangle> boundsList, List<RenderState.SourceMapRenderInfo> sourceMapRenderInfosBackToFront)
+        private ProposedTileSet EstimateLayer_MakeProposedTileSet(Layer layer, List<TileRectangle> boundsList, List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront)
         {
             int num = 0;
             MapRectangle rect = layer.renderClip.rect;
-            RenderState.ProposedTileSet proposedTileSet = new RenderState.ProposedTileSet();
-            foreach (RenderState.SourceMapRenderInfo current in sourceMapRenderInfosBackToFront)
+            ProposedTileSet proposedTileSet = new ProposedTileSet();
+            foreach (SourceMapRenderInfo current in sourceMapRenderInfosBackToFront)
             {
                 this.AddCredit(current.warpedMapTileSource.GetRendererCredit());
                 current.warpedMapTileSource.GetOpenDocumentFuture(FutureFeatures.Cached).Realize("EstimateLayer_MakeProposedTileSet");
@@ -661,7 +661,7 @@ namespace MSR.CVE.BackMaker
                                 DialogResult dialogResult = MessageBox.Show(string.Format("Estimate exceeds {0} tiles; consider canceling the estimation and selecting lower max zoom levels.", 1000000), "That's a lot of tiles.", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
                                 if (dialogResult == DialogResult.Cancel)
                                 {
-                                    throw new RenderState.RenderAborted();
+                                    throw new RenderAborted();
                                 }
                             }
                             num++;
@@ -700,7 +700,7 @@ namespace MSR.CVE.BackMaker
             }
             return result;
         }
-        private List<RenderWorkUnit> EstimateLayer_CreateRenderList(Layer layer, List<RenderState.SourceMapRenderInfo> sourceMapRenderInfosBackToFront, bool useStagedRendering, List<CompositeTileUnit> compositeTileUnits)
+        private List<RenderWorkUnit> EstimateLayer_CreateRenderList(Layer layer, List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront, bool useStagedRendering, List<CompositeTileUnit> compositeTileUnits)
         {
             VETileSource vETileSource = null;
             if (layer.simulateTransparencyWithVEBackingLayer != null && layer.simulateTransparencyWithVEBackingLayer != "")
@@ -708,7 +708,7 @@ namespace MSR.CVE.BackMaker
                 vETileSource = new VETileSource(this.mapTileSourceFactory.GetCachePackage(), layer.simulateTransparencyWithVEBackingLayer);
             }
             this.PostStatus(string.Format("Organizing {0}", layer.displayName));
-            RenderState.LayerApplierMaker layerApplierMaker = new RenderState.LayerApplierMaker(this.mapTileSourceFactory.GetCachePackage());
+            LayerApplierMaker layerApplierMaker = new LayerApplierMaker(this.mapTileSourceFactory.GetCachePackage());
             List<RenderWorkUnit> list = new List<RenderWorkUnit>();
             int num = 0;
             foreach (CompositeTileUnit current in compositeTileUnits)
@@ -719,7 +719,7 @@ namespace MSR.CVE.BackMaker
                     current.AddSupplier(layerApplierMaker.MakeApplier(vETileSource, layer));
                 }
                 MapRectangle mapRectangle = CoordinateSystemUtilities.TileAddressToMapRectangle(this.mercatorCoordinateSystem, current.GetTileAddress());
-                foreach (RenderState.SourceMapRenderInfo current2 in sourceMapRenderInfosBackToFront)
+                foreach (SourceMapRenderInfo current2 in sourceMapRenderInfosBackToFront)
                 {
                     if (mapRectangle.intersects(current2.renderBoundsBoundingBox))
                     {
@@ -812,7 +812,7 @@ namespace MSR.CVE.BackMaker
             catch (Exception ex)
             {
                 this.PostMessage(string.Format("Cannot prepare output directory: {0}. Please correct the problem or select a different render output directory.", ex.Message));
-                throw new RenderState.RenderAborted();
+                throw new RenderAborted();
             }
         }
         private void PurgeDirectory(RenderOutputMethod baseOutputMethod, string dirName)
@@ -845,7 +845,7 @@ namespace MSR.CVE.BackMaker
                     {
                         this.CheckSignal();
                         string text = current2.GetLegendFilename(current3);
-                        text = RenderState.ForceValidFilename(text);
+                        text = ForceValidFilename(text);
                         this.PostStatus("Rendering legend " + text);
                         ImageRef imageRef;
                         try
@@ -883,14 +883,14 @@ namespace MSR.CVE.BackMaker
                     CrunchedLayer crunchedLayer = crunchedFile[current2];
                     if (current2.SomeSourceMapIsReadyToLock())
                     {
-                        this.RenderThumbnail(thumbnailOutput, crunchedLayer, RenderState.ForceValidFilename(string.Format("{0}_{1}.png", current2.displayName, current)), new CompositeTileSource(current2, this.mapTileSourceFactory), current);
+                        this.RenderThumbnail(thumbnailOutput, crunchedLayer, ForceValidFilename(string.Format("{0}_{1}.png", current2.displayName, current)), new CompositeTileSource(current2, this.mapTileSourceFactory), current);
                     }
                     foreach (SourceMap current3 in current2)
                     {
                         if (current3.ReadyToLock())
                         {
                             SourceMapRecord thumbnailCollection = crunchedLayer[current3];
-                            this.RenderThumbnail(thumbnailOutput, thumbnailCollection, RenderState.ForceValidFilename(string.Format("{0}_{1}_{2}.png", current2.displayName, current3.displayName, current)), this.mapTileSourceFactory.CreateDisplayableWarpedSource(current3), current);
+                            this.RenderThumbnail(thumbnailOutput, thumbnailCollection, ForceValidFilename(string.Format("{0}_{1}_{2}.png", current2.displayName, current3.displayName, current)), this.mapTileSourceFactory.CreateDisplayableWarpedSource(current3), current);
                         }
                     }
                 }
@@ -940,7 +940,7 @@ namespace MSR.CVE.BackMaker
             CrunchedFile result;
             try
             {
-                string sourceMashupFilename = this.mashupScratchCopy.GetRenderOptions().publishSourceData ? string.Format("{0}/{1}", RenderState.SourceDataDirName, this.mashupScratchCopy.GetPublishedFilename()) : null;
+                string sourceMashupFilename = this.mashupScratchCopy.GetRenderOptions().publishSourceData ? string.Format("{0}/{1}", SourceDataDirName, this.mashupScratchCopy.GetPublishedFilename()) : null;
                 crunchedFile = new CrunchedFile(this.mashupScratchCopy, this.rangeQueryData, this.renderOutput, sourceMashupFilename, this.boundsList, this.mapTileSourceFactory);
                 result = crunchedFile;
             }
@@ -983,7 +983,7 @@ namespace MSR.CVE.BackMaker
             if (this.mashupScratchCopy.GetRenderOptions().publishSourceData)
             {
                 this.PostStatus("Copying Source Data");
-                RenderOutputMethod renderOutputMethod = this.renderOutput.MakeChildMethod(RenderState.SourceDataDirName);
+                RenderOutputMethod renderOutputMethod = this.renderOutput.MakeChildMethod(SourceDataDirName);
                 Stream stream = renderOutputMethod.CreateFile(this.mashupScratchCopy.GetPublishedFilename(), "text/xml");
                 this.mashupScratchCopy.WriteXML(stream);
                 stream.Close();
@@ -1043,7 +1043,7 @@ namespace MSR.CVE.BackMaker
                 renderProgressBar.Minimum = 0;
                 renderProgressBar.Maximum = 1000;
                 renderProgressBar.Value = (int)(1000.0 * num8);
-                renderProgressBar.Enabled = (this.state == RenderState.States.Rendering);
+                renderProgressBar.Enabled = (this.state == States.Rendering);
                 return;
             }
             renderProgressBar.Minimum = 0;

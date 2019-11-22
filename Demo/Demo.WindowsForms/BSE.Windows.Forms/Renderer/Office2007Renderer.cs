@@ -45,7 +45,7 @@ namespace BSE.Windows.Forms
         /// Initialize a new instance of the Office2007Renderer class.
         /// </summary>
 		public Office2007Renderer()
-			: base(new BSE.Windows.Forms.Office2007BlueColorTable())
+			: base(new Office2007BlueColorTable())
 		{
 			this.ColorTable.UseSystemColors = false;
 		}
@@ -68,7 +68,7 @@ namespace BSE.Windows.Forms
         {
 			if (ColorTable.UseSystemColors == false)
 			{
-				ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+				ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
 				if (colorTable != null)
 				{
 					if ((e.Item.Owner.GetType() == typeof(MenuStrip)) && (e.Item.Selected == false) && e.Item.Pressed == false)
@@ -97,7 +97,7 @@ namespace BSE.Windows.Forms
         {
 			if (ColorTable.UseSystemColors == false)
 			{
-				ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+				ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
 				if (colorTable != null)
 				{
 					if ((e.ToolStrip is MenuStrip) && (e.Item.Selected == false) && e.Item.Pressed == false)

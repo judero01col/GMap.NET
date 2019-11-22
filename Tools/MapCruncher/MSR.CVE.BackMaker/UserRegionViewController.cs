@@ -15,9 +15,9 @@ namespace MSR.CVE.BackMaker
             public bool valid;
             public override bool Equals(object o2)
             {
-                if (o2 is UserRegionViewController.State)
+                if (o2 is State)
                 {
-                    UserRegionViewController.State state = (UserRegionViewController.State)o2;
+                    State state = (State)o2;
                     return this.center == state.center && this.size == state.size && this.valid == state.valid;
                 }
                 return false;
@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker
             {
                 return string.Format("{0} {1}", this.center, this.size);
             }
-            public State(UserRegionViewController.State state)
+            public State(State state)
             {
                 this.center = state.center;
                 this.size = new Size(state.size.Width, state.size.Height);
@@ -46,7 +46,7 @@ namespace MSR.CVE.BackMaker
             }
             public TracedScreenPoint vertexLocation;
             public GraphicsPath path;
-            public UserRegionViewController.ClickableThing.ClickedWhich clickedWhich;
+            public ClickedWhich clickedWhich;
             public int pointIndex;
         }
         private class VertexMouseAction : ViewerControl.MouseAction
@@ -87,8 +87,8 @@ namespace MSR.CVE.BackMaker
             {
                 this.controller = controller;
                 this.originalVertexIndex = originalVertexIndex;
-                UserRegionViewController.SegmentMouseAction.menuIncarnationCounter++;
-                this.menuIncarnation = UserRegionViewController.SegmentMouseAction.menuIncarnationCounter;
+                menuIncarnationCounter++;
+                this.menuIncarnation = menuIncarnationCounter;
                 this.clickedPoint = clickedPoint;
             }
             public void Dragged(Point diff)
@@ -119,8 +119,8 @@ namespace MSR.CVE.BackMaker
         private Brush vertexFillBrush;
         private Pen vertexStrokePen;
         private Brush segmentFillBrush;
-        private UserRegionViewController.State lastState;
-        private UserRegionViewController.ClickableThing[] clickableThings;
+        private State lastState;
+        private ClickableThing[] clickableThings;
         public UserRegionViewController(CoordinateSystemIfc csi, SVDisplayParams svdp, LatentRegionHolder latentRegionHolder, IDisplayableSource unwarpedMapTileSource)
         {
             this.csi = csi;
@@ -131,7 +131,7 @@ namespace MSR.CVE.BackMaker
             this.vertexStrokePen = new Pen(Color.DarkBlue, 1f);
             this.segmentFillBrush = new SolidBrush(Color.DarkBlue);
         }
-        private void UpdateState(UserRegionViewController.State state)
+        private void UpdateState(State state)
         {
             if (state.Equals(this.lastState))
             {
@@ -151,29 +151,29 @@ namespace MSR.CVE.BackMaker
             }
             list.ToArray();
             int count = list.Count;
-            List<UserRegionViewController.ClickableThing> list2 = new List<UserRegionViewController.ClickableThing>();
-            List<UserRegionViewController.ClickableThing> list3 = new List<UserRegionViewController.ClickableThing>();
+            List<ClickableThing> list2 = new List<ClickableThing>();
+            List<ClickableThing> list3 = new List<ClickableThing>();
             for (int j = 0; j < count; j++)
             {
-                UserRegionViewController.ClickableThing clickableThing = new UserRegionViewController.ClickableThing();
+                ClickableThing clickableThing = new ClickableThing();
                 list2.Add(clickableThing);
                 clickableThing.vertexLocation = list[j];
                 clickableThing.path = new GraphicsPath();
                 clickableThing.path.AddEllipse(list[j].pointf.X - 4f, list[j].pointf.Y - 4f, 8f, 8f);
-                clickableThing.clickedWhich = UserRegionViewController.ClickableThing.ClickedWhich.Vertex;
+                clickableThing.clickedWhich = ClickableThing.ClickedWhich.Vertex;
                 clickableThing.pointIndex = j;
-                UserRegionViewController.ClickableThing clickableThing2 = new UserRegionViewController.ClickableThing();
+                ClickableThing clickableThing2 = new ClickableThing();
                 list3.Add(clickableThing2);
                 clickableThing2.vertexLocation = list[j];
                 clickableThing2.path = new GraphicsPath();
                 clickableThing2.path.AddLine(list[j].pointf, list[(j + 1) % count].pointf);
                 clickableThing2.path.Widen(new Pen(Color.Black, 4f));
-                clickableThing2.clickedWhich = UserRegionViewController.ClickableThing.ClickedWhich.Segment;
+                clickableThing2.clickedWhich = ClickableThing.ClickedWhich.Segment;
                 clickableThing2.pointIndex = j;
             }
             list2.AddRange(list3);
             this.clickableThings = list2.ToArray();
-            this.lastState = new UserRegionViewController.State(state);
+            this.lastState = new State(state);
         }
         internal RenderRegion GetUserRegion()
         {
@@ -185,15 +185,15 @@ namespace MSR.CVE.BackMaker
             {
                 return;
             }
-            UserRegionViewController.State state;
+            State state;
             state.center = center;
             state.size = size;
             state.valid = true;
             this.UpdateState(state);
-            UserRegionViewController.ClickableThing[] array = this.clickableThings;
+            ClickableThing[] array = this.clickableThings;
             for (int i = 0; i < array.Length; i++)
             {
-                UserRegionViewController.ClickableThing clickableThing = array[i];
+                ClickableThing clickableThing = array[i];
                 e.Graphics.FillPath(this.segmentFillBrush, clickableThing.path);
             }
         }
@@ -206,14 +206,14 @@ namespace MSR.CVE.BackMaker
             int i = 0;
             while (i < this.clickableThings.GetLength(0))
             {
-                UserRegionViewController.ClickableThing clickableThing = this.clickableThings[i];
+                ClickableThing clickableThing = this.clickableThings[i];
                 if (clickableThing.vertexLocation.originalIndex >= 0 && clickableThing.path.IsVisible(e.Location))
                 {
-                    if (clickableThing.clickedWhich == UserRegionViewController.ClickableThing.ClickedWhich.Segment)
+                    if (clickableThing.clickedWhich == ClickableThing.ClickedWhich.Segment)
                     {
-                        return new UserRegionViewController.SegmentMouseAction(this, clickableThing.vertexLocation.originalIndex, e.Location);
+                        return new SegmentMouseAction(this, clickableThing.vertexLocation.originalIndex, e.Location);
                     }
-                    return new UserRegionViewController.VertexMouseAction(this, clickableThing.vertexLocation.originalIndex);
+                    return new VertexMouseAction(this, clickableThing.vertexLocation.originalIndex);
                 }
                 else
                 {

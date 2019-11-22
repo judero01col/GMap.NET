@@ -43,7 +43,7 @@ namespace MSR.CVE.BackMaker
         public Stream CreateFile(string relativePath, string contentType)
         {
             Stream baseStream = this.baseMethod.CreateFile(relativePath, contentType);
-            return new ManifestOutputMethod.CreateCompleteClosure(baseStream, this, this.GetPath(relativePath));
+            return new CreateCompleteClosure(baseStream, this, this.GetPath(relativePath));
         }
         public Stream ReadFile(string relativePath)
         {

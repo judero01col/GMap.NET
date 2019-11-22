@@ -32,7 +32,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             ((ClockCacheRecord)record).touched = true;
         }
-        internal override void Remove(CacheRecord record, CacheBase.RemoveExpectation removeExpectation)
+        internal override void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             base.Remove(record, removeExpectation);
         }
@@ -72,7 +72,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             }
                             else
                             {
-                                this.Remove(clockCacheRecord, CacheBase.RemoveExpectation.Unknown);
+                                this.Remove(clockCacheRecord, RemoveExpectation.Unknown);
                                 num2++;
                             }
                         }

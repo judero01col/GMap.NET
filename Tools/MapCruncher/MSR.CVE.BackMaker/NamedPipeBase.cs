@@ -72,13 +72,13 @@ namespace MSR.CVE.BackMaker
             int i = 0;
             while (i < len)
             {
-                if (!NamedPipeBase.ReadFile(this.pipeHandle.DangerousGetHandle(), array2, (uint)(len - i), array, 0u))
+                if (!ReadFile(this.pipeHandle.DangerousGetHandle(), array2, (uint)(len - i), array, 0u))
                 {
-                    if ((long)NamedPipeBase.GetLastError() == 109L)
+                    if ((long)GetLastError() == 109L)
                     {
                         throw new EndOfStreamException();
                     }
-                    throw new IOException(string.Format("ReadBuffer sees error {0}", NamedPipeBase.GetLastError()));
+                    throw new IOException(string.Format("ReadBuffer sees error {0}", GetLastError()));
                 }
                 else
                 {
@@ -94,15 +94,15 @@ namespace MSR.CVE.BackMaker
             byte[] array = new byte[4];
             for (int i = 0; i < len; i = 0)
             {
-                if (!NamedPipeBase.WriteFile(this.pipeHandle.DangerousGetHandle(), buffer, (uint)(len - i), array, 0u))
+                if (!WriteFile(this.pipeHandle.DangerousGetHandle(), buffer, (uint)(len - i), array, 0u))
                 {
-                    throw new IOException(string.Format("ReadBuffer sees error {0}", NamedPipeBase.GetLastError()));
+                    throw new IOException(string.Format("ReadBuffer sees error {0}", GetLastError()));
                 }
                 i += BitConverter.ToInt32(array, 0);
                 Array.Copy(buffer, i, buffer, 0, len - i);
                 len -= i;
             }
-            NamedPipeBase.FlushFileBuffers(this.pipeHandle.DangerousGetHandle());
+            FlushFileBuffers(this.pipeHandle.DangerousGetHandle());
         }
         protected object ReadMessage()
         {
@@ -116,7 +116,7 @@ namespace MSR.CVE.BackMaker
             this.SendMessage(request);
             return this.ReadMessage();
         }
-        public void RunServer(NamedPipeBase.ServerHandler serverHandler)
+        public void RunServer(ServerHandler serverHandler)
         {
             bool flag = true;
             while (flag)

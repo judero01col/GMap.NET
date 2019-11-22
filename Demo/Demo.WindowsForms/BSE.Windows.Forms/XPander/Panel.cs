@@ -396,7 +396,7 @@ namespace BSE.Windows.Forms
 
                switch(panelStyle)
                {
-                  case BSE.Windows.Forms.PanelStyle.Default:
+                  case PanelStyle.Default:
                   case PanelStyle.Office2007:
                   DrawStyleDefault(graphics,
               captionRectangle,
@@ -778,7 +778,7 @@ namespace BSE.Windows.Forms
    /// <summary>
    /// Extends the design mode behavior of a Panel control that supports nested controls.
    /// </summary>
-   internal class PanelDesigner : System.Windows.Forms.Design.ParentControlDesigner
+   internal class PanelDesigner : ParentControlDesigner
    {
       #region FieldsPrivate
       #endregion
@@ -794,7 +794,7 @@ namespace BSE.Windows.Forms
       /// Initializes the designer with the specified component.
       /// </summary>
       /// <param name="component"></param>
-      public override void Initialize(System.ComponentModel.IComponent component)
+      public override void Initialize(IComponent component)
       {
          base.Initialize(component);
       }
@@ -947,7 +947,7 @@ namespace BSE.Windows.Forms
       /// Initializes a new instance of the PanelDesignerActionList class.
       /// </summary>
       /// <param name="component">A component related to the DesignerActionList.</param>
-      public PanelDesignerActionList(System.ComponentModel.IComponent component)
+      public PanelDesignerActionList(IComponent component)
          : base(component)
       {
          // Automatically display smart tag panel when
@@ -1066,8 +1066,8 @@ namespace BSE.Windows.Forms
       private void SetProperty(string propertyName, object value)
       {
          // Get property
-         System.ComponentModel.PropertyDescriptor property
-				= System.ComponentModel.TypeDescriptor.GetProperties(this.Panel)[propertyName];
+         PropertyDescriptor property
+				= TypeDescriptor.GetProperties(this.Panel)[propertyName];
          // Set property value
          property.SetValue(this.Panel, value);
       }

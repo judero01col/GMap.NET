@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private long lastStableFreshCount;
         private EventWaitHandle plowCacheEvent = new CountedEventWaitHandle(false, EventResetMode.AutoReset, "DiskCache.plowCacheEvent");
         private long delayedIncrementFreshCount;
-        private Queue<DiskCache.DeferredWriteRecord> deferredWriteQueue = new Queue<DiskCache.DeferredWriteRecord>();
+        private Queue<DeferredWriteRecord> deferredWriteQueue = new Queue<DeferredWriteRecord>();
         private EventWaitHandle writeQueueNonEmptyEvent = new CountedEventWaitHandle(false, EventResetMode.AutoReset, "DiskCache.WriteQueueNonemptyEvent");
         private ResourceCounter resourceCounter;
         public DiskCache()
@@ -203,7 +203,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                DiskCache.DeferredWriteRecord item = new DiskCache.DeferredWriteRecord(result, freshPath, debugOriginInfo);
+                DeferredWriteRecord item = new DeferredWriteRecord(result, freshPath, debugOriginInfo);
                 this.deferredWriteQueue.Enqueue(item);
                 this.writeQueueNonEmptyEvent.Set();
             }
@@ -212,7 +212,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
-        private void WriteRecord(DiskCache.DeferredWriteRecord record)
+        private void WriteRecord(DeferredWriteRecord record)
         {
             try
             {
@@ -245,7 +245,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 int num = 0;
                 while (!this.disposed)
                 {
-                    DiskCache.DeferredWriteRecord deferredWriteRecord = null;
+                    DeferredWriteRecord deferredWriteRecord = null;
                     Monitor.Enter(this);
                     try
                     {

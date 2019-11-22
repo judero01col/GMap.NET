@@ -40,7 +40,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return;
             }
             GDIBigLockedImage image = ((ImageRef)present).image;
-            string text = path + "." + PresentDiskDispatcher.outputExtension(image.RawFormat);
+            string text = path + "." + outputExtension(image.RawFormat);
             if (File.Exists(text))
             {
                 throw new WriteObjectFailedException(text, "file exists", null);
@@ -61,20 +61,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             StreamWriter streamWriter = new StreamWriter(stream);
             streamWriter.Write(text);
             streamWriter.Flush();
-            length = PresentDiskDispatcher.FileLength(text) + stream.Length;
+            length = FileLength(text) + stream.Length;
             stream.Close();
         }
         public Present ReadObject(string path, out long length)
         {
-            PresentDiskDispatcher.AssociatedFileType associatedFileType;
+            AssociatedFileType associatedFileType;
             string text;
             this.ReadAssociatedFileName(path, out associatedFileType, out text, out length);
-            D.Assert(associatedFileType == PresentDiskDispatcher.AssociatedFileType.Image);
-            length += PresentDiskDispatcher.FileLength(text);
+            D.Assert(associatedFileType == AssociatedFileType.Image);
+            length += FileLength(text);
             GDIBigLockedImage image = GDIBigLockedImage.FromFile(text);
             return new ImageRef(new ImageRefCounted(image));
         }
-        private void ReadAssociatedFileName(string cacheControlFilePath, out PresentDiskDispatcher.AssociatedFileType associatedFileType, out string associatedFileName, out long cacheControlFileLength)
+        private void ReadAssociatedFileName(string cacheControlFilePath, out AssociatedFileType associatedFileType, out string associatedFileName, out long cacheControlFileLength)
         {
             Stream stream = new FileStream(cacheControlFilePath, FileMode.Open, FileAccess.Read);
             using (stream)
@@ -88,9 +88,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     {
                         throw new IOException("No type field at beginning of file.");
                     }
-                    associatedFileType = (PresentDiskDispatcher.AssociatedFileType)array[0];
-                    PresentDiskDispatcher.AssociatedFileType associatedFileType2 = associatedFileType;
-                    if (associatedFileType2 != PresentDiskDispatcher.AssociatedFileType.Image)
+                    associatedFileType = (AssociatedFileType)array[0];
+                    AssociatedFileType associatedFileType2 = associatedFileType;
+                    if (associatedFileType2 != AssociatedFileType.Image)
                     {
                         throw new IOException("Unrecognized type field.");
                     }
@@ -108,20 +108,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public long CacheFileLength(string cacheControlFilePath)
         {
-            PresentDiskDispatcher.AssociatedFileType associatedFileType;
+            AssociatedFileType associatedFileType;
             string text;
             long num;
             this.ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);
             long num2 = 0L;
             if (text != null)
             {
-                num2 = PresentDiskDispatcher.FileLength(text);
+                num2 = FileLength(text);
             }
             return num + num2;
         }
         public void DeleteCacheFile(string cacheControlFilePath)
         {
-            PresentDiskDispatcher.AssociatedFileType associatedFileType;
+            AssociatedFileType associatedFileType;
             string text;
             long num;
             this.ReadAssociatedFileName(cacheControlFilePath, out associatedFileType, out text, out num);

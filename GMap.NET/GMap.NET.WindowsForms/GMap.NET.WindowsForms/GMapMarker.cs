@@ -228,14 +228,14 @@ namespace GMap.NET.WindowsForms
         /// <summary>
         ///     if true, marker will be rendered even if it's outside current view
         /// </summary>
-        public bool DisableRegionCheck = false;
+        public bool DisableRegionCheck;
 
         /// <summary>
         ///     can maker receive input
         /// </summary>
         public bool IsHitTestVisible = true;
 
-        private bool isMouseOver = false;
+        private bool isMouseOver;
 
         /// <summary>
         ///     is mouse over marker
@@ -328,7 +328,7 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed = false;
+        bool disposed;
 
         public virtual void Dispose()
         {

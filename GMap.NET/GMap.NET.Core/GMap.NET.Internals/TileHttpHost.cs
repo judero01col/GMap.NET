@@ -11,7 +11,7 @@ namespace GMap.NET.Internals
 {
     internal class TileHttpHost
     {
-        volatile bool listen = false;
+        volatile bool listen;
         TcpListener server;
         int port;
 

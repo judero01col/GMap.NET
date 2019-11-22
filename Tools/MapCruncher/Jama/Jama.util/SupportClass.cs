@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -151,7 +151,7 @@ public class SupportClass
                 }
             }
         }
-        private TextNumberFormat(SupportClass.TextNumberFormat.formatTypes theType, int digits)
+        private TextNumberFormat(formatTypes theType, int digits)
         {
             this.numberFormat = NumberFormatInfo.CurrentInfo;
             this.numberFormatType = (int)theType;
@@ -162,7 +162,7 @@ public class SupportClass
             this.maxFractionDigits = 3;
             this.minFractionDigits = 0;
         }
-        private TextNumberFormat(SupportClass.TextNumberFormat.formatTypes theType, CultureInfo cultureNumberFormat, int digits)
+        private TextNumberFormat(formatTypes theType, CultureInfo cultureNumberFormat, int digits)
         {
             this.numberFormat = cultureNumberFormat.NumberFormat;
             this.numberFormatType = (int)theType;
@@ -173,32 +173,32 @@ public class SupportClass
             this.maxFractionDigits = 3;
             this.minFractionDigits = 0;
         }
-        public static SupportClass.TextNumberFormat getTextNumberInstance()
+        public static TextNumberFormat getTextNumberInstance()
         {
-            return new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Number, 3);
+            return new TextNumberFormat(formatTypes.Number, 3);
         }
-        public static SupportClass.TextNumberFormat getTextNumberCurrencyInstance()
+        public static TextNumberFormat getTextNumberCurrencyInstance()
         {
-            SupportClass.TextNumberFormat textNumberFormat = new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Currency, 3);
+            TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Currency, 3);
             return textNumberFormat.setToCurrencyNumberFormatDefaults(textNumberFormat);
         }
-        public static SupportClass.TextNumberFormat getTextNumberPercentInstance()
+        public static TextNumberFormat getTextNumberPercentInstance()
         {
-            SupportClass.TextNumberFormat textNumberFormat = new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Percent, 3);
+            TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Percent, 3);
             return textNumberFormat.setToPercentNumberFormatDefaults(textNumberFormat);
         }
-        public static SupportClass.TextNumberFormat getTextNumberInstance(CultureInfo culture)
+        public static TextNumberFormat getTextNumberInstance(CultureInfo culture)
         {
-            return new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Number, culture, 3);
+            return new TextNumberFormat(formatTypes.Number, culture, 3);
         }
-        public static SupportClass.TextNumberFormat getTextNumberCurrencyInstance(CultureInfo culture)
+        public static TextNumberFormat getTextNumberCurrencyInstance(CultureInfo culture)
         {
-            SupportClass.TextNumberFormat textNumberFormat = new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Currency, culture, 3);
+            TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Currency, culture, 3);
             return textNumberFormat.setToCurrencyNumberFormatDefaults(textNumberFormat);
         }
-        public static SupportClass.TextNumberFormat getTextNumberPercentInstance(CultureInfo culture)
+        public static TextNumberFormat getTextNumberPercentInstance(CultureInfo culture)
         {
-            SupportClass.TextNumberFormat textNumberFormat = new SupportClass.TextNumberFormat(SupportClass.TextNumberFormat.formatTypes.Percent, culture, 3);
+            TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Percent, culture, 3);
             return textNumberFormat.setToPercentNumberFormatDefaults(textNumberFormat);
         }
         public object Clone()
@@ -214,7 +214,7 @@ public class SupportClass
             }
             else
             {
-                SupportClass.TextNumberFormat textNumberFormat = (SupportClass.TextNumberFormat)obj;
+                TextNumberFormat textNumberFormat = (TextNumberFormat)obj;
                 result = (this.numberFormat == textNumberFormat.numberFormat && this.numberFormatType == textNumberFormat.numberFormatType && this.groupingActivated == textNumberFormat.groupingActivated && this.separator == textNumberFormat.separator && this.maxIntDigits == textNumberFormat.maxIntDigits && this.minIntDigits == textNumberFormat.minIntDigits && this.maxFractionDigits == textNumberFormat.maxFractionDigits && this.minFractionDigits == textNumberFormat.minFractionDigits);
             }
             return result;
@@ -331,13 +331,13 @@ public class SupportClass
             }
             return result;
         }
-        private SupportClass.TextNumberFormat setToCurrencyNumberFormatDefaults(SupportClass.TextNumberFormat format)
+        private TextNumberFormat setToCurrencyNumberFormatDefaults(TextNumberFormat format)
         {
             format.maxFractionDigits = 2;
             format.minFractionDigits = 2;
             return format;
         }
-        private SupportClass.TextNumberFormat setToPercentNumberFormatDefaults(SupportClass.TextNumberFormat format)
+        private TextNumberFormat setToPercentNumberFormatDefaults(TextNumberFormat format)
         {
             format.maxFractionDigits = 0;
             format.minFractionDigits = 0;
@@ -483,15 +483,15 @@ public class SupportClass
         public const int TT_NUMBER = -2;
         public const int TT_WORD = -3;
         private sbyte[] attribute = new sbyte[256];
-        private bool eolIsSignificant = false;
-        private bool slashStarComments = false;
-        private bool slashSlashComments = false;
-        private bool lowerCaseMode = false;
-        private bool pushedback = false;
+        private bool eolIsSignificant;
+        private bool slashStarComments;
+        private bool slashSlashComments;
+        private bool lowerCaseMode;
+        private bool pushedback;
         private int lineno = 1;
-        private SupportClass.BackReader inReader;
-        private SupportClass.BackStringReader inStringReader;
-        private SupportClass.BackInputStream inStream;
+        private BackReader inReader;
+        private BackStringReader inStringReader;
+        private BackInputStream inStream;
         private StringBuilder buf;
         public double nval;
         public string sval;
@@ -569,17 +569,17 @@ public class SupportClass
                 text += (char)num;
             }
             reader.Close();
-            this.inStringReader = new SupportClass.BackStringReader(text);
+            this.inStringReader = new BackStringReader(text);
             this.init();
         }
         public StreamTokenizerSupport(StreamReader reader)
         {
-            this.inReader = new SupportClass.BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream, 2, reader.CurrentEncoding);
+            this.inReader = new BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream, 2, reader.CurrentEncoding);
             this.init();
         }
         public StreamTokenizerSupport(Stream stream)
         {
-            this.inStream = new SupportClass.BackInputStream(new BufferedStream(stream), 2);
+            this.inStream = new BackInputStream(new BufferedStream(stream), 2);
             this.init();
         }
         public virtual void CommentChar(int ch)
@@ -1356,7 +1356,7 @@ public class SupportClass
         public virtual int Read(sbyte[] array, int index, int count)
         {
             int num = count + index;
-            byte[] array2 = SupportClass.ToByteArray(array);
+            byte[] array2 = ToByteArray(array);
             int num2 = 0;
             while (this.position < this.buffer.Length && index < num)
             {

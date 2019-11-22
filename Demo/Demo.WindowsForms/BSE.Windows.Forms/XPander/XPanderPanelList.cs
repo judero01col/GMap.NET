@@ -65,10 +65,10 @@ namespace BSE.Windows.Forms
       private bool m_bShowCloseIcon;
       private int m_iCaptionHeight;
       private LinearGradientMode m_linearGradientMode;
-      private System.Drawing.Color m_colorGradientBackground;
+      private Color m_colorGradientBackground;
       private CaptionStyle m_captionStyle;
-      private BSE.Windows.Forms.PanelStyle m_ePanelStyle;
-      private BSE.Windows.Forms.ColorScheme m_eColorScheme;
+      private PanelStyle m_ePanelStyle;
+      private ColorScheme m_eColorScheme;
       private XPanderPanelCollection m_xpanderPanels;
       private PanelColors m_panelColors;
 
@@ -110,9 +110,9 @@ namespace BSE.Windows.Forms
       /// Specifies the style of the panels in this xpanderpanellist.
       /// </summary>
       [Description("Specifies the style of the xpanderpanels in this xpanderpanellist."),
-      DefaultValue(BSE.Windows.Forms.PanelStyle.Default),
+      DefaultValue(PanelStyle.Default),
       Category("Appearance")]
-      public BSE.Windows.Forms.PanelStyle PanelStyle
+      public PanelStyle PanelStyle
       {
          get
          {
@@ -145,7 +145,7 @@ namespace BSE.Windows.Forms
       /// Specifies the colorscheme of the xpanderpanels in the xpanderpanellist
       /// </summary>
       [Description("The colorscheme of the xpanderpanels in the xpanderpanellist")]
-      [DefaultValue(BSE.Windows.Forms.ColorScheme.Professional)]
+      [DefaultValue(ColorScheme.Professional)]
       [Category("Appearance")]
       public ColorScheme ColorScheme
       {
@@ -300,7 +300,7 @@ namespace BSE.Windows.Forms
       [Description("Gradientcolor background in this xpanderpanellist"),
         DefaultValue(false),
         Category("Appearance")]
-      public System.Drawing.Color GradientBackground
+      public Color GradientBackground
       {
          get
          {
@@ -392,7 +392,7 @@ namespace BSE.Windows.Forms
          {
             throw new ArgumentNullException("panel",
                string.Format(System.Globalization.CultureInfo.InvariantCulture,
-               Demo.WindowsForms.Properties.Resources.IDS_ArgumentException,
+               Resources.IDS_ArgumentException,
                "panel"));
          }
 
@@ -440,10 +440,10 @@ namespace BSE.Windows.Forms
       /// Raises the ControlAdded event.
       /// </summary>
       /// <param name="e">A ControlEventArgs that contains the event data.</param>
-      protected override void OnControlAdded(System.Windows.Forms.ControlEventArgs e)
+      protected override void OnControlAdded(ControlEventArgs e)
       {
          base.OnControlAdded(e);
-         BSE.Windows.Forms.XPanderPanel xpanderPanel = e.Control as BSE.Windows.Forms.XPanderPanel;
+         XPanderPanel xpanderPanel = e.Control as XPanderPanel;
          if(xpanderPanel != null)
          {
             if(xpanderPanel.Expand == true)
@@ -458,8 +458,8 @@ namespace BSE.Windows.Forms
                }
             }
             xpanderPanel.Parent = this;
-            xpanderPanel.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+            xpanderPanel.Anchor = ((AnchorStyles) (((AnchorStyles.Top | AnchorStyles.Left)
+						| AnchorStyles.Right)));
             xpanderPanel.Left = this.Padding.Left;
             xpanderPanel.Width = this.ClientRectangle.Width	- this.Padding.Left - this.Padding.Right;
             xpanderPanel.PanelStyle = this.PanelStyle;
@@ -486,12 +486,12 @@ namespace BSE.Windows.Forms
       /// Raises the ControlRemoved event.
       /// </summary>
       /// <param name="e">A ControlEventArgs that contains the event data.</param>
-      protected override void OnControlRemoved(System.Windows.Forms.ControlEventArgs e)
+      protected override void OnControlRemoved(ControlEventArgs e)
       {
          base.OnControlRemoved(e);
 
-         BSE.Windows.Forms.XPanderPanel xpanderPanel =
-				e.Control as BSE.Windows.Forms.XPanderPanel;
+         XPanderPanel xpanderPanel =
+				e.Control as XPanderPanel;
 
          if(xpanderPanel != null)
          {
@@ -504,7 +504,7 @@ namespace BSE.Windows.Forms
       /// Raises the Resize event.
       /// </summary>
       /// <param name="e">An EventArgs that contains the event data.</param>
-      protected override void OnResize(System.EventArgs e)
+      protected override void OnResize(EventArgs e)
       {
          base.OnResize(e);
          int iXPanderPanelCaptionHeight = 0;
@@ -539,7 +539,7 @@ namespace BSE.Windows.Forms
       protected virtual void OnPanelStyleChanged(object sender, PanelStyleChangeEventArgs e)
       {
          PanelStyle panelStyle = e.PanelStyle;
-         this.Padding = new System.Windows.Forms.Padding(0);
+         this.Padding = new Padding(0);
 
          foreach(XPanderPanel xpanderPanel in this.XPanderPanels)
          {
@@ -640,7 +640,7 @@ namespace BSE.Windows.Forms
 
       private void XPanderPanelExpandClick(object sender, EventArgs e)
       {
-         BSE.Windows.Forms.XPanderPanel xpanderPanel = sender as BSE.Windows.Forms.XPanderPanel;
+         XPanderPanel xpanderPanel = sender as XPanderPanel;
          if(xpanderPanel != null)
          {
             this.Expand(xpanderPanel);
@@ -649,7 +649,7 @@ namespace BSE.Windows.Forms
 
       private void XPanderPanelCloseClick(object sender, EventArgs e)
       {
-         BSE.Windows.Forms.XPanderPanel xpanderPanel = sender as BSE.Windows.Forms.XPanderPanel;
+         XPanderPanel xpanderPanel = sender as XPanderPanel;
          if(xpanderPanel != null)
          {
             this.Controls.Remove(xpanderPanel);
@@ -723,7 +723,7 @@ namespace BSE.Windows.Forms
       /// Initializes the designer with the specified component.
       /// </summary>
       /// <param name="component">The IComponent to associate with the designer.</param>
-      public override void Initialize(System.ComponentModel.IComponent component)
+      public override void Initialize(IComponent component)
       {
          base.Initialize(component);
          this.m_xpanderPanelList = (XPanderPanelList) this.Control;
@@ -903,7 +903,7 @@ namespace BSE.Windows.Forms
       /// Initializes a new instance of the XPanderPanelListDesignerActionList class.
       /// </summary>
       /// <param name="component">A component related to the DesignerActionList.</param>
-      public XPanderPanelListDesignerActionList(System.ComponentModel.IComponent component)
+      public XPanderPanelListDesignerActionList(IComponent component)
          : base(component)
       {
          // Automatically display smart tag panel when
@@ -1021,8 +1021,8 @@ namespace BSE.Windows.Forms
       private void SetProperty(string propertyName, object value)
       {
          // Get property
-         System.ComponentModel.PropertyDescriptor property
-                = System.ComponentModel.TypeDescriptor.GetProperties(this.XPanderPanelList)[propertyName];
+         PropertyDescriptor property
+                = TypeDescriptor.GetProperties(this.XPanderPanelList)[propertyName];
          // Set property value
          property.SetValue(this.XPanderPanelList, value);
       }
@@ -1392,8 +1392,8 @@ namespace BSE.Windows.Forms
               *but this time let it to do the job... 
               */
 
-         BSE.Windows.Forms.XPanderPanel xpanderPanel =
-                (BSE.Windows.Forms.XPanderPanel) base.CreateInstance(ItemType);
+         XPanderPanel xpanderPanel =
+                (XPanderPanel) base.CreateInstance(ItemType);
 
          if(this.Context.Instance != null)
          {

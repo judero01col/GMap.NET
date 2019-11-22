@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
                     break;
                 }
                 this.paintee.Invalidate();
-                PaintPrompter.UpdateDelegate method = new PaintPrompter.UpdateDelegate(this.paintee.Update);
+                UpdateDelegate method = new UpdateDelegate(this.paintee.Update);
                 this.paintee.Invoke(method);
             }
         }

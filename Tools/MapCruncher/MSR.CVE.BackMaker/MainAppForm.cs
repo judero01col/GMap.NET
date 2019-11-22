@@ -46,7 +46,7 @@ namespace MSR.CVE.BackMaker
                     this.addedToLayer.Remove(this.newSourceMap);
                     this.layerControls.CancelSourceMap(this.addedToLayer, this.newSourceMap);
                 }
-                MainAppForm.UndoAddSourceMap.CloseViewDelegate method = new MainAppForm.UndoAddSourceMap.CloseViewDelegate(this.mainAppForm.CloseView);
+                CloseViewDelegate method = new CloseViewDelegate(this.mainAppForm.CloseView);
                 this.mainAppForm.Invoke(method);
             }
         }
@@ -75,7 +75,7 @@ namespace MSR.CVE.BackMaker
         private SourceMapOverviewWindow sourceMapOverviewWindow;
         private string startDocumentPath;
         private bool renderOnLaunch;
-        private MainAppForm.Opening opening = new MainAppForm.Opening();
+        private Opening opening = new Opening();
         private int paintFrozen;
         private IContainer components;
         private MenuStrip menuStrip1;
@@ -156,7 +156,7 @@ namespace MSR.CVE.BackMaker
             {
                 if (value && base.IsHandleCreated && base.Visible && this.paintFrozen++ == 0)
                 {
-                    MainAppForm.SendMessage(base.Handle, 11, 0, 0);
+                    SendMessage(base.Handle, 11, 0, 0);
                 }
                 if (!value)
                 {
@@ -166,7 +166,7 @@ namespace MSR.CVE.BackMaker
                     }
                     if (--this.paintFrozen == 0)
                     {
-                        MainAppForm.SendMessage(base.Handle, 11, 1, 0);
+                        SendMessage(base.Handle, 11, 1, 0);
                         base.Invalidate(true);
                     }
                 }
@@ -248,7 +248,7 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                MainAppForm.DKCUI method = new MainAppForm.DKCUI(this.debugKnobChanged_UI);
+                DKCUI method = new DKCUI(this.debugKnobChanged_UI);
                 base.Invoke(method, new object[]
                 {
                     enabled
@@ -272,7 +272,7 @@ namespace MSR.CVE.BackMaker
         {
             if (!this.alreadyExiting)
             {
-                MainAppForm.ExitDelegate method = new MainAppForm.ExitDelegate(this.LaunchedRenderComplete_ExitApplication);
+                ExitDelegate method = new ExitDelegate(this.LaunchedRenderComplete_ExitApplication);
                 int num = (failure == null) ? 0 : 255;
                 base.Invoke(method, new object[]
                 {
@@ -567,7 +567,7 @@ namespace MSR.CVE.BackMaker
         }
         private void ReadyToLockChangedHandler()
         {
-            MainAppForm.ReadyToLockChangedDelegate method = new MainAppForm.ReadyToLockChangedDelegate(this.ReadyToLockChanged);
+            ReadyToLockChangedDelegate method = new ReadyToLockChangedDelegate(this.ReadyToLockChanged);
             base.Invoke(method);
         }
         private void ReadyToLockChanged()
@@ -778,7 +778,7 @@ namespace MSR.CVE.BackMaker
         {
             try
             {
-                MainAppForm.Opening obj;
+                Opening obj;
                 Monitor.Enter(obj = this.opening);
                 try
                 {
@@ -802,7 +802,7 @@ namespace MSR.CVE.BackMaker
             }
             finally
             {
-                MainAppForm.Opening obj2;
+                Opening obj2;
                 Monitor.Enter(obj2 = this.opening);
                 try
                 {
@@ -870,14 +870,14 @@ namespace MSR.CVE.BackMaker
             {
                 return;
             }
-            MainAppForm.UndoAddSourceMap undoAddSourceMap = new MainAppForm.UndoAddSourceMap(openFileDialog.FileName, null, null, null, this);
+            UndoAddSourceMap undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName, null, null, null, this);
             try
             {
                 FileStream fileStream = File.Open(openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fileStream.Close();
                 SourceMap sourceMap = new SourceMap(new FutureDocumentFromFilesystem(openFileDialog.FileName, 0), new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext), this.currentMashup.dirtyEvent, this.currentMashup.readyToLockEvent);
                 Layer addedToLayer = this.layerControls.AddSourceMap(sourceMap);
-                undoAddSourceMap = new MainAppForm.UndoAddSourceMap(openFileDialog.FileName, sourceMap, addedToLayer, this.layerControls, this);
+                undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName, sourceMap, addedToLayer, this.layerControls, this);
                 new InsaneSourceMapRemover(sourceMap, this.mapTileSourceFactory, new InsaneSourceMapRemover.UndoAdddSourceMapDelegate(undoAddSourceMap.Undo));
                 this.OpenSourceMap(sourceMap);
             }
@@ -1118,75 +1118,75 @@ namespace MSR.CVE.BackMaker
         }
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newMashupMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openMashupMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveMashupMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveMashupAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeMashupMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.addSourceMapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addSourceMapFromUriMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.viewRenderedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapOptionsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.VEroadView = new System.Windows.Forms.ToolStripMenuItem();
-            this.VEaerialView = new System.Windows.Forms.ToolStripMenuItem();
-            this.VEhybridView = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.showCrosshairsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showPushPinsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDMSMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.AddRegLayerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showSourceMapOverviewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.snapFeaturesToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.restoreSnapViewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.recordSnapViewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.restoreSnapZoomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.recordSnapZoomMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugModeToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.enableDebugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMapCruncherTutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.aboutMSRBackMakerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTileNamesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showSourceCropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTileBoundariesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDiagnosticsUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.smViewerControl = new MSR.CVE.BackMaker.ViewerControl();
-            this.veViewerControl = new MSR.CVE.BackMaker.ViewerControl();
-            this.controlSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.RenderLaunchButton = new System.Windows.Forms.Button();
-            this.controlsSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.layerControls = new MSR.CVE.BackMaker.LayerControls();
-            this.synergyExplorer = new System.Windows.Forms.TabControl();
-            this.correspondencesTab = new System.Windows.Forms.TabPage();
-            this.registrationControls = new MSR.CVE.BackMaker.registrationControls();
-            this.transparencyTab = new System.Windows.Forms.TabPage();
-            this.transparencyPanel = new MSR.CVE.BackMaker.TransparencyPanel();
-            this.sourceInfoTab = new System.Windows.Forms.TabPage();
-            this.sourceMapInfoPanel = new MSR.CVE.BackMaker.SourceMapInfoPanel();
-            this.legendTabPage = new System.Windows.Forms.TabPage();
-            this.legendOptionsPanel1 = new MSR.CVE.BackMaker.LegendOptionsPanel();
+            this.menuStrip1 = new MenuStrip();
+            this.fileToolStripMenuItem = new ToolStripMenuItem();
+            this.newMashupMenuItem = new ToolStripMenuItem();
+            this.openMashupMenuItem = new ToolStripMenuItem();
+            this.saveMashupMenuItem = new ToolStripMenuItem();
+            this.saveMashupAsMenuItem = new ToolStripMenuItem();
+            this.closeMashupMenuItem = new ToolStripMenuItem();
+            this.toolStripSeparator1 = new ToolStripSeparator();
+            this.addSourceMapMenuItem = new ToolStripMenuItem();
+            this.addSourceMapFromUriMenuItem = new ToolStripMenuItem();
+            this.toolStripSeparator4 = new ToolStripSeparator();
+            this.viewRenderedMenuItem = new ToolStripMenuItem();
+            this.toolStripSeparator2 = new ToolStripSeparator();
+            this.exitToolStripMenuItem = new ToolStripMenuItem();
+            this.mapOptionsToolStripMenuItem2 = new ToolStripMenuItem();
+            this.VEroadView = new ToolStripMenuItem();
+            this.VEaerialView = new ToolStripMenuItem();
+            this.VEhybridView = new ToolStripMenuItem();
+            this.toolStripSeparator3 = new ToolStripSeparator();
+            this.showCrosshairsMenuItem = new ToolStripMenuItem();
+            this.showPushPinsMenuItem = new ToolStripMenuItem();
+            this.showDMSMenuItem = new ToolStripMenuItem();
+            this.toolStripSeparator8 = new ToolStripSeparator();
+            this.AddRegLayerMenuItem = new ToolStripMenuItem();
+            this.showSourceMapOverviewMenuItem = new ToolStripMenuItem();
+            this.snapFeaturesToolStripSeparator = new ToolStripSeparator();
+            this.restoreSnapViewMenuItem = new ToolStripMenuItem();
+            this.recordSnapViewMenuItem = new ToolStripMenuItem();
+            this.restoreSnapZoomMenuItem = new ToolStripMenuItem();
+            this.recordSnapZoomMenuItem = new ToolStripMenuItem();
+            this.debugModeToolStripSeparator = new ToolStripSeparator();
+            this.enableDebugModeToolStripMenuItem = new ToolStripMenuItem();
+            this.helpToolStripMenuItem = new ToolStripMenuItem();
+            this.viewMapCruncherTutorialToolStripMenuItem = new ToolStripMenuItem();
+            this.toolStripSeparator7 = new ToolStripSeparator();
+            this.aboutMSRBackMakerToolStripMenuItem = new ToolStripMenuItem();
+            this.debugToolStripMenuItem = new ToolStripMenuItem();
+            this.showTileNamesMenuItem = new ToolStripMenuItem();
+            this.showSourceCropToolStripMenuItem = new ToolStripMenuItem();
+            this.showTileBoundariesMenuItem = new ToolStripMenuItem();
+            this.showDiagnosticsUIToolStripMenuItem = new ToolStripMenuItem();
+            this.mapSplitContainer = new SplitContainer();
+            this.smViewerControl = new ViewerControl();
+            this.veViewerControl = new ViewerControl();
+            this.controlSplitContainer = new SplitContainer();
+            this.panel1 = new Panel();
+            this.RenderLaunchButton = new Button();
+            this.controlsSplitContainer = new SplitContainer();
+            this.layerControls = new LayerControls();
+            this.synergyExplorer = new TabControl();
+            this.correspondencesTab = new TabPage();
+            this.registrationControls = new registrationControls();
+            this.transparencyTab = new TabPage();
+            this.transparencyPanel = new TransparencyPanel();
+            this.sourceInfoTab = new TabPage();
+            this.sourceMapInfoPanel = new SourceMapInfoPanel();
+            this.legendTabPage = new TabPage();
+            this.legendOptionsPanel1 = new LegendOptionsPanel();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapSplitContainer)).BeginInit();
+            ((ISupportInitialize)(this.mapSplitContainer)).BeginInit();
             this.mapSplitContainer.Panel1.SuspendLayout();
             this.mapSplitContainer.Panel2.SuspendLayout();
             this.mapSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.controlSplitContainer)).BeginInit();
+            ((ISupportInitialize)(this.controlSplitContainer)).BeginInit();
             this.controlSplitContainer.Panel1.SuspendLayout();
             this.controlSplitContainer.Panel2.SuspendLayout();
             this.controlSplitContainer.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.controlsSplitContainer)).BeginInit();
+            ((ISupportInitialize)(this.controlsSplitContainer)).BeginInit();
             this.controlsSplitContainer.Panel1.SuspendLayout();
             this.controlsSplitContainer.Panel2.SuspendLayout();
             this.controlsSplitContainer.SuspendLayout();
@@ -1199,20 +1199,20 @@ namespace MSR.CVE.BackMaker
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip1.Items.AddRange(new ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.mapOptionsToolStripMenuItem2,
             this.helpToolStripMenuItem,
             this.debugToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Location = new Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1028, 36);
+            this.menuStrip1.Size = new Size(1028, 36);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
             this.newMashupMenuItem,
             this.openMashupMenuItem,
             this.saveMashupMenuItem,
@@ -1226,96 +1226,96 @@ namespace MSR.CVE.BackMaker
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 32);
+            this.fileToolStripMenuItem.Size = new Size(54, 32);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // newMashupMenuItem
             // 
             this.newMashupMenuItem.Name = "newMashupMenuItem";
-            this.newMashupMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.newMashupMenuItem.Size = new Size(306, 32);
             this.newMashupMenuItem.Text = "&New Mashup";
-            this.newMashupMenuItem.Click += new System.EventHandler(this.newMashupMenuItem_Click);
+            this.newMashupMenuItem.Click += new EventHandler(this.newMashupMenuItem_Click);
             // 
             // openMashupMenuItem
             // 
             this.openMashupMenuItem.Name = "openMashupMenuItem";
-            this.openMashupMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.openMashupMenuItem.Size = new Size(306, 32);
             this.openMashupMenuItem.Text = "&Open Mashup...";
-            this.openMashupMenuItem.Click += new System.EventHandler(this.openMashupMenuItem_Click);
+            this.openMashupMenuItem.Click += new EventHandler(this.openMashupMenuItem_Click);
             // 
             // saveMashupMenuItem
             // 
             this.saveMashupMenuItem.Enabled = false;
             this.saveMashupMenuItem.Name = "saveMashupMenuItem";
-            this.saveMashupMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.saveMashupMenuItem.Size = new Size(306, 32);
             this.saveMashupMenuItem.Text = "&Save Mashup";
-            this.saveMashupMenuItem.Click += new System.EventHandler(this.saveMashupMenuItem_Click);
+            this.saveMashupMenuItem.Click += new EventHandler(this.saveMashupMenuItem_Click);
             // 
             // saveMashupAsMenuItem
             // 
             this.saveMashupAsMenuItem.Enabled = false;
             this.saveMashupAsMenuItem.Name = "saveMashupAsMenuItem";
-            this.saveMashupAsMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.saveMashupAsMenuItem.Size = new Size(306, 32);
             this.saveMashupAsMenuItem.Text = "Save Mashup &As...";
-            this.saveMashupAsMenuItem.Click += new System.EventHandler(this.saveMashupAsMenuItem_Click);
+            this.saveMashupAsMenuItem.Click += new EventHandler(this.saveMashupAsMenuItem_Click);
             // 
             // closeMashupMenuItem
             // 
             this.closeMashupMenuItem.Enabled = false;
             this.closeMashupMenuItem.Name = "closeMashupMenuItem";
-            this.closeMashupMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.closeMashupMenuItem.Size = new Size(306, 32);
             this.closeMashupMenuItem.Text = "&Close Mashup";
-            this.closeMashupMenuItem.Click += new System.EventHandler(this.closeMashupMenuItem_Click);
+            this.closeMashupMenuItem.Click += new EventHandler(this.closeMashupMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(303, 6);
+            this.toolStripSeparator1.Size = new Size(303, 6);
             // 
             // addSourceMapMenuItem
             // 
             this.addSourceMapMenuItem.Enabled = false;
             this.addSourceMapMenuItem.Name = "addSourceMapMenuItem";
-            this.addSourceMapMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.addSourceMapMenuItem.Size = new Size(306, 32);
             this.addSourceMapMenuItem.Text = "Add Source &Map...";
-            this.addSourceMapMenuItem.Click += new System.EventHandler(this.addSourceMapMenuItem_Click);
+            this.addSourceMapMenuItem.Click += new EventHandler(this.addSourceMapMenuItem_Click);
             // 
             // addSourceMapFromUriMenuItem
             // 
             this.addSourceMapFromUriMenuItem.Enabled = false;
             this.addSourceMapFromUriMenuItem.Name = "addSourceMapFromUriMenuItem";
-            this.addSourceMapFromUriMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.addSourceMapFromUriMenuItem.Size = new Size(306, 32);
             this.addSourceMapFromUriMenuItem.Text = "Add Map From &Uri...";
             this.addSourceMapFromUriMenuItem.Visible = false;
-            this.addSourceMapFromUriMenuItem.Click += new System.EventHandler(this.addSourceMapFromUriMenuItem_Click);
+            this.addSourceMapFromUriMenuItem.Click += new EventHandler(this.addSourceMapFromUriMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(303, 6);
+            this.toolStripSeparator4.Size = new Size(303, 6);
             // 
             // viewRenderedMenuItem
             // 
             this.viewRenderedMenuItem.Name = "viewRenderedMenuItem";
-            this.viewRenderedMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.viewRenderedMenuItem.Size = new Size(306, 32);
             this.viewRenderedMenuItem.Text = "Launch Mashup &Browser...";
-            this.viewRenderedMenuItem.Click += new System.EventHandler(this.viewRenderedMenuItem_Click);
+            this.viewRenderedMenuItem.Click += new EventHandler(this.viewRenderedMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(303, 6);
+            this.toolStripSeparator2.Size = new Size(303, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(306, 32);
+            this.exitToolStripMenuItem.Size = new Size(306, 32);
             this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // mapOptionsToolStripMenuItem2
             // 
-            this.mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[] {
             this.VEroadView,
             this.VEaerialView,
             this.VEhybridView,
@@ -1334,189 +1334,189 @@ namespace MSR.CVE.BackMaker
             this.debugModeToolStripSeparator,
             this.enableDebugModeToolStripMenuItem});
             this.mapOptionsToolStripMenuItem2.Name = "mapOptionsToolStripMenuItem2";
-            this.mapOptionsToolStripMenuItem2.Size = new System.Drawing.Size(65, 32);
+            this.mapOptionsToolStripMenuItem2.Size = new Size(65, 32);
             this.mapOptionsToolStripMenuItem2.Text = "&View";
             // 
             // VEroadView
             // 
             this.VEroadView.Name = "VEroadView";
-            this.VEroadView.Size = new System.Drawing.Size(334, 32);
+            this.VEroadView.Size = new Size(334, 32);
             this.VEroadView.Text = "&Roads";
-            this.VEroadView.Click += new System.EventHandler(this.roadToolStripMenuItem_Click);
+            this.VEroadView.Click += new EventHandler(this.roadToolStripMenuItem_Click);
             // 
             // VEaerialView
             // 
             this.VEaerialView.Name = "VEaerialView";
-            this.VEaerialView.Size = new System.Drawing.Size(334, 32);
+            this.VEaerialView.Size = new Size(334, 32);
             this.VEaerialView.Text = "&Aerial Photos";
-            this.VEaerialView.Click += new System.EventHandler(this.aerialToolStripMenuItem_Click);
+            this.VEaerialView.Click += new EventHandler(this.aerialToolStripMenuItem_Click);
             // 
             // VEhybridView
             // 
             this.VEhybridView.Name = "VEhybridView";
-            this.VEhybridView.Size = new System.Drawing.Size(334, 32);
+            this.VEhybridView.Size = new Size(334, 32);
             this.VEhybridView.Text = "&Hybrid";
-            this.VEhybridView.Click += new System.EventHandler(this.hybridToolStripMenuItem_Click);
+            this.VEhybridView.Click += new EventHandler(this.hybridToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(331, 6);
+            this.toolStripSeparator3.Size = new Size(331, 6);
             // 
             // showCrosshairsMenuItem
             // 
             this.showCrosshairsMenuItem.Name = "showCrosshairsMenuItem";
-            this.showCrosshairsMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.showCrosshairsMenuItem.Size = new Size(334, 32);
             this.showCrosshairsMenuItem.Text = "Show &Crosshairs";
             // 
             // showPushPinsMenuItem
             // 
             this.showPushPinsMenuItem.Name = "showPushPinsMenuItem";
-            this.showPushPinsMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.showPushPinsMenuItem.Size = new Size(334, 32);
             this.showPushPinsMenuItem.Text = "Show &PushPins";
             // 
             // showDMSMenuItem
             // 
             this.showDMSMenuItem.Name = "showDMSMenuItem";
-            this.showDMSMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.showDMSMenuItem.Size = new Size(334, 32);
             this.showDMSMenuItem.Text = "Show locations in d°m\'s\"";
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(331, 6);
+            this.toolStripSeparator8.Size = new Size(331, 6);
             // 
             // AddRegLayerMenuItem
             // 
             this.AddRegLayerMenuItem.Name = "AddRegLayerMenuItem";
-            this.AddRegLayerMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.AddRegLayerMenuItem.Size = new Size(334, 32);
             this.AddRegLayerMenuItem.Text = "Show Rendered &Layer...";
-            this.AddRegLayerMenuItem.Click += new System.EventHandler(this.AddRegLayerMenuItem_Click);
+            this.AddRegLayerMenuItem.Click += new EventHandler(this.AddRegLayerMenuItem_Click);
             // 
             // showSourceMapOverviewMenuItem
             // 
             this.showSourceMapOverviewMenuItem.Name = "showSourceMapOverviewMenuItem";
-            this.showSourceMapOverviewMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.showSourceMapOverviewMenuItem.Size = new Size(334, 32);
             this.showSourceMapOverviewMenuItem.Text = "Show Source Map Overview";
-            this.showSourceMapOverviewMenuItem.Click += new System.EventHandler(this.showSourceMapOverviewMenuItem_Click);
+            this.showSourceMapOverviewMenuItem.Click += new EventHandler(this.showSourceMapOverviewMenuItem_Click);
             // 
             // snapFeaturesToolStripSeparator
             // 
             this.snapFeaturesToolStripSeparator.Name = "snapFeaturesToolStripSeparator";
-            this.snapFeaturesToolStripSeparator.Size = new System.Drawing.Size(331, 6);
+            this.snapFeaturesToolStripSeparator.Size = new Size(331, 6);
             // 
             // restoreSnapViewMenuItem
             // 
             this.restoreSnapViewMenuItem.Name = "restoreSnapViewMenuItem";
             this.restoreSnapViewMenuItem.ShortcutKeyDisplayString = "F5";
-            this.restoreSnapViewMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.restoreSnapViewMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.restoreSnapViewMenuItem.ShortcutKeys = Keys.F5;
+            this.restoreSnapViewMenuItem.Size = new Size(334, 32);
             this.restoreSnapViewMenuItem.Text = "Restore SnapView";
             // 
             // recordSnapViewMenuItem
             // 
             this.recordSnapViewMenuItem.Name = "recordSnapViewMenuItem";
             this.recordSnapViewMenuItem.ShortcutKeyDisplayString = "Shift+F5";
-            this.recordSnapViewMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.recordSnapViewMenuItem.Size = new Size(334, 32);
             this.recordSnapViewMenuItem.Text = "Record SnapView";
             // 
             // restoreSnapZoomMenuItem
             // 
             this.restoreSnapZoomMenuItem.Name = "restoreSnapZoomMenuItem";
             this.restoreSnapZoomMenuItem.ShortcutKeyDisplayString = "F6";
-            this.restoreSnapZoomMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.restoreSnapZoomMenuItem.Size = new Size(334, 32);
             this.restoreSnapZoomMenuItem.Text = "Restore SnapZoom";
             // 
             // recordSnapZoomMenuItem
             // 
             this.recordSnapZoomMenuItem.Name = "recordSnapZoomMenuItem";
             this.recordSnapZoomMenuItem.ShortcutKeyDisplayString = "Shift+F6";
-            this.recordSnapZoomMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.recordSnapZoomMenuItem.Size = new Size(334, 32);
             this.recordSnapZoomMenuItem.Text = "Record SnapZoom";
             // 
             // debugModeToolStripSeparator
             // 
             this.debugModeToolStripSeparator.Name = "debugModeToolStripSeparator";
-            this.debugModeToolStripSeparator.Size = new System.Drawing.Size(331, 6);
+            this.debugModeToolStripSeparator.Size = new Size(331, 6);
             // 
             // enableDebugModeToolStripMenuItem
             // 
             this.enableDebugModeToolStripMenuItem.Name = "enableDebugModeToolStripMenuItem";
-            this.enableDebugModeToolStripMenuItem.Size = new System.Drawing.Size(334, 32);
+            this.enableDebugModeToolStripMenuItem.Size = new Size(334, 32);
             this.enableDebugModeToolStripMenuItem.Text = "Enable Debug Mode";
-            this.enableDebugModeToolStripMenuItem.Click += new System.EventHandler(this.enableDebugModeToolStripMenuItem_Click);
+            this.enableDebugModeToolStripMenuItem.Click += new EventHandler(this.enableDebugModeToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
             this.viewMapCruncherTutorialToolStripMenuItem,
             this.toolStripSeparator7,
             this.aboutMSRBackMakerToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(65, 32);
+            this.helpToolStripMenuItem.Size = new Size(65, 32);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // viewMapCruncherTutorialToolStripMenuItem
             // 
             this.viewMapCruncherTutorialToolStripMenuItem.Name = "viewMapCruncherTutorialToolStripMenuItem";
-            this.viewMapCruncherTutorialToolStripMenuItem.Size = new System.Drawing.Size(536, 32);
+            this.viewMapCruncherTutorialToolStripMenuItem.Size = new Size(536, 32);
             this.viewMapCruncherTutorialToolStripMenuItem.Text = "MapCruncher for Microsoft Virtual Earth Help";
-            this.viewMapCruncherTutorialToolStripMenuItem.Click += new System.EventHandler(this.viewMapCruncherTutorialToolStripMenuItem_Click);
+            this.viewMapCruncherTutorialToolStripMenuItem.Click += new EventHandler(this.viewMapCruncherTutorialToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(533, 6);
+            this.toolStripSeparator7.Size = new Size(533, 6);
             // 
             // aboutMSRBackMakerToolStripMenuItem
             // 
             this.aboutMSRBackMakerToolStripMenuItem.Name = "aboutMSRBackMakerToolStripMenuItem";
-            this.aboutMSRBackMakerToolStripMenuItem.Size = new System.Drawing.Size(536, 32);
+            this.aboutMSRBackMakerToolStripMenuItem.Size = new Size(536, 32);
             this.aboutMSRBackMakerToolStripMenuItem.Text = "&About MapCruncher Beta for Microsoft Virtual Earth";
-            this.aboutMSRBackMakerToolStripMenuItem.Click += new System.EventHandler(this.aboutMSRBackMakerToolStripMenuItem_Click);
+            this.aboutMSRBackMakerToolStripMenuItem.Click += new EventHandler(this.aboutMSRBackMakerToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
             this.showTileNamesMenuItem,
             this.showSourceCropToolStripMenuItem,
             this.showTileBoundariesMenuItem,
             this.showDiagnosticsUIToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(83, 32);
+            this.debugToolStripMenuItem.Size = new Size(83, 32);
             this.debugToolStripMenuItem.Text = "&Debug";
             // 
             // showTileNamesMenuItem
             // 
             this.showTileNamesMenuItem.Name = "showTileNamesMenuItem";
-            this.showTileNamesMenuItem.Size = new System.Drawing.Size(269, 32);
+            this.showTileNamesMenuItem.Size = new Size(269, 32);
             this.showTileNamesMenuItem.Text = "Show Tile &Names";
             // 
             // showSourceCropToolStripMenuItem
             // 
             this.showSourceCropToolStripMenuItem.Name = "showSourceCropToolStripMenuItem";
-            this.showSourceCropToolStripMenuItem.Size = new System.Drawing.Size(269, 32);
+            this.showSourceCropToolStripMenuItem.Size = new Size(269, 32);
             this.showSourceCropToolStripMenuItem.Text = "Show Source Crop";
             // 
             // showTileBoundariesMenuItem
             // 
             this.showTileBoundariesMenuItem.Name = "showTileBoundariesMenuItem";
-            this.showTileBoundariesMenuItem.Size = new System.Drawing.Size(269, 32);
+            this.showTileBoundariesMenuItem.Size = new Size(269, 32);
             this.showTileBoundariesMenuItem.Text = "Show Tile &Boundaries";
             // 
             // showDiagnosticsUIToolStripMenuItem
             // 
             this.showDiagnosticsUIToolStripMenuItem.Name = "showDiagnosticsUIToolStripMenuItem";
-            this.showDiagnosticsUIToolStripMenuItem.Size = new System.Drawing.Size(269, 32);
+            this.showDiagnosticsUIToolStripMenuItem.Size = new Size(269, 32);
             this.showDiagnosticsUIToolStripMenuItem.Text = "Show DiagnosticsUI";
-            this.showDiagnosticsUIToolStripMenuItem.Click += new System.EventHandler(this.showDiagnosticsUIToolStripMenuItem_Click_1);
+            this.showDiagnosticsUIToolStripMenuItem.Click += new EventHandler(this.showDiagnosticsUIToolStripMenuItem_Click_1);
             // 
             // mapSplitContainer
             // 
-            this.mapSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mapSplitContainer.Location = new System.Drawing.Point(3, 3);
+            this.mapSplitContainer.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) 
+            | AnchorStyles.Left) 
+            | AnchorStyles.Right)));
+            this.mapSplitContainer.Location = new Point(3, 3);
             this.mapSplitContainer.Name = "mapSplitContainer";
             // 
             // mapSplitContainer.Panel1
@@ -1528,32 +1528,32 @@ namespace MSR.CVE.BackMaker
             // 
             this.mapSplitContainer.Panel2.Controls.Add(this.veViewerControl);
             this.mapSplitContainer.Panel2MinSize = 100;
-            this.mapSplitContainer.Size = new System.Drawing.Size(691, 647);
+            this.mapSplitContainer.Size = new Size(691, 647);
             this.mapSplitContainer.SplitterDistance = 337;
             this.mapSplitContainer.TabIndex = 6;
             // 
             // smViewerControl
             // 
-            this.smViewerControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.smViewerControl.Location = new System.Drawing.Point(0, 0);
-            this.smViewerControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.smViewerControl.Dock = DockStyle.Fill;
+            this.smViewerControl.Location = new Point(0, 0);
+            this.smViewerControl.Margin = new Padding(4, 4, 4, 4);
             this.smViewerControl.Name = "smViewerControl";
-            this.smViewerControl.Size = new System.Drawing.Size(337, 647);
+            this.smViewerControl.Size = new Size(337, 647);
             this.smViewerControl.TabIndex = 0;
             // 
             // veViewerControl
             // 
-            this.veViewerControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.veViewerControl.Location = new System.Drawing.Point(0, 0);
-            this.veViewerControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.veViewerControl.Dock = DockStyle.Fill;
+            this.veViewerControl.Location = new Point(0, 0);
+            this.veViewerControl.Margin = new Padding(4, 4, 4, 4);
             this.veViewerControl.Name = "veViewerControl";
-            this.veViewerControl.Size = new System.Drawing.Size(350, 647);
+            this.veViewerControl.Size = new Size(350, 647);
             this.veViewerControl.TabIndex = 0;
             // 
             // controlSplitContainer
             // 
-            this.controlSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.controlSplitContainer.Location = new System.Drawing.Point(0, 36);
+            this.controlSplitContainer.Dock = DockStyle.Fill;
+            this.controlSplitContainer.Location = new Point(0, 36);
             this.controlSplitContainer.Name = "controlSplitContainer";
             // 
             // controlSplitContainer.Panel1
@@ -1564,37 +1564,37 @@ namespace MSR.CVE.BackMaker
             // controlSplitContainer.Panel2
             // 
             this.controlSplitContainer.Panel2.Controls.Add(this.mapSplitContainer);
-            this.controlSplitContainer.Size = new System.Drawing.Size(1028, 650);
+            this.controlSplitContainer.Size = new Size(1028, 650);
             this.controlSplitContainer.SplitterDistance = 330;
             this.controlSplitContainer.TabIndex = 7;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.RenderLaunchButton);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 608);
+            this.panel1.Dock = DockStyle.Bottom;
+            this.panel1.Location = new Point(0, 608);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(330, 42);
+            this.panel1.Size = new Size(330, 42);
             this.panel1.TabIndex = 9;
             // 
             // RenderLaunchButton
             // 
-            this.RenderLaunchButton.Location = new System.Drawing.Point(3, 4);
+            this.RenderLaunchButton.Location = new Point(3, 4);
             this.RenderLaunchButton.Name = "RenderLaunchButton";
-            this.RenderLaunchButton.Size = new System.Drawing.Size(125, 30);
+            this.RenderLaunchButton.Size = new Size(125, 30);
             this.RenderLaunchButton.TabIndex = 9;
             this.RenderLaunchButton.Text = "Render...";
             this.RenderLaunchButton.UseVisualStyleBackColor = true;
-            this.RenderLaunchButton.Click += new System.EventHandler(this.RenderLaunchButton_Click);
+            this.RenderLaunchButton.Click += new EventHandler(this.RenderLaunchButton_Click);
             // 
             // controlsSplitContainer
             // 
-            this.controlsSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.controlsSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.controlsSplitContainer.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) 
+            | AnchorStyles.Left) 
+            | AnchorStyles.Right)));
+            this.controlsSplitContainer.Location = new Point(0, 0);
             this.controlsSplitContainer.Name = "controlsSplitContainer";
-            this.controlsSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.controlsSplitContainer.Orientation = Orientation.Horizontal;
             // 
             // controlsSplitContainer.Panel1
             // 
@@ -1603,17 +1603,17 @@ namespace MSR.CVE.BackMaker
             // controlsSplitContainer.Panel2
             // 
             this.controlsSplitContainer.Panel2.Controls.Add(this.synergyExplorer);
-            this.controlsSplitContainer.Size = new System.Drawing.Size(327, 606);
+            this.controlsSplitContainer.Size = new Size(327, 606);
             this.controlsSplitContainer.SplitterDistance = 130;
             this.controlsSplitContainer.TabIndex = 8;
             // 
             // layerControls
             // 
-            this.layerControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layerControls.Location = new System.Drawing.Point(0, 0);
-            this.layerControls.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.layerControls.Dock = DockStyle.Fill;
+            this.layerControls.Location = new Point(0, 0);
+            this.layerControls.Margin = new Padding(4, 4, 4, 4);
             this.layerControls.Name = "layerControls";
-            this.layerControls.Size = new System.Drawing.Size(327, 130);
+            this.layerControls.Size = new Size(327, 130);
             this.layerControls.TabIndex = 10;
             // 
             // synergyExplorer
@@ -1622,118 +1622,118 @@ namespace MSR.CVE.BackMaker
             this.synergyExplorer.Controls.Add(this.transparencyTab);
             this.synergyExplorer.Controls.Add(this.sourceInfoTab);
             this.synergyExplorer.Controls.Add(this.legendTabPage);
-            this.synergyExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.synergyExplorer.Location = new System.Drawing.Point(0, 0);
+            this.synergyExplorer.Dock = DockStyle.Fill;
+            this.synergyExplorer.Location = new Point(0, 0);
             this.synergyExplorer.Multiline = true;
             this.synergyExplorer.Name = "synergyExplorer";
             this.synergyExplorer.SelectedIndex = 0;
             this.synergyExplorer.ShowToolTips = true;
-            this.synergyExplorer.Size = new System.Drawing.Size(327, 472);
+            this.synergyExplorer.Size = new Size(327, 472);
             this.synergyExplorer.TabIndex = 7;
             // 
             // correspondencesTab
             // 
             this.correspondencesTab.Controls.Add(this.registrationControls);
-            this.correspondencesTab.Location = new System.Drawing.Point(4, 46);
+            this.correspondencesTab.Location = new Point(4, 46);
             this.correspondencesTab.Name = "correspondencesTab";
-            this.correspondencesTab.Padding = new System.Windows.Forms.Padding(3);
-            this.correspondencesTab.Size = new System.Drawing.Size(319, 422);
+            this.correspondencesTab.Padding = new Padding(3);
+            this.correspondencesTab.Size = new Size(319, 422);
             this.correspondencesTab.TabIndex = 1;
             this.correspondencesTab.Text = "Correspondences";
             this.correspondencesTab.UseVisualStyleBackColor = true;
             // 
             // registrationControls
             // 
-            this.registrationControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.registrationControls.Location = new System.Drawing.Point(3, 3);
-            this.registrationControls.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.registrationControls.Dock = DockStyle.Fill;
+            this.registrationControls.Location = new Point(3, 3);
+            this.registrationControls.Margin = new Padding(4, 4, 4, 4);
             this.registrationControls.Name = "registrationControls";
-            this.registrationControls.Size = new System.Drawing.Size(313, 416);
+            this.registrationControls.Size = new Size(313, 416);
             this.registrationControls.TabIndex = 9;
             // 
             // transparencyTab
             // 
             this.transparencyTab.Controls.Add(this.transparencyPanel);
-            this.transparencyTab.Location = new System.Drawing.Point(4, 46);
+            this.transparencyTab.Location = new Point(4, 46);
             this.transparencyTab.Name = "transparencyTab";
-            this.transparencyTab.Size = new System.Drawing.Size(319, 412);
+            this.transparencyTab.Size = new Size(319, 412);
             this.transparencyTab.TabIndex = 4;
             this.transparencyTab.Text = "Transparency";
             this.transparencyTab.UseVisualStyleBackColor = true;
             // 
             // transparencyPanel
             // 
-            this.transparencyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.transparencyPanel.Location = new System.Drawing.Point(0, 0);
-            this.transparencyPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.transparencyPanel.Dock = DockStyle.Fill;
+            this.transparencyPanel.Location = new Point(0, 0);
+            this.transparencyPanel.Margin = new Padding(4, 4, 4, 4);
             this.transparencyPanel.Name = "transparencyPanel";
-            this.transparencyPanel.Size = new System.Drawing.Size(319, 412);
+            this.transparencyPanel.Size = new Size(319, 412);
             this.transparencyPanel.TabIndex = 0;
             // 
             // sourceInfoTab
             // 
             this.sourceInfoTab.Controls.Add(this.sourceMapInfoPanel);
-            this.sourceInfoTab.Location = new System.Drawing.Point(4, 46);
+            this.sourceInfoTab.Location = new Point(4, 46);
             this.sourceInfoTab.Name = "sourceInfoTab";
-            this.sourceInfoTab.Padding = new System.Windows.Forms.Padding(3);
-            this.sourceInfoTab.Size = new System.Drawing.Size(319, 412);
+            this.sourceInfoTab.Padding = new Padding(3);
+            this.sourceInfoTab.Size = new Size(319, 412);
             this.sourceInfoTab.TabIndex = 3;
             this.sourceInfoTab.Text = "Source Info";
             this.sourceInfoTab.UseVisualStyleBackColor = true;
             // 
             // sourceMapInfoPanel
             // 
-            this.sourceMapInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sourceMapInfoPanel.Location = new System.Drawing.Point(3, 3);
-            this.sourceMapInfoPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.sourceMapInfoPanel.Dock = DockStyle.Fill;
+            this.sourceMapInfoPanel.Location = new Point(3, 3);
+            this.sourceMapInfoPanel.Margin = new Padding(4, 4, 4, 4);
             this.sourceMapInfoPanel.Name = "sourceMapInfoPanel";
-            this.sourceMapInfoPanel.Size = new System.Drawing.Size(313, 406);
+            this.sourceMapInfoPanel.Size = new Size(313, 406);
             this.sourceMapInfoPanel.TabIndex = 0;
             // 
             // legendTabPage
             // 
             this.legendTabPage.Controls.Add(this.legendOptionsPanel1);
-            this.legendTabPage.Location = new System.Drawing.Point(4, 46);
+            this.legendTabPage.Location = new Point(4, 46);
             this.legendTabPage.Name = "legendTabPage";
-            this.legendTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.legendTabPage.Size = new System.Drawing.Size(319, 412);
+            this.legendTabPage.Padding = new Padding(3);
+            this.legendTabPage.Size = new Size(319, 412);
             this.legendTabPage.TabIndex = 5;
             this.legendTabPage.Text = "Legend Options";
             this.legendTabPage.UseVisualStyleBackColor = true;
             // 
             // legendOptionsPanel1
             // 
-            this.legendOptionsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.legendOptionsPanel1.Location = new System.Drawing.Point(3, 3);
-            this.legendOptionsPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.legendOptionsPanel1.Dock = DockStyle.Fill;
+            this.legendOptionsPanel1.Location = new Point(3, 3);
+            this.legendOptionsPanel1.Margin = new Padding(4, 4, 4, 4);
             this.legendOptionsPanel1.Name = "legendOptionsPanel1";
-            this.legendOptionsPanel1.Size = new System.Drawing.Size(313, 406);
+            this.legendOptionsPanel1.Size = new Size(313, 406);
             this.legendOptionsPanel1.TabIndex = 10;
             // 
             // MainAppForm
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1028, 686);
+            this.AutoScaleMode = AutoScaleMode.Inherit;
+            this.ClientSize = new Size(1028, 686);
             this.Controls.Add(this.controlSplitContainer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainAppForm";
             this.Text = "MapCruncher Beta for Microsoft Virtual Earth";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.mapSplitContainer.Panel1.ResumeLayout(false);
             this.mapSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mapSplitContainer)).EndInit();
+            ((ISupportInitialize)(this.mapSplitContainer)).EndInit();
             this.mapSplitContainer.ResumeLayout(false);
             this.controlSplitContainer.Panel1.ResumeLayout(false);
             this.controlSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.controlSplitContainer)).EndInit();
+            ((ISupportInitialize)(this.controlSplitContainer)).EndInit();
             this.controlSplitContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.controlsSplitContainer.Panel1.ResumeLayout(false);
             this.controlsSplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.controlsSplitContainer)).EndInit();
+            ((ISupportInitialize)(this.controlsSplitContainer)).EndInit();
             this.controlsSplitContainer.ResumeLayout(false);
             this.synergyExplorer.ResumeLayout(false);
             this.correspondencesTab.ResumeLayout(false);

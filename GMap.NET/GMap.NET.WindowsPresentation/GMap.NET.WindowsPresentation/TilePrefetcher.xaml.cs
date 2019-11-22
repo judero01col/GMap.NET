@@ -104,7 +104,7 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
-        volatile bool stopped = false;
+        volatile bool stopped;
 
         public void Stop()
         {

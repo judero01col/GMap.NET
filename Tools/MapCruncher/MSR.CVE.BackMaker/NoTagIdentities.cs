@@ -8,11 +8,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (NoTagIdentities._schema == null)
+                if (_schema == null)
                 {
-                    NoTagIdentities._schema = new NoTagIdentities();
+                    _schema = new NoTagIdentities();
                 }
-                return NoTagIdentities._schema;
+                return _schema;
             }
         }
         private NoTagIdentities() : base("1.6")

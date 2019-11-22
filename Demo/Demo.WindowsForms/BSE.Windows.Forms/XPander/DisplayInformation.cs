@@ -32,13 +32,13 @@ namespace BSE.Windows.Forms
 
 		static DisplayInformation()
 		{
-			SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(DisplayInformation.OnUserPreferenceChanged);
-			DisplayInformation.SetScheme();
+			SystemEvents.UserPreferenceChanged += new UserPreferenceChangedEventHandler(OnUserPreferenceChanged);
+			SetScheme();
 		}
 
 		private static void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
 		{
-			DisplayInformation.SetScheme();
+			SetScheme();
 		}
 
 		private static void SetScheme()

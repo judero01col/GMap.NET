@@ -17,7 +17,7 @@ namespace Demo.WindowsPresentation
 
         private int counter;
         readonly Typeface tf = new Typeface("GenericSansSerif");
-        readonly System.Windows.FlowDirection fd = new System.Windows.FlowDirection();
+        readonly FlowDirection fd = new FlowDirection();
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         /// <summary>

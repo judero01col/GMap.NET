@@ -45,7 +45,7 @@ namespace Jama.examples
                 {
                     int num3 = n / 2;
                     int num4 = (n - 2) / 4;
-                    JamaMatrix jamaMatrix = MagicSquareExample.magic(num3);
+                    JamaMatrix jamaMatrix = magic(num3);
                     for (int j = 0; j < num3; j++)
                     {
                         for (int i = 0; i < num3; i++)
@@ -103,42 +103,42 @@ namespace Jama.examples
         [STAThread]
         public static void Main2(string[] argv)
         {
-            MagicSquareExample.print("\n    Test of Matrix Class, using magic squares.\n");
-            MagicSquareExample.print("    See MagicSquareExample.main() for an explanation.\n");
-            MagicSquareExample.print("\n      n     trace       max_eig   rank        cond      lu_res      qr_res\n\n");
+            print("\n    Test of Matrix Class, using magic squares.\n");
+            print("    See MagicSquareExample.main() for an explanation.\n");
+            print("\n      n     trace       max_eig   rank        cond      lu_res      qr_res\n\n");
             DateTime now = DateTime.Now;
             double num = Math.Pow(2.0, -52.0);
             for (int i = 3; i <= 32; i++)
             {
-                MagicSquareExample.print(MagicSquareExample.fixedWidthIntegertoString(i, 7));
-                JamaMatrix jamaMatrix = MagicSquareExample.magic(i);
+                print(fixedWidthIntegertoString(i, 7));
+                JamaMatrix jamaMatrix = magic(i);
                 int n = (int)jamaMatrix.trace();
-                MagicSquareExample.print(MagicSquareExample.fixedWidthIntegertoString(n, 10));
+                print(fixedWidthIntegertoString(n, 10));
                 EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(jamaMatrix.plus(jamaMatrix.transpose()).times(0.5));
                 double[] realEigenvalues = eigenvalueDecomposition.RealEigenvalues;
-                MagicSquareExample.print(MagicSquareExample.fixedWidthDoubletoString(realEigenvalues[i - 1], 14, 3));
+                print(fixedWidthDoubletoString(realEigenvalues[i - 1], 14, 3));
                 int n2 = jamaMatrix.rank();
-                MagicSquareExample.print(MagicSquareExample.fixedWidthIntegertoString(n2, 7));
+                print(fixedWidthIntegertoString(n2, 7));
                 double num2 = jamaMatrix.cond();
-                MagicSquareExample.print((num2 < 1.0 / num) ? MagicSquareExample.fixedWidthDoubletoString(num2, 12, 3) : "         Inf");
+                print((num2 < 1.0 / num) ? fixedWidthDoubletoString(num2, 12, 3) : "         Inf");
                 LUDecomposition lUDecomposition = new LUDecomposition(jamaMatrix);
                 JamaMatrix l = lUDecomposition.L;
                 JamaMatrix u = lUDecomposition.U;
                 int[] pivot = lUDecomposition.Pivot;
                 JamaMatrix jamaMatrix2 = l.times(u).minus(jamaMatrix.getMatrix(pivot, 0, i - 1));
                 double x = jamaMatrix2.norm1() / ((double)i * num);
-                MagicSquareExample.print(MagicSquareExample.fixedWidthDoubletoString(x, 12, 3));
+                print(fixedWidthDoubletoString(x, 12, 3));
                 QRDecomposition qRDecomposition = new QRDecomposition(jamaMatrix);
                 JamaMatrix q = qRDecomposition.Q;
                 jamaMatrix2 = qRDecomposition.R;
                 jamaMatrix2 = q.times(jamaMatrix2).minus(jamaMatrix);
                 x = jamaMatrix2.norm1() / ((double)i * num);
-                MagicSquareExample.print(MagicSquareExample.fixedWidthDoubletoString(x, 12, 3));
-                MagicSquareExample.print("\n");
+                print(fixedWidthDoubletoString(x, 12, 3));
+                print("\n");
             }
             double x2 = (double)(DateTime.Now.Ticks - now.Ticks) / 1000.0;
-            MagicSquareExample.print("\nElapsed Time = " + MagicSquareExample.fixedWidthDoubletoString(x2, 12, 3) + " seconds\n");
-            MagicSquareExample.print("Adios\n");
+            print("\nElapsed Time = " + fixedWidthDoubletoString(x2, 12, 3) + " seconds\n");
+            print("Adios\n");
         }
     }
 }

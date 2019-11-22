@@ -6,7 +6,7 @@ namespace MSR.CVE.BackMaker
         public static string SchemeName = "MC1";
         public override string GetSchemeName()
         {
-            return MC1NamingScheme.SchemeName;
+            return SchemeName;
         }
         public MC1NamingScheme(string filePrefix) : base(filePrefix, "png")
         {

@@ -10,18 +10,18 @@ namespace MSR.CVE.BackMaker
             global
         }
         private PositionAssociation assoc;
-        private PositionAssociationView.WhichPosition whichPosition;
+        private WhichPosition whichPosition;
         public DisplayablePosition position
         {
             get
             {
                 switch (this.whichPosition)
                 {
-                case PositionAssociationView.WhichPosition.image:
+                case WhichPosition.image:
                     return this.assoc.imagePosition;
-                case PositionAssociationView.WhichPosition.source:
+                case WhichPosition.source:
                     return this.assoc.sourcePosition;
-                case PositionAssociationView.WhichPosition.global:
+                case WhichPosition.global:
                     return this.assoc.globalPosition;
                 default:
                     throw new Exception("booogus.");
@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker
                 return this.assoc.pinId;
             }
         }
-        public PositionAssociationView(PositionAssociation assoc, PositionAssociationView.WhichPosition whichPosition)
+        public PositionAssociationView(PositionAssociation assoc, WhichPosition whichPosition)
         {
             this.assoc = assoc;
             this.whichPosition = whichPosition;

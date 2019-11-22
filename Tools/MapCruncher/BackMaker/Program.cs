@@ -27,7 +27,7 @@ namespace BackMaker
                 }
                 if (args.Length > 0)
                 {
-                    Program.EmitUsage(text);
+                    EmitUsage(text);
                 }
                 else
                 {

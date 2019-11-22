@@ -21,7 +21,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 int num = (this._present != null) ? 1 : 0;
                 int num2 = (value != null) ? 1 : 0;
-                CacheRecord.cacheRecordsCompletedResourceCounter.crement(num2 - num);
+                cacheRecordsCompletedResourceCounter.crement(num2 - num);
                 this._present = value;
             }
         }
@@ -30,7 +30,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.future = future;
             this.wait = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "CacheRecord.Wait");
             this.refs = 1;
-            CacheRecord.cacheRecordsExtant.crement(1);
+            cacheRecordsExtant.crement(1);
         }
         public void Dispose()
         {
@@ -52,7 +52,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
-            CacheRecord.cacheRecordsExtant.crement(-1);
+            cacheRecordsExtant.crement(-1);
         }
         public void Process()
         {

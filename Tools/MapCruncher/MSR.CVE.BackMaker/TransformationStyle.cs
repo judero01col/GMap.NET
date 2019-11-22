@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker
         public abstract string getXmlName();
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteAttributeString(TransformationStyle.TransformationStyleNameAttr, this.getXmlName());
+            writer.WriteAttributeString(TransformationStyleNameAttr, this.getXmlName());
         }
         public void AccumulateRobustHash(IRobustHash hash)
         {

@@ -33,7 +33,7 @@ namespace MSR.CVE.BackMaker
             {
                 while (mashupParseContext.reader.Read())
                 {
-                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == LayerMetadataFile.LayerMetadataTag)
+                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == LayerMetadataTag)
                     {
                         layerMetadataFile = new LayerMetadataFile(outputMethod, mashupParseContext);
                         break;
@@ -43,14 +43,14 @@ namespace MSR.CVE.BackMaker
             }
             if (layerMetadataFile == null)
             {
-                throw new InvalidMashupFile(mashupParseContext, string.Format("{0} doesn't appear to be a valid {1}", outputMethod.GetUri("LayerMetadata.xml"), LayerMetadataFile.LayerMetadataTag));
+                throw new InvalidMashupFile(mashupParseContext, string.Format("{0} doesn't appear to be a valid {1}", outputMethod.GetUri("LayerMetadata.xml"), LayerMetadataTag));
             }
             return layerMetadataFile;
         }
         private LayerMetadataFile(RenderOutputMethod renderOutputMethod, MashupParseContext context)
         {
             this.renderOutputMethod = renderOutputMethod;
-            XMLTagReader xMLTagReader = context.NewTagReader(LayerMetadataFile.LayerMetadataTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(LayerMetadataTag);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs("StrongHash"))
@@ -74,7 +74,7 @@ namespace MSR.CVE.BackMaker
         }
         private void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(LayerMetadataFile.LayerMetadataTag);
+            writer.WriteStartElement(LayerMetadataTag);
             this._encodableHash.WriteXML(writer);
             writer.WriteEndElement();
         }

@@ -226,7 +226,7 @@ namespace BSE.Windows.Forms
         #region MethodsPrivate
         private static Control CreateControlInstance()
         {
-            BSE.Windows.Forms.ProgressBar progressBar = new BSE.Windows.Forms.ProgressBar();
+            ProgressBar progressBar = new ProgressBar();
             progressBar.Size = new Size(100, 15);
 
             return progressBar;

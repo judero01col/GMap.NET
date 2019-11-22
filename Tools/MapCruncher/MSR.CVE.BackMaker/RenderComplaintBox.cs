@@ -5,9 +5,9 @@ namespace MSR.CVE.BackMaker
     public class RenderComplaintBox
     {
         public delegate void AnnounceDelegate(string complaint);
-        private RenderComplaintBox.AnnounceDelegate announce;
+        private AnnounceDelegate announce;
         private Dictionary<NonredundantRenderComplaint, bool> complaints = new Dictionary<NonredundantRenderComplaint, bool>();
-        public RenderComplaintBox(RenderComplaintBox.AnnounceDelegate announce)
+        public RenderComplaintBox(AnnounceDelegate announce)
         {
             this.announce = announce;
         }

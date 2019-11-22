@@ -13,10 +13,10 @@ namespace MSR.CVE.BackMaker
         }
         private void Initialize(string pipeName)
         {
-            this.pipeHandle = NamedPipeBase.CreateNamedPipe("\\\\.\\pipe\\" + pipeName, 3u, 6u, 255u, 4096u, 4096u, 0u, new IntPtr(0));
-            if (NamedPipeBase.ConnectNamedPipe(this.pipeHandle, new IntPtr(0)) == 0)
+            this.pipeHandle = CreateNamedPipe("\\\\.\\pipe\\" + pipeName, 3u, 6u, 255u, 4096u, 4096u, 0u, new IntPtr(0));
+            if (ConnectNamedPipe(this.pipeHandle, new IntPtr(0)) == 0)
             {
-                throw new IOException(string.Format("Unable to open pipe: {0}.", NamedPipeBase.GetLastError()));
+                throw new IOException(string.Format("Unable to open pipe: {0}.", GetLastError()));
             }
         }
         public void Dispose()

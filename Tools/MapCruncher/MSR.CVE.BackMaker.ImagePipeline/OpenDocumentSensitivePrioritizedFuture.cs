@@ -9,7 +9,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private IFuture openDocumentFuture;
         private bool realizing;
         private int _identity;
-        private static int nextIdentity = 0;
+        private static int nextIdentity;
         private static object nextIdentityMutex = new object();
         private AsyncRef activeAsyncRef;
         public int identity
@@ -25,11 +25,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.future = future;
             this.openDocumentFuture = openDocumentFuture;
             object obj;
-            Monitor.Enter(obj = OpenDocumentSensitivePrioritizedFuture.nextIdentityMutex);
+            Monitor.Enter(obj = nextIdentityMutex);
             try
             {
-                this._identity = OpenDocumentSensitivePrioritizedFuture.nextIdentity;
-                OpenDocumentSensitivePrioritizedFuture.nextIdentity++;
+                this._identity = nextIdentity;
+                nextIdentity++;
             }
             finally
             {

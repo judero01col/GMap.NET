@@ -45,7 +45,7 @@ namespace MSR.CVE.BackMaker
         public FileIdentification GetFileIdentification(string relativePath)
         {
             string path = this.GetPath(relativePath);
-            return FileOutputMethod.GetFileIdentificationStatic(path);
+            return GetFileIdentificationStatic(path);
         }
         public static FileIdentification GetFileIdentificationStatic(string fullPathname)
         {

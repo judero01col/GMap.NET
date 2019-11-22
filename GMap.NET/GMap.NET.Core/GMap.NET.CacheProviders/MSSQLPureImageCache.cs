@@ -39,7 +39,7 @@ namespace GMap.NET.CacheProviders
         SqlConnection cnGet;
         SqlConnection cnSet;
 
-        bool initialized = false;
+        bool initialized;
 
         /// <summary>
         ///     is cache initialized

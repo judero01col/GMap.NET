@@ -109,7 +109,7 @@ namespace MSR.CVE.BackMaker
         }
         public string FilePosition()
         {
-            return MashupParseContext.FilePosition(this.reader);
+            return FilePosition(this.reader);
         }
         public static string FilePosition(XmlTextReader reader)
         {

@@ -27,17 +27,17 @@ namespace MSR.CVE.BackMaker
                 return null;
             }
             Uri uri = new Uri(openFileDialog.FileName);
-            return RenderedLayerSelector.GetLayerSelector(viewer, cachePackage, uri);
+            return GetLayerSelector(viewer, cachePackage, uri);
         }
         public static RenderedLayerDisplayInfo GetLayerSelector(ViewerControl viewer, CachePackage cachePackage, Uri uri)
         {
             RenderedLayerDisplayInfo result;
             try
             {
-                CrunchedFile renderedMashupsFromFile = RenderedLayerSelector.GetRenderedMashupsFromFile(uri);
+                CrunchedFile renderedMashupsFromFile = GetRenderedMashupsFromFile(uri);
                 D.Assert(uri.IsFile);
                 string localPath = uri.LocalPath;
-                result = RenderedLayerSelector.BuildLayerSelector(viewer, cachePackage, Path.GetDirectoryName(localPath), renderedMashupsFromFile);
+                result = BuildLayerSelector(viewer, cachePackage, Path.GetDirectoryName(localPath), renderedMashupsFromFile);
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace MSR.CVE.BackMaker
                 renderedLayerSelector.menuItem = new ToolStripMenuItem(current.displayName);
                 renderedLayerSelector.tileSource = new RenderedTileSource(cachePackage, new VENamingScheme(Path.Combine(basePath, current.namingScheme.GetFilePrefix()), current.namingScheme.GetFileSuffix()));
                 renderedLayerSelector.menuItem.Tag = renderedLayerSelector;
-                renderedLayerSelector.menuItem.Click += new EventHandler(RenderedLayerSelector.MenuItem_Click);
+                renderedLayerSelector.menuItem.Click += new EventHandler(MenuItem_Click);
                 renderedLayerDisplayInfo.tsmiList.Add(renderedLayerSelector.menuItem);
             }
             for (int i = 0; i < renderedLayerDisplayInfo.tsmiList.Count; i++)

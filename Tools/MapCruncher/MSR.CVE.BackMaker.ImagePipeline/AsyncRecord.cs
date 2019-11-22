@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private Present _present;
         private AsyncState asyncState;
         private int queuePriority;
-        private AsyncRecord.CompleteCallback callbackEvent;
+        private CompleteCallback callbackEvent;
         private AsyncRef qtpRef;
         private AsyncRef notificationRef;
         private int refs;
@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.queuePriority = 0;
             this.qtpRef = new AsyncRef(this, "qRef");
         }
-        public void AddCallback(AsyncRecord.CompleteCallback callback)
+        public void AddCallback(CompleteCallback callback)
         {
             Monitor.Enter(this);
             try
@@ -60,7 +60,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 }
                 else
                 {
-                    this.callbackEvent = (AsyncRecord.CompleteCallback)Delegate.Combine(this.callbackEvent, callback);
+                    this.callbackEvent = (CompleteCallback)Delegate.Combine(this.callbackEvent, callback);
                 }
             }
             finally

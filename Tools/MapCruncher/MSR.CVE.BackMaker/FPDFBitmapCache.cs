@@ -34,7 +34,7 @@ namespace MSR.CVE.BackMaker
             }
             D.Assert(this.created && width == this.allocatedSize.Width && height == this.allocatedSize.Height);
             this.locked = true;
-            FPDFBitmapCache.FPDFBitmap_FillRect(this.bitmapHandle, 0, 0, this.allocatedSize.Width, this.allocatedSize.Height, 255, 255, 255, 255);
+            FPDFBitmap_FillRect(this.bitmapHandle, 0, 0, this.allocatedSize.Width, this.allocatedSize.Height, 255, 255, 255, 255);
             return this.bitmapHandle;
         }
         private void dispose()
@@ -42,7 +42,7 @@ namespace MSR.CVE.BackMaker
             D.Assert(!this.locked);
             if (this.created)
             {
-                FPDFBitmapCache.FPDFBitmap_Destroy(this.bitmapHandle);
+                FPDFBitmap_Destroy(this.bitmapHandle);
                 this.created = false;
             }
         }
@@ -50,7 +50,7 @@ namespace MSR.CVE.BackMaker
         {
             D.Assert(!this.created);
             D.Assert(!this.locked);
-            this.bitmapHandle = FPDFBitmapCache.FPDFBitmap_Create(this.allocatedSize.Width, this.allocatedSize.Height, 1);
+            this.bitmapHandle = FPDFBitmap_Create(this.allocatedSize.Width, this.allocatedSize.Height, 1);
             this.created = true;
         }
         public void Release(int bitmapHandle)

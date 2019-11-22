@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
         private string displayName;
         private SourceMapInfo sourceMapInfo;
         private List<LegendRecord> legendRecords;
-        private SourceMapLegendFrame.ThumbnailDelegate thumbnailDelegate;
+        private ThumbnailDelegate thumbnailDelegate;
         public Size size
         {
             get
@@ -43,7 +43,7 @@ namespace MSR.CVE.BackMaker
                 return result;
             }
         }
-        public SourceMapLegendFrame(Layer layer, SourceMap sourceMap, List<LegendRecord> legendRecords, SourceMapLegendFrame.ThumbnailDelegate thumbnailDelegate)
+        public SourceMapLegendFrame(Layer layer, SourceMap sourceMap, List<LegendRecord> legendRecords, ThumbnailDelegate thumbnailDelegate)
         {
             this.filename = RenderState.ForceValidFilename(string.Format("SourceMap_{0}_{1}.html", layer.displayName, sourceMap.displayName));
             this.displayName = sourceMap.displayName;
@@ -57,7 +57,7 @@ namespace MSR.CVE.BackMaker
         }
         public SourceMapLegendFrame(MashupParseContext context)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(SourceMapLegendFrame.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             this.filename = context.GetRequiredAttribute("Filename");
             this.loadedSize.Width = context.GetRequiredAttributeInt("Width");
             this.loadedSize.Height = context.GetRequiredAttributeInt("Height");
@@ -66,7 +66,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(SourceMapLegendFrame.GetXMLTag());
+            writer.WriteStartElement(GetXMLTag());
             writer.WriteAttributeString("Filename", this.filename);
             writer.WriteAttributeString("URL", this.GetURL());
             writer.WriteAttributeString("Width", this.size.Width.ToString(CultureInfo.InvariantCulture));

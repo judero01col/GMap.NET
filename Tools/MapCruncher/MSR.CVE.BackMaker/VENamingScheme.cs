@@ -6,7 +6,7 @@ namespace MSR.CVE.BackMaker
         public static string SchemeName = "VE";
         public override string GetSchemeName()
         {
-            return VENamingScheme.SchemeName;
+            return SchemeName;
         }
         public VENamingScheme(string filePrefix, string fileSuffix) : base(filePrefix, fileSuffix)
         {
@@ -32,7 +32,7 @@ namespace MSR.CVE.BackMaker
         }
         public override string GetTileFilename(TileAddress ta)
         {
-            return string.Format("{0}{1}", VENamingScheme.GetQuadKey(ta), this.fileSuffix);
+            return string.Format("{0}{1}", GetQuadKey(ta), this.fileSuffix);
         }
     }
 }

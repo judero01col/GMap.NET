@@ -54,11 +54,11 @@ namespace MSR.CVE.BackMaker
             }
             this._pinPosition = new LatLonZoom(context, coordSys);
         }
-        public ErrorPosition GetErrorPosition(DisplayablePosition.ErrorMarker errorMarker)
+        public ErrorPosition GetErrorPosition(ErrorMarker errorMarker)
         {
             return this._errorPositions[(int)errorMarker];
         }
-        public void SetErrorPosition(DisplayablePosition.ErrorMarker errorMarker, LatLon errorPosition)
+        public void SetErrorPosition(ErrorMarker errorMarker, LatLon errorPosition)
         {
             this._errorPositions[(int)errorMarker] = new ErrorPosition(errorPosition);
         }

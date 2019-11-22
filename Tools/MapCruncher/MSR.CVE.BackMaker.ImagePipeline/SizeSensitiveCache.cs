@@ -9,7 +9,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private LinkedList<CacheRecord> lruQueue;
         private List<OpenDocumentStateObserverIfc> observers = new List<OpenDocumentStateObserverIfc>();
         private static bool oneEntryAtATime = false;
-        private static long paramCacheMaxSize = (long)((SizeSensitiveCache.oneEntryAtATime ? 1 : 400) * 1048576);
+        private static long paramCacheMaxSize = (long)((oneEntryAtATime ? 1 : 400) * 1048576);
         private long memoryUsed;
         private int spillCount;
         public SizeSensitiveCache(string debugName) : base(debugName)
@@ -53,7 +53,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.NotifyObservers(record.GetFuture(), true);
             }
         }
-        internal override void Remove(CacheRecord record, CacheBase.RemoveExpectation removeExpectation)
+        internal override void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             this.memoryUsed -= ((SizedCacheRecord)record).memoryCharge;
             this.lruQueue.Remove(record);
@@ -65,7 +65,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public override Present Get(IFuture future, string refCredit)
         {
-            if (SizeSensitiveCache.oneEntryAtATime)
+            if (oneEntryAtATime)
             {
                 Present present = base.Lookup(future);
                 if (present != null)
@@ -83,12 +83,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                while ((purge && this.lruQueue.Count > 0) || (this.memoryUsed > SizeSensitiveCache.paramCacheMaxSize && ((SizeSensitiveCache.oneEntryAtATime && this.lruQueue.Count > 0) || (!SizeSensitiveCache.oneEntryAtATime && this.lruQueue.Count > 1))))
+                while ((purge && this.lruQueue.Count > 0) || (this.memoryUsed > paramCacheMaxSize && ((oneEntryAtATime && this.lruQueue.Count > 0) || (!oneEntryAtATime && this.lruQueue.Count > 1))))
                 {
                     CacheRecord value = this.lruQueue.First.Value;
                     num++;
                     list.Add(value);
-                    this.Remove(value, CacheBase.RemoveExpectation.Present);
+                    this.Remove(value, RemoveExpectation.Present);
                     this.spillCount++;
                 }
             }

@@ -64,7 +64,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.sourceMapSupplier.Curry(new ParamDict(new object[]
             {
                 TermName.ImageBounds,
-                new WarpImageVerb.UnboundParameter()
+                new UnboundParameter()
             })).AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }

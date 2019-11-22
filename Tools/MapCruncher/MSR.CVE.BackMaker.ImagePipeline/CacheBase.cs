@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.cache = new Dictionary<IFuture, CacheRecord>();
             foreach (CacheRecord current in dictionary.Values)
             {
-                this.Remove(current, CacheBase.RemoveExpectation.Absent);
+                this.Remove(current, RemoveExpectation.Absent);
             }
         }
         internal abstract void Touch(CacheRecord record, bool recordIsNew);
@@ -36,13 +36,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         protected abstract void Clean();
         internal abstract CacheRecord NewRecord(IFuture future);
-        internal virtual void Remove(CacheRecord record, CacheBase.RemoveExpectation removeExpectation)
+        internal virtual void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             Monitor.Enter(this);
             try
             {
                 bool flag = this.cache.Remove(record.GetFuture());
-                D.Assert(removeExpectation == CacheBase.RemoveExpectation.Unknown || removeExpectation == CacheBase.RemoveExpectation.Present == flag, "Remove didn't meet expectations. That could suggest a mutating hash.");
+                D.Assert(removeExpectation == RemoveExpectation.Unknown || removeExpectation == RemoveExpectation.Present == flag, "Remove didn't meet expectations. That could suggest a mutating hash.");
                 this.resourceCounter.crement(-1);
                 record.DropReference();
             }
@@ -161,7 +161,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 if (flag)
                 {
                     CacheRecord record = this.cache[future];
-                    this.Remove(record, CacheBase.RemoveExpectation.Unknown);
+                    this.Remove(record, RemoveExpectation.Unknown);
                 }
             }
             finally

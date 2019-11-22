@@ -10,11 +10,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (FoxitLibManager._theInstance == null)
+                if (_theInstance == null)
                 {
-                    FoxitLibManager._theInstance = new FoxitLibManager();
+                    _theInstance = new FoxitLibManager();
                 }
-                return FoxitLibManager._theInstance;
+                return _theInstance;
             }
         }
         public FoxitLibWorker foxitLib

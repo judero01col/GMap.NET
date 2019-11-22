@@ -22,15 +22,15 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             JamaMatrix jamaMatrix2 = new JamaMatrix(num, 2);
             for (int i = 0; i < num; i++)
             {
-                LatLon latLon = (i == associationList.Count) ? PolynomialImageTransformer.getThirdPosition(associationList[0].sourcePosition.pinPosition.latlon, associationList[1].sourcePosition.pinPosition.latlon, true) : associationList[i].sourcePosition.pinPosition.latlon;
+                LatLon latLon = (i == associationList.Count) ? getThirdPosition(associationList[0].sourcePosition.pinPosition.latlon, associationList[1].sourcePosition.pinPosition.latlon, true) : associationList[i].sourcePosition.pinPosition.latlon;
                 jamaMatrix.SetElement(i, 0, latLon.lon);
                 jamaMatrix.SetElement(i, 1, latLon.lat);
-                LatLon latLon2 = (i == associationList.Count) ? PolynomialImageTransformer.getThirdPosition(MercatorCoordinateSystem.LatLonToMercator(associationList[0].globalPosition.pinPosition.latlon), MercatorCoordinateSystem.LatLonToMercator(associationList[1].globalPosition.pinPosition.latlon), false) : MercatorCoordinateSystem.LatLonToMercator(associationList[i].globalPosition.pinPosition.latlon);
+                LatLon latLon2 = (i == associationList.Count) ? getThirdPosition(MercatorCoordinateSystem.LatLonToMercator(associationList[0].globalPosition.pinPosition.latlon), MercatorCoordinateSystem.LatLonToMercator(associationList[1].globalPosition.pinPosition.latlon), false) : MercatorCoordinateSystem.LatLonToMercator(associationList[i].globalPosition.pinPosition.latlon);
                 jamaMatrix2.SetElement(i, 0, latLon2.lon);
                 jamaMatrix2.SetElement(i, 1, latLon2.lat);
             }
-            this.destMercatorToSourceTransformer = PolynomialImageTransformer.getPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
-            this.sourceToDestMercatorTransformer_approximate = PolynomialImageTransformer.getApproximateInverterPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
+            this.destMercatorToSourceTransformer = getPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
+            this.sourceToDestMercatorTransformer_approximate = getApproximateInverterPolyPointTransformer(jamaMatrix, jamaMatrix2, polynomialDegree);
             DownhillInverterPointTransformer flakyPointTransformer = new DownhillInverterPointTransformer(this.destMercatorToSourceTransformer, this.sourceToDestMercatorTransformer_approximate);
             IPointTransformer sourceToMercator = new RobustPointTransformer(flakyPointTransformer, this.sourceToDestMercatorTransformer_approximate);
             this.destLatLonToSourceTransformer = new LatLonToSourceTransform(this.destMercatorToSourceTransformer);
@@ -40,9 +40,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             MapRectangle inr = new MapRectangle(-0.5, -0.5, (double)destImage.Height - 0.5, (double)destImage.Width - 0.5);
             MapRectangle outr = MapRectangle.MapRectangleIgnoreOrder(MercatorCoordinateSystem.LatLonToMercator(destBounds.GetNW()), MercatorCoordinateSystem.LatLonToMercator(destBounds.GetSE()));
-            JamaMatrix matrix = PolynomialImageTransformer.FindAffineMatrix(inr, outr);
+            JamaMatrix matrix = FindAffineMatrix(inr, outr);
             MapRectangle outr2 = new MapRectangle(-0.5, -0.5, (double)sourceImage.Height - 0.5, (double)sourceImage.Width - 0.5);
-            JamaMatrix matrix2 = PolynomialImageTransformer.FindAffineMatrix(sourceBounds, outr2);
+            JamaMatrix matrix2 = FindAffineMatrix(sourceBounds, outr2);
             FastImageWarper.doWarp(destImage, sourceImage, new IPointTransformer[]
             {
                 new Affine2DPointTransformer(matrix),
@@ -53,7 +53,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private static IPolyPointTransformer getPolyPointTransformer(JamaMatrix sourcePoints, JamaMatrix destPoints, int polynomialDegree)
         {
             JamaMatrix am = IPolyPointTransformer.Polynomialize(destPoints, polynomialDegree);
-            JamaMatrix matrix = PolynomialImageTransformer.SVDSolveApply(am, PolynomialImageTransformer.PointUnroll(sourcePoints));
+            JamaMatrix matrix = SVDSolveApply(am, PointUnroll(sourcePoints));
             switch (polynomialDegree)
             {
             case 1:
@@ -66,7 +66,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         private static IPolyPointTransformer getApproximateInverterPolyPointTransformer(JamaMatrix sourcePoints, JamaMatrix destPoints, int polynomialDegree)
         {
-            return PolynomialImageTransformer.getPolyPointTransformer(destPoints, sourcePoints, polynomialDegree);
+            return getPolyPointTransformer(destPoints, sourcePoints, polynomialDegree);
         }
         private static LatLon getThirdPosition(LatLon p1, LatLon p2, bool senseNormal)
         {
@@ -98,12 +98,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         private static JamaMatrix FindAffineMatrix(MapRectangle inr, MapRectangle outr)
         {
-            JamaMatrix gm = PolynomialImageTransformer.CornersToVectorMatrix(inr);
-            return PolynomialImageTransformer.CornersToVectorMatrix(outr).times(PolynomialImageTransformer.PseudoInverseBySVD(gm));
+            JamaMatrix gm = CornersToVectorMatrix(inr);
+            return CornersToVectorMatrix(outr).times(PseudoInverseBySVD(gm));
         }
         private static JamaMatrix SVDSolveApply(JamaMatrix am, JamaMatrix b)
         {
-            return PolynomialImageTransformer.PseudoInverseBySVD(am).times(b);
+            return PseudoInverseBySVD(am).times(b);
         }
         private static JamaMatrix PointUnroll(JamaMatrix pointVector)
         {
@@ -137,7 +137,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             if (gm.RowDimension < gm.ColumnDimension)
             {
                 JamaMatrix gm2 = gm.transpose();
-                JamaMatrix jamaMatrix = PolynomialImageTransformer.PseudoInverseBySVD(gm2);
+                JamaMatrix jamaMatrix = PseudoInverseBySVD(gm2);
                 return jamaMatrix.transpose();
             }
             if (gm.RowDimension == gm.ColumnDimension)
@@ -193,18 +193,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             arg_73_0[arg_73_1] = array3;
             double[][] a = array;
             JamaMatrix jamaMatrix = new JamaMatrix(a);
-            PolynomialImageTransformer.RegularUnitGrid(4);
+            RegularUnitGrid(4);
             JamaMatrix jamaMatrix2 = (JamaMatrix)jamaMatrix.Clone();
             jamaMatrix2.SetElement(1, 0, 1.0);
             jamaMatrix2.SetElement(1, 1, 1.0);
             JamaMatrix jamaMatrix3 = IPolyPointTransformer.Polynomialize(jamaMatrix, 2);
-            JamaMatrix jamaMatrix4 = PolynomialImageTransformer.SVDSolveApply(jamaMatrix3, PolynomialImageTransformer.PointUnroll(jamaMatrix2));
+            JamaMatrix jamaMatrix4 = SVDSolveApply(jamaMatrix3, PointUnroll(jamaMatrix2));
             D.Say(0, "polyTransform:\n" + jamaMatrix4.ToString());
             JamaMatrix unrolledVector = jamaMatrix3.times(jamaMatrix4);
-            D.Say(0, "testSolution:\n" + PolynomialImageTransformer.PointRoll(unrolledVector, 2).ToString());
-            PolynomialImageTransformer.getPolyPointTransformer(jamaMatrix, jamaMatrix2, 2);
+            D.Say(0, "testSolution:\n" + PointRoll(unrolledVector, 2).ToString());
+            getPolyPointTransformer(jamaMatrix, jamaMatrix2, 2);
             LatLon p = new LatLon(0.93, 1.02);
-            D.Say(0, "Invert test:\n" + PolynomialImageTransformer.getApproximateInverterPolyPointTransformer(jamaMatrix, jamaMatrix2, 2).getTransformedPoint(p).ToString());
+            D.Say(0, "Invert test:\n" + getApproximateInverterPolyPointTransformer(jamaMatrix, jamaMatrix2, 2).getTransformedPoint(p).ToString());
         }
         public static void TestSVD()
         {

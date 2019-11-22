@@ -5,7 +5,7 @@ namespace MSR.CVE.BackMaker
 {
     public static class ImageTypeMapper
     {
-        private static List<ImageTypeMapping> mappings = ImageTypeMapper.InitMappings();
+        private static List<ImageTypeMapping> mappings = InitMappings();
         private static List<ImageTypeMapping> InitMappings()
         {
             return new List<ImageTypeMapping>
@@ -29,7 +29,7 @@ namespace MSR.CVE.BackMaker
                 extension = extension.Substring(1);
             }
             extension = extension.ToLower();
-            ImageTypeMapping imageTypeMapping = ImageTypeMapper.mappings.Find((ImageTypeMapping candidate) => candidate.extension == extension);
+            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.extension == extension);
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(extension);
@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker
         }
         public static ImageTypeMapping ByMimeType(string mimeType)
         {
-            ImageTypeMapping imageTypeMapping = ImageTypeMapper.mappings.Find((ImageTypeMapping candidate) => candidate.mimeType == mimeType);
+            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.mimeType == mimeType);
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(mimeType);
@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker
         }
         public static ImageTypeMapping ByImageFormat(ImageFormat imageFormat)
         {
-            ImageTypeMapping imageTypeMapping = ImageTypeMapper.mappings.Find((ImageTypeMapping candidate) => candidate.ImageFormatEquals(imageFormat));
+            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.ImageFormatEquals(imageFormat));
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(imageFormat.ToString());

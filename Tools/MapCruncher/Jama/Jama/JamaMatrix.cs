@@ -630,7 +630,7 @@ namespace Jama
         }
         public virtual JamaMatrix inverse()
         {
-            return this.solve(JamaMatrix.identity(this.m, this.m));
+            return this.solve(identity(this.m, this.m));
         }
         public virtual double det()
         {

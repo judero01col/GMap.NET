@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 current2.Key.Activate(current2.Value);
             }
-            InterestList.globalInterestCounter.crement(this.list.Count);
+            globalInterestCounter.crement(this.list.Count);
         }
         public void Dispose()
         {
@@ -35,7 +35,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 current.Dispose();
             }
-            InterestList.globalInterestCounter.crement(-this.list.Count);
+            globalInterestCounter.crement(-this.list.Count);
             this.list.Clear();
         }
     }

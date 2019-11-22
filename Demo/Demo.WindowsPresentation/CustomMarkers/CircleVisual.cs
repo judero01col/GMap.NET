@@ -28,8 +28,8 @@ namespace Demo.WindowsPresentation.CustomMarkers
          Popup.Child.Opacity = 0.777;
 
          SizeChanged += new SizeChangedEventHandler(CircleVisual_SizeChanged);
-         MouseEnter += new System.Windows.Input.MouseEventHandler(CircleVisual_MouseEnter);
-         MouseLeave += new System.Windows.Input.MouseEventHandler(CircleVisual_MouseLeave);
+         MouseEnter += new MouseEventHandler(CircleVisual_MouseEnter);
+         MouseLeave += new MouseEventHandler(CircleVisual_MouseLeave);
          Loaded += new RoutedEventHandler(OnLoaded);
 
          Text = "?";
@@ -48,7 +48,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
 
       void CircleVisual_SizeChanged(object sender, SizeChangedEventArgs e)
       {
-         Marker.Offset = new System.Windows.Point(-e.NewSize.Width/2, -e.NewSize.Height/2);
+         Marker.Offset = new Point(-e.NewSize.Width/2, -e.NewSize.Height/2);
          scale.CenterX = -Marker.Offset.X;
          scale.CenterY = -Marker.Offset.Y;
       }
@@ -60,7 +60,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
 
       readonly ScaleTransform scale = new ScaleTransform(1, 1);
 
-      void CircleVisual_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+      void CircleVisual_MouseLeave(object sender, MouseEventArgs e)
       {
          if(Popup.IsOpen)
          {
@@ -76,7 +76,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
          scale.ScaleX = 1;
       }
 
-      void CircleVisual_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+      void CircleVisual_MouseEnter(object sender, MouseEventArgs e)
       {
          if(!Popup.IsOpen)
          {
@@ -253,7 +253,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
          return false;
       }
 
-      int countCreate = 0;
+      int countCreate;
 
       private DrawingVisual Create()
       {

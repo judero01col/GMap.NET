@@ -62,8 +62,8 @@ namespace Demo.StreetView
          Title = "Demo.StreetView, enjoy! ;}";
       }
 
-      Vector RotationVector = new Vector();
-      Point DownPoint = new Point();
+      Vector RotationVector;
+      Point DownPoint;
       void Viewer_MouseMove(object sender, MouseEventArgs e)
       {
          if(e.LeftButton == MouseButtonState.Released)
@@ -132,7 +132,7 @@ namespace Demo.StreetView
                p.X = x;
 
                string fl = "Tiles\\" + zoom + "\\" + panoId + "\\img_" + x + "_" + y + ".jpg";
-               string dr = System.IO.Path.GetDirectoryName(fl);
+               string dr = Path.GetDirectoryName(fl);
                if(!Directory.Exists(dr))
                {
                   Directory.CreateDirectory(dr);

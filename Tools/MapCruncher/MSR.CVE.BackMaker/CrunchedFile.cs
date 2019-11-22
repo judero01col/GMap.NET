@@ -51,7 +51,7 @@ namespace MSR.CVE.BackMaker
         }
         public CrunchedFile(MashupParseContext context)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(CrunchedFile.crunchedFileTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(crunchedFileTag);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(LayerList.GetXMLTag()))
@@ -101,7 +101,7 @@ namespace MSR.CVE.BackMaker
             {
                 while (mashupParseContext.reader.Read() && crunchedFile == null)
                 {
-                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == CrunchedFile.crunchedFileTag)
+                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == crunchedFileTag)
                     {
                         crunchedFile = new CrunchedFile(mashupParseContext);
                         break;
@@ -117,7 +117,7 @@ namespace MSR.CVE.BackMaker
         }
         public string GetRelativeFilename()
         {
-            return CrunchedFile.CrunchedFilename;
+            return CrunchedFilename;
         }
         public void WriteXML()
         {
@@ -133,15 +133,15 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(CrunchedFile.crunchedFileTag);
+            writer.WriteStartElement(crunchedFileTag);
             writer.WriteAttributeString("xmlns:rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
             writer.WriteAttributeString("xmlns:dc", "http://purl.org/dc/elements/1.1/");
             writer.WriteAttributeString("xmlns:cc", "http://web.resource.org/cc/");
             writer.WriteAttributeString("Version", "1.6");
-            writer.WriteAttributeString(CrunchedFile.renderDateTag, DateTime.Now.ToString());
+            writer.WriteAttributeString(renderDateTag, DateTime.Now.ToString());
             if (this.sourceMashupFilename != null)
             {
-                writer.WriteAttributeString(CrunchedFile.SourceMashupFilenameAttr, this.sourceMashupFilename);
+                writer.WriteAttributeString(SourceMashupFilenameAttr, this.sourceMashupFilename);
             }
             if (this.permitComposition)
             {
@@ -177,7 +177,7 @@ namespace MSR.CVE.BackMaker
         private void WritePermitCompositionLicense(XmlTextWriter writer)
         {
             writer.WriteStartElement("rdf:RDF");
-            writer.WriteComment("This element indicates that the present XML document is in the\r\npublic domain. This permits others to compose the contents of this" + CrunchedFile.CrunchedFilename + " document with other such documents to produce\r\ncomposite map presentations. This element does not address the\r\nusage of the image tiles referred to by this document.");
+            writer.WriteComment("This element indicates that the present XML document is in the\r\npublic domain. This permits others to compose the contents of this" + CrunchedFilename + " document with other such documents to produce\r\ncomposite map presentations. This element does not address the\r\nusage of the image tiles referred to by this document.");
             writer.WriteStartElement("ThisDocument");
             writer.WriteAttributeString("xpath", "ancestor::CrunchUp");
             writer.WriteAttributeString("rdf:about", "");

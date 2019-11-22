@@ -41,13 +41,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             Stream responseStream = httpWebResponse.GetResponseStream();
             HashAlgorithm hashAlgorithm = new SHA1CryptoServiceProvider();
-            string text = FileUtilities.MakeTempFilename(FutureDocumentFromUri.MakeDownloadCacheDir(), "Download");
+            string text = FileUtilities.MakeTempFilename(MakeDownloadCacheDir(), "Download");
             Stream outputStream = new FileStream(text, FileMode.CreateNew);
             StreamTee streamTee = new StreamTee(responseStream, outputStream);
             byte[] buffer = hashAlgorithm.ComputeHash(streamTee);
             streamTee.Close();
             string arg = this.BytesToHexString(buffer);
-            string text2 = Path.Combine(FutureDocumentFromUri.MakeDownloadCacheDir(), string.Format("Hash-{0}.{1}", arg, ImageTypeMapper.ByMimeType(httpWebResponse.ContentType).extension));
+            string text2 = Path.Combine(MakeDownloadCacheDir(), string.Format("Hash-{0}.{1}", arg, ImageTypeMapper.ByMimeType(httpWebResponse.ContentType).extension));
             if (File.Exists(text2))
             {
                 File.Delete(text);
@@ -84,9 +84,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public void WriteXML(MashupWriteContext wc, string pathBase)
         {
-            wc.writer.WriteStartElement(FutureDocumentFromUri.GetXMLTag());
-            wc.writer.WriteAttributeString(FutureDocumentFromUri.FetchedDocumentUriAttr, this.documentUri.ToString());
-            wc.writer.WriteAttributeString(FutureDocumentFromUri.FetchedDocumentPageNumberAttr, this.pageNumber.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteStartElement(GetXMLTag());
+            wc.writer.WriteAttributeString(FetchedDocumentUriAttr, this.documentUri.ToString());
+            wc.writer.WriteAttributeString(FetchedDocumentPageNumberAttr, this.pageNumber.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteEndElement();
         }
         public override void AccumulateRobustHash(IRobustHash hash)
@@ -96,9 +96,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public FutureDocumentFromUri(MashupParseContext context)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(FutureDocumentFromUri.GetXMLTag());
-            this.documentUri = new Uri(context.GetRequiredAttribute(FutureDocumentFromUri.FetchedDocumentUriAttr));
-            this.pageNumber = context.GetRequiredAttributeInt(FutureDocumentFromUri.FetchedDocumentPageNumberAttr);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            this.documentUri = new Uri(context.GetRequiredAttribute(FetchedDocumentUriAttr));
+            this.pageNumber = context.GetRequiredAttributeInt(FetchedDocumentPageNumberAttr);
             xMLTagReader.SkipAllSubTags();
         }
         public string GetDefaultDisplayName()

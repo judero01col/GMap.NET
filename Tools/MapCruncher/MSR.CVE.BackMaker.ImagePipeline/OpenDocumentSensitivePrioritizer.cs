@@ -8,11 +8,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private class ODSPFutureSet : Dictionary<int, OpenDocumentSensitivePrioritizedFuture>
         {
         }
-        private class DocToFuturesDict : Dictionary<IFuture, OpenDocumentSensitivePrioritizer.ODSPFutureSet>
+        private class DocToFuturesDict : Dictionary<IFuture, ODSPFutureSet>
         {
         }
         private SizeSensitiveCache openDocumentCache;
-        private OpenDocumentSensitivePrioritizer.DocToFuturesDict docToFuturesDict = new OpenDocumentSensitivePrioritizer.DocToFuturesDict();
+        private DocToFuturesDict docToFuturesDict = new DocToFuturesDict();
         public OpenDocumentSensitivePrioritizer(SizeSensitiveCache openDocumentCache)
         {
             this.openDocumentCache = openDocumentCache;
@@ -28,7 +28,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     if (!this.docToFuturesDict.ContainsKey(openDocumentFuture))
                     {
-                        this.docToFuturesDict[openDocumentFuture] = new OpenDocumentSensitivePrioritizer.ODSPFutureSet();
+                        this.docToFuturesDict[openDocumentFuture] = new ODSPFutureSet();
                     }
                     D.Assert(!this.docToFuturesDict[openDocumentFuture].ContainsKey(openDocumentSensitivePrioritizedFuture.identity));
                     this.docToFuturesDict[openDocumentFuture][openDocumentSensitivePrioritizedFuture.identity] = openDocumentSensitivePrioritizedFuture;

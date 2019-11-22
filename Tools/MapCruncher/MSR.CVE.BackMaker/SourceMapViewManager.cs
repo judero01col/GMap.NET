@@ -162,7 +162,7 @@ namespace MSR.CVE.BackMaker
         }
         internal LatLonZoom DefaultReferenceMapPosition(DefaultReferenceView drv)
         {
-            return SourceMapViewManager.DefaultReferenceMapPosition(this.sourceMap, this.mapTileSourceFactory, this.viewControl, drv);
+            return DefaultReferenceMapPosition(this.sourceMap, this.mapTileSourceFactory, this.viewControl, drv);
         }
         internal static LatLonZoom DefaultReferenceMapPosition(SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory, ViewControlIfc viewControl, DefaultReferenceView drv)
         {

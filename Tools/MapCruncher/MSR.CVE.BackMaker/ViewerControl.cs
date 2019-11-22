@@ -18,7 +18,7 @@ namespace MSR.CVE.BackMaker
             Cursor GetCursor(bool dragging);
             void OnPopup(ContextMenu menu);
         }
-        public class NoAction : ViewerControl.MouseAction
+        public class NoAction : MouseAction
         {
             public void Dragged(Point diff)
             {
@@ -31,7 +31,7 @@ namespace MSR.CVE.BackMaker
                 return Cursors.No;
             }
         }
-        public class DragImageAction : ViewerControl.MouseAction
+        public class DragImageAction : MouseAction
         {
             private ViewerControl sourceViewer;
             public DragImageAction(ViewerControl sourceViewer)
@@ -58,7 +58,7 @@ namespace MSR.CVE.BackMaker
         {
             void PaintTile(Graphics g, Rectangle paintLocation);
         }
-        private class ImagePainter : ViewerControl.TilePaintClosure, IDisposable
+        private class ImagePainter : TilePaintClosure, IDisposable
         {
             private ImageRef imageRef;
             private Region clipRegion;
@@ -89,7 +89,7 @@ namespace MSR.CVE.BackMaker
                 this.imageRef.Dispose();
             }
         }
-        private class NullPainter : ViewerControl.TilePaintClosure, IDisposable
+        private class NullPainter : TilePaintClosure, IDisposable
         {
             public void PaintTile(Graphics g, Rectangle paintLocation)
             {
@@ -98,7 +98,7 @@ namespace MSR.CVE.BackMaker
             {
             }
         }
-        private class MessagePainter : ViewerControl.TilePaintClosure, IDisposable
+        private class MessagePainter : TilePaintClosure, IDisposable
         {
             private int offsetPixels;
             private string message;
@@ -129,7 +129,7 @@ namespace MSR.CVE.BackMaker
             {
             }
         }
-        private class TileNamePainter : ViewerControl.TilePaintClosure, IDisposable
+        private class TileNamePainter : TilePaintClosure, IDisposable
         {
             private string tileName;
             public TileNamePainter(string tileName)
@@ -151,7 +151,7 @@ namespace MSR.CVE.BackMaker
             {
             }
         }
-        private class TileBoundaryPainter : ViewerControl.TilePaintClosure, IDisposable
+        private class TileBoundaryPainter : TilePaintClosure, IDisposable
         {
             public void PaintTile(Graphics g, Rectangle paintLocation)
             {
@@ -164,8 +164,8 @@ namespace MSR.CVE.BackMaker
         private class PaintKit
         {
             public Rectangle paintLocation;
-            public List<ViewerControl.TilePaintClosure> meatyParts = new List<ViewerControl.TilePaintClosure>();
-            public List<ViewerControl.TilePaintClosure> annotations = new List<ViewerControl.TilePaintClosure>();
+            public List<TilePaintClosure> meatyParts = new List<TilePaintClosure>();
+            public List<TilePaintClosure> annotations = new List<TilePaintClosure>();
             public PaintKit(Rectangle paintLocation)
             {
                 this.paintLocation = paintLocation;
@@ -199,7 +199,7 @@ namespace MSR.CVE.BackMaker
         private LatentRegionHolder latentRegionHolder;
         private Point drag_origin;
         private bool is_dragging;
-        private ViewerControl.MouseAction imminentAction = new ViewerControl.NoAction();
+        private MouseAction imminentAction = new NoAction();
         public MapDrawingOption ShowCrosshairs;
         public MapDrawingOption ShowTileBoundaries;
         public MapDrawingOption ShowTileNames;
@@ -480,16 +480,16 @@ namespace MSR.CVE.BackMaker
                 this.center().setPosition(CoordinateSystemUtilities.GetZoomedView(this.GetCoordinateSystem(), this.center().llz, zoomFactor));
             }
         }
-        private ViewerControl.MouseAction ImminentAction(MouseEventArgs e)
+        private MouseAction ImminentAction(MouseEventArgs e)
         {
-            ViewerControl.MouseAction mouseAction = null;
+            MouseAction mouseAction = null;
             if (this.userRegionViewController != null)
             {
                 mouseAction = this.userRegionViewController.ImminentAction(e);
             }
             if (mouseAction == null)
             {
-                mouseAction = new ViewerControl.DragImageAction(this);
+                mouseAction = new DragImageAction(this);
             }
             return mouseAction;
         }
@@ -532,7 +532,7 @@ namespace MSR.CVE.BackMaker
         protected override void OnMouseLeave(EventArgs e)
         {
             this.is_dragging = false;
-            this.imminentAction = new ViewerControl.NoAction();
+            this.imminentAction = new NoAction();
             base.OnMouseLeave(e);
         }
         private void DragOnImage(Point diff)
@@ -721,7 +721,7 @@ namespace MSR.CVE.BackMaker
             this.activeTiles = new InterestList();
             e.ResetClip();
             e.Graphics.FillRectangle(new SolidBrush(Color.LightPink), new Rectangle(new Point(0, 0), e.Size));
-            List<ViewerControl.PaintKit> list = new List<ViewerControl.PaintKit>();
+            List<PaintKit> list = new List<PaintKit>();
             list.AddRange(this.AssembleLayer(e, llz, this.baseLayer, 0));
             int num = 1;
             foreach (IDisplayableSource current in this.alphaLayers)
@@ -803,30 +803,30 @@ namespace MSR.CVE.BackMaker
             this.displayProgressBar.Maximum = this.tilesRequired;
             this.displayProgressBar.Value = this.tilesAvailable;
         }
-        private void PaintKits(Graphics g, List<ViewerControl.PaintKit> kits)
+        private void PaintKits(Graphics g, List<PaintKit> kits)
         {
             g.CompositingMode = CompositingMode.SourceOver;
-            foreach (ViewerControl.PaintKit current in kits)
+            foreach (PaintKit current in kits)
             {
-                foreach (ViewerControl.TilePaintClosure current2 in current.meatyParts)
+                foreach (TilePaintClosure current2 in current.meatyParts)
                 {
                     current2.PaintTile(g, current.paintLocation);
                     current2.Dispose();
                 }
             }
             g.ResetClip();
-            foreach (ViewerControl.PaintKit current3 in kits)
+            foreach (PaintKit current3 in kits)
             {
-                foreach (ViewerControl.TilePaintClosure current4 in current3.annotations)
+                foreach (TilePaintClosure current4 in current3.annotations)
                 {
                     current4.PaintTile(g, current3.paintLocation);
                     current4.Dispose();
                 }
             }
         }
-        private List<ViewerControl.PaintKit> AssembleLayer(PaintSpecification e, LatLonZoom llz, IDisplayableSource tileSource, int stackOrder)
+        private List<PaintKit> AssembleLayer(PaintSpecification e, LatLonZoom llz, IDisplayableSource tileSource, int stackOrder)
         {
-            List<ViewerControl.PaintKit> list = new List<ViewerControl.PaintKit>();
+            List<PaintKit> list = new List<PaintKit>();
             CoordinateSystemIfc defaultCoordinateSystem = tileSource.GetDefaultCoordinateSystem();
             TileDisplayDescriptorArray tileArrayDescriptor = defaultCoordinateSystem.GetTileArrayDescriptor(llz, e.Size);
             AsyncRef asyncRef;
@@ -836,10 +836,10 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception ex)
             {
-                ViewerControl.MessagePainter item = new ViewerControl.MessagePainter(stackOrder * 12, BigDebugKnob.theKnob.debugFeaturesEnabled ? ex.ToString() : "X", stackOrder == 0);
+                MessagePainter item = new MessagePainter(stackOrder * 12, BigDebugKnob.theKnob.debugFeaturesEnabled ? ex.ToString() : "X", stackOrder == 0);
                 foreach (TileDisplayDescriptor current in tileArrayDescriptor)
                 {
-                    list.Add(new ViewerControl.PaintKit(current.paintLocation)
+                    list.Add(new PaintKit(current.paintLocation)
                     {
                         annotations = 
                         {
@@ -864,7 +864,7 @@ namespace MSR.CVE.BackMaker
             int num = 0;
             foreach (TileDisplayDescriptor current2 in tileArrayDescriptor)
             {
-                ViewerControl.PaintKit paintKit = new ViewerControl.PaintKit(current2.paintLocation);
+                PaintKit paintKit = new PaintKit(current2.paintLocation);
                 D.Sayf(10, "count {0} tdd {1}", new object[]
                 {
                     num,
@@ -891,7 +891,7 @@ namespace MSR.CVE.BackMaker
                 asyncRef2.SetInterest(interest);
                 if (asyncRef2.present == null)
                 {
-                    ViewerControl.AsyncNotifier @object = new ViewerControl.AsyncNotifier(this);
+                    AsyncNotifier @object = new AsyncNotifier(this);
                     asyncRef2.AddCallback(new AsyncRecord.CompleteCallback(@object.AsyncRecordComplete));
                 }
                 this.activeTiles.Add(asyncRef2);
@@ -909,7 +909,7 @@ namespace MSR.CVE.BackMaker
                 {
                     flag = false;
                     ImageRef imageRef = (ImageRef)asyncRef2.present.Duplicate("tpc");
-                    paintKit.meatyParts.Add(new ViewerControl.ImagePainter(imageRef, clipRegion));
+                    paintKit.meatyParts.Add(new ImagePainter(imageRef, clipRegion));
                 }
                 else
                 {
@@ -923,13 +923,13 @@ namespace MSR.CVE.BackMaker
                         {
                             flag = false;
                             PresentFailureCode presentFailureCode = (PresentFailureCode)asyncRef2.present;
-                            ViewerControl.MessagePainter item2 = new ViewerControl.MessagePainter(stackOrder * 12, BigDebugKnob.theKnob.debugFeaturesEnabled ? StringUtils.breakLines(presentFailureCode.ToString()) : "X", stackOrder == 0);
+                            MessagePainter item2 = new MessagePainter(stackOrder * 12, BigDebugKnob.theKnob.debugFeaturesEnabled ? StringUtils.breakLines(presentFailureCode.ToString()) : "X", stackOrder == 0);
                             paintKit.annotations.Add(item2);
                         }
                         else
                         {
                             flag = true;
-                            ViewerControl.MessagePainter item3 = new ViewerControl.MessagePainter(stackOrder * 12, stackOrder.ToString(), stackOrder == 0);
+                            MessagePainter item3 = new MessagePainter(stackOrder * 12, stackOrder.ToString(), stackOrder == 0);
                             if (stackOrder == 0)
                             {
                                 paintKit.meatyParts.Add(item3);
@@ -948,11 +948,11 @@ namespace MSR.CVE.BackMaker
                 }
                 if ((flag && stackOrder == 0) || MapDrawingOption.IsEnabled(this.ShowTileBoundaries))
                 {
-                    paintKit.annotations.Add(new ViewerControl.TileBoundaryPainter());
+                    paintKit.annotations.Add(new TileBoundaryPainter());
                 }
                 if (MapDrawingOption.IsEnabled(this.ShowTileNames))
                 {
-                    paintKit.annotations.Add(new ViewerControl.TileNamePainter(current2.tileAddress.ToString()));
+                    paintKit.annotations.Add(new TileNamePainter(current2.tileAddress.ToString()));
                 }
                 asyncRef2.Dispose();
                 list.Add(paintKit);
@@ -1084,68 +1084,68 @@ namespace MSR.CVE.BackMaker
         }
         private void InitializeComponent()
         {
-            this.zoomOutButton = new System.Windows.Forms.Button();
-            this.zoomInButton = new System.Windows.Forms.Button();
-            this.creditsTextBox = new System.Windows.Forms.TextBox();
-            this.zenButton = new System.Windows.Forms.Button();
-            this.displayProgressBar = new System.Windows.Forms.ProgressBar();
-            this.llzBox = new MSR.CVE.BackMaker.LLZBox();
+            this.zoomOutButton = new Button();
+            this.zoomInButton = new Button();
+            this.creditsTextBox = new TextBox();
+            this.zenButton = new Button();
+            this.displayProgressBar = new ProgressBar();
+            this.llzBox = new LLZBox();
             this.SuspendLayout();
             // 
             // zoomOutButton
             // 
-            this.zoomOutButton.Location = new System.Drawing.Point(242, 39);
+            this.zoomOutButton.Location = new Point(242, 39);
             this.zoomOutButton.Name = "zoomOutButton";
-            this.zoomOutButton.Size = new System.Drawing.Size(82, 23);
+            this.zoomOutButton.Size = new Size(82, 23);
             this.zoomOutButton.TabIndex = 9;
             this.zoomOutButton.Text = "Zoom Out";
-            this.zoomOutButton.Click += new System.EventHandler(this.zoomOutButton_Click);
+            this.zoomOutButton.Click += new EventHandler(this.zoomOutButton_Click);
             // 
             // zoomInButton
             // 
-            this.zoomInButton.Location = new System.Drawing.Point(242, 68);
+            this.zoomInButton.Location = new Point(242, 68);
             this.zoomInButton.Name = "zoomInButton";
-            this.zoomInButton.Size = new System.Drawing.Size(82, 23);
+            this.zoomInButton.Size = new Size(82, 23);
             this.zoomInButton.TabIndex = 10;
             this.zoomInButton.Text = "Zoom In";
-            this.zoomInButton.Click += new System.EventHandler(this.zoomInButton_Click);
+            this.zoomInButton.Click += new EventHandler(this.zoomInButton_Click);
             // 
             // creditsTextBox
             // 
-            this.creditsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.creditsTextBox.Location = new System.Drawing.Point(330, 34);
+            this.creditsTextBox.Anchor = ((AnchorStyles)((AnchorStyles.Top | AnchorStyles.Right)));
+            this.creditsTextBox.Location = new Point(330, 34);
             this.creditsTextBox.Multiline = true;
             this.creditsTextBox.Name = "creditsTextBox";
             this.creditsTextBox.ReadOnly = true;
-            this.creditsTextBox.Size = new System.Drawing.Size(115, 32);
+            this.creditsTextBox.Size = new Size(115, 32);
             this.creditsTextBox.TabIndex = 12;
             this.creditsTextBox.Visible = false;
             // 
             // zenButton
             // 
-            this.zenButton.Location = new System.Drawing.Point(242, 10);
+            this.zenButton.Location = new Point(242, 10);
             this.zenButton.Name = "zenButton";
-            this.zenButton.Size = new System.Drawing.Size(82, 23);
+            this.zenButton.Size = new Size(82, 23);
             this.zenButton.TabIndex = 13;
             this.zenButton.Text = "zenButton";
             this.zenButton.UseVisualStyleBackColor = true;
             // 
             // displayProgressBar
             // 
-            this.displayProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.displayProgressBar.Location = new System.Drawing.Point(330, 14);
+            this.displayProgressBar.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Left) 
+            | AnchorStyles.Right)));
+            this.displayProgressBar.Location = new Point(330, 14);
             this.displayProgressBar.Name = "displayProgressBar";
-            this.displayProgressBar.Size = new System.Drawing.Size(115, 19);
+            this.displayProgressBar.Size = new Size(115, 19);
             this.displayProgressBar.TabIndex = 14;
             // 
             // llzBox
             // 
-            this.llzBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.llzBox.Location = new System.Drawing.Point(0, 0);
-            this.llzBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.llzBox.Dock = DockStyle.Top;
+            this.llzBox.Location = new Point(0, 0);
+            this.llzBox.Margin = new Padding(4, 4, 4, 4);
             this.llzBox.Name = "llzBox";
-            this.llzBox.Size = new System.Drawing.Size(456, 95);
+            this.llzBox.Size = new Size(456, 95);
             this.llzBox.TabIndex = 11;
             // 
             // ViewerControl
@@ -1157,7 +1157,7 @@ namespace MSR.CVE.BackMaker
             this.Controls.Add(this.zenButton);
             this.Controls.Add(this.llzBox);
             this.Name = "ViewerControl";
-            this.Size = new System.Drawing.Size(456, 615);
+            this.Size = new Size(456, 615);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -87,7 +87,7 @@ namespace Demo.WindowsForms
             GPoint topLeftPx = info.Type.Projection.FromLatLngToPixel(info.Area.LocationTopLeft, info.Zoom);
             GPoint rightButtomPx = info.Type.Projection.FromLatLngToPixel(info.Area.Bottom, info.Area.Right, info.Zoom);
             GPoint pxDelta = new GPoint(rightButtomPx.X - topLeftPx.X, rightButtomPx.Y - topLeftPx.Y);
-            GMap.NET.GSize maxOfTiles = info.Type.Projection.GetTileMatrixMaxXY(info.Zoom);
+            GSize maxOfTiles = info.Type.Projection.GetTileMatrixMaxXY(info.Zoom);
 
             int padding = info.MakeWorldFile || info.MakeKmz ? 0 : 22;
             {
@@ -168,7 +168,7 @@ namespace Demo.WindowsForms
                                     }
                                     else
                                     {
-                                       System.Drawing.PointF p = rp.GetLastPoint();
+                                       PointF p = rp.GetLastPoint();
                                        rp.AddLine(p.X, p.Y, p2.X, p2.Y);
                                     }
                                  }
@@ -284,7 +284,7 @@ namespace Demo.WindowsForms
                            // draw bounds & coordinates
                            using(Pen p = new Pen(Brushes.DimGray, 3))
                            {
-                              p.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                              p.DashStyle = DashStyle.DashDot;
 
                               gfx.DrawRectangle(p, rect);
 

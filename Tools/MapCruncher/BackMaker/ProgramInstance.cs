@@ -89,11 +89,11 @@ namespace BackMaker
                     mainAppForm.UndoConstruction();
                 }
             }
-            return ProgramInstance.applicationResultCode;
+            return applicationResultCode;
         }
         public static void SetApplicationResultCode(int rc)
         {
-            ProgramInstance.applicationResultCode = rc;
+            applicationResultCode = rc;
         }
     }
 }

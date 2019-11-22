@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public override void writeToXml(XmlTextWriter writer)
         {
-            JamaMatrix jamaMatrix = IPolyPointTransformer.PolyExps(this.polynomialDegree);
+            JamaMatrix jamaMatrix = PolyExps(this.polynomialDegree);
             string[] array = new string[]
             {
                 "x",
@@ -43,7 +43,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public static JamaMatrix Polynomialize(JamaMatrix values, int degree)
         {
-            JamaMatrix jamaMatrix = IPolyPointTransformer.PolyExps(degree);
+            JamaMatrix jamaMatrix = PolyExps(degree);
             JamaMatrix jamaMatrix2 = new JamaMatrix(values.RowDimension, jamaMatrix.RowDimension);
             for (int i = 0; i < jamaMatrix.RowDimension; i++)
             {

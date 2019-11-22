@@ -8,13 +8,13 @@ namespace MSR.CVE.BackMaker
         public delegate void UndoAdddSourceMapDelegate(string message);
         private SourceMap sourceMap;
         private MapTileSourceFactory mapTileSourceFactory;
-        private InsaneSourceMapRemover.UndoAdddSourceMapDelegate undoAddSourceMapDelegate;
+        private UndoAdddSourceMapDelegate undoAddSourceMapDelegate;
         private bool handled;
         private int tryCount;
-        public InsaneSourceMapRemover(SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory, InsaneSourceMapRemover.UndoAdddSourceMapDelegate removeSourceMapDelegate) : this(sourceMap, mapTileSourceFactory, removeSourceMapDelegate, 0)
+        public InsaneSourceMapRemover(SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory, UndoAdddSourceMapDelegate removeSourceMapDelegate) : this(sourceMap, mapTileSourceFactory, removeSourceMapDelegate, 0)
         {
         }
-        private InsaneSourceMapRemover(SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory, InsaneSourceMapRemover.UndoAdddSourceMapDelegate removeSourceMapDelegate, int tryCount)
+        private InsaneSourceMapRemover(SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory, UndoAdddSourceMapDelegate removeSourceMapDelegate, int tryCount)
         {
             this.sourceMap = sourceMap;
             this.mapTileSourceFactory = mapTileSourceFactory;

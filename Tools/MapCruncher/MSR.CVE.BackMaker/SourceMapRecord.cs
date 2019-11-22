@@ -89,7 +89,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(SourceMapRecord.GetXMLTag());
+            writer.WriteStartElement(GetXMLTag());
             writer.WriteAttributeString("DisplayName", this.displayName);
             writer.WriteAttributeString("ReferenceName", SampleHTMLWriter.ReferenceName(this.displayName));
             writer.WriteAttributeString("MaxZoom", this.maxZoom.ToString());

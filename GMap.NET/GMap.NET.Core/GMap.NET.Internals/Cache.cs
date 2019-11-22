@@ -105,7 +105,7 @@ namespace GMap.NET.Internals
             return path;
         }
 
-        public static bool Delay = false;
+        public static bool Delay;
     }
 
     /// <summary>

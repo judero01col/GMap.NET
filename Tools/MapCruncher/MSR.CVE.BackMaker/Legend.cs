@@ -89,9 +89,9 @@ namespace MSR.CVE.BackMaker
             string attribute = context.reader.GetAttribute("RenderedSize");
             if (attribute != null)
             {
-                Legend.renderedSizeRange.Parse(context, "RenderedSize", attribute);
+                renderedSizeRange.Parse(context, "RenderedSize", attribute);
             }
-            XMLTagReader xMLTagReader = context.NewTagReader(Legend.GetXMLTag());
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             context.ExpectIdentity(this);
             while (xMLTagReader.FindNextStartTag())
             {
@@ -111,7 +111,7 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(MashupWriteContext context)
         {
-            context.writer.WriteStartElement(Legend.GetXMLTag());
+            context.writer.WriteStartElement(GetXMLTag());
             context.WriteIdentityAttr(this);
             context.writer.WriteAttributeString("DisplayName", this._displayName);
             context.writer.WriteAttributeString("RenderedSize", this.renderedSize.ToString(CultureInfo.InvariantCulture));
@@ -156,7 +156,7 @@ namespace MSR.CVE.BackMaker
             RenderRegion renderRegion = this.latentRegionHolder.renderRegion;
             if (renderRegion == null)
             {
-                throw new Legend.RenderFailedException("Region unavailable");
+                throw new RenderFailedException("Region unavailable");
             }
             renderRegion = renderRegion.Copy(new DirtyEvent());
             MapRectangleParameter mapRectangleParameter = new MapRectangleParameter(renderRegion.GetBoundingBox());
@@ -178,7 +178,7 @@ namespace MSR.CVE.BackMaker
             Present present = this.GetRenderedLegendFuture(displayableSource, FutureFeatures.Cached).Realize("Legend.RenderLegend");
             if (!(present is ImageRef))
             {
-                throw new Legend.RenderFailedException("Render failed: " + present.ToString());
+                throw new RenderFailedException("Render failed: " + present.ToString());
             }
             return (ImageRef)present;
         }

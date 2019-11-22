@@ -50,11 +50,11 @@ namespace BSE.Windows.Forms
 
       #region FieldsPrivate
 
-      private System.Drawing.Image m_imageChevron;
-      private System.Drawing.Image m_imageChevronUp;
-      private System.Drawing.Image m_imageChevronDown;
+      private Image m_imageChevron;
+      private Image m_imageChevronUp;
+      private Image m_imageChevronDown;
       private CustomXPanderPanelColors m_customColors;
-      private System.Drawing.Image m_imageClosePanel;
+      private Image m_imageClosePanel;
       private bool m_bIsClosable = true;
       private CaptionStyle m_captionStyle;
 
@@ -363,8 +363,8 @@ namespace BSE.Windows.Forms
                this.Expand = false;
                foreach(Control control in this.Parent.Controls)
                {
-                  BSE.Windows.Forms.XPanderPanel xpanderPanel =
-                            control as BSE.Windows.Forms.XPanderPanel;
+                  XPanderPanel xpanderPanel =
+                            control as XPanderPanel;
 
                   if(xpanderPanel != null)
                   {
@@ -526,7 +526,7 @@ namespace BSE.Windows.Forms
                   XPanderPanelList xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
                   if((xpanderPanelList != null) && (xpanderPanelList.Dock == DockStyle.Fill))
                   {
-                     BSE.Windows.Forms.Panel panel = xpanderPanelList.Parent as BSE.Windows.Forms.Panel;
+                     Panel panel = xpanderPanelList.Parent as Panel;
                      XPanderPanel parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
                      if(((panel != null) && (panel.Padding == new Padding(0))) ||
                                 ((parentXPanderPanel != null) && (parentXPanderPanel.Padding == new Padding(0))))
@@ -641,7 +641,7 @@ namespace BSE.Windows.Forms
                XPanderPanelList xpanderPanelList = xpanderPanel.Parent as XPanderPanelList;
                if((xpanderPanelList != null) && (xpanderPanelList.Dock == DockStyle.Fill))
                {
-                  BSE.Windows.Forms.Panel panel = xpanderPanelList.Parent as BSE.Windows.Forms.Panel;
+                  Panel panel = xpanderPanelList.Parent as Panel;
                   XPanderPanel parentXPanderPanel = xpanderPanelList.Parent as XPanderPanel;
                   if(((panel != null) && (panel.Padding == new Padding(0))) ||
                             ((parentXPanderPanel != null) && (parentXPanderPanel.Padding == new Padding(0))))
@@ -695,8 +695,8 @@ namespace BSE.Windows.Forms
 
          foreach(Control control in this.Parent.Controls)
          {
-            BSE.Windows.Forms.XPanderPanel xpanderPanel =
-					control as BSE.Windows.Forms.XPanderPanel;
+            XPanderPanel xpanderPanel =
+					control as XPanderPanel;
 
             if((xpanderPanel != null) && (xpanderPanel.Visible == true))
             {
@@ -708,8 +708,8 @@ namespace BSE.Windows.Forms
 
          foreach(Control control in this.Parent.Controls)
          {
-            BSE.Windows.Forms.XPanderPanel xpanderPanel =
-					control as BSE.Windows.Forms.XPanderPanel;
+            XPanderPanel xpanderPanel =
+					control as XPanderPanel;
 
             if(xpanderPanel != null)
             {
@@ -729,8 +729,8 @@ namespace BSE.Windows.Forms
          int iTop = this.Parent.Padding.Top;
          foreach(Control control in this.Parent.Controls)
          {
-            BSE.Windows.Forms.XPanderPanel xpanderPanel =
-					control as BSE.Windows.Forms.XPanderPanel;
+            XPanderPanel xpanderPanel =
+					control as XPanderPanel;
 
             if((xpanderPanel != null) && (xpanderPanel.Visible == true))
             {

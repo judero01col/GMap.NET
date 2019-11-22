@@ -95,16 +95,16 @@ namespace System.IO.Compression
         private string Comment = "";
 
         // Central dir image
-        private byte[] CentralDirImage = null;
+        private byte[] CentralDirImage;
 
         // Existing files in zip
-        private ushort ExistingFiles = 0;
+        private ushort ExistingFiles;
 
         // File access for Open method
         private FileAccess Access;
 
         // Static CRC32 Table
-        private static UInt32[] CrcTable = null;
+        private static UInt32[] CrcTable;
 
         // Default filename encoder
         private static Encoding DefaultEncoding = Encoding.GetEncoding(437);

@@ -52,21 +52,21 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RenderToS3Options.xmlTag);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3credentialsFilename, this.s3credentialsFilename);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3bucket, this.s3bucket);
-            writer.WriteAttributeString(RenderToS3Options.attr_s3pathPrefix, this.s3pathPrefix);
+            writer.WriteStartElement(xmlTag);
+            writer.WriteAttributeString(attr_s3credentialsFilename, this.s3credentialsFilename);
+            writer.WriteAttributeString(attr_s3bucket, this.s3bucket);
+            writer.WriteAttributeString(attr_s3pathPrefix, this.s3pathPrefix);
             writer.WriteEndElement();
         }
         public RenderToS3Options(MashupParseContext context, DirtyEvent parentDirtyEvent)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(RenderToS3Options.xmlTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(xmlTag);
             this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
-            this.s3credentialsFilename = context.GetRequiredAttribute(RenderToS3Options.attr_s3credentialsFilename);
+            this.s3credentialsFilename = context.GetRequiredAttribute(attr_s3credentialsFilename);
             this._s3bucket = new DirtyString(parentDirtyEvent);
-            this.s3bucket = context.GetRequiredAttribute(RenderToS3Options.attr_s3bucket);
+            this.s3bucket = context.GetRequiredAttribute(attr_s3bucket);
             this._s3pathPrefix = new DirtyString(parentDirtyEvent);
-            this.s3pathPrefix = context.GetRequiredAttribute(RenderToS3Options.attr_s3pathPrefix);
+            this.s3pathPrefix = context.GetRequiredAttribute(attr_s3pathPrefix);
             xMLTagReader.SkipAllSubTags();
         }
         public override string ToString()

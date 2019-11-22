@@ -491,25 +491,25 @@ namespace Org.Mentalis.Network.ProxySocket
         private object m_State;
 
         /// <summary>Holds the value of the ProxyEndPoint property.</summary>
-        private IPEndPoint m_ProxyEndPoint = null;
+        private IPEndPoint m_ProxyEndPoint;
 
         /// <summary>Holds the value of the ProxyType property.</summary>
         private ProxyTypes m_ProxyType = ProxyTypes.None;
 
         /// <summary>Holds the value of the ProxyUser property.</summary>
-        private string m_ProxyUser = null;
+        private string m_ProxyUser;
 
         /// <summary>Holds the value of the ProxyPass property.</summary>
-        private string m_ProxyPass = null;
+        private string m_ProxyPass;
 
         /// <summary>Holds a pointer to the method that should be called when the Socket is connected to the remote device.</summary>
-        private AsyncCallback CallBack = null;
+        private AsyncCallback CallBack;
 
         /// <summary>Holds the value of the AsyncResult property.</summary>
         private IAsyncProxyResult m_AsyncResult;
 
         /// <summary>Holds the value of the ToThrow property.</summary>
-        private Exception m_ToThrow = null;
+        private Exception m_ToThrow;
 
         /// <summary>Holds the value of the RemotePort property.</summary>
         private int m_RemotePort;

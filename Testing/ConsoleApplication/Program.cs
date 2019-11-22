@@ -17,8 +17,8 @@ namespace ConsoleApplication
         //const int batchSize = 3;
         const int logSize = 8;//1024 * 8;
         readonly PointLatLng[] gpsLog = new PointLatLng[logSize];
-        int logCounter = 0;
-        bool logFull = false;
+        int logCounter;
+        bool logFull;
 
         public IEnumerable<PointLatLng> GpsLogView()
         {

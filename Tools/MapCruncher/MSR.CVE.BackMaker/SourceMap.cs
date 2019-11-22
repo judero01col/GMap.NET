@@ -26,7 +26,7 @@ namespace MSR.CVE.BackMaker
         private const string ZoomAttr = "Zoom";
         private GeneralDocumentFuture _documentFuture;
         private string _displayName;
-        private SourceMap.GetFilenameContext filenameContextDelegate;
+        private GetFilenameContext filenameContextDelegate;
         private SourceMapInfo _sourceMapInfo;
         private SourceMapRenderOptions _sourceMapRenderOptions;
         private TransparencyOptions _transparencyOptions;
@@ -110,7 +110,7 @@ namespace MSR.CVE.BackMaker
                 return this._lastView;
             }
         }
-        public SourceMap(IDocumentFuture documentDescriptor, SourceMap.GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
+        public SourceMap(IDocumentFuture documentDescriptor, GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
         {
             this.dirtyEvent = new DirtyEvent(parentDirty);
             this.readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
@@ -184,7 +184,7 @@ namespace MSR.CVE.BackMaker
             this.legendList.WriteXML(wc);
             writer.WriteEndElement();
         }
-        public SourceMap(MashupParseContext context, SourceMap.GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
+        public SourceMap(MashupParseContext context, GetFilenameContext filenameContextDelegate, DirtyEvent parentDirty, DirtyEvent parentReadyToLockEvent)
         {
             this.dirtyEvent = new DirtyEvent(parentDirty);
             this.readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);

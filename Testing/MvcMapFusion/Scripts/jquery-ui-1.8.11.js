@@ -7532,6 +7532,7 @@ $.widget( "ui.tabs", {
 		// restore all former loading tabs labels
 		this.lis.filter( ".ui-state-processing" )
 			.removeClass( "ui-state-processing" )
+// ReSharper disable once UnexpectedValue
 			.find( "span:data(label.tabs)" )
 				.each(function() {
 					var el = $( this );

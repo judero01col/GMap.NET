@@ -74,10 +74,10 @@ namespace BigMapMaker
 
                      // draw info
                      {
-                        System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
+                        Rectangle rect = new Rectangle();
                         {
-                           rect.Location = new System.Drawing.Point(padding, padding);
-                           rect.Size = new System.Drawing.Size((int)pxDelta.X, (int)pxDelta.Y);
+                           rect.Location = new Point(padding, padding);
+                           rect.Size = new Size((int)pxDelta.X, (int)pxDelta.Y);
                         }
                         using(Font f = new Font(FontFamily.GenericSansSerif, 9, FontStyle.Bold))
                         using(Graphics gfx = Graphics.FromImage(bmpDestination))

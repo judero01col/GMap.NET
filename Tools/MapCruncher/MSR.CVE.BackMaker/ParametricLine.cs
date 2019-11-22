@@ -10,11 +10,11 @@ namespace MSR.CVE.BackMaker
             public double t;
             public int CompareTo(object obj)
             {
-                if (!(obj is ParametricLine.Intersection))
+                if (!(obj is Intersection))
                 {
                     return 1;
                 }
-                ParametricLine.Intersection intersection = (ParametricLine.Intersection)obj;
+                Intersection intersection = (Intersection)obj;
                 if (intersection.IsParallel && this.IsParallel)
                 {
                     return 0;
@@ -45,9 +45,9 @@ namespace MSR.CVE.BackMaker
         {
             return Math.Sqrt(Math.Pow(this.d.lon - this.s.lon, 2.0) + Math.Pow(this.d.lat - this.s.lat, 2.0));
         }
-        public ParametricLine.Intersection LatitudeIntersection(double lat)
+        public Intersection LatitudeIntersection(double lat)
         {
-            ParametricLine.Intersection intersection = new ParametricLine.Intersection();
+            Intersection intersection = new Intersection();
             if (this.s.lat == this.d.lat)
             {
                 intersection.IsParallel = true;
@@ -59,9 +59,9 @@ namespace MSR.CVE.BackMaker
             }
             return intersection;
         }
-        public ParametricLine.Intersection LongitudeIntersection(double lon)
+        public Intersection LongitudeIntersection(double lon)
         {
-            ParametricLine.Intersection intersection = new ParametricLine.Intersection();
+            Intersection intersection = new Intersection();
             if (this.s.lon == this.d.lon)
             {
                 intersection.IsParallel = true;

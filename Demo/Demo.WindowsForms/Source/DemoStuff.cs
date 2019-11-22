@@ -169,8 +169,8 @@ namespace Demo.WindowsForms
                                     log.Speed = rd["Speed"] as double?;
                                     log.SeaLevelAltitude = rd["SeaLevelAltitude"] as double?;
                                     log.EllipsoidAltitude = rd["EllipsoidAltitude"] as double?;
-                                    log.SatellitesInView = rd["SatellitesInView"] as System.Byte?;
-                                    log.SatelliteCount = rd["SatelliteCount"] as System.Byte?;
+                                    log.SatellitesInView = rd["SatellitesInView"] as Byte?;
+                                    log.SatelliteCount = rd["SatelliteCount"] as Byte?;
                                     log.Position = new PointLatLng((double) rd["Lat"], (double) rd["Lng"]);
                                     log.PositionDilutionOfPrecision = rd["PositionDilutionOfPrecision"] as double?;
                                     log.HorizontalDilutionOfPrecision = rd["HorizontalDilutionOfPrecision"] as double?;

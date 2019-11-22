@@ -83,15 +83,15 @@ namespace MSR.CVE.BackMaker
             this.lonText.Text = this.dms.FormatLatLon(this.lastValue.lon);
             this.zoomLabel.Text = this.lastValue.zoom.ToString();
         }
-        public void SetLabelStyle(LLZBox.LabelStyle labelStyle)
+        public void SetLabelStyle(LabelStyle labelStyle)
         {
             switch (labelStyle)
             {
-            case LLZBox.LabelStyle.LatLon:
+            case LabelStyle.LatLon:
                 this.latLabel_text.Text = "Latitude";
                 this.lonLabel_text.Text = "Longitude";
                 return;
-            case LLZBox.LabelStyle.XY:
+            case LabelStyle.XY:
                 this.latLabel_text.Text = "Y";
                 this.lonLabel_text.Text = "X";
                 return;

@@ -81,7 +81,7 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         public bool IsHitTestVisible = false;
 
-        private bool isMouseOver = false;
+        private bool isMouseOver;
 
         /// <summary>
         ///     is mouse over
@@ -276,7 +276,7 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed = false;
+        bool disposed;
 
         public virtual void Dispose()
         {

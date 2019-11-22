@@ -100,17 +100,17 @@ namespace MSR.CVE.BackMaker
                 this.SetDirty();
             }
         }
-        public TransparencyOptions.TransparencyMode GetMode()
+        public TransparencyMode GetMode()
         {
             if (!this._enabled)
             {
-                return TransparencyOptions.TransparencyMode.Off;
+                return TransparencyMode.Off;
             }
             if (this._inverted)
             {
-                return TransparencyOptions.TransparencyMode.Inverted;
+                return TransparencyMode.Inverted;
             }
-            return TransparencyOptions.TransparencyMode.Normal;
+            return TransparencyMode.Normal;
         }
         public void SetNormalTransparency()
         {
@@ -210,7 +210,7 @@ namespace MSR.CVE.BackMaker
         }
         internal bool Effectless()
         {
-            return this.colorList.Count == 0 || this.GetMode() == TransparencyOptions.TransparencyMode.Off;
+            return this.colorList.Count == 0 || this.GetMode() == TransparencyMode.Off;
         }
         internal FadeOptions GetFadeOptions()
         {

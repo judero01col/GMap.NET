@@ -40,7 +40,7 @@ namespace BingMapsWpfUsingCache
             map.Children.Add(pin);
         }
 
-        void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             GMaps.Instance.DisableTileHost();
             GMaps.Instance.CancelTileCaching();

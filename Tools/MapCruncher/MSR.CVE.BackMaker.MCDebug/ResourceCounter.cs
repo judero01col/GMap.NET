@@ -8,7 +8,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         private int period;
         private int _value;
         private int lastRoundedValue;
-        private ResourceCounter.NotifyDelegate notifyDelegate;
+        private NotifyDelegate notifyDelegate;
         public int Value
         {
             get
@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker.MCDebug
                 return this._value;
             }
         }
-        public ResourceCounter(string resourceName, int period, ResourceCounter.NotifyDelegate notifyDelegate)
+        public ResourceCounter(string resourceName, int period, NotifyDelegate notifyDelegate)
         {
             this.resourceName = resourceName;
             this.period = period;

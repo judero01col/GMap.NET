@@ -75,7 +75,7 @@ namespace MSR.CVE.BackMaker
                 this.bucketCreated.value = true;
             }
             string path = this.GetPath(relativePath);
-            return new S3OutputMethod.S3PutClosure(this, path, contentType);
+            return new S3PutClosure(this, path, contentType);
         }
         public Stream ReadFile(string relativePath)
         {

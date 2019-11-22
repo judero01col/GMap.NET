@@ -20,19 +20,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public FutureDocumentFromFilesystem(MashupParseContext context, string pathBase)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(FutureDocumentFromFilesystem.GetXMLTag());
-            string requiredAttribute = context.GetRequiredAttribute(FutureDocumentFromFilesystem.FilenameAttr);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            string requiredAttribute = context.GetRequiredAttribute(FilenameAttr);
             this.path = Path.Combine(pathBase, requiredAttribute);
-            this.pageNumber = context.GetRequiredAttributeInt(FutureDocumentFromFilesystem.PageNumberAttr);
+            this.pageNumber = context.GetRequiredAttributeInt(PageNumberAttr);
             xMLTagReader.SkipAllSubTags();
             this.ValidateFilename();
         }
         public void WriteXML(MashupWriteContext context, string pathBase)
         {
-            string value = FutureDocumentFromFilesystem.MakeRelativePath(pathBase, this.path);
-            context.writer.WriteStartElement(FutureDocumentFromFilesystem.GetXMLTag());
-            context.writer.WriteAttributeString(FutureDocumentFromFilesystem.FilenameAttr, value);
-            context.writer.WriteAttributeString(FutureDocumentFromFilesystem.PageNumberAttr, this.pageNumber.ToString(CultureInfo.InvariantCulture));
+            string value = MakeRelativePath(pathBase, this.path);
+            context.writer.WriteStartElement(GetXMLTag());
+            context.writer.WriteAttributeString(FilenameAttr, value);
+            context.writer.WriteAttributeString(PageNumberAttr, this.pageNumber.ToString(CultureInfo.InvariantCulture));
             context.writer.WriteEndElement();
         }
         public static string MakeRelativePath(string pathBase, string path)

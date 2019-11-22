@@ -62,7 +62,7 @@ namespace MSR.CVE.BackMaker
         public BiSortedDictionary()
         {
             this.forwardDict = new SortedDictionary<TKey, TValue>();
-            this.backwardDict = new SortedDictionary<TKey, TValue>(new BiSortedDictionary<TKey, TValue>.BackwardsComparer(this.forwardDict.Comparer));
+            this.backwardDict = new SortedDictionary<TKey, TValue>(new BackwardsComparer(this.forwardDict.Comparer));
         }
         public void Add(TKey key, TValue value)
         {

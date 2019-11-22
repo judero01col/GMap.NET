@@ -96,7 +96,7 @@ namespace BSE.Windows.Forms
       private bool m_bShowBorder;
       private bool m_bExpand;
       private Size m_imageSize;
-      private BSE.Windows.Forms.ColorScheme m_eColorScheme;
+      private ColorScheme m_eColorScheme;
       private PanelColors m_panelColors;
       private PanelStyle m_ePanelStyle;
       private Image m_image;
@@ -108,7 +108,7 @@ namespace BSE.Windows.Forms
       private string m_strToolTipTextCloseIcon;
       private bool m_bShowExpandIcon;
       private bool m_bShowCloseIcon;
-      private System.Windows.Forms.ToolTip m_toolTip;
+      private ToolTip m_toolTip;
 
       #endregion
 
@@ -131,7 +131,7 @@ namespace BSE.Windows.Forms
       [Description("Style of the panel")]
       [DefaultValue(0)]
       [Category("Appearance")]
-      public virtual BSE.Windows.Forms.PanelStyle PanelStyle
+      public virtual PanelStyle PanelStyle
       {
          get
          {
@@ -170,10 +170,10 @@ namespace BSE.Windows.Forms
       /// Gets or sets the color schema which is used for the panel.
       /// </summary>
       [Description("ColorScheme of the Panel")]
-      [DefaultValue(BSE.Windows.Forms.ColorScheme.Professional)]
+      [DefaultValue(ColorScheme.Professional)]
       [Browsable(true)]
       [Category("Appearance")]
-      public virtual BSE.Windows.Forms.ColorScheme ColorScheme
+      public virtual ColorScheme ColorScheme
       {
          get
          {
@@ -529,7 +529,7 @@ namespace BSE.Windows.Forms
          this.m_panelColors = new PanelColors(this);
          this.m_imageSize = new Size(16, 16);
          this.m_imageRectangle = Rectangle.Empty;
-         this.m_toolTip = new System.Windows.Forms.ToolTip();
+         this.m_toolTip = new ToolTip();
 
       }
       /// <summary>

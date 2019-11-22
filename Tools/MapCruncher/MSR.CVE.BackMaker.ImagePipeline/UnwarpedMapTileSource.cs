@@ -49,12 +49,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public IFuture GetOpenDocumentFuture(FutureFeatures features)
         {
             IFuture future = new FetchDocumentFuture(this.localDocumentFuture);
-            D.Assert(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached));
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached))
+            D.Assert(HasFeature(features, FutureFeatures.MemoryCached));
+            if (HasFeature(features, FutureFeatures.MemoryCached))
             {
                 future = new MemCacheFuture(this.cachePackage.openSourceDocumentCache, future);
             }
-            D.Assert(!UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Async));
+            D.Assert(!HasFeature(features, FutureFeatures.Async));
             return future;
         }
         public IFuturePrototype GetImageDetailPrototype(FutureFeatures features)
@@ -63,7 +63,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 new UnevaluatedTerm(TermName.ImageDetail)
             });
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached))
+            if (HasFeature(features, FutureFeatures.MemoryCached))
             {
                 prototype = new MemCachePrototype(this.cachePackage.computeCache, prototype);
             }
@@ -77,8 +77,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public IFuture GetUserBounds(LatentRegionHolder latentRegionHolder, FutureFeatures features)
         {
-            D.Assert(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached));
-            D.Assert(!UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Transparency));
+            D.Assert(HasFeature(features, FutureFeatures.MemoryCached));
+            D.Assert(!HasFeature(features, FutureFeatures.Transparency));
             if (latentRegionHolder == null)
             {
                 latentRegionHolder = this.sourceMap.latentRegionHolder;
@@ -107,9 +107,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 parameterType.GetBoundsParameter(),
                 parameterType.GetSizeParameter(),
                 new ConstantFuture(new BoolParameter(this.sourceMap.transparencyOptions.useDocumentTransparency)),
-                new ConstantFuture(new BoolParameter(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.ExactColors)))
+                new ConstantFuture(new BoolParameter(HasFeature(features, FutureFeatures.ExactColors)))
             });
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Transparency))
+            if (HasFeature(features, FutureFeatures.Transparency))
             {
                 IFuturePrototype futurePrototype2 = new ApplyPrototype(verb, new IFuturePrototype[]
                 {
@@ -118,7 +118,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     new ConstantFuture(new BoolParameter(this.sourceMap.transparencyOptions.useDocumentTransparency)),
                     new ConstantFuture(new BoolParameter(true))
                 });
-                if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached))
+                if (HasFeature(features, FutureFeatures.MemoryCached))
                 {
                     futurePrototype = this.AddCaching(futurePrototype, FutureFeatures.MemoryCached);
                     futurePrototype2 = this.AddCaching(futurePrototype2, FutureFeatures.MemoryCached);
@@ -134,7 +134,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         internal IFuture AddAsynchrony(IFuture future, FutureFeatures features)
         {
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Async))
+            if (HasFeature(features, FutureFeatures.Async))
             {
                 future = new MemCacheFuture(this.cachePackage.asyncCache, new OpenDocumentSensitivePrioritizedFuture(this.cachePackage.openDocumentPrioritizer, Asynchronizer.MakeFuture(this.cachePackage.computeAsyncScheduler, future), this.GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
             }
@@ -142,11 +142,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         internal IFuturePrototype AddCaching(IFuturePrototype prototype, FutureFeatures features)
         {
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.DiskCached))
+            if (HasFeature(features, FutureFeatures.DiskCached))
             {
                 prototype = new DiskCachePrototype(this.cachePackage.diskCache, prototype);
             }
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached))
+            if (HasFeature(features, FutureFeatures.MemoryCached))
             {
                 prototype = new MemCachePrototype(this.cachePackage.computeCache, prototype);
             }
@@ -154,9 +154,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         internal IFuturePrototype AddAsynchrony(IFuturePrototype prototype, FutureFeatures features)
         {
-            if (UnwarpedMapTileSource.HasFeature(features, FutureFeatures.Async))
+            if (HasFeature(features, FutureFeatures.Async))
             {
-                D.Assert(UnwarpedMapTileSource.HasFeature(features, FutureFeatures.MemoryCached), "should always cache async stuff, I think.");
+                D.Assert(HasFeature(features, FutureFeatures.MemoryCached), "should always cache async stuff, I think.");
                 prototype = new MemCachePrototype(this.cachePackage.asyncCache, new OpenDocumentSensitivePrioritizedPrototype(this.cachePackage.openDocumentPrioritizer, new Asynchronizer(this.cachePackage.computeAsyncScheduler, prototype), this.GetOpenDocumentFuture(FutureFeatures.MemoryCached)));
             }
             return prototype;

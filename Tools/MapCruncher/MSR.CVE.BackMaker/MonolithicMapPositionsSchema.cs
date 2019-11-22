@@ -13,11 +13,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (MonolithicMapPositionsSchema._schema == null)
+                if (_schema == null)
                 {
-                    MonolithicMapPositionsSchema._schema = new MonolithicMapPositionsSchema();
+                    _schema = new MonolithicMapPositionsSchema();
                 }
-                return MonolithicMapPositionsSchema._schema;
+                return _schema;
             }
         }
         private MonolithicMapPositionsSchema() : base("1.0")

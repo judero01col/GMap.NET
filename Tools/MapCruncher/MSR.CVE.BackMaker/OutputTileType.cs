@@ -33,15 +33,15 @@ namespace MSR.CVE.BackMaker
         {
             if (extn == "png")
             {
-                return OutputTileType.PNG;
+                return PNG;
             }
             if (extn == "jpg")
             {
-                return OutputTileType.JPG;
+                return JPG;
             }
             if (extn == "ipic")
             {
-                return OutputTileType.IPIC;
+                return IPIC;
             }
             throw new UnknownImageTypeException(string.Format("Unrecognized output type {0}", extn));
         }

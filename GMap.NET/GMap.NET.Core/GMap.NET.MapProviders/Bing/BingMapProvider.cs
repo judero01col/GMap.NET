@@ -174,7 +174,7 @@ namespace GMap.NET.MapProviders
         /// </summary>
         public bool TryGetDefaultKey = true;
 
-        static bool init = false;
+        static bool init;
 
         public override void OnInitialized()
         {

@@ -33,13 +33,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public ImageRefCounted(GDIBigLockedImage image)
         {
             this._image = image;
-            ImageRefCounted.imageResourceCounter.crement(1);
+            imageResourceCounter.crement(1);
         }
         private void Dispose()
         {
             this._image.Dispose();
             this._image = null;
-            ImageRefCounted.imageResourceCounter.crement(-1);
+            imageResourceCounter.crement(-1);
         }
         public void AddRef(string refCredit)
         {

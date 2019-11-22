@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
             DateTime now = DateTime.Now;
             while (true)
             {
-                this.pipeHandle = NamedPipeBase.CreateFile("\\\\.\\pipe\\" + name, 3221225472u, 0u, new IntPtr(0), 3u, 0u, new IntPtr(0));
+                this.pipeHandle = CreateFile("\\\\.\\pipe\\" + name, 3221225472u, 0u, new IntPtr(0), 3u, 0u, new IntPtr(0));
                 if (!this.pipeHandle.IsInvalid)
                 {
                     return;

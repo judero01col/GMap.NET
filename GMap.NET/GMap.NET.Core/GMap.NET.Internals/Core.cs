@@ -2,24 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using GMap.NET.MapProviders;
 using GMap.NET.Projections;
-
-namespace GMap.NET.Internals
-{
 #if NET40
-    using System.Collections.Concurrent;
-    using System.Threading.Tasks;
-
+using System.Collections.Concurrent;
 #endif
 
 #if PocketPC
-   using OpenNETCF.ComponentModel;
-   using OpenNETCF.Threading;
-   using Thread = OpenNETCF.Threading.Thread2;
+using OpenNETCF.ComponentModel;
+using OpenNETCF.Threading;
+using Thread = OpenNETCF.Threading.Thread2;
 #endif
 
+namespace GMap.NET.Internals
+{
     /// <summary>
     ///     internal map control core
     /// </summary>
@@ -41,7 +40,7 @@ namespace GMap.NET.Internals
         public MouseWheelZoomType MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
         public bool MouseWheelZoomEnabled = true;
 
-        public PointLatLng? LastLocationInBounds = null;
+        public PointLatLng? LastLocationInBounds;
         public bool VirtualSizeEnabled = false;
 
         public GSize sizeOfMapArea;
@@ -75,7 +74,7 @@ namespace GMap.NET.Internals
 
         DateTime LastTileLoadStart = DateTime.Now;
         DateTime LastTileLoadEnd = DateTime.Now;
-        internal volatile bool IsStarted = false;
+        internal volatile bool IsStarted;
         int zoom;
 
         internal double scaleX = 1;
@@ -96,7 +95,7 @@ namespace GMap.NET.Internals
         /// <summary>
         ///     is user dragging map
         /// </summary>
-        public bool IsDragging = false;
+        public bool IsDragging;
 
         public Core()
         {
@@ -376,7 +375,7 @@ namespace GMap.NET.Internals
         // windows forms or wpf
         internal string SystemType;
 
-        internal static int instances = 0;
+        internal static int instances;
 
         BackgroundWorker invalidator;
 
@@ -807,22 +806,22 @@ namespace GMap.NET.Internals
             }
         }
 
-        bool RaiseEmptyTileError = false;
+        bool RaiseEmptyTileError;
 
         internal Dictionary<LoadTask, Exception> FailedLoads =
             new Dictionary<LoadTask, Exception>(new LoadTaskComparer());
 
         internal static readonly int WaitForTileLoadThreadTimeout = 5 * 1000 * 60; // 5 min.
 
-        volatile int okZoom = 0;
-        volatile int skipOverZoom = 0;
+        volatile int okZoom;
+        volatile int skipOverZoom;
 
 #if NET40
         static readonly BlockingCollection<LoadTask> tileLoadQueue4 =
             new BlockingCollection<LoadTask>(new ConcurrentStack<LoadTask>());
 
         static List<Task> tileLoadQueue4Tasks;
-        static int loadWaitCount = 0;
+        static int loadWaitCount;
         void AddLoadTask(LoadTask t)
         {
             if (tileLoadQueue4Tasks == null)
@@ -1153,7 +1152,7 @@ namespace GMap.NET.Internals
 
         public AutoResetEvent Refresh = new AutoResetEvent(false);
 
-        public bool updatingBounds = false;
+        public bool updatingBounds;
 
         /// <summary>
         ///     updates map bounds

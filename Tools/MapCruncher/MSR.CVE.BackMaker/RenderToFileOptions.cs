@@ -24,18 +24,18 @@ namespace MSR.CVE.BackMaker
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(RenderToFileOptions.xmlTag);
-            writer.WriteAttributeString(RenderToFileOptions.OutputFolderAttr, this.outputFolder);
+            writer.WriteStartElement(xmlTag);
+            writer.WriteAttributeString(OutputFolderAttr, this.outputFolder);
             writer.WriteEndElement();
         }
         public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent, string byTagName)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(byTagName);
             this._outputFolder = new DirtyString(parentDirtyEvent);
-            this.outputFolder = context.GetRequiredAttribute(RenderToFileOptions.OutputFolderAttr);
+            this.outputFolder = context.GetRequiredAttribute(OutputFolderAttr);
             xMLTagReader.SkipAllSubTags();
         }
-        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context, parentDirtyEvent, RenderToFileOptions.xmlTag)
+        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context, parentDirtyEvent, xmlTag)
         {
         }
         public override string ToString()

@@ -173,7 +173,7 @@ namespace GMap.NET.WindowsForms
 
         #region IDisposable Members
 
-        bool disposed = false;
+        bool disposed;
 
         public void Dispose()
         {

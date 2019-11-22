@@ -45,7 +45,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public void Accumulate(string value)
         {
-            this.accBytes(StrongHash.encoding.GetBytes(value));
+            this.accBytes(encoding.GetBytes(value));
         }
         public void Accumulate(bool value)
         {
@@ -114,7 +114,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             StrongHash strongHash = new StrongHash();
             strongHash.ms.Write(this.ms.GetBuffer(), 0, (int)this.ms.Length);
             strongHash.DoHash();
-            return StrongHash.ByteArrayToHex(strongHash.hashValue);
+            return ByteArrayToHex(strongHash.hashValue);
         }
         public static string ByteArrayToHex(byte[] byteArray)
         {

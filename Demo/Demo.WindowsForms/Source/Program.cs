@@ -330,7 +330,7 @@ namespace Demo.WindowsForms
       /// <summary>
       /// <see cref="http://msdn2.microsoft.com/en-us/library/aa365928.aspx"/>
       /// </summary>
-      [DllImport(IpHelper.DllName, SetLastError = true)]
+      [DllImport(DllName, SetLastError = true)]
       public static extern uint GetExtendedTcpTable(IntPtr tcpTable, ref int tcpTableLength, bool sort, int ipVersion, TcpTableType tcpTableType, int reserved);
 
       #endregion

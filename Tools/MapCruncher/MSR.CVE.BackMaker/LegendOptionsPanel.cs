@@ -29,7 +29,7 @@ namespace MSR.CVE.BackMaker
         private ImageRef previewImage;
         private IFuture previewFuture;
         private InterestList previewInterest;
-        private LegendOptionsPanel.CallbackIgnorinator waitingForCI;
+        private CallbackIgnorinator waitingForCI;
         private bool needUpdate;
         protected override void Dispose(bool disposing)
         {
@@ -195,7 +195,7 @@ namespace MSR.CVE.BackMaker
                             AsyncRef asyncRef = (AsyncRef)renderedLegendFuture.Realize("LegendOptionsPanel.UpdatePreviewPanel");
                             if (asyncRef.present == null)
                             {
-                                this.waitingForCI = new LegendOptionsPanel.CallbackIgnorinator(this);
+                                this.waitingForCI = new CallbackIgnorinator(this);
                                 asyncRef.AddCallback(new AsyncRecord.CompleteCallback(this.waitingForCI.Callback));
                                 asyncRef.SetInterest(524296);
                                 this.previewInterest = new InterestList();
@@ -222,7 +222,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
-        internal void AsyncReadyCallback(LegendOptionsPanel.CallbackIgnorinator ci)
+        internal void AsyncReadyCallback(CallbackIgnorinator ci)
         {
             if (ci == this.waitingForCI)
             {

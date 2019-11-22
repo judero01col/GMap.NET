@@ -50,7 +50,7 @@ namespace BSE.Windows.Forms
 		/// Initialize a color Dictionary with defined Bse colors
 		/// </summary>
 		/// <param name="rgbTable">Dictionary with defined colors</param>
-		protected override void InitColors(Dictionary<KnownColors, System.Drawing.Color> rgbTable)
+		protected override void InitColors(Dictionary<KnownColors, Color> rgbTable)
 		{
 			base.InitColors(rgbTable);
             rgbTable[KnownColors.PanelCaptionSelectedGradientBegin] = Color.FromArgb(156, 163, 254);

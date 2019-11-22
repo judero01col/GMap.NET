@@ -11,7 +11,7 @@ namespace MSR.CVE.BackMaker
         private IContainer components;
         public ViewerControl viewerControl;
         private MapPosition mapPos;
-        private SourceMapOverviewWindow.ClosedDelegate closedDelegate;
+        private ClosedDelegate closedDelegate;
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
@@ -45,7 +45,7 @@ namespace MSR.CVE.BackMaker
             this.mapPos = new MapPosition(this.viewerControl);
             this.viewerControl.Initialize(new MapPositionDelegate(this.GetMapPos), "Overview");
         }
-        public void Initialize(SourceMapOverviewWindow.ClosedDelegate closedDelegate, MapDrawingOption ShowDMS)
+        public void Initialize(ClosedDelegate closedDelegate, MapDrawingOption ShowDMS)
         {
             this.closedDelegate = closedDelegate;
             this.viewerControl.ShowDMS = ShowDMS;

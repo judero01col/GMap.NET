@@ -7,8 +7,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             if (o1 is IRobustlyHashable)
             {
-                IRobustHash robustHash = RobustHashTools.Hash(o0);
-                IRobustHash obj = RobustHashTools.Hash((IRobustlyHashable)o1);
+                IRobustHash robustHash = Hash(o0);
+                IRobustHash obj = Hash((IRobustlyHashable)o1);
                 return robustHash.Equals(obj);
             }
             return false;
@@ -27,7 +27,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public static int GetHashCode(IRobustlyHashable hashable)
         {
-            return RobustHashTools.Hash(hashable).GetHashCode();
+            return Hash(hashable).GetHashCode();
         }
     }
 }

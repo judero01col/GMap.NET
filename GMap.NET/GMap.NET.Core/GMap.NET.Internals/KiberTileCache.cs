@@ -24,7 +24,7 @@ namespace GMap.NET.Internals
       public int MemoryCacheCapacity = 3;
 #endif
 
-        long memoryCacheSize = 0;
+        long memoryCacheSize;
 
         /// <summary>
         ///     current memmory cache size in MB

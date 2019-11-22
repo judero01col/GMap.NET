@@ -146,7 +146,7 @@ namespace MSR.CVE.BackMaker
             {
                 e.Data.ToString()
             });
-            if (e.Data.GetDataPresent(LayerControls.dataTypeName, true))
+            if (e.Data.GetDataPresent(dataTypeName, true))
             {
                 e.Effect = DragDropEffects.Move;
                 return;
@@ -155,11 +155,11 @@ namespace MSR.CVE.BackMaker
         }
         private void layerTreeView_DragOver(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(LayerControls.dataTypeName, true))
+            if (!e.Data.GetDataPresent(dataTypeName, true))
             {
                 return;
             }
-            TreeNode treeNode = (TreeNode)e.Data.GetData(LayerControls.dataTypeName);
+            TreeNode treeNode = (TreeNode)e.Data.GetData(dataTypeName);
             TreeView treeView = (TreeView)sender;
             Point pt = treeView.PointToClient(new Point(e.X, e.Y));
             TreeNode nodeAt = treeView.GetNodeAt(pt);
@@ -177,9 +177,9 @@ namespace MSR.CVE.BackMaker
             TreeView treeView = (TreeView)sender;
             try
             {
-                if (e.Data.GetDataPresent(LayerControls.dataTypeName, true))
+                if (e.Data.GetDataPresent(dataTypeName, true))
                 {
-                    TreeNode treeNode = (TreeNode)e.Data.GetData(LayerControls.dataTypeName);
+                    TreeNode treeNode = (TreeNode)e.Data.GetData(dataTypeName);
                     TreeNode treeNode2 = ((LayerControls)treeView.Tag).currentDropHighlight;
                     if (treeNode2 != null)
                     {
@@ -415,7 +415,7 @@ namespace MSR.CVE.BackMaker
         }
         public void CancelSourceMap(Layer layer, SourceMap sourceMap)
         {
-            LayerControls.ReloadDelegate method = new LayerControls.ReloadDelegate(this.Reload);
+            ReloadDelegate method = new ReloadDelegate(this.Reload);
             base.Invoke(method);
         }
         private void NodeSelectedHandler(object sender, TreeViewEventArgs e)

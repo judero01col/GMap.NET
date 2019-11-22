@@ -25,7 +25,7 @@ namespace MSR.CVE.BackMaker
         public FoxitViewer(string filename, int pageNumber)
         {
             object foxitMutex;
-            Monitor.Enter(foxitMutex = FoxitViewer.FoxitMutex);
+            Monitor.Enter(foxitMutex = FoxitMutex);
             try
             {
                 if (this.foxitLib == null)
@@ -50,7 +50,7 @@ namespace MSR.CVE.BackMaker
                     filename,
                     pageNumber
                 });
-                FoxitViewer.foxitResourceCounter.crement(1);
+                foxitResourceCounter.crement(1);
             }
             finally
             {
@@ -60,7 +60,7 @@ namespace MSR.CVE.BackMaker
         public RectangleF GetPageSize()
         {
             object foxitMutex;
-            Monitor.Enter(foxitMutex = FoxitViewer.FoxitMutex);
+            Monitor.Enter(foxitMutex = FoxitMutex);
             RectangleF result;
             try
             {
@@ -85,7 +85,7 @@ namespace MSR.CVE.BackMaker
         {
             int alpha = transparentBackground ? 0 : 255;
             object foxitMutex;
-            Monitor.Enter(foxitMutex = FoxitViewer.FoxitMutex);
+            Monitor.Enter(foxitMutex = FoxitMutex);
             GDIBigLockedImage result;
             try
             {
@@ -108,7 +108,7 @@ namespace MSR.CVE.BackMaker
         {
             int alpha = transparentBackground ? 0 : 255;
             object foxitMutex;
-            Monitor.Enter(foxitMutex = FoxitViewer.FoxitMutex);
+            Monitor.Enter(foxitMutex = FoxitMutex);
             RenderReply result;
             try
             {
@@ -131,7 +131,7 @@ namespace MSR.CVE.BackMaker
         public void Dispose()
         {
             object foxitMutex;
-            Monitor.Enter(foxitMutex = FoxitViewer.FoxitMutex);
+            Monitor.Enter(foxitMutex = FoxitMutex);
             try
             {
                 this.foxitLib.ClosePage(this.pageHandle);
@@ -140,7 +140,7 @@ namespace MSR.CVE.BackMaker
                 {
                     MakeObjectID.Maker.make(this)
                 });
-                FoxitViewer.foxitResourceCounter.crement(-1);
+                foxitResourceCounter.crement(-1);
             }
             finally
             {

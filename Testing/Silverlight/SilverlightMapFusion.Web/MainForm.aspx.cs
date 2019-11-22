@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 namespace SilverlightMapFusion.Web
 {
-    public partial class MainForm : System.Web.UI.Page
+    public partial class MainForm : Page
     {
         static MainForm()
         {

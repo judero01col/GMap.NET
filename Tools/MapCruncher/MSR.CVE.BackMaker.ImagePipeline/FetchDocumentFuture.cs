@@ -11,20 +11,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                if (FetchDocumentFuture._knownExtensions == null)
+                if (_knownExtensions == null)
                 {
-                    FetchDocumentFuture._knownExtensions = new Dictionary<string, string>();
-                    FetchDocumentFuture._knownExtensions.Add("pdf", "FoxIt");
-                    FetchDocumentFuture._knownExtensions.Add("jpg", "WPF");
-                    FetchDocumentFuture._knownExtensions.Add("gif", "WPF");
-                    FetchDocumentFuture._knownExtensions.Add("png", "WPF");
-                    FetchDocumentFuture._knownExtensions.Add("wmf", "GDI");
-                    FetchDocumentFuture._knownExtensions.Add("emf", "GDI");
-                    FetchDocumentFuture._knownExtensions.Add("tif", "WPF");
-                    FetchDocumentFuture._knownExtensions.Add("tiff", "WPF");
-                    FetchDocumentFuture._knownExtensions.Add("bmp", "WPF");
+                    _knownExtensions = new Dictionary<string, string>();
+                    _knownExtensions.Add("pdf", "FoxIt");
+                    _knownExtensions.Add("jpg", "WPF");
+                    _knownExtensions.Add("gif", "WPF");
+                    _knownExtensions.Add("png", "WPF");
+                    _knownExtensions.Add("wmf", "GDI");
+                    _knownExtensions.Add("emf", "GDI");
+                    _knownExtensions.Add("tif", "WPF");
+                    _knownExtensions.Add("tiff", "WPF");
+                    _knownExtensions.Add("bmp", "WPF");
                 }
-                return FetchDocumentFuture._knownExtensions;
+                return _knownExtensions;
             }
         }
         public FetchDocumentFuture(IFuture documentFuture)
@@ -52,9 +52,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             Verb verb = null;
             string a = null;
-            if (FetchDocumentFuture.knownExtensions.ContainsKey(text))
+            if (knownExtensions.ContainsKey(text))
             {
-                a = FetchDocumentFuture.knownExtensions[text];
+                a = knownExtensions[text];
             }
             if (a == "FoxIt")
             {
@@ -88,7 +88,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public static string[] GetKnownFileTypes()
         {
-            return new List<string>(FetchDocumentFuture.knownExtensions.Keys).ToArray();
+            return new List<string>(knownExtensions.Keys).ToArray();
         }
     }
 }

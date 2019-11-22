@@ -1,6 +1,6 @@
 namespace MSR.CVE.BackMaker
 {
-    using MSR.CVE.BackMaker.ImagePipeline;
+    using ImagePipeline;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -183,11 +183,11 @@ namespace MSR.CVE.BackMaker
 
         public static bool operator ==(MapRectangle mr1, MapRectangle mr2)
         {
-            if (object.ReferenceEquals(mr1, null) && object.ReferenceEquals(mr2, null))
+            if (ReferenceEquals(mr1, null) && ReferenceEquals(mr2, null))
             {
                 return true;
             }
-            if (object.ReferenceEquals(mr1, null) || object.ReferenceEquals(mr2, null))
+            if (ReferenceEquals(mr1, null) || ReferenceEquals(mr2, null))
             {
                 return false;
             }

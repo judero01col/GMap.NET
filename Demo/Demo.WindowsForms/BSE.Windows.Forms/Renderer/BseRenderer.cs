@@ -38,7 +38,7 @@ namespace BSE.Windows.Forms
         /// Initialize a new instance of the BseRenderer class.
         /// </summary>
         public BseRenderer()
-            : base(new BSE.Windows.Forms.ColorTableBlack())
+            : base(new ColorTableBlack())
         {
 			this.ColorTable.UseSystemColors = false;
 		}
@@ -65,7 +65,7 @@ namespace BSE.Windows.Forms
             }
             else
             {
-                ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+                ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
                 if ((colorTable != null) && (e.Item.Enabled == true))
                 {
                     if (e.Item.Owner is MenuStrip)
@@ -291,7 +291,7 @@ namespace BSE.Windows.Forms
                 return;
             }
             Graphics graphics = e.Graphics;
-            ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+            ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
             if (colorTable != null)
             {
                 using (UseAntiAlias useAntiAlias = new UseAntiAlias(graphics))
@@ -331,7 +331,7 @@ namespace BSE.Windows.Forms
         {
 			if (ColorTable.UseSystemColors == false)
 			{
-				ProfessionalColorTable colorTable = ColorTable as BSE.Windows.Forms.ProfessionalColorTable;
+				ProfessionalColorTable colorTable = ColorTable as ProfessionalColorTable;
 				if (colorTable != null)
 				{
                     if ((e.ToolStrip is MenuStrip))// && (e.Item.Selected == false) && e.Item.Pressed == false)

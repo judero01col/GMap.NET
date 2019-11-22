@@ -305,7 +305,7 @@ namespace GMap.NET.WindowsForms
         }
 
         public Pen HelperLinePen = new Pen(Color.Blue, 1);
-        bool renderHelperLine = false;
+        bool renderHelperLine;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -431,7 +431,7 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         [Category("GMap.NET")] public MouseButtons DragButton = MouseButtons.Right;
 
-        private bool showTileGridLines = false;
+        private bool showTileGridLines;
 
         /// <summary>
         ///     shows tile gridlines
@@ -483,7 +483,7 @@ namespace GMap.NET.WindowsForms
         ///     enables integrated DoubleBuffer for running on windows mobile
         /// </summary>
 #if !PocketPC
-        public bool ForceDoubleBuffer = false;
+        public bool ForceDoubleBuffer;
 
         readonly bool MobileMode = false;
 #else
@@ -494,7 +494,7 @@ namespace GMap.NET.WindowsForms
         ///     stops immediate marker/route/polygon invalidations;
         ///     call Refresh to perform single refresh and reset invalidation state
         /// </summary>
-        public bool HoldInvalidation = false;
+        public bool HoldInvalidation;
 
         /// <summary>
         ///     call this to stop HoldInvalidation and perform single forced instant refresh
@@ -525,7 +525,7 @@ namespace GMap.NET.WindowsForms
 #endif
 
 #if !PocketPC
-        private bool _GrayScale = false;
+        private bool _GrayScale;
 
         [Category("GMap.NET")]
         public bool GrayScaleMode
@@ -541,7 +541,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        private bool _Negative = false;
+        private bool _Negative;
 
         [Category("GMap.NET")]
         public bool NegativeMode
@@ -583,7 +583,7 @@ namespace GMap.NET.WindowsForms
 #endif
 
         // internal stuff
-        internal readonly Internals.Core Core = new Internals.Core();
+        internal readonly Core Core = new Core();
 
         internal readonly Font CopyrightFont = new Font(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
 #if !PocketPC
@@ -812,7 +812,7 @@ namespace GMap.NET.WindowsForms
             return false;
         }
 
-        RectLatLng? lazySetZoomToFitRect = null;
+        RectLatLng? lazySetZoomToFitRect;
         bool lazyEvents = true;
 
         /// <summary>
@@ -1324,7 +1324,7 @@ namespace GMap.NET.WindowsForms
         PointLatLng selectionEnd;
 
 #if !PocketPC
-        float? MapRenderTransform = null;
+        float? MapRenderTransform;
 #endif
 
         public Color EmptyMapBackground = Color.WhiteSmoke;
@@ -2031,7 +2031,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        bool isSelected = false;
+        bool isSelected;
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -2622,7 +2622,7 @@ namespace GMap.NET.WindowsForms
             mouseIn = true;
         }
 
-        bool mouseIn = false;
+        bool mouseIn;
 
         protected override void OnMouseLeave(EventArgs e)
         {
@@ -3093,7 +3093,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        bool isDragging = false;
+        bool isDragging;
 
         /// <summary>
         ///     is user dragging map
@@ -3108,7 +3108,7 @@ namespace GMap.NET.WindowsForms
         }
 
         bool isMouseOverMarker;
-        internal int overObjectCount = 0;
+        internal int overObjectCount;
 
         /// <summary>
         ///     is mouse over marker

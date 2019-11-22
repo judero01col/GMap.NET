@@ -7,7 +7,7 @@ namespace BSE.Windows.Forms
     /// <summary>
     /// Provide Office 2007 black theme colors
     /// </summary>
-    public class ColorTableBlack : BSE.Windows.Forms.BseColorTable
+    public class ColorTableBlack : BseColorTable
     {
         #region FieldsPrivate
         private PanelColors m_panelColorTable;
@@ -35,7 +35,7 @@ namespace BSE.Windows.Forms
         /// Initializes a color dictionary with defined colors
         /// </summary>
         /// <param name="rgbTable">Dictionary with defined colors</param>
-        protected override void InitColors(Dictionary<ProfessionalColorTable.KnownColors, Color> rgbTable)
+        protected override void InitColors(Dictionary<KnownColors, Color> rgbTable)
         {
             base.InitColors(rgbTable);
             rgbTable[KnownColors.ButtonPressedBorder] = Color.FromArgb(145, 153, 164);

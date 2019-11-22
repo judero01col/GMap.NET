@@ -58,7 +58,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             int num = (this.localInterest > 524291) ? 1 : 0;
             int num2 = (newInterest > 524291) ? 1 : 0;
-            AsyncRef.asyncRefsHoldingInterestResourceCounter.crement(num2 - num);
+            asyncRefsHoldingInterestResourceCounter.crement(num2 - num);
             DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + this.debugAnnotation + "-withInterest", -1).crement(num2 - num);
             int crement = newInterest - this.localInterest;
             this.resource.ChangePriority(crement);

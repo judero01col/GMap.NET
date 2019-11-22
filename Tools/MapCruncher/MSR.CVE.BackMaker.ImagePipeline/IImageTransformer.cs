@@ -17,11 +17,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             public int CompareTo(object obj)
             {
-                if (!(obj is IImageTransformer.QualitySortPair))
+                if (!(obj is QualitySortPair))
                 {
                     return 1;
                 }
-                IImageTransformer.QualitySortPair qualitySortPair = (IImageTransformer.QualitySortPair)obj;
+                QualitySortPair qualitySortPair = (QualitySortPair)obj;
                 int num = -this.fitQuality.CompareTo(qualitySortPair.fitQuality);
                 if (num != 0)
                 {
@@ -52,7 +52,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             IPointTransformer pointTransformer = this.getSourceToDestLatLonTransformer();
             List<PositionAssociation> associationList = this.registration.GetAssociationList();
-            List<IImageTransformer.QualitySortPair> list = new List<IImageTransformer.QualitySortPair>();
+            List<QualitySortPair> list = new List<QualitySortPair>();
             for (int i = 0; i < associationList.Count; i++)
             {
                 PositionAssociation positionAssociation = associationList[i];
@@ -64,12 +64,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 positionAssociation2.pinId = positionAssociation.pinId;
                 double num = LatLon.DistanceInMeters(p, positionAssociation.globalPosition.pinPosition.latlon);
                 positionAssociation2.qualityMessage = LatLon.PrettyDistance(num);
-                list.Add(new IImageTransformer.QualitySortPair(positionAssociation2, num));
+                list.Add(new QualitySortPair(positionAssociation2, num));
             }
             list.Sort();
             RegistrationDefinition registrationDefinition = new RegistrationDefinition(new DirtyEvent());
             registrationDefinition.warpStyle = this.registration.warpStyle;
-            foreach (IImageTransformer.QualitySortPair current in list)
+            foreach (QualitySortPair current in list)
             {
                 registrationDefinition.AddAssociation(current.assoc);
             }

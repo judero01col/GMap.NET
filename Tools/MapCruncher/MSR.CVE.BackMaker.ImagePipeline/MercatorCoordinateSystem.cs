@@ -14,7 +14,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private RangeDouble LonRange = new RangeDouble(-180.0, 180.0);
         private VEAddressLayout addressLayout = new VEAddressLayout();
         public static MercatorCoordinateSystem theInstance = new MercatorCoordinateSystem();
-        private static bool beenHere = false;
+        private static bool beenHere;
         private double MetersPerPixel(int zoomLevel)
         {
             return 40075016.685578488 / (Math.Pow(2.0, (double)zoomLevel) * 256.0);
@@ -188,11 +188,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         }
         public static void TestLanLonFuncs()
         {
-            if (MercatorCoordinateSystem.beenHere)
+            if (beenHere)
             {
                 return;
             }
-            MercatorCoordinateSystem.beenHere = true;
+            beenHere = true;
             foreach (LatLon current in new List<LatLon>
             {
                 new LatLon(-85.0, -175.0),
@@ -202,8 +202,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 new LatLon(1.0, 1.0)
             })
             {
-                LatLon latLon = MercatorCoordinateSystem.LatLonToMercator(current);
-                LatLon latLon2 = MercatorCoordinateSystem.MercatorToLatLon(latLon);
+                LatLon latLon = LatLonToMercator(current);
+                LatLon latLon2 = MercatorToLatLon(latLon);
                 D.Sayf(0, "Orig {0} merc {1} back {2}", new object[]
                 {
                     current,

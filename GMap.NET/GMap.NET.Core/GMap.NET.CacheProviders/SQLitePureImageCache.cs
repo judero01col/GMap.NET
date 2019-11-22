@@ -107,7 +107,7 @@ namespace GMap.NET.CacheProviders
             return null;
         }
 
-        static int ping = 0;
+        static int ping;
 
         /// <summary>
         ///     triggers dynamic sqlite loading
@@ -127,7 +127,7 @@ namespace GMap.NET.CacheProviders
         string gtileCache;
         string dir;
         string db;
-        bool Created = false;
+        bool Created;
 
         public string GtileCache
         {
@@ -303,7 +303,7 @@ namespace GMap.NET.CacheProviders
                                 {
                                     cmd.Transaction = tr;
 #if !PocketPC
-                                    cmd.CommandText = NET.Core.Properties.Resources.CreateTileDb;
+                                    cmd.CommandText = Properties.Resources.CreateTileDb;
 #else
                            cmd.CommandText = GMap.NET.WindowsMobile.Properties.Resources.CreateTileDb;
 #endif
@@ -721,7 +721,7 @@ namespace GMap.NET.CacheProviders
 
         #region PureImageCache Members
 
-        int preAllocationPing = 0;
+        int preAllocationPing;
 
         bool PureImageCache.PutImageToCache(byte[] tile, int type, GPoint pos, int zoom)
         {

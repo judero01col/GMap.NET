@@ -20,7 +20,7 @@ namespace BSE.Windows.Forms
       /// <summary>
       /// Gets or sets the style of the panel.
       /// </summary>
-      BSE.Windows.Forms.PanelStyle PanelStyle
+      PanelStyle PanelStyle
       {
          get;
          set;
@@ -28,7 +28,7 @@ namespace BSE.Windows.Forms
       /// <summary>
       /// Gets or sets the color schema which is used for the panel.
       /// </summary>
-      BSE.Windows.Forms.ColorScheme ColorScheme
+      ColorScheme ColorScheme
       {
          get;
          set;

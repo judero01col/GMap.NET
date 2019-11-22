@@ -333,7 +333,7 @@ namespace GMap.NET.MapProviders
             WebProxy = EmptyWebProxy.Instance;
         }
 
-        bool isInitialized = false;
+        bool isInitialized;
 
         /// <summary>
         ///     was provider initialized

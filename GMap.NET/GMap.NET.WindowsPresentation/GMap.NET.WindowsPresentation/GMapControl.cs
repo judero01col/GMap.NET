@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -245,11 +246,11 @@ namespace GMap.NET.WindowsPresentation
 
                 map._core.Provider = e.NewValue as GMapProvider;
 
-                map.Copyright = null;
+                map._copyright = null;
 
                 if (!string.IsNullOrEmpty(map._core.Provider.Copyright))
                 {
-                    map.Copyright = new FormattedText(map._core.Provider.Copyright,
+                    map._copyright = new FormattedText(map._core.Provider.Copyright,
                         CultureInfo.CurrentUICulture,
                         FlowDirection.LeftToRight,
                         new Typeface("GenericSansSerif"),
@@ -406,14 +407,14 @@ namespace GMap.NET.WindowsPresentation
 
         #endregion
 
-        readonly Internals.Core _core = new Internals.Core();
+        readonly Core _core = new Core();
 
         PointLatLng _selectionStart;
         PointLatLng _selectionEnd;
         readonly Typeface _tileTypeface = new Typeface("Arial");
-        bool _showTileGridLines = false;
+        bool _showTileGridLines;
 
-        FormattedText Copyright;
+        private FormattedText _copyright;
 
         /// <summary>
         ///     enables filling empty tiles using lower level images
@@ -616,7 +617,7 @@ namespace GMap.NET.WindowsPresentation
             get { return DesignerProperties.GetIsInDesignMode(this); }
         }
 
-        Canvas mapCanvas = null;
+        Canvas mapCanvas;
 
         /// <summary>
         ///     markers overlay
@@ -1297,7 +1298,7 @@ namespace GMap.NET.WindowsPresentation
             return false;
         }
 
-        RectLatLng? _lazySetZoomToFitRect = null;
+        RectLatLng? _lazySetZoomToFitRect;
         bool lazyEvents = true;
 
         /// <summary>
@@ -1621,9 +1622,9 @@ namespace GMap.NET.WindowsPresentation
 
             #region -- copyright --
 
-            if (Copyright != null)
+            if (_copyright != null)
             {
-                drawingContext.DrawText(Copyright, new Point(5, ActualHeight - Copyright.Height - 5));
+                drawingContext.DrawText(_copyright, new Point(5, ActualHeight - _copyright.Height - 5));
             }
 
             #endregion
@@ -1659,7 +1660,7 @@ namespace GMap.NET.WindowsPresentation
         }
 
         public Pen HelperLinePen = new Pen(Brushes.Blue, 1);
-        bool _renderHelperLine = false;
+        bool _renderHelperLine;
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
@@ -1790,7 +1791,7 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
-        bool isSelected = false;
+        bool isSelected;
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
@@ -1825,7 +1826,7 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
-        int onMouseUpTimestamp = 0;
+        int onMouseUpTimestamp;
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
@@ -2527,7 +2528,7 @@ namespace GMap.NET.WindowsPresentation
 #if !NET40
         public Task ReloadMapAsync()
         {
-            return Core.ReloadMapAsync();
+            return _core.ReloadMapAsync();
         }
 #endif
 
@@ -2749,7 +2750,7 @@ namespace GMap.NET.WindowsPresentation
             set { CacheLocator.Location = value; }
         }
 
-        [Browsable(false)] public bool IsDragging { get; private set; };
+        [Browsable(false)] public bool IsDragging { get; private set; }
 
         [Browsable(false)]
         public RectLatLng ViewArea

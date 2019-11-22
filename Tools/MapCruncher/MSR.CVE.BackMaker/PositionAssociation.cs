@@ -95,17 +95,17 @@ namespace MSR.CVE.BackMaker
         }
         public static string XMLTag()
         {
-            return PositionAssociation.PositionAssociationTag;
+            return PositionAssociationTag;
         }
         public void WriteXML(XmlTextWriter writer)
         {
-            writer.WriteStartElement(PositionAssociation.PositionAssociationTag);
-            writer.WriteAttributeString(PositionAssociation.pinIdAttr, this._pinId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAttributeString(PositionAssociation.associationNameAttr, this._associationName);
-            writer.WriteStartElement(PositionAssociation.SourcePositionTag);
+            writer.WriteStartElement(PositionAssociationTag);
+            writer.WriteAttributeString(pinIdAttr, this._pinId.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(associationNameAttr, this._associationName);
+            writer.WriteStartElement(SourcePositionTag);
             this._sourcePosition.WriteXML(writer);
             writer.WriteEndElement();
-            writer.WriteStartElement(PositionAssociation.GlobalPositionTag);
+            writer.WriteStartElement(GlobalPositionTag);
             this._globalPosition.WriteXML(writer);
             writer.WriteEndElement();
             writer.WriteEndElement();
@@ -113,18 +113,18 @@ namespace MSR.CVE.BackMaker
         public PositionAssociation(MashupParseContext context, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
-            XMLTagReader xMLTagReader = context.NewTagReader(PositionAssociation.PositionAssociationTag);
+            XMLTagReader xMLTagReader = context.NewTagReader(PositionAssociationTag);
             this._pinId = -1;
-            context.GetAttributeInt(PositionAssociation.pinIdAttr, ref this._pinId);
-            if ((this.associationName = context.reader.GetAttribute(PositionAssociation.associationNameAttr)) == null)
+            context.GetAttributeInt(pinIdAttr, ref this._pinId);
+            if ((this.associationName = context.reader.GetAttribute(associationNameAttr)) == null)
             {
                 this.associationName = "";
             }
             while (xMLTagReader.FindNextStartTag())
             {
-                if (xMLTagReader.TagIs(PositionAssociation.SourcePositionTag))
+                if (xMLTagReader.TagIs(SourcePositionTag))
                 {
-                    XMLTagReader xMLTagReader2 = context.NewTagReader(PositionAssociation.SourcePositionTag);
+                    XMLTagReader xMLTagReader2 = context.NewTagReader(SourcePositionTag);
                     while (xMLTagReader2.FindNextStartTag())
                     {
                         if (xMLTagReader2.TagIs(DisplayablePosition.GetXMLTag(context.version)))
@@ -136,9 +136,9 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    if (xMLTagReader.TagIs(PositionAssociation.GlobalPositionTag))
+                    if (xMLTagReader.TagIs(GlobalPositionTag))
                     {
-                        XMLTagReader xMLTagReader3 = context.NewTagReader(PositionAssociation.GlobalPositionTag);
+                        XMLTagReader xMLTagReader3 = context.NewTagReader(GlobalPositionTag);
                         while (xMLTagReader3.FindNextStartTag())
                         {
                             if (xMLTagReader3.TagIs(DisplayablePosition.GetXMLTag(context.version)))

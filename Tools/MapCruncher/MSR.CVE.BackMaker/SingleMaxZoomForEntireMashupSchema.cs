@@ -11,11 +11,11 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                if (SingleMaxZoomForEntireMashupSchema._schema == null)
+                if (_schema == null)
                 {
-                    SingleMaxZoomForEntireMashupSchema._schema = new SingleMaxZoomForEntireMashupSchema();
+                    _schema = new SingleMaxZoomForEntireMashupSchema();
                 }
-                return SingleMaxZoomForEntireMashupSchema._schema;
+                return _schema;
             }
         }
         private SingleMaxZoomForEntireMashupSchema() : base("1.4")

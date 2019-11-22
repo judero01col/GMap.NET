@@ -140,12 +140,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             graphics.DrawImage(image2, destRect, srcRect, GraphicsUnit.Pixel);
                             graphics.Dispose();
                             ImageRef imageRef2 = new ImageRef(new ImageRefCounted(new GDIBigLockedImage(bitmap)));
-                            TransparencyFuture.MaxInPlace(imageRef, imageRef2);
+                            MaxInPlace(imageRef, imageRef2);
                             imageRef2.Dispose();
                         }
                     }
                 }
-                TransparencyFuture.ReplaceAlphaChannel(source, imageRef);
+                ReplaceAlphaChannel(source, imageRef);
             }
             finally
             {

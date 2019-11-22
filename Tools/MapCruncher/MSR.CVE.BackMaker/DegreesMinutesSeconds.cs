@@ -10,7 +10,7 @@ namespace MSR.CVE.BackMaker
             DecimalDegrees
         }
         private Regex dmsRegex = new Regex("\r\n(?<Sign>-?)\r\n(?<Degrees>\\d+)\r\n\\s*\r\n([°dD])?\r\n\\s*\r\n\r\n(\r\n  (?<Minutes>\\d+)\r\n  \\s*\r\n  (['mM])?\r\n  \\s*\r\n\r\n  (\r\n    (?<Seconds>\\d+(\\.\\d+)?)\r\n    \\s*\r\n    ([\"sS])?\r\n  )?\r\n)?", RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace);
-        public DegreesMinutesSeconds.OutputMode outputMode = DegreesMinutesSeconds.OutputMode.DecimalDegrees;
+        public OutputMode outputMode = OutputMode.DecimalDegrees;
         public double ParseLatLon(string str)
         {
             try
@@ -49,7 +49,7 @@ namespace MSR.CVE.BackMaker
         public string FormatLatLon(double value)
         {
             string result;
-            if (this.outputMode == DegreesMinutesSeconds.OutputMode.DMS)
+            if (this.outputMode == OutputMode.DMS)
             {
                 int num = 1;
                 double num2 = value;
@@ -67,7 +67,7 @@ namespace MSR.CVE.BackMaker
             }
             else
             {
-                if (this.outputMode == DegreesMinutesSeconds.OutputMode.DecimalDegrees)
+                if (this.outputMode == OutputMode.DecimalDegrees)
                 {
                     result = string.Format("{0:###.00000000}", value);
                 }

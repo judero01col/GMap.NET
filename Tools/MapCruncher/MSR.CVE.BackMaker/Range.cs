@@ -19,7 +19,7 @@ namespace MSR.CVE.BackMaker
         {
             return this.Parse(context, fieldName, str, null);
         }
-        public T Parse(MashupParseContext context, string fieldName, string str, Range<T>.Escape escape)
+        public T Parse(MashupParseContext context, string fieldName, string str, Escape escape)
         {
             if (str == null)
             {

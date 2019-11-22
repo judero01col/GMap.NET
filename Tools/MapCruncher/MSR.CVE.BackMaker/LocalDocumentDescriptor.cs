@@ -50,9 +50,9 @@ namespace MSR.CVE.BackMaker
             {
                 value = Path.GetFileName(this._filename);
             }
-            wc.writer.WriteStartElement(LocalDocumentDescriptor.GetXMLTag());
-            wc.writer.WriteAttributeString(LocalDocumentDescriptor.LocalDocumentFilenameAttr, value);
-            wc.writer.WriteAttributeString(LocalDocumentDescriptor.LocalDocumentPageNumberAttr, this._pageNumber.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteStartElement(GetXMLTag());
+            wc.writer.WriteAttributeString(LocalDocumentFilenameAttr, value);
+            wc.writer.WriteAttributeString(LocalDocumentPageNumberAttr, this._pageNumber.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteEndElement();
         }
         public void AccumulateRobustHash(IRobustHash hash)
@@ -62,10 +62,10 @@ namespace MSR.CVE.BackMaker
         }
         public LocalDocumentDescriptor(MashupParseContext context, string pathBase)
         {
-            XMLTagReader xMLTagReader = context.NewTagReader(LocalDocumentDescriptor.GetXMLTag());
-            string requiredAttribute = context.GetRequiredAttribute(LocalDocumentDescriptor.LocalDocumentFilenameAttr);
+            XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
+            string requiredAttribute = context.GetRequiredAttribute(LocalDocumentFilenameAttr);
             this._filename = Path.Combine(pathBase, requiredAttribute);
-            this._pageNumber = context.GetRequiredAttributeInt(LocalDocumentDescriptor.LocalDocumentPageNumberAttr);
+            this._pageNumber = context.GetRequiredAttributeInt(LocalDocumentPageNumberAttr);
             xMLTagReader.SkipAllSubTags();
         }
     }

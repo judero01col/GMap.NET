@@ -28,11 +28,11 @@ namespace MSR.CVE.BackMaker.MCDebug
         {
             get
             {
-                if (DiagnosticUI._theDiagnostics == null)
+                if (_theDiagnostics == null)
                 {
-                    DiagnosticUI._theDiagnostics = new DiagnosticUI();
+                    _theDiagnostics = new DiagnosticUI();
                 }
-                return DiagnosticUI._theDiagnostics;
+                return _theDiagnostics;
             }
         }
         public DiagnosticUI()
@@ -76,7 +76,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         }
         private void CreateAllCountersInvokeThread()
         {
-            DiagnosticUI.CACDelegate method = new DiagnosticUI.CACDelegate(this.CreateAllCounters);
+            CACDelegate method = new CACDelegate(this.CreateAllCounters);
             base.Invoke(method);
         }
         private void CreateAllCounters()
@@ -131,7 +131,7 @@ namespace MSR.CVE.BackMaker.MCDebug
                 DateTime now = DateTime.Now;
                 if (this.lastQueueDraw.AddMilliseconds(200.0) < now && this.canInvoke)
                 {
-                    DiagnosticUI.UQLDelegate method = new DiagnosticUI.UQLDelegate(this.updateQueueList);
+                    UQLDelegate method = new UQLDelegate(this.updateQueueList);
                     base.BeginInvoke(method);
                     this.lastQueueDraw = now;
                 }

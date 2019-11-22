@@ -24,7 +24,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return MashupXMLSchemaVersion._AcceptedVersions;
+                return _AcceptedVersions;
             }
         }
         protected MashupXMLSchemaVersion(string versionNumberString)
@@ -38,7 +38,7 @@ namespace MSR.CVE.BackMaker
         public static MashupXMLSchemaVersion ReadXMLAttribute(XmlTextReader reader)
         {
             string versionString = reader.GetAttribute("Version");
-            MashupXMLSchemaVersion mashupXMLSchemaVersion = MashupXMLSchemaVersion.AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi._versionNumberString == versionString);
+            MashupXMLSchemaVersion mashupXMLSchemaVersion = AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi._versionNumberString == versionString);
             if (mashupXMLSchemaVersion == null)
             {
                 throw new InvalidMashupFile(reader, string.Format("Unknown mashup file version {0}", versionString));
@@ -47,14 +47,14 @@ namespace MSR.CVE.BackMaker
         }
         static MashupXMLSchemaVersion()
         {
-            MashupXMLSchemaVersion._AcceptedVersions = new List<MashupXMLSchemaVersion>();
-            MashupXMLSchemaVersion._AcceptedVersions.Add(CurrentSchema.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(NoTagIdentities.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(ViewsNotAsWellPreservedSchema.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(SingleMaxZoomForEntireMashupSchema.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(SourceMapInfoAsCharDataSchema.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(InlineSourceMapInfoSchema.schema);
-            MashupXMLSchemaVersion._AcceptedVersions.Add(MonolithicMapPositionsSchema.schema);
+            _AcceptedVersions = new List<MashupXMLSchemaVersion>();
+            _AcceptedVersions.Add(CurrentSchema.schema);
+            _AcceptedVersions.Add(NoTagIdentities.schema);
+            _AcceptedVersions.Add(ViewsNotAsWellPreservedSchema.schema);
+            _AcceptedVersions.Add(SingleMaxZoomForEntireMashupSchema.schema);
+            _AcceptedVersions.Add(SourceMapInfoAsCharDataSchema.schema);
+            _AcceptedVersions.Add(InlineSourceMapInfoSchema.schema);
+            _AcceptedVersions.Add(MonolithicMapPositionsSchema.schema);
         }
     }
 }

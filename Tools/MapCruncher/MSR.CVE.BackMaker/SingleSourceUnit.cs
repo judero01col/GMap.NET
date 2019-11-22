@@ -10,9 +10,9 @@ namespace MSR.CVE.BackMaker
         private OneLayerBoundApplier applier;
         private TileAddress address;
         private int stage;
-        private SingleSourceUnit.NeedThisTileDelegate needThisTile;
+        private NeedThisTileDelegate needThisTile;
         private static int debug_lastZoom = -1;
-        internal SingleSourceUnit(OneLayerBoundApplier applier, TileAddress address, int stage, SingleSourceUnit.NeedThisTileDelegate needThisTile)
+        internal SingleSourceUnit(OneLayerBoundApplier applier, TileAddress address, int stage, NeedThisTileDelegate needThisTile)
         {
             this.applier = applier;
             this.address = address;
@@ -58,9 +58,9 @@ namespace MSR.CVE.BackMaker
         }
         private Present FetchClippedImage()
         {
-            if (SingleSourceUnit.debug_lastZoom != this.address.ZoomLevel)
+            if (debug_lastZoom != this.address.ZoomLevel)
             {
-                SingleSourceUnit.debug_lastZoom = this.address.ZoomLevel;
+                debug_lastZoom = this.address.ZoomLevel;
                 D.Sayf(0, "{0} start zoom level {1}", new object[]
                 {
                     Clocker.theClock.stamp(),

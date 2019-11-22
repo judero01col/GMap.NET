@@ -38,7 +38,7 @@ namespace Sample3
          MapOpenCycle.MapProvider = GMapProviders.OpenCycleMap;
          MapOpenStreetSurfer.MapProvider = GMapProviders.OpenStreetMapQuest;
 
-         this.WindowState = System.Windows.WindowState.Minimized;
+         this.WindowState = WindowState.Minimized;
       }
 
       private void OnMapZoomChanged()
@@ -90,7 +90,7 @@ namespace Sample3
          }));
       }
 
-      GMap.NET.PointLatLng last = new GMap.NET.PointLatLng();
+      GMap.NET.PointLatLng last;
       GMap.NET.WindowsPresentation.GMapControl lastMap;
 
       private void DocumentPane_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
