@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class OpenDocumentSensitivePrioritizedFuture : FutureBase, IDisposable
@@ -12,6 +13,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private static int nextIdentity;
         private static object nextIdentityMutex = new object();
         private AsyncRef activeAsyncRef;
+
         public int identity
         {
             get
@@ -19,7 +21,9 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return this._identity;
             }
         }
-        public OpenDocumentSensitivePrioritizedFuture(OpenDocumentSensitivePrioritizer prioritizer, IFuture future, IFuture openDocumentFuture)
+
+        public OpenDocumentSensitivePrioritizedFuture(OpenDocumentSensitivePrioritizer prioritizer, IFuture future,
+            IFuture openDocumentFuture)
         {
             this.prioritizer = prioritizer;
             this.future = future;
@@ -36,6 +40,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(obj);
             }
         }
+
         public override Present Realize(string refCredit)
         {
             Monitor.Enter(this);
@@ -61,14 +66,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             return result;
         }
+
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("ODSPF(");
             this.future.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
+
         private void AsyncCompleteCallback(AsyncRef asyncRef)
         {
             Monitor.Enter(this);
@@ -84,14 +92,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         internal IFuture GetOpenDocumentFuture()
         {
             return this.openDocumentFuture;
         }
+
         internal void DocumentStateChanged(bool isOpen)
         {
             this.activeAsyncRef.SetInterest(isOpen ? 524291 : 0);
         }
+
         public void Dispose()
         {
             Monitor.Enter(this);

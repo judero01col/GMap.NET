@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class RangeDescriptor
@@ -7,10 +7,12 @@ namespace MSR.CVE.BackMaker
         public const string RangeDescriptorTag = "RangeDescriptor";
         public const string QuadTreeLocationAttr = "QuadTreeLocation";
         public TileAddress tileAddress;
+
         public RangeDescriptor(TileAddress tileAddress)
         {
             this.tileAddress = tileAddress;
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("RangeDescriptor");

@@ -1,10 +1,11 @@
 using MSR.CVE.BackMaker.ImagePipeline;
-using System;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderClip
     {
         private MapRectangle _rect;
+
         public MapRectangle rect
         {
             get
@@ -12,13 +13,16 @@ namespace MSR.CVE.BackMaker
                 return this._rect;
             }
         }
+
         public static string GetXMLTag()
         {
             return "RenderClip";
         }
+
         public RenderClip()
         {
         }
+
         public RenderClip(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
@@ -31,6 +35,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(GetXMLTag());
@@ -38,6 +43,7 @@ namespace MSR.CVE.BackMaker
             {
                 this._rect.WriteXML(wc.writer);
             }
+
             wc.writer.WriteEndElement();
         }
     }

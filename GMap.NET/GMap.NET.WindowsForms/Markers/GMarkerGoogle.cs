@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace GMap.NET.WindowsForms.Markers
 {
 #if !PocketPC
-    using System;
-    using System.Runtime.Serialization;
-
 #else
    using GMap.NET.WindowsMobile.Properties;
 #endif

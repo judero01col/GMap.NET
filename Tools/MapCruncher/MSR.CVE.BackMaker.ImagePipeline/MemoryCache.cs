@@ -1,7 +1,7 @@
-using MSR.CVE.BackMaker.MCDebug;
-using System;
 using System.Collections.Generic;
 using System.Threading;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class MemoryCache : CacheBase
@@ -11,31 +11,39 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private int paramCacheMinSize = 64;
         private int nextCleanMark;
         private ResourceCounter interestingStuffResourceCounter;
+
         public MemoryCache(string debugName) : base(debugName)
         {
             this.clockQueue = new LinkedList<CacheRecord>();
-            this.interestingStuffResourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + debugName + "-interestingStuff", -1);
+            this.interestingStuffResourceCounter =
+                DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + debugName + "-interestingStuff", -1);
         }
+
         public MemoryCache(string debugName, int paramCacheMinSize) : this(debugName)
         {
             this.paramCacheMinSize = paramCacheMinSize;
         }
+
         internal override CacheRecord NewRecord(IFuture future)
         {
             return new ClockCacheRecord(future);
         }
+
         internal override void Touch(CacheRecord record, bool recordIsNew)
         {
             if (recordIsNew)
             {
                 this.clockQueue.AddLast(record);
             }
+
             ((ClockCacheRecord)record).touched = true;
         }
+
         internal override void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             base.Remove(record, removeExpectation);
         }
+
         protected override void Clean()
         {
             int num = 0;
@@ -54,10 +62,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             flag = true;
                             break;
                         }
+
                         ClockCacheRecord clockCacheRecord = (ClockCacheRecord)this.clockQueue.First.Value;
                         this.clockQueue.RemoveFirst();
                         num++;
-                        bool flag2 = clockCacheRecord.present is RequestInterestIfc && ((RequestInterestIfc)clockCacheRecord.present).GetInterest() > 524291;
+                        bool flag2 = clockCacheRecord.present is RequestInterestIfc &&
+                                     ((RequestInterestIfc)clockCacheRecord.present).GetInterest() > 524291;
                         if (flag2)
                         {
                             num3++;
@@ -77,28 +87,25 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                             }
                         }
                     }
+
                     if (!flag)
                     {
                         int num4 = num3 * 2 + 64;
                         if (num4 > this.paramCacheMinSize)
                         {
                             this.paramCacheMinSize = num4;
-                            D.Sayf(0, "Grew cache {0} to paramCacheMinSize={1}; cache now {2}; clock now {3}", new object[]
-                            {
-                                this.hashName,
-                                this.paramCacheMinSize,
-                                this.cache.Count,
-                                this.clockQueue.Count
-                            });
+                            D.Sayf(0,
+                                "Grew cache {0} to paramCacheMinSize={1}; cache now {2}; clock now {3}",
+                                new object[]
+                                {
+                                    this.hashName, this.paramCacheMinSize, this.cache.Count, this.clockQueue.Count
+                                });
                         }
                     }
+
                     this.interestingStuffResourceCounter.SetValue(num3);
                     this.nextCleanMark = this.cache.Count + (this.paramCacheMinSize >> 2);
-                    D.Sayf(10, "MemoryCache Cleaner: removed {0}/{1}", new object[]
-                    {
-                        num2,
-                        num
-                    });
+                    D.Sayf(10, "MemoryCache Cleaner: removed {0}/{1}", new object[] {num2, num});
                 }
             }
             finally

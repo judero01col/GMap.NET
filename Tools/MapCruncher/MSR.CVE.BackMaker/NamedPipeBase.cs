@@ -1,14 +1,16 @@
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Microsoft.Win32.SafeHandles;
+
 namespace MSR.CVE.BackMaker
 {
     public class NamedPipeBase
     {
         public delegate bool ServerHandler(object request, ref ISerializable reply);
+
         protected const int PIPE_ACCESS_DUPLEX = 3;
         protected const int PIPE_ACCESS_INBOUND = 1;
         protected const int PIPE_ACCESS_OUTBOUND = 2;
@@ -28,20 +30,33 @@ namespace MSR.CVE.BackMaker
         protected const int LengthBufferLength = 147;
         protected BinaryFormatter binaryFormatter = new BinaryFormatter();
         protected SafeFileHandle pipeHandle;
+
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern SafeFileHandle CreateNamedPipe(string lpName, uint dwOpenMode, uint dwPipeMode, uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut, IntPtr lpSecurityAttributes);
+        internal static extern SafeFileHandle CreateNamedPipe(string lpName, uint dwOpenMode, uint dwPipeMode,
+            uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut,
+            IntPtr lpSecurityAttributes);
+
         [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern SafeFileHandle CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+        internal static extern SafeFileHandle CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode,
+            IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern int ConnectNamedPipe(SafeFileHandle hNamedPipe, IntPtr lpOverlapped);
+
         [DllImport("kernel32.dll")]
         internal static extern int GetLastError();
+
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadFile(IntPtr hHandle, byte[] lpBuffer, uint nNumberOfBytesToRead, byte[] lpNumberOfBytesRead, uint lpOverlapped);
+        public static extern bool ReadFile(IntPtr hHandle, byte[] lpBuffer, uint nNumberOfBytesToRead,
+            byte[] lpNumberOfBytesRead, uint lpOverlapped);
+
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool WriteFile(IntPtr hHandle, byte[] lpBuffer, uint nNumberOfBytesToWrite, byte[] lpNumberOfBytesWritten, uint lpOverlapped);
+        public static extern bool WriteFile(IntPtr hHandle, byte[] lpBuffer, uint nNumberOfBytesToWrite,
+            byte[] lpNumberOfBytesWritten, uint lpOverlapped);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FlushFileBuffers(IntPtr hHandle);
+
         protected byte[] Serialize(ISerializable obj)
         {
             MemoryStream memoryStream = new MemoryStream();
@@ -50,11 +65,13 @@ namespace MSR.CVE.BackMaker
             Array.Copy(memoryStream.GetBuffer(), array, memoryStream.Length);
             return array;
         }
+
         protected object Deserialize(byte[] buffer)
         {
             MemoryStream serializationStream = new MemoryStream(buffer);
             return this.binaryFormatter.Deserialize(serializationStream);
         }
+
         protected void SendMessage(ISerializable request)
         {
             byte[] array = this.Serialize(request);
@@ -64,6 +81,7 @@ namespace MSR.CVE.BackMaker
             this.WriteBuffer(array2, array2.Length);
             this.WriteBuffer(array, array.Length);
         }
+
         protected byte[] ReadBuffer(int len)
         {
             byte[] array = new byte[4];
@@ -78,6 +96,7 @@ namespace MSR.CVE.BackMaker
                     {
                         throw new EndOfStreamException();
                     }
+
                     throw new IOException(string.Format("ReadBuffer sees error {0}", GetLastError()));
                 }
                 else
@@ -87,8 +106,10 @@ namespace MSR.CVE.BackMaker
                     i += num;
                 }
             }
+
             return array3;
         }
+
         protected void WriteBuffer(byte[] buffer, int len)
         {
             byte[] array = new byte[4];
@@ -98,12 +119,15 @@ namespace MSR.CVE.BackMaker
                 {
                     throw new IOException(string.Format("ReadBuffer sees error {0}", GetLastError()));
                 }
+
                 i += BitConverter.ToInt32(array, 0);
                 Array.Copy(buffer, i, buffer, 0, len - i);
                 len -= i;
             }
+
             FlushFileBuffers(this.pipeHandle.DangerousGetHandle());
         }
+
         protected object ReadMessage()
         {
             byte[] buffer = this.ReadBuffer(147);
@@ -111,11 +135,13 @@ namespace MSR.CVE.BackMaker
             byte[] buffer2 = this.ReadBuffer(lengthRecord.length);
             return this.Deserialize(buffer2);
         }
+
         public object RPC(ISerializable request)
         {
             this.SendMessage(request);
             return this.ReadMessage();
         }
+
         public void RunServer(ServerHandler serverHandler)
         {
             bool flag = true;
@@ -130,6 +156,7 @@ namespace MSR.CVE.BackMaker
                 {
                     break;
                 }
+
                 ISerializable request2 = null;
                 flag = serverHandler(request, ref request2);
                 this.SendMessage(request2);

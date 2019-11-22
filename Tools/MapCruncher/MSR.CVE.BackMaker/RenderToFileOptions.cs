@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderToFileOptions : RenderToOptions
@@ -7,6 +7,7 @@ namespace MSR.CVE.BackMaker
         private DirtyString _outputFolder;
         public static string xmlTag = "RenderToFile";
         private static string OutputFolderAttr = "Folder";
+
         public string outputFolder
         {
             get
@@ -18,16 +19,19 @@ namespace MSR.CVE.BackMaker
                 this._outputFolder.myValue = value;
             }
         }
+
         public RenderToFileOptions(DirtyEvent parentDirtyEvent)
         {
             this._outputFolder = new DirtyString(parentDirtyEvent);
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(xmlTag);
             writer.WriteAttributeString(OutputFolderAttr, this.outputFolder);
             writer.WriteEndElement();
         }
+
         public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent, string byTagName)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(byTagName);
@@ -35,9 +39,13 @@ namespace MSR.CVE.BackMaker
             this.outputFolder = context.GetRequiredAttribute(OutputFolderAttr);
             xMLTagReader.SkipAllSubTags();
         }
-        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context, parentDirtyEvent, xmlTag)
+
+        public RenderToFileOptions(MashupParseContext context, DirtyEvent parentDirtyEvent) : this(context,
+            parentDirtyEvent,
+            xmlTag)
         {
         }
+
         public override string ToString()
         {
             return string.Format("file:{0}", this.outputFolder);

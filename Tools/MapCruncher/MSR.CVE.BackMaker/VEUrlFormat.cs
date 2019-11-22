@@ -1,4 +1,3 @@
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Globalization;
 using System.IO;
@@ -6,6 +5,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class VEUrlFormat
@@ -17,9 +18,13 @@ namespace MSR.CVE.BackMaker
         private const string FormatStringAttr = "FormatString";
         private const string GenerationNumberAttr = "GenerationNumber";
         public static VEUrlFormat theFormat = new VEUrlFormat();
-        private EventWaitHandle formatReadyEvent = new CountedEventWaitHandle(false, EventResetMode.ManualReset, "VEUrlFormat.formatReadyEvent");
+
+        private EventWaitHandle formatReadyEvent =
+            new CountedEventWaitHandle(false, EventResetMode.ManualReset, "VEUrlFormat.formatReadyEvent");
+
         private string formatString;
         private int generationNumber;
+
         private VEUrlFormat()
         {
             if (BuildConfig.theConfig.veFormatUpdateURL != null)
@@ -32,27 +37,31 @@ namespace MSR.CVE.BackMaker
                         break;
                     }
                 }
+
                 if (this.formatString == null)
                 {
-                    D.Sayf(0, "Dynamic VEUrlFormat unavailable at {0}", new object[]
-                    {
-                        BuildConfig.theConfig.veFormatUpdateURL
-                    });
+                    D.Sayf(0,
+                        "Dynamic VEUrlFormat unavailable at {0}",
+                        new object[] {BuildConfig.theConfig.veFormatUpdateURL});
                 }
             }
+
             if (this.formatString == null)
             {
                 this.formatString = "http://{0}{1}.ortho.tiles.virtualearth.net/tiles/{0}{2}.{3}?g={4}";
                 this.generationNumber = 66;
             }
+
             this.UpdateGenerationNumber();
             this.formatReadyEvent.Set();
         }
+
         private void TryOneFetchFormatString()
         {
             try
             {
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(BuildConfig.theConfig.veFormatUpdateURL);
+                HttpWebRequest httpWebRequest =
+                    (HttpWebRequest)WebRequest.Create(BuildConfig.theConfig.veFormatUpdateURL);
                 httpWebRequest.Timeout = 5000;
                 HttpWebResponse httpWebResponse;
                 try
@@ -63,6 +72,7 @@ namespace MSR.CVE.BackMaker
                 {
                     return;
                 }
+
                 if (httpWebResponse.StatusCode == HttpStatusCode.OK)
                 {
                     Stream responseStream = httpWebResponse.GetResponseStream();
@@ -72,7 +82,8 @@ namespace MSR.CVE.BackMaker
                     {
                         while (mashupParseContext.reader.Read())
                         {
-                            if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == "VEUrlFormat")
+                            if (mashupParseContext.reader.NodeType == XmlNodeType.Element &&
+                                mashupParseContext.reader.Name == "VEUrlFormat")
                             {
                                 XMLTagReader xMLTagReader = mashupParseContext.NewTagReader("VEUrlFormat");
                                 this.formatString = mashupParseContext.GetRequiredAttribute("FormatString");
@@ -81,18 +92,17 @@ namespace MSR.CVE.BackMaker
                                 break;
                             }
                         }
+
                         mashupParseContext.Dispose();
                     }
                 }
             }
             catch (Exception ex)
             {
-                D.Sayf(0, "VEUrlFormat fetch failed with unexpected {0}", new object[]
-                {
-                    ex
-                });
+                D.Sayf(0, "VEUrlFormat fetch failed with unexpected {0}", new object[] {ex});
             }
         }
+
         private void UpdateGenerationNumber()
         {
             for (int i = 0; i < 3; i++)
@@ -104,22 +114,22 @@ namespace MSR.CVE.BackMaker
                 }
                 catch (Exception ex)
                 {
-                    D.Sayf(0, "VEUrlFormat fetch failed with unexpected {0}", new object[]
-                    {
-                        ex
-                    });
+                    D.Sayf(0, "VEUrlFormat fetch failed with unexpected {0}", new object[] {ex});
                 }
             }
         }
+
         private int TryOneFetchGenerationNumber()
         {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://tiles.virtualearth.net/tiles/gen");
+            HttpWebRequest httpWebRequest =
+                (HttpWebRequest)WebRequest.Create("http://tiles.virtualearth.net/tiles/gen");
             httpWebRequest.Timeout = 5000;
             HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             if (httpWebResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new Exception("Status code = " + httpWebResponse.StatusCode.ToString());
             }
+
             Stream responseStream = httpWebResponse.GetResponseStream();
             byte[] array = new byte[1000];
             responseStream.Read(array, 0, array.Length);
@@ -127,11 +137,13 @@ namespace MSR.CVE.BackMaker
             string @string = aSCIIEncoding.GetString(array);
             return Convert.ToInt32(@string, CultureInfo.InvariantCulture);
         }
+
         public string GetFormatString()
         {
             this.formatReadyEvent.WaitOne();
             return this.formatString;
         }
+
         public int GetGenerationNumber()
         {
             return this.generationNumber;

@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     internal class DownhillInverterPointTransformer : IPointTransformer
@@ -7,11 +8,14 @@ namespace MSR.CVE.BackMaker
         private const int loopLimit = 200;
         private IPointTransformer destToSourceWarp;
         private IPointTransformer approximateSourceToDestWarp;
-        public DownhillInverterPointTransformer(IPointTransformer destToSourceWarp, IPointTransformer approximateSourceToDestWarp)
+
+        public DownhillInverterPointTransformer(IPointTransformer destToSourceWarp,
+            IPointTransformer approximateSourceToDestWarp)
         {
             this.destToSourceWarp = destToSourceWarp;
             this.approximateSourceToDestWarp = approximateSourceToDestWarp;
         }
+
         public override void doTransform(PointD p0, PointD p1)
         {
             try
@@ -25,6 +29,7 @@ namespace MSR.CVE.BackMaker
                 throw;
             }
         }
+
         protected PointD getTransformedPoint(PointD goal, bool debug)
         {
             PointD pointD = this.approximateSourceToDestWarp.getTransformedPoint(goal);
@@ -35,27 +40,26 @@ namespace MSR.CVE.BackMaker
             {
                 PointD[] array = new PointD[]
                 {
-                    pointD,
-                    new PointD(pointD.x + num, pointD.y),
-                    new PointD(pointD.x - num, pointD.y),
-                    new PointD(pointD.x, pointD.y + num),
-                    new PointD(pointD.x, pointD.y - num),
+                    pointD, new PointD(pointD.x + num, pointD.y), new PointD(pointD.x - num, pointD.y),
+                    new PointD(pointD.x, pointD.y + num), new PointD(pointD.x, pointD.y - num),
                     new PointD(pointD.x + num * 0.707106781186547, pointD.y + num * 0.707106781186547),
                     new PointD(pointD.x - num * 0.707106781186547, pointD.y + num * 0.707106781186547),
                     new PointD(pointD.x - num * 0.707106781186547, pointD.y - num * 0.707106781186547),
                     new PointD(pointD.x + num * 0.707106781186547, pointD.y - num * 0.707106781186547)
                 };
-                PointD[] array2 = Array.ConvertAll<PointD, PointD>(array, delegate(PointD p1)
-                {
-                    PointD pointD2 = new PointD();
-                    this.destToSourceWarp.doTransform(p1, pointD2);
-                    return pointD2;
-                });
+                PointD[] array2 = Array.ConvertAll<PointD, PointD>(array,
+                    delegate(PointD p1)
+                    {
+                        PointD pointD2 = new PointD();
+                        this.destToSourceWarp.doTransform(p1, pointD2);
+                        return pointD2;
+                    });
                 double[] array3 = new double[9];
                 for (int j = 0; j < 9; j++)
                 {
                     array3[j] = (array2[j] - goal).Length();
                 }
+
                 int num2 = 0;
                 for (int k = 1; k < 9; k++)
                 {
@@ -64,32 +68,30 @@ namespace MSR.CVE.BackMaker
                         num2 = k;
                     }
                 }
+
                 double num3 = (array2[1] - array2[0]).Length();
                 if (debug)
                 {
-                    D.Say(0, string.Format("guess[{0:G19}] = {1} [{5}] source={6} dist = {2} radius={3} spread={4}", new object[]
-                    {
-                        num2,
-                        pointD,
-                        array3[num2],
-                        num,
-                        num3,
-                        num2,
-                        array2[num2]
-                    }));
+                    D.Say(0,
+                        string.Format("guess[{0:G19}] = {1} [{5}] source={6} dist = {2} radius={3} spread={4}",
+                            new object[] {num2, pointD, array3[num2], num, num3, num2, array2[num2]}));
                 }
+
                 double num4 = num * array3[num2] / num3;
                 pointD = array[num2];
                 double arg_25C_0 = array3[num2];
-                if (num3 == 0.0 || (num4 >= num && num2 == 0))
+                if (num3 == 0.0 || num4 >= num && num2 == 0)
                 {
                     D.Say(6, string.Format("Convergence iters: {0}", i));
                     return pointD;
                 }
+
                 num = num4;
             }
+
             throw new TransformFailedException();
         }
+
         public override IPointTransformer getInversePointTransfomer()
         {
             throw new NotImplementedException();

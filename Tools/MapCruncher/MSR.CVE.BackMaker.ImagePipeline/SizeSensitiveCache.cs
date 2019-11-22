@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class SizeSensitiveCache : CacheBase
@@ -12,20 +12,24 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private static long paramCacheMaxSize = (long)((oneEntryAtATime ? 1 : 400) * 1048576);
         private long memoryUsed;
         private int spillCount;
+
         public SizeSensitiveCache(string debugName) : base(debugName)
         {
             this.lruQueue = new LinkedList<CacheRecord>();
         }
+
         internal override CacheRecord NewRecord(IFuture future)
         {
             return new SizedCacheRecord(future);
         }
+
         private void UpdateSizeForRecord(SizedCacheRecord record)
         {
             if (record.knowCorrectSize)
             {
                 return;
             }
+
             this.memoryUsed -= record.memoryCharge;
             if (record.present != null && record.present is SizedObject)
             {
@@ -35,17 +39,21 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 record.memoryCharge = 83886080L;
             }
+
             this.memoryUsed += record.memoryCharge;
         }
+
         internal override void Touch(CacheRecord record, bool recordIsNew)
         {
             if (!recordIsNew)
             {
                 this.lruQueue.Remove(record);
             }
+
             this.UpdateSizeForRecord((SizedCacheRecord)record);
             this.lruQueue.AddLast(record);
         }
+
         internal override void TouchAfterUnlocked(CacheRecord record, bool recordIsNew)
         {
             if (recordIsNew)
@@ -53,16 +61,19 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.NotifyObservers(record.GetFuture(), true);
             }
         }
+
         internal override void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             this.memoryUsed -= ((SizedCacheRecord)record).memoryCharge;
             this.lruQueue.Remove(record);
             base.Remove(record, removeExpectation);
         }
+
         protected override void Clean()
         {
             this.Clean(false);
         }
+
         public override Present Get(IFuture future, string refCredit)
         {
             if (oneEntryAtATime)
@@ -73,8 +84,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     return present;
                 }
             }
+
             return base.Get(future, refCredit);
         }
+
         private void Clean(bool purge)
         {
             int num = 0;
@@ -83,7 +96,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                while ((purge && this.lruQueue.Count > 0) || (this.memoryUsed > paramCacheMaxSize && ((oneEntryAtATime && this.lruQueue.Count > 0) || (!oneEntryAtATime && this.lruQueue.Count > 1))))
+                while (purge && this.lruQueue.Count > 0 || this.memoryUsed > paramCacheMaxSize &&
+                       (oneEntryAtATime && this.lruQueue.Count > 0 || !oneEntryAtATime && this.lruQueue.Count > 1))
                 {
                     CacheRecord value = this.lruQueue.First.Value;
                     num++;
@@ -96,30 +110,33 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             foreach (CacheRecord current in list)
             {
                 this.NotifyObservers(current.GetFuture(), false);
             }
-            D.Sayf(10, "SizeSensitive Cleaner: removed {0} objects; from {1} to {2} MB", new object[]
-            {
-                num,
-                num2 >> 20,
-                this.memoryUsed >> 20
-            });
+
+            D.Sayf(10,
+                "SizeSensitive Cleaner: removed {0} objects; from {1} to {2} MB",
+                new object[] {num, num2 >> 20, this.memoryUsed >> 20});
         }
+
         internal int GetSpillCount()
         {
             return this.spillCount;
         }
+
         internal void Purge()
         {
             this.Clean(true);
             this.spillCount = 0;
         }
+
         internal void AddCallback(OpenDocumentStateObserverIfc openDocumentStateObserver)
         {
             this.observers.Add(openDocumentStateObserver);
         }
+
         private void NotifyObservers(IFuture openDocumentFuture, bool documentState)
         {
             foreach (OpenDocumentStateObserverIfc current in this.observers)

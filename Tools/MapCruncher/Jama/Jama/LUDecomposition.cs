@@ -1,4 +1,5 @@
 using System;
+
 namespace Jama
 {
     [Serializable]
@@ -9,6 +10,7 @@ namespace Jama
         private int n;
         private int pivsign;
         private int[] piv;
+
         public virtual bool Nonsingular
         {
             get
@@ -22,10 +24,12 @@ namespace Jama
                         return result;
                     }
                 }
+
                 result = true;
                 return result;
             }
         }
+
         public virtual JamaMatrix L
         {
             get
@@ -53,9 +57,11 @@ namespace Jama
                         }
                     }
                 }
+
                 return jamaMatrix;
             }
         }
+
         public virtual JamaMatrix U
         {
             get
@@ -76,9 +82,11 @@ namespace Jama
                         }
                     }
                 }
+
                 return jamaMatrix;
             }
         }
+
         public virtual int[] Pivot
         {
             get
@@ -88,9 +96,11 @@ namespace Jama
                 {
                     array[i] = this.piv[i];
                 }
+
                 return array;
             }
         }
+
         public virtual double[] DoublePivot
         {
             get
@@ -100,9 +110,11 @@ namespace Jama
                 {
                     array[i] = (double)this.piv[i];
                 }
+
                 return array;
             }
         }
+
         public LUDecomposition(JamaMatrix A)
         {
             this.LU = A.ArrayCopy;
@@ -113,6 +125,7 @@ namespace Jama
             {
                 this.piv[i] = i;
             }
+
             this.pivsign = 1;
             double[] array = new double[this.m];
             for (int j = 0; j < this.n; j++)
@@ -121,6 +134,7 @@ namespace Jama
                 {
                     array[i] = this.LU[i][j];
                 }
+
                 for (int i = 0; i < this.m; i++)
                 {
                     double[] array2 = this.LU[i];
@@ -130,8 +144,10 @@ namespace Jama
                     {
                         num2 += array2[k] * array[k];
                     }
-                    array2[j] = (array[i] -= num2);
+
+                    array2[j] = array[i] -= num2;
                 }
+
                 int num3 = j;
                 for (int i = j + 1; i < this.m; i++)
                 {
@@ -140,6 +156,7 @@ namespace Jama
                         num3 = i;
                     }
                 }
+
                 if (num3 != j)
                 {
                     for (int k = 0; k < this.n; k++)
@@ -148,12 +165,14 @@ namespace Jama
                         this.LU[num3][k] = this.LU[j][k];
                         this.LU[j][k] = num4;
                     }
+
                     int num5 = this.piv[num3];
                     this.piv[num3] = this.piv[j];
                     this.piv[j] = num5;
                     this.pivsign = -this.pivsign;
                 }
-                if (j < this.m & this.LU[j][j] != 0.0)
+
+                if ((j < this.m) & (this.LU[j][j] != 0.0))
                 {
                     for (int i = j + 1; i < this.m; i++)
                     {
@@ -162,29 +181,35 @@ namespace Jama
                 }
             }
         }
+
         public virtual double det()
         {
             if (this.m != this.n)
             {
                 throw new ArgumentException("Matrix must be square.");
             }
+
             double num = (double)this.pivsign;
             for (int i = 0; i < this.n; i++)
             {
                 num *= this.LU[i][i];
             }
+
             return num;
         }
+
         public virtual JamaMatrix solve(JamaMatrix B)
         {
             if (B.RowDimension != this.m)
             {
                 throw new ArgumentException("Matrix row dimensions must agree.");
             }
+
             if (!this.Nonsingular)
             {
                 throw new CorrespondencesAreSingularException();
             }
+
             int columnDimension = B.ColumnDimension;
             JamaMatrix matrix = B.getMatrix(this.piv, 0, columnDimension - 1);
             double[][] array = matrix.Array;
@@ -198,12 +223,14 @@ namespace Jama
                     }
                 }
             }
+
             for (int i = this.n - 1; i >= 0; i--)
             {
                 for (int k = 0; k < columnDimension; k++)
                 {
                     array[i][k] /= this.LU[i][i];
                 }
+
                 for (int j = 0; j < i; j++)
                 {
                     for (int k = 0; k < columnDimension; k++)
@@ -212,6 +239,7 @@ namespace Jama
                     }
                 }
             }
+
             return matrix;
         }
     }

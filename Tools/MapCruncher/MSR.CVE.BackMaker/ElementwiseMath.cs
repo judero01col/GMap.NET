@@ -1,5 +1,6 @@
-using Jama;
 using System;
+using Jama;
+
 namespace MSR.CVE.BackMaker
 {
     internal class ElementwiseMath
@@ -12,6 +13,7 @@ namespace MSR.CVE.BackMaker
             {
                 throw new Exception("No elements.");
             }
+
             for (int i = 0; i < gm.RowDimension; i++)
             {
                 for (int j = 0; j < gm.ColumnDimension; j++)
@@ -24,8 +26,10 @@ namespace MSR.CVE.BackMaker
                     }
                 }
             }
+
             return num;
         }
+
         public static double Max(JamaMatrix gm)
         {
             bool flag = true;
@@ -34,6 +38,7 @@ namespace MSR.CVE.BackMaker
             {
                 throw new Exception("No elements.");
             }
+
             for (int i = 0; i < gm.RowDimension; i++)
             {
                 for (int j = 0; j < gm.ColumnDimension; j++)
@@ -46,6 +51,7 @@ namespace MSR.CVE.BackMaker
                     }
                 }
             }
+
             return num;
         }
     }

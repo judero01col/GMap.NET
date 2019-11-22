@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderToS3Options : RenderToOptions
@@ -11,6 +11,7 @@ namespace MSR.CVE.BackMaker
         private static string attr_s3credentialsFilename = "CredentialsFilename";
         private static string attr_s3bucket = "Bucket";
         private static string attr_s3pathPrefix = "PathPrefix";
+
         public string s3credentialsFilename
         {
             get
@@ -22,6 +23,7 @@ namespace MSR.CVE.BackMaker
                 this._s3credentialsFilename.myValue = value;
             }
         }
+
         public string s3bucket
         {
             get
@@ -33,6 +35,7 @@ namespace MSR.CVE.BackMaker
                 this._s3bucket.myValue = value;
             }
         }
+
         public string s3pathPrefix
         {
             get
@@ -44,12 +47,14 @@ namespace MSR.CVE.BackMaker
                 this._s3pathPrefix.myValue = value;
             }
         }
+
         public RenderToS3Options(DirtyEvent parentDirtyEvent)
         {
             this._s3credentialsFilename = new DirtyString(parentDirtyEvent);
             this._s3bucket = new DirtyString(parentDirtyEvent);
             this._s3pathPrefix = new DirtyString(parentDirtyEvent);
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(xmlTag);
@@ -58,6 +63,7 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString(attr_s3pathPrefix, this.s3pathPrefix);
             writer.WriteEndElement();
         }
+
         public RenderToS3Options(MashupParseContext context, DirtyEvent parentDirtyEvent)
         {
             XMLTagReader xMLTagReader = context.NewTagReader(xmlTag);
@@ -69,6 +75,7 @@ namespace MSR.CVE.BackMaker
             this.s3pathPrefix = context.GetRequiredAttribute(attr_s3pathPrefix);
             xMLTagReader.SkipAllSubTags();
         }
+
         public override string ToString()
         {
             return string.Format("s3:{0}/{1}", this.s3bucket, this.s3pathPrefix);

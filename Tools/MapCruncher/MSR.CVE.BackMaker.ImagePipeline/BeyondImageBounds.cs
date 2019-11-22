@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class BeyondImageBounds : Present, IDisposable
@@ -7,6 +8,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             return this;
         }
+
         public void Dispose()
         {
         }

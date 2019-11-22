@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+
 namespace MSR.CVE.BackMaker
 {
     public class LegendList
@@ -19,6 +18,7 @@ namespace MSR.CVE.BackMaker
             this.dirtyEvent = new DirtyEvent(parentEvent);
             this.parentBoundsChangedEvent = parentBoundsChangedEvent;
         }
+
         public LegendList(SourceMap sourceMap, MashupParseContext context, DirtyEvent parentEvent)
         {
             this._sourceMap = sourceMap;
@@ -33,10 +33,12 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public static string GetXMLTag()
         {
             return "LegendList";
         }
+
         public void WriteXML(MashupWriteContext context)
         {
             context.writer.WriteStartElement(GetXMLTag());
@@ -44,8 +46,10 @@ namespace MSR.CVE.BackMaker
             {
                 current.WriteXML(context);
             }
+
             context.writer.WriteEndElement();
         }
+
         internal Legend AddNewLegend()
         {
             Legend legend = new Legend(this._sourceMap, this.dirtyEvent, this.parentBoundsChangedEvent);
@@ -57,14 +61,17 @@ namespace MSR.CVE.BackMaker
                 num++;
                 legend.displayName = string.Format("{0} {1}", displayName, num);
             }
+
             this.list.Add(legend);
             this.dirtyEvent.SetDirty();
             return legend;
         }
+
         public List<Legend>.Enumerator GetEnumerator()
         {
             return this.list.GetEnumerator();
         }
+
         public void RemoveLegend(Legend legend)
         {
             this.list.Remove(legend);

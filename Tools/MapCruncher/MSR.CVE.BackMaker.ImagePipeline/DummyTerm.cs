@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal class DummyTerm : Parameter, IRobustlyHashable, Present, IDisposable
@@ -7,10 +8,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             hash.Accumulate("DummyTerm");
         }
+
         public Present Duplicate(string refCredit)
         {
             return this;
         }
+
         public void Dispose()
         {
         }

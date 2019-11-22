@@ -1,6 +1,6 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class DisplayablePosition
@@ -10,10 +10,12 @@ namespace MSR.CVE.BackMaker
             AsOutlier,
             AsContributor
         }
+
         private const int NumErrorMarkers = 2;
         private LatLonZoom _pinPosition;
         private ErrorPosition[] _errorPositions = new ErrorPosition[2];
         private bool _invertError;
+
         public LatLonZoom pinPosition
         {
             get
@@ -21,6 +23,7 @@ namespace MSR.CVE.BackMaker
                 return this._pinPosition;
             }
         }
+
         public bool invertError
         {
             get
@@ -32,18 +35,22 @@ namespace MSR.CVE.BackMaker
                 this._invertError = value;
             }
         }
+
         public DisplayablePosition(LatLonZoom position)
         {
             this._pinPosition = position;
         }
+
         public static string GetXMLTag(MashupXMLSchemaVersion version)
         {
             if (version == MonolithicMapPositionsSchema.schema)
             {
                 return MapPosition.GetXMLTag(version);
             }
+
             return LatLonZoom.GetXMLTag();
         }
+
         public DisplayablePosition(MashupParseContext context, CoordinateSystemIfc coordSys)
         {
             if (context.version == MonolithicMapPositionsSchema.schema)
@@ -52,20 +59,25 @@ namespace MSR.CVE.BackMaker
                 this._pinPosition = mapPosition.llz;
                 return;
             }
+
             this._pinPosition = new LatLonZoom(context, coordSys);
         }
+
         public ErrorPosition GetErrorPosition(ErrorMarker errorMarker)
         {
             return this._errorPositions[(int)errorMarker];
         }
+
         public void SetErrorPosition(ErrorMarker errorMarker, LatLon errorPosition)
         {
             this._errorPositions[(int)errorMarker] = new ErrorPosition(errorPosition);
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             this._pinPosition.WriteXML(writer);
         }
+
         public override int GetHashCode()
         {
             return this._pinPosition.GetHashCode();

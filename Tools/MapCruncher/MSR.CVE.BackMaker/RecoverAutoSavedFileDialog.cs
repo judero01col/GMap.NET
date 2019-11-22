@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class RecoverAutoSavedFileDialog : Form
@@ -13,10 +14,12 @@ namespace MSR.CVE.BackMaker
         private Button deleteBackupButton;
         private Button cancelButton;
         private NotifyIcon notifyIcon1;
+
         public RecoverAutoSavedFileDialog()
         {
             this.InitializeComponent();
         }
+
         public void Initialize(string filename)
         {
             List<string> list = new List<string>();
@@ -29,29 +32,35 @@ namespace MSR.CVE.BackMaker
             this.message.SelectionStart = 0;
             this.message.SelectionLength = 0;
         }
+
         private void openAsNewButton_Click(object sender, EventArgs e)
         {
             base.DialogResult = DialogResult.Yes;
             base.Close();
         }
+
         private void deleteBackupButton_Click(object sender, EventArgs e)
         {
             base.DialogResult = DialogResult.Ignore;
             base.Close();
         }
+
         private void cancelButton_Click(object sender, EventArgs e)
         {
             base.DialogResult = DialogResult.Cancel;
             base.Close();
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.components = new Container();
@@ -61,7 +70,7 @@ namespace MSR.CVE.BackMaker
             this.cancelButton = new Button();
             this.notifyIcon1 = new NotifyIcon(this.components);
             base.SuspendLayout();
-            this.message.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.message.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.message.BorderStyle = BorderStyle.None;
             this.message.Font = new Font("Microsoft Sans Serif", 9f, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.message.Location = new Point(8, 7);
@@ -71,7 +80,7 @@ namespace MSR.CVE.BackMaker
             this.message.Size = new Size(376, 173);
             this.message.TabIndex = 0;
             this.message.Text = "Example text";
-            this.openAsNewButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.openAsNewButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.openAsNewButton.Location = new Point(20, 218);
             this.openAsNewButton.Name = "openAsNewButton";
             this.openAsNewButton.Size = new Size(130, 29);
@@ -79,7 +88,7 @@ namespace MSR.CVE.BackMaker
             this.openAsNewButton.Text = "Open Backup as New";
             this.openAsNewButton.UseVisualStyleBackColor = true;
             this.openAsNewButton.Click += new EventHandler(this.openAsNewButton_Click);
-            this.deleteBackupButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.deleteBackupButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.deleteBackupButton.Location = new Point(156, 218);
             this.deleteBackupButton.Name = "deleteBackupButton";
             this.deleteBackupButton.Size = new Size(107, 29);
@@ -87,7 +96,7 @@ namespace MSR.CVE.BackMaker
             this.deleteBackupButton.Text = "Delete Backup";
             this.deleteBackupButton.UseVisualStyleBackColor = true;
             this.deleteBackupButton.Click += new EventHandler(this.deleteBackupButton_Click);
-            this.cancelButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.cancelButton.Location = new Point(269, 218);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new Size(107, 29);

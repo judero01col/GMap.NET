@@ -1,8 +1,9 @@
-using Jama.util;
 using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using Jama.util;
+
 namespace Jama
 {
     [Serializable]
@@ -11,6 +12,7 @@ namespace Jama
         private double[][] A;
         private int m;
         private int n;
+
         public virtual double[][] Array
         {
             get
@@ -18,6 +20,7 @@ namespace Jama
                 return this.A;
             }
         }
+
         public virtual double[][] ArrayCopy
         {
             get
@@ -27,6 +30,7 @@ namespace Jama
                 {
                     array[i] = new double[this.n];
                 }
+
                 for (int i = 0; i < this.m; i++)
                 {
                     for (int j = 0; j < this.n; j++)
@@ -34,9 +38,11 @@ namespace Jama
                         array[i][j] = this.A[i][j];
                     }
                 }
+
                 return array;
             }
         }
+
         public virtual double[] ColumnPackedCopy
         {
             get
@@ -49,9 +55,11 @@ namespace Jama
                         array[i + j * this.m] = this.A[i][j];
                     }
                 }
+
                 return array;
             }
         }
+
         public virtual double[] RowPackedCopy
         {
             get
@@ -64,9 +72,11 @@ namespace Jama
                         array[i * this.n + j] = this.A[i][j];
                     }
                 }
+
                 return array;
             }
         }
+
         public virtual int RowDimension
         {
             get
@@ -74,6 +84,7 @@ namespace Jama
                 return this.m;
             }
         }
+
         public virtual int ColumnDimension
         {
             get
@@ -81,6 +92,7 @@ namespace Jama
                 return this.n;
             }
         }
+
         public JamaMatrix(int m, int n)
         {
             this.m = m;
@@ -91,6 +103,7 @@ namespace Jama
                 this.A[i] = new double[n];
             }
         }
+
         public JamaMatrix(int m, int n, double s)
         {
             this.m = m;
@@ -100,6 +113,7 @@ namespace Jama
             {
                 this.A[i] = new double[n];
             }
+
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < n; j++)
@@ -108,6 +122,7 @@ namespace Jama
                 }
             }
         }
+
         public JamaMatrix(double[][] A)
         {
             this.m = A.Length;
@@ -119,27 +134,32 @@ namespace Jama
                     throw new ArgumentException("All rows must have the same length.");
                 }
             }
+
             this.A = A;
         }
+
         public JamaMatrix(double[][] A, int m, int n)
         {
             this.A = A;
             this.m = m;
             this.n = n;
         }
+
         public JamaMatrix(double[] vals, int m)
         {
             this.m = m;
-            this.n = ((m != 0) ? (vals.Length / m) : 0);
+            this.n = m != 0 ? vals.Length / m : 0;
             if (m * this.n != vals.Length)
             {
                 throw new ArgumentException("Array length must be a multiple of m.");
             }
+
             this.A = new double[m][];
             for (int i = 0; i < m; i++)
             {
                 this.A[i] = new double[this.n];
             }
+
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < this.n; j++)
@@ -148,6 +168,7 @@ namespace Jama
                 }
             }
         }
+
         public static JamaMatrix constructWithCopy(double[][] A)
         {
             int num = A.Length;
@@ -160,13 +181,16 @@ namespace Jama
                 {
                     throw new ArgumentException("All rows must have the same length.");
                 }
+
                 for (int j = 0; j < num2; j++)
                 {
                     array[i][j] = A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix copy()
         {
             JamaMatrix jamaMatrix = new JamaMatrix(this.m, this.n);
@@ -178,24 +202,30 @@ namespace Jama
                     array[i][j] = this.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual object Clone()
         {
             return this.copy();
         }
+
         public double GetElement(int i, int j)
         {
             return this.A[i][j];
         }
+
         public void SetElement(int i, int j, double v)
         {
             this.A[i][j] = v;
         }
+
         public virtual double get_Renamed(int i, int j)
         {
             return this.A[i][j];
         }
+
         public virtual JamaMatrix getMatrix(int i0, int i1, int j0, int j1)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(i1 - i0 + 1, j1 - j0 + 1);
@@ -214,8 +244,10 @@ namespace Jama
             {
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix getMatrix(int[] r, int[] c)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(r.Length, c.Length);
@@ -234,8 +266,10 @@ namespace Jama
             {
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix getMatrix(int i0, int i1, int[] c)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(i1 - i0 + 1, c.Length);
@@ -254,8 +288,10 @@ namespace Jama
             {
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix getMatrix(int[] r, int j0, int j1)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(r.Length, j1 - j0 + 1);
@@ -274,12 +310,15 @@ namespace Jama
             {
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
+
             return jamaMatrix;
         }
+
         public virtual void set_Renamed(int i, int j, double s)
         {
             this.A[i][j] = s;
         }
+
         public virtual void setMatrix(int i0, int i1, int j0, int j1, JamaMatrix X)
         {
             try
@@ -297,6 +336,7 @@ namespace Jama
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
         }
+
         public virtual void setMatrix(int[] r, int[] c, JamaMatrix X)
         {
             try
@@ -314,6 +354,7 @@ namespace Jama
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
         }
+
         public virtual void setMatrix(int[] r, int j0, int j1, JamaMatrix X)
         {
             try
@@ -331,6 +372,7 @@ namespace Jama
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
         }
+
         public virtual void setMatrix(int i0, int i1, int[] c, JamaMatrix X)
         {
             try
@@ -348,6 +390,7 @@ namespace Jama
                 throw new IndexOutOfRangeException("Submatrix indices");
             }
         }
+
         public virtual JamaMatrix transpose()
         {
             JamaMatrix jamaMatrix = new JamaMatrix(this.n, this.m);
@@ -359,8 +402,10 @@ namespace Jama
                     array[j][i] = this.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual double norm1()
         {
             double num = 0.0;
@@ -371,14 +416,18 @@ namespace Jama
                 {
                     num2 += Math.Abs(this.A[j][i]);
                 }
+
                 num = Math.Max(num, num2);
             }
+
             return num;
         }
+
         public virtual double norm2()
         {
             return new SingularValueDecomposition(this).norm2();
         }
+
         public virtual double normInf()
         {
             double num = 0.0;
@@ -389,10 +438,13 @@ namespace Jama
                 {
                     num2 += Math.Abs(this.A[i][j]);
                 }
+
                 num = Math.Max(num, num2);
             }
+
             return num;
         }
+
         public virtual double normF()
         {
             double num = 0.0;
@@ -403,8 +455,10 @@ namespace Jama
                     num = Maths.hypot(num, this.A[i][j]);
                 }
             }
+
             return num;
         }
+
         public virtual JamaMatrix uminus()
         {
             JamaMatrix jamaMatrix = new JamaMatrix(this.m, this.n);
@@ -416,8 +470,10 @@ namespace Jama
                     array[i][j] = -this.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix plus(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -430,8 +486,10 @@ namespace Jama
                     array[i][j] = this.A[i][j] + B.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix plusEquals(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -442,8 +500,10 @@ namespace Jama
                     this.A[i][j] = this.A[i][j] + B.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix minus(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -456,8 +516,10 @@ namespace Jama
                     array[i][j] = this.A[i][j] - B.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix minusEquals(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -468,8 +530,10 @@ namespace Jama
                     this.A[i][j] = this.A[i][j] - B.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix arrayTimes(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -482,8 +546,10 @@ namespace Jama
                     array[i][j] = this.A[i][j] * B.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix arrayTimesEquals(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -494,8 +560,10 @@ namespace Jama
                     this.A[i][j] = this.A[i][j] * B.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix arrayRightDivide(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -508,8 +576,10 @@ namespace Jama
                     array[i][j] = this.A[i][j] / B.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix arrayRightDivideEquals(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -520,8 +590,10 @@ namespace Jama
                     this.A[i][j] = this.A[i][j] / B.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix arrayLeftDivide(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -534,8 +606,10 @@ namespace Jama
                     array[i][j] = B.A[i][j] / this.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix arrayLeftDivideEquals(JamaMatrix B)
         {
             this.checkMatrixDimensions(B);
@@ -546,8 +620,10 @@ namespace Jama
                     this.A[i][j] = B.A[i][j] / this.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix times(double s)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(this.m, this.n);
@@ -559,8 +635,10 @@ namespace Jama
                     array[i][j] = s * this.A[i][j];
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual JamaMatrix timesEquals(double s)
         {
             for (int i = 0; i < this.m; i++)
@@ -570,14 +648,17 @@ namespace Jama
                     this.A[i][j] = s * this.A[i][j];
                 }
             }
+
             return this;
         }
+
         public virtual JamaMatrix times(JamaMatrix B)
         {
             if (B.m != this.n)
             {
                 throw new ArgumentException("Matrix inner dimensions must agree.");
             }
+
             JamaMatrix jamaMatrix = new JamaMatrix(this.m, B.n);
             double[][] array = jamaMatrix.Array;
             double[] array2 = new double[this.n];
@@ -587,6 +668,7 @@ namespace Jama
                 {
                     array2[j] = B.A[j][i];
                 }
+
                 for (int k = 0; k < this.m; k++)
                 {
                     double[] array3 = this.A[k];
@@ -595,55 +677,69 @@ namespace Jama
                     {
                         num += array3[j] * array2[j];
                     }
+
                     array[k][i] = num;
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual LUDecomposition lu()
         {
             return new LUDecomposition(this);
         }
+
         public virtual QRDecomposition qr()
         {
             return new QRDecomposition(this);
         }
+
         public virtual CholeskyDecomposition chol()
         {
             return new CholeskyDecomposition(this);
         }
+
         public virtual SingularValueDecomposition svd()
         {
             return new SingularValueDecomposition(this);
         }
+
         public virtual EigenvalueDecomposition eig()
         {
             return new EigenvalueDecomposition(this);
         }
+
         public virtual JamaMatrix solve(JamaMatrix B)
         {
-            return (this.m == this.n) ? new LUDecomposition(this).solve(B) : new QRDecomposition(this).solve(B);
+            return this.m == this.n ? new LUDecomposition(this).solve(B) : new QRDecomposition(this).solve(B);
         }
+
         public virtual JamaMatrix solveTranspose(JamaMatrix B)
         {
             return this.transpose().solve(B.transpose());
         }
+
         public virtual JamaMatrix inverse()
         {
             return this.solve(identity(this.m, this.m));
         }
+
         public virtual double det()
         {
             return new LUDecomposition(this).det();
         }
+
         public virtual int rank()
         {
             return new SingularValueDecomposition(this).rank();
         }
+
         public virtual double cond()
         {
             return new SingularValueDecomposition(this).cond();
         }
+
         public virtual double trace()
         {
             double num = 0.0;
@@ -651,8 +747,10 @@ namespace Jama
             {
                 num += this.A[i][i];
             }
+
             return num;
         }
+
         public static JamaMatrix random(int m, int n)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(m, n);
@@ -664,8 +762,10 @@ namespace Jama
                     array[i][j] = SupportClass.Random.NextDouble();
                 }
             }
+
             return jamaMatrix;
         }
+
         public static JamaMatrix identity(int m, int n)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(m, n);
@@ -674,29 +774,30 @@ namespace Jama
             {
                 for (int j = 0; j < n; j++)
                 {
-                    array[i][j] = ((i == j) ? 1.0 : 0.0);
+                    array[i][j] = i == j ? 1.0 : 0.0;
                 }
             }
+
             return jamaMatrix;
         }
+
         public virtual void print(int w, int d)
         {
-            this.print(new StreamWriter(Console.OpenStandardOutput(), Encoding.Default)
-            {
-                AutoFlush = true
-            }, w, d);
+            this.print(new StreamWriter(Console.OpenStandardOutput(), Encoding.Default) {AutoFlush = true}, w, d);
         }
+
         public virtual void print(StreamWriter output, int w, int d)
         {
             throw new NotImplementedException();
         }
+
         public virtual void print(SupportClass.TextNumberFormat format, int width)
         {
-            this.print(new StreamWriter(Console.OpenStandardOutput(), Encoding.Default)
-            {
-                AutoFlush = true
-            }, format, width);
+            this.print(new StreamWriter(Console.OpenStandardOutput(), Encoding.Default) {AutoFlush = true},
+                format,
+                width);
         }
+
         public virtual void print(StreamWriter output, SupportClass.TextNumberFormat format, int width)
         {
             output.WriteLine();
@@ -710,12 +811,16 @@ namespace Jama
                     {
                         output.Write(' ');
                     }
+
                     output.Write(text);
                 }
+
                 output.WriteLine();
             }
+
             output.WriteLine();
         }
+
         public static JamaMatrix read(StreamReader input)
         {
             SupportClass.StreamTokenizerSupport streamTokenizerSupport = new SupportClass.StreamTokenizerSupport(input);
@@ -727,21 +832,24 @@ namespace Jama
             while (streamTokenizerSupport.NextToken() == 10)
             {
             }
+
             if (streamTokenizerSupport.ttype == -1)
             {
                 throw new IOException("Unexpected EOF on matrix read.");
             }
+
             do
             {
                 arrayList.Add(double.Parse(streamTokenizerSupport.sval));
-            }
-            while (streamTokenizerSupport.NextToken() == -3);
+            } while (streamTokenizerSupport.NextToken() == -3);
+
             int count = arrayList.Count;
             double[] array = new double[count];
             for (int i = 0; i < count; i++)
             {
                 array[i] = (double)arrayList[i];
             }
+
             arrayList.Clear();
             arrayList.Add(array);
             IL_16F:
@@ -758,16 +866,20 @@ namespace Jama
                         {
                             throw new IOException("Row " + arrayList.Count + " is too short.");
                         }
+
                         goto IL_16F;
                     }
                 }
+
                 throw new IOException("Row " + arrayList.Count + " is too long.");
             }
+
             int count2 = arrayList.Count;
             double[][] array2 = new double[count2][];
             arrayList.CopyTo(array2);
             return new JamaMatrix(array2);
         }
+
         private void checkMatrixDimensions(JamaMatrix B)
         {
             if (B.m != this.m || B.n != this.n)
@@ -775,6 +887,7 @@ namespace Jama
                 throw new ArgumentException("Matrix dimensions must agree.");
             }
         }
+
         public override string ToString()
         {
             int[] array = new int[this.ColumnDimension];
@@ -787,6 +900,7 @@ namespace Jama
                     array[j] = Math.Max(array[j], text2.Length);
                 }
             }
+
             for (int i = 0; i < this.m; i++)
             {
                 for (int j = 0; j < this.n; j++)
@@ -794,8 +908,10 @@ namespace Jama
                     string text2 = this.A[i][j].ToString("g05");
                     text += text2.PadLeft(array[j] + 1);
                 }
+
                 text += "\n";
             }
+
             return text;
         }
     }

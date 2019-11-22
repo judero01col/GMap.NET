@@ -1,10 +1,11 @@
 using System;
-using System.Runtime.CompilerServices;
+
 namespace MSR.CVE.BackMaker.MCDebug
 {
     public class BigDebugKnob
     {
         public delegate void DebugKnobListener(bool enabled);
+
         private bool _debugFeaturesEnabled;
         public static BigDebugKnob theKnob = new BigDebugKnob();
 
@@ -22,6 +23,7 @@ namespace MSR.CVE.BackMaker.MCDebug
                 this.listeners(this._debugFeaturesEnabled);
             }
         }
+
         public void AddListener(DebugKnobListener listener)
         {
             this.listeners = (DebugKnobListener)Delegate.Combine(this.listeners, listener);

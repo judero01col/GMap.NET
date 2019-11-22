@@ -1,10 +1,11 @@
 using Jama;
-using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal class FastPoly1PointTransformer : IPolyPointTransformer
     {
         private double[] c = new double[6];
+
         public FastPoly1PointTransformer(JamaMatrix matrix) : base(matrix)
         {
             this.polynomialDegree = 1;
@@ -13,6 +14,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.c[i] = matrix.GetElement(i, 0);
             }
         }
+
         public override void doTransform(PointD p0, PointD p1)
         {
             double arg_06_0 = p0.x;

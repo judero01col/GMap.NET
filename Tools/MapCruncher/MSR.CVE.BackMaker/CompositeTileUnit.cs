@@ -1,10 +1,10 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.CompilerServices;
+using MSR.CVE.BackMaker.ImagePipeline;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class CompositeTileUnit : RenderWorkUnit
@@ -21,8 +21,9 @@ namespace MSR.CVE.BackMaker
 
         //[CompilerGenerated]
         //private static Predicate<ImageCodecInfo> <>9__CachedAnonymousMethodDelegate1;
-        
-        public CompositeTileUnit(Layer layer, TileAddress address, RenderOutputMethod renderOutput, string outputFilename, OutputTileType outputTileType)
+
+        public CompositeTileUnit(Layer layer, TileAddress address, RenderOutputMethod renderOutput,
+            string outputFilename, OutputTileType outputTileType)
         {
             this.layer = layer;
             this.address = address;
@@ -30,29 +31,32 @@ namespace MSR.CVE.BackMaker
             this.outputFilename = outputFilename;
             this.outputTileType = outputTileType;
         }
+
         public void AddSupplier(OneLayerBoundApplier applier)
         {
-            this.singleSourceUnits.AddLast(new SingleSourceUnit(applier, this.address, this.stage, new SingleSourceUnit.NeedThisTileDelegate(this.NeedThisTile)));
+            this.singleSourceUnits.AddLast(new SingleSourceUnit(applier,
+                this.address,
+                this.stage,
+                new SingleSourceUnit.NeedThisTileDelegate(this.NeedThisTile)));
         }
+
         public TileAddress GetTileAddress()
         {
             return this.address;
         }
+
         public bool NeedThisTile()
         {
             return !this.renderOutput.KnowFileExists(this.outputFilename);
         }
+
         public override bool DoWork(ITileWorkFeedback feedback)
         {
             this.feedback = feedback;
             bool result;
             try
             {
-                D.Sayf(0, "{0} start compositing {1}", new object[]
-                {
-                    Clocker.theClock.stamp(),
-                    this
-                });
+                D.Sayf(0, "{0} start compositing {1}", new object[] {Clocker.theClock.stamp(), this});
                 if (!this.NeedThisTile())
                 {
                     D.Say(10, "Skipping extant file: " + this.outputFilename);
@@ -60,10 +64,7 @@ namespace MSR.CVE.BackMaker
                 }
                 else
                 {
-                    D.Sayf(10, "Compositing {0}", new object[]
-                    {
-                        this.address
-                    });
+                    D.Sayf(10, "Compositing {0}", new object[] {this.address});
                     Size tileSize = new MercatorCoordinateSystem().GetTileSize();
                     GDIBigLockedImage gDIBigLockedImage = new GDIBigLockedImage(tileSize, "CompositeTileUnit");
                     D.Say(10, string.Format("Start({0}) sm.count={1}", this.address, this.singleSourceUnits.Count));
@@ -71,6 +72,7 @@ namespace MSR.CVE.BackMaker
                     {
                         current.CompositeImageInto(gDIBigLockedImage);
                     }
+
                     this.SaveTile(gDIBigLockedImage);
                     result = true;
                 }
@@ -85,23 +87,26 @@ namespace MSR.CVE.BackMaker
                 feedback.PostMessage(string.Format("Exception compositing tile {0}: {1}", this.address, arg));
                 result = false;
             }
+
             return result;
         }
+
         public override RenderWorkUnitComparinator GetWorkUnitComparinator()
         {
             return new RenderWorkUnitComparinator(new IComparable[]
             {
-                this.address.ZoomLevel,
-                this.layer.displayName,
-                this.stage,
-                1,
-                this.address
+                this.address.ZoomLevel, this.layer.displayName, this.stage, 1, this.address
             });
         }
+
         public override string ToString()
         {
-            return string.Format("CTU layer {0} address {1} stage {2}", this.layer.displayName, this.address, this.stage);
+            return string.Format("CTU layer {0} address {1} stage {2}",
+                this.layer.displayName,
+                this.address,
+                this.stage);
         }
+
         private ImageCodecInfo SelectCodec()
         {
             if (this.imageCodecInfo == null)
@@ -109,8 +114,10 @@ namespace MSR.CVE.BackMaker
                 List<ImageCodecInfo> list = new List<ImageCodecInfo>(ImageCodecInfo.GetImageDecoders());
                 this.imageCodecInfo = list.Find((ImageCodecInfo info) => info.FormatDescription == "JPEG");
             }
+
             return this.imageCodecInfo;
         }
+
         private void SaveTile(GDIBigLockedImage compositeImage)
         {
             try
@@ -134,8 +141,13 @@ namespace MSR.CVE.BackMaker
                             this.outputTileType = OutputTileType.PNG;
                         }
                     }
-                    RenderOutputUtil.SaveImage(imageRef, this.renderOutput, this.outputFilename, this.outputTileType.imageFormat);
+
+                    RenderOutputUtil.SaveImage(imageRef,
+                        this.renderOutput,
+                        this.outputFilename,
+                        this.outputTileType.imageFormat);
                 }
+
                 this.feedback.PostImageResult(imageRef, this.layer, "(composite)", this.address);
                 imageRef.Dispose();
             }
@@ -144,6 +156,7 @@ namespace MSR.CVE.BackMaker
                 this.feedback.PostMessage(string.Format("Can't create {0}: {1}", this.outputFilename, arg));
             }
         }
+
         internal IEnumerable<SingleSourceUnit> GetSingleSourceUnits()
         {
             return this.singleSourceUnits;

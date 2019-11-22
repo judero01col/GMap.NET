@@ -9,6 +9,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.Projections;
 #if NET40
 using System.Collections.Concurrent;
+
 #endif
 
 #if PocketPC
@@ -63,7 +64,7 @@ namespace GMap.NET.Internals
         public FastReaderWriterLock tileDrawingListLock = new FastReaderWriterLock();
 
 #if !NET40
-        public readonly Stack<LoadTask> tileLoadQueue = new Stack<LoadTask>();
+        public readonly Stack<LoadTask> TileLoadQueue = new Stack<LoadTask>();
 #endif
 
 #if !PocketPC
@@ -647,14 +648,14 @@ namespace GMap.NET.Internals
                 do
                 {
                     Thread.Sleep(100);
-                    Monitor.Enter(tileLoadQueue);
+                    Monitor.Enter(TileLoadQueue);
                     try
                     {
-                        wait = tileLoadQueue.Any();
+                        wait = TileLoadQueue.Any();
                     }
                     finally
                     {
-                        Monitor.Exit(tileLoadQueue);
+                        Monitor.Exit(TileLoadQueue);
                     }
                 } while (wait);
             });
@@ -793,14 +794,14 @@ namespace GMap.NET.Internals
 #if NET40
                 //TODO: clear loading
 #else
-                Monitor.Enter(tileLoadQueue);
+                Monitor.Enter(TileLoadQueue);
                 try
                 {
-                    tileLoadQueue.Clear();
+                    TileLoadQueue.Clear();
                 }
                 finally
                 {
-                    Monitor.Exit(tileLoadQueue);
+                    Monitor.Exit(TileLoadQueue);
                 }
 #endif
             }
@@ -886,10 +887,10 @@ namespace GMap.NET.Internals
             {
                 task = null;
 
-                Monitor.Enter(tileLoadQueue);
+                Monitor.Enter(TileLoadQueue);
                 try
                 {
-                    while (tileLoadQueue.Count == 0)
+                    while (TileLoadQueue.Count == 0)
                     {
                         Debug.WriteLine(ctid + " - Wait " + loadWaitCount + " - " + DateTime.Now.TimeOfDay);
 
@@ -899,21 +900,21 @@ namespace GMap.NET.Internals
                             OnLoadComplete(ctid);
                         }
 
-                        if (!IsStarted || false == Monitor.Wait(tileLoadQueue, WaitForTileLoadThreadTimeout, false) || !IsStarted)
+                        if (!IsStarted || false == Monitor.Wait(TileLoadQueue, WaitForTileLoadThreadTimeout, false) || !IsStarted)
                         {
                             stop = true;
                             break;
                         }
                     }
 
-                    if (IsStarted && !stop || tileLoadQueue.Count > 0)
+                    if (IsStarted && !stop || TileLoadQueue.Count > 0)
                     {
-                        task = tileLoadQueue.Pop();
+                        task = TileLoadQueue.Pop();
                     }
                 }
                 finally
                 {
-                    Monitor.Exit(tileLoadQueue);
+                    Monitor.Exit(TileLoadQueue);
                 }
 
                 if (task.HasValue && IsStarted)
@@ -923,7 +924,7 @@ namespace GMap.NET.Internals
             }
 
 #if !PocketPC
-            Monitor.Enter(tileLoadQueue);
+            Monitor.Enter(TileLoadQueue);
             try
             {
                 Debug.WriteLine("Quit - " + ct.Name);
@@ -934,7 +935,7 @@ namespace GMap.NET.Internals
             }
             finally
             {
-                Monitor.Exit(tileLoadQueue);
+                Monitor.Exit(TileLoadQueue);
             }
 #endif
         }
@@ -1239,7 +1240,7 @@ namespace GMap.NET.Internals
 #if NET40
             Interlocked.Exchange(ref loadWaitCount, 0);
 #else
-            Monitor.Enter(tileLoadQueue);
+            Monitor.Enter(TileLoadQueue);
             try
             {
 #endif
@@ -1253,9 +1254,9 @@ namespace GMap.NET.Internals
                     AddLoadTask(task);
 #else
                         {
-                            if (!tileLoadQueue.Contains(task))
+                            if (!TileLoadQueue.Contains(task))
                             {
-                                tileLoadQueue.Push(task);
+                                TileLoadQueue.Push(task);
                             }
                         }
 #endif
@@ -1294,11 +1295,11 @@ namespace GMap.NET.Internals
             }
 #if !NET40
                 loadWaitCount = 0;
-                Monitor.PulseAll(tileLoadQueue);
+                Monitor.PulseAll(TileLoadQueue);
             }
             finally
             {
-                Monitor.Exit(tileLoadQueue);
+                Monitor.Exit(TileLoadQueue);
             }
 #endif
             updatingBounds = false;
@@ -1386,14 +1387,14 @@ namespace GMap.NET.Internals
                 //TODO: maybe
 #else
                 // cancel waiting loaders
-                Monitor.Enter(tileLoadQueue);
+                Monitor.Enter(TileLoadQueue);
                 try
                 {
-                    Monitor.PulseAll(tileLoadQueue);
+                    Monitor.PulseAll(TileLoadQueue);
                 }
                 finally
                 {
-                    Monitor.Exit(tileLoadQueue);
+                    Monitor.Exit(TileLoadQueue);
                 }
 
                 lock (GThreadPool)

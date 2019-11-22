@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using GMap.NET.MapProviders;
-using GMap.NET;
-using GMap.NET.WindowsPresentation;
-using System.Net;
 using System.Diagnostics;
+using System.Web.UI;
+using GMap.NET;
 
 namespace SilverlightMapFusion.Web
 {
@@ -37,7 +30,6 @@ namespace SilverlightMapFusion.Web
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
         }
     }
 }

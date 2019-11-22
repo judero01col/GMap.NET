@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     internal interface HasDisplayNameIfc

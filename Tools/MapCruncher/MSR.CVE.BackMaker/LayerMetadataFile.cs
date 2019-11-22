@@ -1,8 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class LayerMetadataFile
@@ -11,6 +11,7 @@ namespace MSR.CVE.BackMaker
         private RenderOutputMethod renderOutputMethod;
         private EncodableHash _encodableHash;
         private static string LayerMetadataTag = "LayerMetadata";
+
         public EncodableHash encodableHash
         {
             get
@@ -18,11 +19,13 @@ namespace MSR.CVE.BackMaker
                 return this._encodableHash;
             }
         }
+
         public LayerMetadataFile(RenderOutputMethod renderOutputMethod, EncodableHash encodableHash)
         {
             this.renderOutputMethod = renderOutputMethod;
             this._encodableHash = encodableHash;
         }
+
         public static LayerMetadataFile Read(RenderOutputMethod outputMethod)
         {
             LayerMetadataFile layerMetadataFile = null;
@@ -33,20 +36,28 @@ namespace MSR.CVE.BackMaker
             {
                 while (mashupParseContext.reader.Read())
                 {
-                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == LayerMetadataTag)
+                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element &&
+                        mashupParseContext.reader.Name == LayerMetadataTag)
                     {
                         layerMetadataFile = new LayerMetadataFile(outputMethod, mashupParseContext);
                         break;
                     }
                 }
+
                 mashupParseContext.Dispose();
             }
+
             if (layerMetadataFile == null)
             {
-                throw new InvalidMashupFile(mashupParseContext, string.Format("{0} doesn't appear to be a valid {1}", outputMethod.GetUri("LayerMetadata.xml"), LayerMetadataTag));
+                throw new InvalidMashupFile(mashupParseContext,
+                    string.Format("{0} doesn't appear to be a valid {1}",
+                        outputMethod.GetUri("LayerMetadata.xml"),
+                        LayerMetadataTag));
             }
+
             return layerMetadataFile;
         }
+
         private LayerMetadataFile(RenderOutputMethod renderOutputMethod, MashupParseContext context)
         {
             this.renderOutputMethod = renderOutputMethod;
@@ -59,11 +70,14 @@ namespace MSR.CVE.BackMaker
                     this._encodableHash = new EncodableHash(context);
                 }
             }
+
             context.AssertPresent(this._encodableHash, "StrongHash");
         }
+
         public void Write()
         {
-            XmlTextWriter xmlTextWriter = new XmlTextWriter(this.renderOutputMethod.CreateFile("LayerMetadata.xml", "text/xml"), Encoding.UTF8);
+            XmlTextWriter xmlTextWriter =
+                new XmlTextWriter(this.renderOutputMethod.CreateFile("LayerMetadata.xml", "text/xml"), Encoding.UTF8);
             using (xmlTextWriter)
             {
                 xmlTextWriter.Formatting = Formatting.Indented;
@@ -72,6 +86,7 @@ namespace MSR.CVE.BackMaker
                 xmlTextWriter.Close();
             }
         }
+
         private void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(LayerMetadataTag);

@@ -1,10 +1,12 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     public abstract class RenderWorkUnit : IComparable
     {
         public abstract bool DoWork(ITileWorkFeedback feedback);
         public abstract RenderWorkUnitComparinator GetWorkUnitComparinator();
+
         public int CompareTo(object obj)
         {
             RenderWorkUnitComparinator workUnitComparinator = this.GetWorkUnitComparinator();
@@ -18,6 +20,7 @@ namespace MSR.CVE.BackMaker
                     return num2;
                 }
             }
+
             return workUnitComparinator.fields.Length.CompareTo(workUnitComparinator2.fields.Length);
         }
     }

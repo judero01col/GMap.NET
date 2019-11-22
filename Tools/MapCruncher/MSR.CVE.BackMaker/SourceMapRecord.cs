@@ -1,9 +1,9 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using System.Runtime.CompilerServices;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class SourceMapRecord : ThumbnailCollection
@@ -20,10 +20,10 @@ namespace MSR.CVE.BackMaker
         private int maxZoom;
         private List<LegendRecord> legendRecords = new List<LegendRecord>();
         private List<ThumbnailRecord> thumbnailRecords = new List<ThumbnailRecord>();
-        
+
         //[CompilerGenerated]
         //private static Comparison<ThumbnailRecord> <>9__CachedAnonymousMethodDelegate1;
-        
+
         public SourceMapRecord(Layer layer, SourceMap sourceMap, MapTileSourceFactory mapTileSourceFactory)
         {
             this.displayName = sourceMap.displayName;
@@ -32,23 +32,36 @@ namespace MSR.CVE.BackMaker
             this.maxZoom = sourceMap.sourceMapRenderOptions.maxZoom;
             try
             {
-                this.imageTransformer = sourceMap.registration.warpStyle.getImageTransformer(sourceMap.registration, InterpolationMode.Invalid);
+                this.imageTransformer =
+                    sourceMap.registration.warpStyle.getImageTransformer(sourceMap.registration,
+                        InterpolationMode.Invalid);
             }
             catch (Exception)
             {
             }
+
             foreach (Legend current in sourceMap.legendList)
             {
-                this.legendRecords.Add(new LegendRecord("legends", sourceMap.GetLegendFilename(current), current.displayName, current.GetOutputSizeSynchronously(mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap).GetUserBounds(current.latentRegionHolder, FutureFeatures.Cached))));
+                this.legendRecords.Add(new LegendRecord("legends",
+                    sourceMap.GetLegendFilename(current),
+                    current.displayName,
+                    current.GetOutputSizeSynchronously(mapTileSourceFactory.CreateDisplayableUnwarpedSource(sourceMap)
+                        .GetUserBounds(current.latentRegionHolder, FutureFeatures.Cached))));
             }
-            this.sourceMapLegendFrame = new SourceMapLegendFrame(layer, sourceMap, this.legendRecords, new SourceMapLegendFrame.ThumbnailDelegate(this.thumbnailForLegendFrame));
+
+            this.sourceMapLegendFrame = new SourceMapLegendFrame(layer,
+                sourceMap,
+                this.legendRecords,
+                new SourceMapLegendFrame.ThumbnailDelegate(this.thumbnailForLegendFrame));
         }
+
         public SourceMapRecord(SourceMapInfo sourceMapInfo)
         {
             this.displayName = "";
             this.sourceMapInfo = sourceMapInfo;
             this.userBoundingRect = null;
         }
+
         public SourceMapRecord(MashupParseContext context)
         {
             this.displayName = context.GetRequiredAttribute("DisplayName");
@@ -83,10 +96,12 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public static string GetXMLTag()
         {
             return "SourceMapRecord";
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(GetXMLTag());
@@ -99,34 +114,45 @@ namespace MSR.CVE.BackMaker
             {
                 this.userBoundingRect.WriteXML(writer);
             }
+
             foreach (LegendRecord current in this.legendRecords)
             {
                 current.WriteXML(writer);
             }
+
             if (this.imageTransformer != null)
             {
                 this.imageTransformer.writeToXml(writer);
             }
+
             foreach (ThumbnailRecord current2 in this.thumbnailRecords)
             {
                 current2.WriteXML(writer);
             }
+
             writer.WriteEndElement();
         }
+
         public void WriteSourceMapLegendFrame(RenderOutputMethod renderOutput)
         {
             this.sourceMapLegendFrame.WriteSourceMapLegendFrame(renderOutput);
         }
+
         private ThumbnailRecord thumbnailForLegendFrame()
         {
             if (this.thumbnailRecords.Count == 0)
             {
                 return null;
             }
+
             ThumbnailRecord[] array = this.thumbnailRecords.ToArray();
-            Array.Sort<ThumbnailRecord>(array, (ThumbnailRecord r0, ThumbnailRecord r1) => Math.Abs(Math.Max(r0.size.Width, r0.size.Height) - 200) - Math.Abs(Math.Max(r1.size.Width, r1.size.Height) - 200));
+            Array.Sort<ThumbnailRecord>(array,
+                (ThumbnailRecord r0, ThumbnailRecord r1) =>
+                    Math.Abs(Math.Max(r0.size.Width, r0.size.Height) - 200) -
+                    Math.Abs(Math.Max(r1.size.Width, r1.size.Height) - 200));
             return array[0];
         }
+
         public void Add(ThumbnailRecord thumbnailRecord)
         {
             this.thumbnailRecords.Add(thumbnailRecord);

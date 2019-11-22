@@ -1,5 +1,6 @@
-using Jama.util;
 using System;
+using Jama.util;
+
 namespace Jama
 {
     [Serializable]
@@ -12,10 +13,9 @@ namespace Jama
         private double[][] V;
         private double[][] H;
         private double[] ort;
-        [NonSerialized]
-        private double cdivr;
-        [NonSerialized]
-        private double cdivi;
+        [NonSerialized] private double cdivr;
+        [NonSerialized] private double cdivi;
+
         public virtual double[] RealEigenvalues
         {
             get
@@ -23,6 +23,7 @@ namespace Jama
                 return this.d;
             }
         }
+
         public virtual double[] ImagEigenvalues
         {
             get
@@ -30,6 +31,7 @@ namespace Jama
                 return this.e;
             }
         }
+
         public virtual JamaMatrix D
         {
             get
@@ -42,6 +44,7 @@ namespace Jama
                     {
                         array[i][j] = 0.0;
                     }
+
                     array[i][i] = this.d[i];
                     if (this.e[i] > 0.0)
                     {
@@ -55,15 +58,18 @@ namespace Jama
                         }
                     }
                 }
+
                 return jamaMatrix;
             }
         }
+
         private void tred2()
         {
             for (int i = 0; i < this.n; i++)
             {
                 this.d[i] = this.V[this.n - 1][i];
             }
+
             for (int j = this.n - 1; j > 0; j--)
             {
                 double num = 0.0;
@@ -72,6 +78,7 @@ namespace Jama
                 {
                     num += Math.Abs(this.d[k]);
                 }
+
                 if (num == 0.0)
                 {
                     this.e[j] = this.d[j - 1];
@@ -89,12 +96,14 @@ namespace Jama
                         this.d[k] /= num;
                         num2 += this.d[k] * this.d[k];
                     }
+
                     double num3 = this.d[j - 1];
                     double num4 = Math.Sqrt(num2);
                     if (num3 > 0.0)
                     {
                         num4 = -num4;
                     }
+
                     this.e[j] = num * num4;
                     num2 -= num3 * num4;
                     this.d[j - 1] = num3 - num4;
@@ -102,6 +111,7 @@ namespace Jama
                     {
                         this.e[i] = 0.0;
                     }
+
                     for (int i = 0; i < j; i++)
                     {
                         num3 = this.d[i];
@@ -112,19 +122,23 @@ namespace Jama
                             num4 += this.V[k][i] * this.d[k];
                             this.e[k] += this.V[k][i] * num3;
                         }
+
                         this.e[i] = num4;
                     }
+
                     num3 = 0.0;
                     for (int i = 0; i < j; i++)
                     {
                         this.e[i] /= num2;
                         num3 += this.e[i] * this.d[i];
                     }
+
                     double num5 = num3 / (num2 + num2);
                     for (int i = 0; i < j; i++)
                     {
                         this.e[i] -= num5 * this.d[i];
                     }
+
                     for (int i = 0; i < j; i++)
                     {
                         num3 = this.d[i];
@@ -133,12 +147,15 @@ namespace Jama
                         {
                             this.V[k][i] -= num3 * this.e[k] + num4 * this.d[k];
                         }
+
                         this.d[i] = this.V[j - 1][i];
                         this.V[j][i] = 0.0;
                     }
                 }
+
                 this.d[j] = num2;
             }
+
             for (int j = 0; j < this.n - 1; j++)
             {
                 this.V[this.n - 1][j] = this.V[j][j];
@@ -150,6 +167,7 @@ namespace Jama
                     {
                         this.d[k] = this.V[k][j + 1] / num2;
                     }
+
                     for (int i = 0; i <= j; i++)
                     {
                         double num4 = 0.0;
@@ -157,31 +175,37 @@ namespace Jama
                         {
                             num4 += this.V[k][j + 1] * this.V[k][i];
                         }
+
                         for (int k = 0; k <= j; k++)
                         {
                             this.V[k][i] -= num4 * this.d[k];
                         }
                     }
                 }
+
                 for (int k = 0; k <= j; k++)
                 {
                     this.V[k][j + 1] = 0.0;
                 }
             }
+
             for (int i = 0; i < this.n; i++)
             {
                 this.d[i] = this.V[this.n - 1][i];
                 this.V[this.n - 1][i] = 0.0;
             }
+
             this.V[this.n - 1][this.n - 1] = 1.0;
             this.e[0] = 0.0;
         }
+
         private void tql2()
         {
             for (int i = 1; i < this.n; i++)
             {
                 this.e[i - 1] = this.e[i];
             }
+
             this.e[this.n - 1] = 0.0;
             double num = 0.0;
             double num2 = 0.0;
@@ -197,6 +221,7 @@ namespace Jama
                         break;
                     }
                 }
+
                 if (k > j)
                 {
                     int num4 = 0;
@@ -210,6 +235,7 @@ namespace Jama
                         {
                             num7 = -num7;
                         }
+
                         this.d[j] = this.e[j] / (num6 + num7);
                         this.d[j + 1] = this.e[j] * (num6 + num7);
                         double num8 = this.d[j + 1];
@@ -218,6 +244,7 @@ namespace Jama
                         {
                             this.d[i] -= num9;
                         }
+
                         num += num9;
                         num6 = this.d[k];
                         double num10 = 1.0;
@@ -246,15 +273,17 @@ namespace Jama
                                 this.V[l][i] = num10 * this.V[l][i] - num14 * num9;
                             }
                         }
+
                         num6 = -num14 * num15 * num12 * num13 * this.e[j] / num8;
                         this.e[j] = num14 * num6;
                         this.d[j] = num10 * num6;
-                    }
-                    while (Math.Abs(this.e[j]) > num3 * num2);
+                    } while (Math.Abs(this.e[j]) > num3 * num2);
                 }
+
                 this.d[j] = this.d[j] + num;
                 this.e[j] = 0.0;
             }
+
             for (int i = 0; i < this.n - 1; i++)
             {
                 int l = i;
@@ -267,6 +296,7 @@ namespace Jama
                         num6 = this.d[m];
                     }
                 }
+
                 if (l != i)
                 {
                     this.d[l] = this.d[i];
@@ -280,6 +310,7 @@ namespace Jama
                 }
             }
         }
+
         private void orthes()
         {
             int num = 0;
@@ -291,6 +322,7 @@ namespace Jama
                 {
                     num3 += Math.Abs(this.H[j][i - 1]);
                 }
+
                 if (num3 != 0.0)
                 {
                     double num4 = 0.0;
@@ -299,11 +331,13 @@ namespace Jama
                         this.ort[j] = this.H[j][i - 1] / num3;
                         num4 += this.ort[j] * this.ort[j];
                     }
+
                     double num5 = Math.Sqrt(num4);
                     if (this.ort[i] > 0.0)
                     {
                         num5 = -num5;
                     }
+
                     num4 -= this.ort[i] * num5;
                     this.ort[i] = this.ort[i] - num5;
                     for (int k = i; k < this.n; k++)
@@ -313,12 +347,14 @@ namespace Jama
                         {
                             num6 += this.ort[j] * this.H[j][k];
                         }
+
                         num6 /= num4;
                         for (int j = i; j <= num2; j++)
                         {
                             this.H[j][k] -= num6 * this.ort[j];
                         }
                     }
+
                     for (int j = 0; j <= num2; j++)
                     {
                         double num6 = 0.0;
@@ -326,23 +362,27 @@ namespace Jama
                         {
                             num6 += this.ort[k] * this.H[j][k];
                         }
+
                         num6 /= num4;
                         for (int k = i; k <= num2; k++)
                         {
                             this.H[j][k] -= num6 * this.ort[k];
                         }
                     }
+
                     this.ort[i] = num3 * this.ort[i];
                     this.H[i][i - 1] = num3 * num5;
                 }
             }
+
             for (int j = 0; j < this.n; j++)
             {
                 for (int k = 0; k < this.n; k++)
                 {
-                    this.V[j][k] = ((j == k) ? 1.0 : 0.0);
+                    this.V[j][k] = j == k ? 1.0 : 0.0;
                 }
             }
+
             for (int i = num2 - 1; i >= num + 1; i--)
             {
                 if (this.H[i][i - 1] != 0.0)
@@ -351,6 +391,7 @@ namespace Jama
                     {
                         this.ort[j] = this.H[j][i - 1];
                     }
+
                     for (int k = i; k <= num2; k++)
                     {
                         double num5 = 0.0;
@@ -358,6 +399,7 @@ namespace Jama
                         {
                             num5 += this.ort[j] * this.V[j][k];
                         }
+
                         num5 = num5 / this.ort[i] / this.H[i][i - 1];
                         for (int j = i; j <= num2; j++)
                         {
@@ -367,6 +409,7 @@ namespace Jama
                 }
             }
         }
+
         private void cdiv(double xr, double xi, double yr, double yi)
         {
             if (Math.Abs(yr) > Math.Abs(yi))
@@ -384,6 +427,7 @@ namespace Jama
                 this.cdivi = (num * xi - xr) / num2;
             }
         }
+
         private void hqr2()
         {
             int num = this.n;
@@ -400,16 +444,18 @@ namespace Jama
             double num11 = 0.0;
             for (int j = 0; j < num; j++)
             {
-                if (j < num2 | j > num3)
+                if ((j < num2) | (j > num3))
                 {
                     this.d[j] = this.H[j][j];
                     this.e[j] = 0.0;
                 }
+
                 for (int k = Math.Max(j - 1, 0); k < num; k++)
                 {
                     num11 += Math.Abs(this.H[j][k]);
                 }
             }
+
             int num12 = 0;
             while (i >= num2)
             {
@@ -421,11 +467,13 @@ namespace Jama
                     {
                         num9 = num11;
                     }
+
                     if (Math.Abs(this.H[l][l - 1]) < num4 * num9)
                     {
                         break;
                     }
                 }
+
                 if (l == i)
                 {
                     this.H[i][i] = this.H[i][i] + num5;
@@ -455,12 +503,14 @@ namespace Jama
                             {
                                 num10 = num6 - num10;
                             }
+
                             this.d[i - 1] = num14 + num10;
                             this.d[i] = this.d[i - 1];
                             if (num10 != 0.0)
                             {
                                 this.d[i] = num14 - num13 / num10;
                             }
+
                             this.e[i - 1] = 0.0;
                             this.e[i] = 0.0;
                             num14 = this.H[i][i - 1];
@@ -476,12 +526,14 @@ namespace Jama
                                 this.H[i - 1][k] = num7 * num10 + num6 * this.H[i][k];
                                 this.H[i][k] = num7 * this.H[i][k] - num6 * num10;
                             }
+
                             for (int j = 0; j <= i; j++)
                             {
                                 num10 = this.H[j][i - 1];
                                 this.H[j][i - 1] = num7 * num10 + num6 * this.H[j][i];
                                 this.H[j][i] = num7 * this.H[j][i] - num6 * num10;
                             }
+
                             for (int j = num2; j <= num3; j++)
                             {
                                 num10 = this.V[j][i - 1];
@@ -496,6 +548,7 @@ namespace Jama
                             this.e[i - 1] = num10;
                             this.e[i] = -num10;
                         }
+
                         i -= 2;
                         num12 = 0;
                     }
@@ -509,6 +562,7 @@ namespace Jama
                             num15 = this.H[i - 1][i - 1];
                             num13 = this.H[i][i - 1] * this.H[i - 1][i];
                         }
+
                         if (num12 == 10)
                         {
                             num5 += num14;
@@ -516,10 +570,12 @@ namespace Jama
                             {
                                 this.H[j][j] -= num14;
                             }
+
                             num9 = Math.Abs(this.H[i][i - 1]) + Math.Abs(this.H[i - 1][i - 2]);
-                            num15 = (num14 = 0.75 * num9);
+                            num15 = num14 = 0.75 * num9;
                             num13 = -0.4375 * num9 * num9;
                         }
+
                         if (num12 == 30)
                         {
                             num9 = (num15 - num14) / 2.0;
@@ -531,15 +587,18 @@ namespace Jama
                                 {
                                     num9 = -num9;
                                 }
+
                                 num9 = num14 - num13 / ((num15 - num14) / 2.0 + num9);
                                 for (int j = num2; j <= i; j++)
                                 {
                                     this.H[j][j] -= num9;
                                 }
+
                                 num5 += num9;
-                                num15 = (num14 = (num13 = 0.964));
+                                num15 = num14 = num13 = 0.964;
                             }
                         }
+
                         num12++;
                         int m;
                         for (m = i - 2; m >= l; m--)
@@ -558,11 +617,15 @@ namespace Jama
                             {
                                 break;
                             }
-                            if (Math.Abs(this.H[m][m - 1]) * (Math.Abs(num7) + Math.Abs(num8)) < num4 * (Math.Abs(num6) * (Math.Abs(this.H[m - 1][m - 1]) + Math.Abs(num10) + Math.Abs(this.H[m + 1][m + 1]))))
+
+                            if (Math.Abs(this.H[m][m - 1]) * (Math.Abs(num7) + Math.Abs(num8)) < num4 *
+                                (Math.Abs(num6) * (Math.Abs(this.H[m - 1][m - 1]) + Math.Abs(num10) +
+                                                   Math.Abs(this.H[m + 1][m + 1]))))
                             {
                                 break;
                             }
                         }
+
                         for (int j = m + 2; j <= i; j++)
                         {
                             this.H[j][j - 2] = 0.0;
@@ -571,6 +634,7 @@ namespace Jama
                                 this.H[j][j - 3] = 0.0;
                             }
                         }
+
                         for (int n = m; n <= i - 1; n++)
                         {
                             bool flag = n != i - 1;
@@ -578,7 +642,7 @@ namespace Jama
                             {
                                 num6 = this.H[n][n - 1];
                                 num7 = this.H[n + 1][n - 1];
-                                num8 = (flag ? this.H[n + 2][n - 1] : 0.0);
+                                num8 = flag ? this.H[n + 2][n - 1] : 0.0;
                                 num14 = Math.Abs(num6) + Math.Abs(num7) + Math.Abs(num8);
                                 if (num14 != 0.0)
                                 {
@@ -587,15 +651,18 @@ namespace Jama
                                     num8 /= num14;
                                 }
                             }
+
                             if (num14 == 0.0)
                             {
                                 break;
                             }
+
                             num9 = Math.Sqrt(num6 * num6 + num7 * num7 + num8 * num8);
                             if (num6 < 0.0)
                             {
                                 num9 = -num9;
                             }
+
                             if (num9 != 0.0)
                             {
                                 if (n != m)
@@ -609,6 +676,7 @@ namespace Jama
                                         this.H[n][n - 1] = -this.H[n][n - 1];
                                     }
                                 }
+
                                 num6 += num9;
                                 num14 = num6 / num9;
                                 num15 = num7 / num9;
@@ -623,9 +691,11 @@ namespace Jama
                                         num6 += num8 * this.H[n + 2][k];
                                         this.H[n + 2][k] = this.H[n + 2][k] - num6 * num10;
                                     }
+
                                     this.H[n][k] = this.H[n][k] - num6 * num14;
                                     this.H[n + 1][k] = this.H[n + 1][k] - num6 * num15;
                                 }
+
                                 for (int j = 0; j <= Math.Min(i, n + 3); j++)
                                 {
                                     num6 = num14 * this.H[j][n] + num15 * this.H[j][n + 1];
@@ -634,9 +704,11 @@ namespace Jama
                                         num6 += num10 * this.H[j][n + 2];
                                         this.H[j][n + 2] = this.H[j][n + 2] - num6 * num8;
                                     }
+
                                     this.H[j][n] = this.H[j][n] - num6;
                                     this.H[j][n + 1] = this.H[j][n + 1] - num6 * num7;
                                 }
+
                                 for (int j = num2; j <= num3; j++)
                                 {
                                     num6 = num14 * this.V[j][n] + num15 * this.V[j][n + 1];
@@ -645,6 +717,7 @@ namespace Jama
                                         num6 += num10 * this.V[j][n + 2];
                                         this.V[j][n + 2] = this.V[j][n + 2] - num6 * num8;
                                     }
+
                                     this.V[j][n] = this.V[j][n] - num6;
                                     this.V[j][n + 1] = this.V[j][n + 1] - num6 * num7;
                                 }
@@ -653,6 +726,7 @@ namespace Jama
                     }
                 }
             }
+
             if (num11 != 0.0)
             {
                 for (i = num - 1; i >= 0; i--)
@@ -671,6 +745,7 @@ namespace Jama
                             {
                                 num8 += this.H[j][k] * this.H[k][i];
                             }
+
                             if (this.e[j] < 0.0)
                             {
                                 num10 = num13;
@@ -707,6 +782,7 @@ namespace Jama
                                         this.H[j + 1][i] = (-num9 - num15 * num16) / num10;
                                     }
                                 }
+
                                 num16 = Math.Abs(this.H[j][i]);
                                 if (num4 * num16 * num16 > 1.0)
                                 {
@@ -734,6 +810,7 @@ namespace Jama
                                 this.H[i - 1][i - 1] = this.cdivr;
                                 this.H[i - 1][i] = this.cdivi;
                             }
+
                             this.H[i][i - 1] = 0.0;
                             this.H[i][i] = 1.0;
                             for (int j = i - 2; j >= 0; j--)
@@ -745,6 +822,7 @@ namespace Jama
                                     num17 += this.H[j][k] * this.H[k][i - 1];
                                     num18 += this.H[j][k] * this.H[k][i];
                                 }
+
                                 double num13 = this.H[j][j] - num6;
                                 if (this.e[j] < 0.0)
                                 {
@@ -765,27 +843,40 @@ namespace Jama
                                     {
                                         double num14 = this.H[j][j + 1];
                                         double num15 = this.H[j + 1][j];
-                                        double num19 = (this.d[j] - num6) * (this.d[j] - num6) + this.e[j] * this.e[j] - num7 * num7;
+                                        double num19 = (this.d[j] - num6) * (this.d[j] - num6) + this.e[j] * this.e[j] -
+                                                       num7 * num7;
                                         double num20 = (this.d[j] - num6) * 2.0 * num7;
-                                        if (num19 == 0.0 & num20 == 0.0)
+                                        if ((num19 == 0.0) & (num20 == 0.0))
                                         {
-                                            num19 = num4 * num11 * (Math.Abs(num13) + Math.Abs(num7) + Math.Abs(num14) + Math.Abs(num15) + Math.Abs(num10));
+                                            num19 = num4 * num11 *
+                                                    (Math.Abs(num13) + Math.Abs(num7) + Math.Abs(num14) +
+                                                     Math.Abs(num15) + Math.Abs(num10));
                                         }
-                                        this.cdiv(num14 * num8 - num10 * num17 + num7 * num18, num14 * num9 - num10 * num18 - num7 * num17, num19, num20);
+
+                                        this.cdiv(num14 * num8 - num10 * num17 + num7 * num18,
+                                            num14 * num9 - num10 * num18 - num7 * num17,
+                                            num19,
+                                            num20);
                                         this.H[j][i - 1] = this.cdivr;
                                         this.H[j][i] = this.cdivi;
                                         if (Math.Abs(num14) > Math.Abs(num10) + Math.Abs(num7))
                                         {
-                                            this.H[j + 1][i - 1] = (-num17 - num13 * this.H[j][i - 1] + num7 * this.H[j][i]) / num14;
-                                            this.H[j + 1][i] = (-num18 - num13 * this.H[j][i] - num7 * this.H[j][i - 1]) / num14;
+                                            this.H[j + 1][i - 1] =
+                                                (-num17 - num13 * this.H[j][i - 1] + num7 * this.H[j][i]) / num14;
+                                            this.H[j + 1][i] =
+                                                (-num18 - num13 * this.H[j][i] - num7 * this.H[j][i - 1]) / num14;
                                         }
                                         else
                                         {
-                                            this.cdiv(-num8 - num15 * this.H[j][i - 1], -num9 - num15 * this.H[j][i], num10, num7);
+                                            this.cdiv(-num8 - num15 * this.H[j][i - 1],
+                                                -num9 - num15 * this.H[j][i],
+                                                num10,
+                                                num7);
                                             this.H[j + 1][i - 1] = this.cdivr;
                                             this.H[j + 1][i] = this.cdivi;
                                         }
                                     }
+
                                     double num16 = Math.Max(Math.Abs(this.H[j][i - 1]), Math.Abs(this.H[j][i]));
                                     if (num4 * num16 * num16 > 1.0)
                                     {
@@ -800,9 +891,10 @@ namespace Jama
                         }
                     }
                 }
+
                 for (int j = 0; j < num; j++)
                 {
-                    if (j < num2 | j > num3)
+                    if ((j < num2) | (j > num3))
                     {
                         for (int k = j; k < num; k++)
                         {
@@ -810,6 +902,7 @@ namespace Jama
                         }
                     }
                 }
+
                 for (int k = num - 1; k >= num2; k--)
                 {
                     for (int j = num2; j <= num3; j++)
@@ -819,11 +912,13 @@ namespace Jama
                         {
                             num10 += this.V[j][n] * this.H[n][k];
                         }
+
                         this.V[j][k] = num10;
                     }
                 }
             }
         }
+
         public EigenvalueDecomposition(JamaMatrix Arg)
         {
             double[][] array = Arg.Array;
@@ -833,20 +928,23 @@ namespace Jama
             {
                 this.V[i] = new double[this.n];
             }
+
             this.d = new double[this.n];
             this.e = new double[this.n];
             this.issymmetric = true;
             int j = 0;
-            while (j < this.n & this.issymmetric)
+            while ((j < this.n) & this.issymmetric)
             {
                 int i = 0;
-                while (i < this.n & this.issymmetric)
+                while ((i < this.n) & this.issymmetric)
                 {
-                    this.issymmetric = (array[i][j] == array[j][i]);
+                    this.issymmetric = array[i][j] == array[j][i];
                     i++;
                 }
+
                 j++;
             }
+
             if (this.issymmetric)
             {
                 for (int i = 0; i < this.n; i++)
@@ -856,6 +954,7 @@ namespace Jama
                         this.V[i][j] = array[i][j];
                     }
                 }
+
                 this.tred2();
                 this.tql2();
             }
@@ -866,6 +965,7 @@ namespace Jama
                 {
                     array2[k] = new double[this.n];
                 }
+
                 this.H = array2;
                 this.ort = new double[this.n];
                 for (j = 0; j < this.n; j++)
@@ -875,10 +975,12 @@ namespace Jama
                         this.H[i][j] = array[i][j];
                     }
                 }
+
                 this.orthes();
                 this.hqr2();
             }
         }
+
         public virtual JamaMatrix getV()
         {
             return new JamaMatrix(this.V, this.n, this.n);

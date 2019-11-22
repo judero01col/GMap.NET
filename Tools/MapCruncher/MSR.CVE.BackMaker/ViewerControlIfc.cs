@@ -1,7 +1,7 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public interface ViewerControlIfc : TransparencyIfc
@@ -10,6 +10,7 @@ namespace MSR.CVE.BackMaker
         {
             get;
         }
+
         void ClearLayers();
         void SetBaseLayer(IDisplayableSource layer);
         void AddLayer(IDisplayableSource layer);

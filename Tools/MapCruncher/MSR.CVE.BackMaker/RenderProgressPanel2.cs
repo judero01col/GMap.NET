@@ -1,17 +1,21 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderProgressPanel2 : UserControl, RenderUIIfc
     {
         public delegate void LaunchRenderedBrowserDelegate(Uri path);
+
         public delegate void RenderCompleteDelegate(Exception failure);
+
         public delegate void NotifyDelegate();
+
         private Mashup mashup;
         private MapTileSourceFactory mapTileSourceFactory;
         private LaunchRenderedBrowserDelegate launchRenderedBrowser;
@@ -32,17 +36,22 @@ namespace MSR.CVE.BackMaker
         private ProgressBar renderProgressBar;
         private Button renderControlButton;
         private TextBox tileDisplayLabel;
+
         public RenderProgressPanel2()
         {
             this.InitializeComponent();
             this.previewRenderedResultsLinkLabel.Click += new EventHandler(this.previewRenderedResultsLinkLabel_Click);
             base.VisibleChanged += new EventHandler(this.RenderProgressPanel2_VisibleChanged);
         }
+
         private void RenderProgressPanel2_VisibleChanged(object sender, EventArgs e)
         {
             base.Invalidate();
         }
-        public void Setup(Mashup mashup, MapTileSourceFactory mapTileSourceFactory, LaunchRenderedBrowserDelegate launchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
+
+        public void Setup(Mashup mashup, MapTileSourceFactory mapTileSourceFactory,
+            LaunchRenderedBrowserDelegate launchRenderedBrowser,
+            RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
         {
             this.flushRenderedTileCachePackage = flushRenderedTileCachePackage;
             this.ReplacePreviewImage(null);
@@ -50,6 +59,7 @@ namespace MSR.CVE.BackMaker
             {
                 this.mashup.dirtyEvent.Remove(new DirtyListener(this.MashupChangedHandler));
             }
+
             this.mashup = mashup;
             this.mapTileSourceFactory = mapTileSourceFactory;
             this.launchRenderedBrowser = launchRenderedBrowser;
@@ -57,8 +67,10 @@ namespace MSR.CVE.BackMaker
             {
                 this.mashup.dirtyEvent.Add(new DirtyListener(this.MashupChangedHandler));
             }
+
             this.MashupChangedHandler();
         }
+
         private void CheckForUpdate()
         {
             if (this.updateRequired && this.renderState != null)
@@ -76,18 +88,24 @@ namespace MSR.CVE.BackMaker
                 this.tileDisplayLabel.Lines = this.renderState.UI_GetTileDisplayLabel();
             }
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             if (D.CustomPaintDisabled())
             {
                 return;
             }
+
             this.CheckForUpdate();
             base.OnPaint(e);
         }
+
         private void MashupChangedHandler()
         {
-            RenderState renderState = new RenderState(this.mashup, this, this.flushRenderedTileCachePackage, this.mapTileSourceFactory);
+            RenderState renderState = new RenderState(this.mashup,
+                this,
+                this.flushRenderedTileCachePackage,
+                this.mapTileSourceFactory);
             if (!renderState.Equals(this.renderState))
             {
                 if (this.renderState != null)
@@ -95,31 +113,38 @@ namespace MSR.CVE.BackMaker
                     this.renderState.Dispose();
                     this.renderState = null;
                 }
+
                 this.renderErrors.Text = "";
                 this.renderState = renderState;
                 D.Sayf(0, "RenderProgressPanel2: renderState replaced.", new object[0]);
                 this.uiChanged();
                 return;
             }
+
             renderState.Dispose();
         }
+
         private void ReplacePreviewImage(ImageRef newImage)
         {
             if (this.previewImage != null)
             {
                 this.previewImage.Dispose();
             }
+
             this.previewImage = newImage;
         }
+
         private void renderControlButton_Click(object sender, EventArgs e)
         {
             this.renderState.RenderClick();
         }
+
         public void StartRender(RenderCompleteDelegate renderCompleteDelegate)
         {
             this.renderCompleteDelegate = renderCompleteDelegate;
             this.renderState.StartRender();
         }
+
         private void tileDisplayPanel_Paint(object sender, PaintEventArgs e)
         {
             Monitor.Enter(this);
@@ -127,7 +152,8 @@ namespace MSR.CVE.BackMaker
             {
                 if (this.previewImage != null)
                 {
-                    e.Graphics.FillRectangle(new SolidBrush(Color.LightPink), new Rectangle(new Point(0, 0), this.tileDisplayPanel.Size));
+                    e.Graphics.FillRectangle(new SolidBrush(Color.LightPink),
+                        new Rectangle(new Point(0, 0), this.tileDisplayPanel.Size));
                     try
                     {
                         GDIBigLockedImage image;
@@ -135,12 +161,16 @@ namespace MSR.CVE.BackMaker
                         try
                         {
                             Image image2 = this.previewImage.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-                            e.Graphics.DrawImage(image2, new Rectangle(new Point(0, 0), this.tileDisplayPanel.Size), new Rectangle(0, 0, image2.Width, image2.Height), GraphicsUnit.Pixel);
+                            e.Graphics.DrawImage(image2,
+                                new Rectangle(new Point(0, 0), this.tileDisplayPanel.Size),
+                                new Rectangle(0, 0, image2.Width, image2.Height),
+                                GraphicsUnit.Pixel);
                         }
                         finally
                         {
                             Monitor.Exit(image);
                         }
+
                         goto IL_EB;
                     }
                     catch (Exception)
@@ -149,18 +179,25 @@ namespace MSR.CVE.BackMaker
                         goto IL_EB;
                     }
                 }
-                e.Graphics.DrawRectangle(new Pen(Color.Black), 0, 0, this.tileDisplayPanel.Size.Width - 1, this.tileDisplayPanel.Height - 1);
-                IL_EB:;
+
+                e.Graphics.DrawRectangle(new Pen(Color.Black),
+                    0,
+                    0,
+                    this.tileDisplayPanel.Size.Width - 1,
+                    this.tileDisplayPanel.Height - 1);
+                IL_EB: ;
             }
             finally
             {
                 Monitor.Exit(this);
             }
         }
+
         private void previewRenderedResultsLinkLabel_Click(object sender, EventArgs e)
         {
             this.launchRenderedBrowser(this.renderState.GetRenderedXMLDescriptor());
         }
+
         private void viewInBrowserLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(new ProcessStartInfo(this.renderState.GetSampleHTMLUri().ToString())
@@ -168,6 +205,7 @@ namespace MSR.CVE.BackMaker
                 WindowStyle = ProcessWindowStyle.Normal
             });
         }
+
         internal void UndoConstruction()
         {
             if (this.mashup != null)
@@ -175,15 +213,18 @@ namespace MSR.CVE.BackMaker
                 this.mashup.dirtyEvent.Remove(new DirtyListener(this.MashupChangedHandler));
                 this.mashup = null;
             }
+
             this.renderState.Dispose();
             this.renderState = null;
         }
+
         public void uiChanged()
         {
             this.updateRequired = true;
             base.Invalidate();
             this.tileDisplayPanel.Invalidate();
         }
+
         public void notifyRenderComplete(Exception failure)
         {
             if (this.renderCompleteDelegate != null)
@@ -191,24 +232,29 @@ namespace MSR.CVE.BackMaker
                 this.renderCompleteDelegate(failure);
                 return;
             }
+
             if (failure == null)
             {
                 NotifyDelegate method = new NotifyDelegate(this.ModalNotifyRenderComplete);
                 base.Invoke(method);
             }
         }
+
         private void ModalNotifyRenderComplete()
         {
             MessageBox.Show(this, "Render completed successfully.", "Render complete");
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.tileDisplayPanel = new Panel();
@@ -238,7 +284,7 @@ namespace MSR.CVE.BackMaker
             this.currentTileName.Size = new Size(261, 13);
             this.currentTileName.TabIndex = 36;
             this.currentTileName.TabStop = false;
-            this.estimatedOutputSizeBox.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.estimatedOutputSizeBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.estimatedOutputSizeBox.BackColor = SystemColors.Control;
             this.estimatedOutputSizeBox.BorderStyle = BorderStyle.None;
             this.estimatedOutputSizeBox.Location = new Point(156, 49);
@@ -254,7 +300,7 @@ namespace MSR.CVE.BackMaker
             this.textBox1.TabIndex = 39;
             this.textBox1.TabStop = false;
             this.textBox1.Text = "Status";
-            this.renderErrors.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.renderErrors.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.renderErrors.Location = new Point(269, 77);
             this.renderErrors.Multiline = true;
             this.renderErrors.Name = "renderErrors";
@@ -262,25 +308,28 @@ namespace MSR.CVE.BackMaker
             this.renderErrors.ScrollBars = ScrollBars.Vertical;
             this.renderErrors.Size = new Size(453, 293);
             this.renderErrors.TabIndex = 40;
-            this.previewRenderedResultsLinkLabel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.previewRenderedResultsLinkLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.previewRenderedResultsLinkLabel.AutoSize = true;
-            this.previewRenderedResultsLinkLabel.Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            this.previewRenderedResultsLinkLabel.Font =
+                new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.previewRenderedResultsLinkLabel.Location = new Point(266, 377);
             this.previewRenderedResultsLinkLabel.Name = "previewRenderedResultsLinkLabel";
             this.previewRenderedResultsLinkLabel.Size = new Size(170, 18);
             this.previewRenderedResultsLinkLabel.TabIndex = 41;
             this.previewRenderedResultsLinkLabel.TabStop = true;
             this.previewRenderedResultsLinkLabel.Text = "Preview rendered results";
-            this.viewInBrowserLinkLabel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.viewInBrowserLinkLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.viewInBrowserLinkLabel.AutoSize = true;
-            this.viewInBrowserLinkLabel.Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point, 0);
+            this.viewInBrowserLinkLabel.Font =
+                new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.viewInBrowserLinkLabel.Location = new Point(442, 377);
             this.viewInBrowserLinkLabel.Name = "viewInBrowserLinkLabel";
             this.viewInBrowserLinkLabel.Size = new Size(160, 18);
             this.viewInBrowserLinkLabel.TabIndex = 41;
             this.viewInBrowserLinkLabel.TabStop = true;
             this.viewInBrowserLinkLabel.Text = "View results in browser";
-            this.viewInBrowserLinkLabel.LinkClicked += new LinkLabelLinkClickedEventHandler(this.viewInBrowserLinkLabel_LinkClicked);
+            this.viewInBrowserLinkLabel.LinkClicked +=
+                new LinkLabelLinkClickedEventHandler(this.viewInBrowserLinkLabel_LinkClicked);
             this.panel1.Controls.Add(this.tileDisplayLabel);
             this.panel1.Controls.Add(this.renderErrors);
             this.panel1.Controls.Add(this.renderProgressBar);
@@ -304,7 +353,7 @@ namespace MSR.CVE.BackMaker
             this.tileDisplayLabel.ReadOnly = true;
             this.tileDisplayLabel.Size = new Size(256, 66);
             this.tileDisplayLabel.TabIndex = 43;
-            this.renderProgressBar.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.renderProgressBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.renderProgressBar.Location = new Point(156, 20);
             this.renderProgressBar.Name = "estimateProgressBar";
             this.renderProgressBar.Size = new Size(566, 23);

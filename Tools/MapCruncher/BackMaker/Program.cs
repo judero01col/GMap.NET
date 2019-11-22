@@ -1,7 +1,8 @@
-using MSR.CVE.BackMaker;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker;
+
 namespace BackMaker
 {
     internal static class Program
@@ -25,6 +26,7 @@ namespace BackMaker
                 {
                     text = string.Format("Error starting MapCruncher: {0}", ex.Message);
                 }
+
                 if (args.Length > 0)
                 {
                     EmitUsage(text);
@@ -33,10 +35,13 @@ namespace BackMaker
                 {
                     MessageBox.Show(text, "Error starting MapCruncher");
                 }
+
                 result = 1;
             }
+
             return result;
         }
+
         private static void EmitUsage(string message)
         {
             bool flag = true;
@@ -51,15 +56,15 @@ namespace BackMaker
             {
                 flag = false;
             }
-            string text = message + "\n" + string.Format("Usage: {0} [<filename.yum>] [-render]\n", "MapCruncher.exe") + "   <filename.yum>: a .yum document to open\n   -render: start rendering immediately, and exit when render completes\n";
+
+            string text = message + "\n" + string.Format("Usage: {0} [<filename.yum>] [-render]\n", "MapCruncher.exe") +
+                          "   <filename.yum>: a .yum document to open\n   -render: start rendering immediately, and exit when render completes\n";
             if (flag)
             {
-                D.Sayf(0, "{0}", new object[]
-                {
-                    text
-                });
+                D.Sayf(0, "{0}", new object[] {text});
                 return;
             }
+
             MessageBox.Show(text, "MapCruncher");
         }
     }

@@ -1,36 +1,43 @@
-using BackMaker;
-using MSR.CVE.BackMaker.ImagePipeline;
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using BackMaker;
+using MSR.CVE.BackMaker.ImagePipeline;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class MainAppForm : Form, AssociationIfc, LayerControlIfc, ViewControlIfc, DocumentMutabilityControlIfc
     {
         private delegate void DKCUI(bool enabled);
+
         private delegate void ExitDelegate(int rc);
+
         private delegate void ReadyToLockChangedDelegate();
+
         private class Opening
         {
             public bool opening;
         }
+
         private class UndoAddSourceMap
         {
             private delegate void CloseViewDelegate();
+
             private string filename;
             private SourceMap newSourceMap;
             private Layer addedToLayer;
             private LayerControls layerControls;
             private MainAppForm mainAppForm;
-            public UndoAddSourceMap(string filename, SourceMap newSourceMap, Layer addedToLayer, LayerControls layerControls, MainAppForm mainAppForm)
+
+            public UndoAddSourceMap(string filename, SourceMap newSourceMap, Layer addedToLayer,
+                LayerControls layerControls, MainAppForm mainAppForm)
             {
                 this.filename = filename;
                 this.newSourceMap = newSourceMap;
@@ -38,18 +45,24 @@ namespace MSR.CVE.BackMaker
                 this.layerControls = layerControls;
                 this.mainAppForm = mainAppForm;
             }
+
             public void Undo(string message)
             {
-                MessageBox.Show(string.Format("Can't open {0}:\n{1}", this.filename, message), "Can't Open Source Map", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(string.Format("Can't open {0}:\n{1}", this.filename, message),
+                    "Can't Open Source Map",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Hand);
                 if (this.addedToLayer != null && this.newSourceMap != null && this.layerControls != null)
                 {
                     this.addedToLayer.Remove(this.newSourceMap);
                     this.layerControls.CancelSourceMap(this.addedToLayer, this.newSourceMap);
                 }
+
                 CloseViewDelegate method = new CloseViewDelegate(this.mainAppForm.CloseView);
                 this.mainAppForm.Invoke(method);
             }
         }
+
         private const string regSourceMapFileName = "last_open_source_map";
         private const string regWindowWidth = "gui_window_width";
         private const string regWindowHeight = "gui_window_height";
@@ -158,12 +171,14 @@ namespace MSR.CVE.BackMaker
                 {
                     SendMessage(base.Handle, 11, 0, 0);
                 }
+
                 if (!value)
                 {
                     if (this.paintFrozen == 0)
                     {
                         return;
                     }
+
                     if (--this.paintFrozen == 0)
                     {
                         SendMessage(base.Handle, 11, 1, 0);
@@ -172,11 +187,13 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public MainAppForm(string startDocumentPath, bool renderOnLaunch)
         {
             this.startDocumentPath = startDocumentPath;
             this.renderOnLaunch = renderOnLaunch;
         }
+
         public void StartUpApplication()
         {
             try
@@ -193,6 +210,7 @@ namespace MSR.CVE.BackMaker
                 this.UndoConstruction();
                 throw;
             }
+
             this.layerControls.SetLayerControl(this);
             this.RestoreWindowParameters();
             this.SetInterfaceNoMashupOpen();
@@ -200,19 +218,29 @@ namespace MSR.CVE.BackMaker
             timer.Interval = 10000;
             timer.Tick += new EventHandler(this.saveBackupTimer_Tick);
             timer.Start();
-            this.registrationControls.ShowDMS = new MapDrawingOption(this.registrationControls, this.showDMSMenuItem, false);
-            this.smViewerControl.ShowCrosshairs = new MapDrawingOption(this.smViewerControl, this.showCrosshairsMenuItem, true);
-            this.smViewerControl.ShowTileBoundaries = new MapDrawingOption(this.smViewerControl, this.showTileBoundariesMenuItem, true);
-            this.smViewerControl.ShowPushPins = new MapDrawingOption(this.smViewerControl, this.showPushPinsMenuItem, true);
-            this.smViewerControl.ShowTileNames = new MapDrawingOption(this.smViewerControl, this.showTileNamesMenuItem, false);
-            this.smViewerControl.ShowSourceCrop = new MapDrawingOption(this.smViewerControl, this.showSourceCropToolStripMenuItem, true);
+            this.registrationControls.ShowDMS =
+                new MapDrawingOption(this.registrationControls, this.showDMSMenuItem, false);
+            this.smViewerControl.ShowCrosshairs =
+                new MapDrawingOption(this.smViewerControl, this.showCrosshairsMenuItem, true);
+            this.smViewerControl.ShowTileBoundaries =
+                new MapDrawingOption(this.smViewerControl, this.showTileBoundariesMenuItem, true);
+            this.smViewerControl.ShowPushPins =
+                new MapDrawingOption(this.smViewerControl, this.showPushPinsMenuItem, true);
+            this.smViewerControl.ShowTileNames =
+                new MapDrawingOption(this.smViewerControl, this.showTileNamesMenuItem, false);
+            this.smViewerControl.ShowSourceCrop =
+                new MapDrawingOption(this.smViewerControl, this.showSourceCropToolStripMenuItem, true);
             this.smViewerControl.ShowDMS = new MapDrawingOption(this.smViewerControl, this.showDMSMenuItem, false);
             this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
             this.SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
-            this.veViewerControl.ShowCrosshairs = new MapDrawingOption(this.veViewerControl, this.showCrosshairsMenuItem, true);
-            this.veViewerControl.ShowTileBoundaries = new MapDrawingOption(this.veViewerControl, this.showTileBoundariesMenuItem, false);
-            this.veViewerControl.ShowPushPins = new MapDrawingOption(this.veViewerControl, this.showPushPinsMenuItem, true);
-            this.veViewerControl.ShowTileNames = new MapDrawingOption(this.veViewerControl, this.showTileNamesMenuItem, false);
+            this.veViewerControl.ShowCrosshairs =
+                new MapDrawingOption(this.veViewerControl, this.showCrosshairsMenuItem, true);
+            this.veViewerControl.ShowTileBoundaries =
+                new MapDrawingOption(this.veViewerControl, this.showTileBoundariesMenuItem, false);
+            this.veViewerControl.ShowPushPins =
+                new MapDrawingOption(this.veViewerControl, this.showPushPinsMenuItem, true);
+            this.veViewerControl.ShowTileNames =
+                new MapDrawingOption(this.veViewerControl, this.showTileNamesMenuItem, false);
             this.veViewerControl.ShowDMS = new MapDrawingOption(this.veViewerControl, this.showDMSMenuItem, false);
             this.veViewerControl.configureLLZBoxEditable();
             this.uiPosition = new UIPositionManager(this.smViewerControl, this.veViewerControl);
@@ -223,7 +251,8 @@ namespace MSR.CVE.BackMaker
             this.restoreSnapZoomMenuItem.Click += new EventHandler(this.restoreSnapZoomMenuItem_Click);
             this.registrationControls.setAssociationIfc(this);
             this.setDisplayedRegistration(null);
-            this.sourceMapInfoPanel.Initialize(new SourceMapInfoPanel.PreviewSourceMapZoomDelegate(this.PreviewSourceMapZoom));
+            this.sourceMapInfoPanel.Initialize(
+                new SourceMapInfoPanel.PreviewSourceMapZoomDelegate(this.PreviewSourceMapZoom));
             BigDebugKnob.theKnob.AddListener(new BigDebugKnob.DebugKnobListener(this.debugKnobChanged));
             BigDebugKnob.theKnob.debugFeaturesEnabled = false;
             this.enableDebugModeToolStripMenuItem.Visible = BuildConfig.theConfig.debugModeEnabled;
@@ -236,56 +265,58 @@ namespace MSR.CVE.BackMaker
             {
                 this.NewMashup();
             }
+
             if (this.renderOnLaunch)
             {
                 this.currentMashup.AutoSelectMaxZooms(this.mapTileSourceFactory);
                 this.LaunchRenderWindow();
-                this.renderWindow.StartRender(new RenderProgressPanel2.RenderCompleteDelegate(this.LaunchedRenderComplete));
+                this.renderWindow.StartRender(
+                    new RenderProgressPanel2.RenderCompleteDelegate(this.LaunchedRenderComplete));
                 base.Shown += new EventHandler(this.MainAppForm_Shown_BringRenderWindowToFront);
             }
         }
+
         private void debugKnobChanged(bool enabled)
         {
             try
             {
                 DKCUI method = new DKCUI(this.debugKnobChanged_UI);
-                base.Invoke(method, new object[]
-                {
-                    enabled
-                });
+                base.Invoke(method, new object[] {enabled});
             }
             catch (InvalidOperationException)
             {
                 this.debugKnobChanged_UI(enabled);
             }
         }
+
         private void debugKnobChanged_UI(bool enabled)
         {
             this.debugToolStripMenuItem.Visible = enabled;
             this.enableDebugModeToolStripMenuItem.Checked = enabled;
         }
+
         private void MainAppForm_Shown_BringRenderWindowToFront(object sender, EventArgs e)
         {
             this.renderWindow.BringToFront();
         }
+
         private void LaunchedRenderComplete(Exception failure)
         {
             if (!this.alreadyExiting)
             {
                 ExitDelegate method = new ExitDelegate(this.LaunchedRenderComplete_ExitApplication);
-                int num = (failure == null) ? 0 : 255;
-                base.Invoke(method, new object[]
-                {
-                    num
-                });
+                int num = failure == null ? 0 : 255;
+                base.Invoke(method, new object[] {num});
             }
         }
+
         private void LaunchedRenderComplete_ExitApplication(int rc)
         {
             ProgramInstance.SetApplicationResultCode(rc);
             this.TeardownApplication();
             Application.Exit();
         }
+
         private void saveBackupTimer_Tick(object sender, EventArgs e)
         {
             if (this.currentMashup != null)
@@ -293,6 +324,7 @@ namespace MSR.CVE.BackMaker
                 this.currentMashup.AutoSaveBackup();
             }
         }
+
         private int RobustGetFromRegistry(int defaultValue, string registryEntryName)
         {
             string value = this.backMakerRegistry.GetValue(registryEntryName);
@@ -300,8 +332,10 @@ namespace MSR.CVE.BackMaker
             {
                 return int.Parse(value);
             }
+
             return defaultValue;
         }
+
         private void RestoreWindowParameters()
         {
             try
@@ -309,20 +343,25 @@ namespace MSR.CVE.BackMaker
                 this.programName = this.Text;
                 if (this.backMakerRegistry.GetValue("gui_window_width") != null)
                 {
-                    Point location = new Point(int.Parse(this.backMakerRegistry.GetValue("gui_window_x")), int.Parse(this.backMakerRegistry.GetValue("gui_window_y")));
+                    Point location = new Point(int.Parse(this.backMakerRegistry.GetValue("gui_window_x")),
+                        int.Parse(this.backMakerRegistry.GetValue("gui_window_y")));
                     if (location.X > 0 && location.Y > 0)
                     {
                         base.Location = location;
                         base.Width = this.RobustGetFromRegistry(base.Width, "gui_window_width");
                         base.Height = this.RobustGetFromRegistry(base.Height, "gui_window_height");
-                        this.controlSplitContainer.SplitterDistance = this.RobustGetFromRegistry(this.controlSplitContainer.SplitterDistance, "control_splitter_pos");
-                        this.mapSplitContainer.SplitterDistance = this.RobustGetFromRegistry(this.mapSplitContainer.SplitterDistance, "gui_splitter_pos");
+                        this.controlSplitContainer.SplitterDistance =
+                            this.RobustGetFromRegistry(this.controlSplitContainer.SplitterDistance,
+                                "control_splitter_pos");
+                        this.mapSplitContainer.SplitterDistance =
+                            this.RobustGetFromRegistry(this.mapSplitContainer.SplitterDistance, "gui_splitter_pos");
                     }
                 }
             }
             catch (Exception)
             {
             }
+
             this.recordSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
             this.recordSnapViewMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
             this.restoreSnapViewMenuItem.Visible = BuildConfig.theConfig.enableSnapFeatures;
@@ -333,9 +372,11 @@ namespace MSR.CVE.BackMaker
             this.restoreSnapZoomMenuItem.Enabled = BuildConfig.theConfig.enableSnapFeatures;
             this.snapFeaturesToolStripSeparator.Visible = BuildConfig.theConfig.enableSnapFeatures;
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             if (!this.CloseMashup())
@@ -343,10 +384,12 @@ namespace MSR.CVE.BackMaker
                 e.Cancel = true;
                 return;
             }
+
             this.TeardownApplication();
             Application.Exit();
             base.OnClosing(e);
         }
+
         private void TeardownApplication()
         {
             this.alreadyExiting = true;
@@ -354,10 +397,12 @@ namespace MSR.CVE.BackMaker
             this.backMakerRegistry.SetValue("gui_window_height", base.Height.ToString());
             this.backMakerRegistry.SetValue("gui_window_x", base.Location.X.ToString());
             this.backMakerRegistry.SetValue("gui_window_y", base.Location.Y.ToString());
-            this.backMakerRegistry.SetValue("control_splitter_pos", this.controlSplitContainer.SplitterDistance.ToString());
+            this.backMakerRegistry.SetValue("control_splitter_pos",
+                this.controlSplitContainer.SplitterDistance.ToString());
             this.backMakerRegistry.SetValue("gui_splitter_pos", this.mapSplitContainer.SplitterDistance.ToString());
             this.UndoConstruction();
         }
+
         public void UndoConstruction()
         {
             Monitor.Enter(this);
@@ -377,58 +422,72 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
+
         public void SetVEMapStyle(string s)
         {
             if (!VirtualEarthWebDownloader.StyleIsValid(s))
             {
                 return;
             }
+
             if (this.uiPosition != null)
             {
                 this.uiPosition.GetVEPos().setStyle(s);
             }
-            this.VEroadView.Checked = (s == VirtualEarthWebDownloader.RoadStyle);
-            this.VEaerialView.Checked = (s == VirtualEarthWebDownloader.AerialStyle);
-            this.VEhybridView.Checked = (s == VirtualEarthWebDownloader.HybridStyle);
+
+            this.VEroadView.Checked = s == VirtualEarthWebDownloader.RoadStyle;
+            this.VEaerialView.Checked = s == VirtualEarthWebDownloader.AerialStyle;
+            this.VEhybridView.Checked = s == VirtualEarthWebDownloader.HybridStyle;
             this.veViewerControl.SetBaseLayer(new VETileSource(this.GetCachePackage(), s));
         }
+
         private void roadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
         }
+
         private void aerialToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.AerialStyle);
         }
+
         private void hybridToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.HybridStyle);
         }
+
         private void AddRegLayerMenuItem_Click(object sender, EventArgs e)
         {
-            RenderedLayerDisplayInfo layerSelector = RenderedLayerSelector.GetLayerSelector(this.veViewerControl, this.renderedTileCachePackage);
+            RenderedLayerDisplayInfo layerSelector =
+                RenderedLayerSelector.GetLayerSelector(this.veViewerControl, this.renderedTileCachePackage);
             if (layerSelector != null)
             {
                 foreach (ToolStripMenuItem current in layerSelector.tsmiList)
                 {
                     this.mapOptionsToolStripMenuItem2.DropDownItems.Add(current);
                 }
+
                 this.uiPosition.GetVEPos().setPosition(layerSelector.defaultView);
             }
         }
+
         private void aboutMSRBackMakerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutForm aboutForm = new AboutForm(MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
+            AboutForm aboutForm =
+                new AboutForm(MapCruncher.MSR.CVE.BackMaker.Resources.Version.ApplicationVersionNumber);
             aboutForm.ShowDialog();
         }
+
         private void viewMapCruncherTutorialToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(new ProcessStartInfo("hh.exe")
             {
                 WindowStyle = ProcessWindowStyle.Normal,
-                Arguments = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "MapCruncher.chm")
+                Arguments = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                    "MapCruncher.chm")
             });
         }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.CloseMashup())
@@ -437,30 +496,44 @@ namespace MSR.CVE.BackMaker
                 Application.Exit();
             }
         }
+
         private void viewRenderedMenuItem_Click(object sender, EventArgs e)
         {
-            RenderedMashupViewer renderedMashupViewer = new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
+            RenderedMashupViewer renderedMashupViewer =
+                new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
             renderedMashupViewer.Show();
         }
+
         public void AddNewAssociation(string newPinName)
         {
             D.Assert(!((SourceMapViewManager)this.currentView).MapsLocked());
-            PositionAssociation positionAssociation = new PositionAssociation(newPinName, this.uiPosition.GetSMPos().llz, this.uiPosition.GetSMPos().llz, this.uiPosition.GetVEPos().llz, this.displayedRegistration.model.dirtyEvent);
+            PositionAssociation positionAssociation = new PositionAssociation(newPinName,
+                this.uiPosition.GetSMPos().llz,
+                this.uiPosition.GetSMPos().llz,
+                this.uiPosition.GetVEPos().llz,
+                this.displayedRegistration.model.dirtyEvent);
             this.CheckForDuplicatePushpin(positionAssociation, -1);
             this.displayedRegistration.model.AddAssociation(positionAssociation);
             this.updateRegistrationDisplay();
         }
+
         public void UpdateAssociation(PositionAssociation assoc, string newName)
         {
-            PositionAssociation newAssoc = new PositionAssociation("proposed", this.uiPosition.GetSMPos().llz, this.uiPosition.GetSMPos().llz, this.uiPosition.GetVEPos().llz, new DirtyEvent());
+            PositionAssociation newAssoc = new PositionAssociation("proposed",
+                this.uiPosition.GetSMPos().llz,
+                this.uiPosition.GetSMPos().llz,
+                this.uiPosition.GetVEPos().llz,
+                new DirtyEvent());
             this.CheckForDuplicatePushpin(newAssoc, assoc.pinId);
             assoc.UpdateAssociation(this.uiPosition.GetSMPos().llz, this.uiPosition.GetVEPos().llz);
             if (newName != null && newName != "")
             {
                 assoc.associationName = newName;
             }
+
             this.updateRegistrationDisplay();
         }
+
         private void CheckForDuplicatePushpin(PositionAssociation newAssoc, int ignorePinId)
         {
             foreach (PositionAssociation current in this.displayedRegistration.model.GetAssociationList())
@@ -488,6 +561,7 @@ namespace MSR.CVE.BackMaker
                             }
                         }
                     }
+
                     if (text != "")
                     {
                         throw new DuplicatePushpinException(text, current.pinId, current.associationName);
@@ -495,17 +569,20 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public void RemoveAssociation(PositionAssociation assoc)
         {
             this.displayedRegistration.model.RemoveAssociation(assoc);
             this.updateRegistrationDisplay();
         }
+
         public void ViewAssociation(PositionAssociation pa)
         {
             this.uiPosition.GetSMPos().setPosition(pa.sourcePosition.pinPosition);
             this.uiPosition.GetVEPos().setPosition(pa.globalPosition.pinPosition);
             this.SetVEMapStyle(this.uiPosition.GetVEPos().style);
         }
+
         public void setDisplayedRegistration(RegistrationControlRecord display)
         {
             PositionAssociation oldSelectedPA = this.registrationControls.GetSelected();
@@ -514,18 +591,25 @@ namespace MSR.CVE.BackMaker
             PositionAssociation selected = null;
             if (oldSelectedPA != null && this.displayedRegistration != null)
             {
-                selected = this.displayedRegistration.model.GetAssociationList().Find((PositionAssociation pa) => pa.pinId == oldSelectedPA.pinId);
+                selected = this.displayedRegistration.model.GetAssociationList()
+                    .Find((PositionAssociation pa) => pa.pinId == oldSelectedPA.pinId);
             }
+
             this.registrationControls.SetSelected(selected);
         }
+
         private void updateRegistrationDisplay()
         {
             if (this.displayedRegistration != null)
             {
-                Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) => new PositionAssociationView(pa, PositionAssociationView.WhichPosition.global);
-                this.veViewerControl.setPinList(this.displayedRegistration.model.GetAssociationList().ConvertAll<PositionAssociationView>(converter));
-                Converter<PositionAssociation, PositionAssociationView> converter2 = (PositionAssociation pa) => new PositionAssociationView(pa, PositionAssociationView.WhichPosition.source);
-                List<PositionAssociationView> pinList = this.displayedRegistration.model.GetAssociationList().ConvertAll<PositionAssociationView>(converter2);
+                Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) =>
+                    new PositionAssociationView(pa, PositionAssociationView.WhichPosition.global);
+                this.veViewerControl.setPinList(this.displayedRegistration.model.GetAssociationList()
+                    .ConvertAll<PositionAssociationView>(converter));
+                Converter<PositionAssociation, PositionAssociationView> converter2 = (PositionAssociation pa) =>
+                    new PositionAssociationView(pa, PositionAssociationView.WhichPosition.source);
+                List<PositionAssociationView> pinList = this.displayedRegistration.model.GetAssociationList()
+                    .ConvertAll<PositionAssociationView>(converter2);
                 this.smViewerControl.setPinList(pinList);
             }
             else
@@ -533,9 +617,11 @@ namespace MSR.CVE.BackMaker
                 this.veViewerControl.setPinList(new List<PositionAssociationView>());
                 this.smViewerControl.setPinList(new List<PositionAssociationView>());
             }
+
             this.UpdateOverviewPins();
             this.registrationControls.DisplayModel(this.displayedRegistration);
         }
+
         private void EnableMashupInterfaceItems(bool enable)
         {
             this.saveMashupMenuItem.Enabled = enable;
@@ -545,6 +631,7 @@ namespace MSR.CVE.BackMaker
             this.addSourceMapFromUriMenuItem.Enabled = enable;
             this.controlSplitContainer.Visible = enable;
         }
+
         private void updateWindowTitle()
         {
             if (this.currentMashup == null)
@@ -552,8 +639,10 @@ namespace MSR.CVE.BackMaker
                 this.Text = this.programName;
                 return;
             }
+
             this.Text = string.Format("{0} - {1}", this.currentMashup.GetDisplayName(), this.programName);
         }
+
         private void OpenMashup(Mashup newmash)
         {
             D.Assert(this.currentMashup == null);
@@ -565,36 +654,47 @@ namespace MSR.CVE.BackMaker
             this.currentMashup.readyToLockEvent.Add(new DirtyListener(this.ReadyToLockChangedHandler));
             this.ReadyToLockChanged();
         }
+
         private void ReadyToLockChangedHandler()
         {
             ReadyToLockChangedDelegate method = new ReadyToLockChangedDelegate(this.ReadyToLockChanged);
             base.Invoke(method);
         }
+
         private void ReadyToLockChanged()
         {
             this.RenderLaunchButton.Enabled = this.currentMashup.SomeSourceMapIsReadyToLock();
         }
+
         private bool SaveMashup()
         {
             if (this.currentMashup.GetFilename() == null)
             {
                 return this.SaveMashupAs();
             }
+
             try
             {
                 this.currentMashup.WriteXML();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Can't save mashup {0}:\n{1}", this.currentMashup.GetFilename(), ex.Message), "Error Writing Mashup", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(
+                    string.Format("Can't save mashup {0}:\n{1}", this.currentMashup.GetFilename(), ex.Message),
+                    "Error Writing Mashup",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Hand);
                 return false;
             }
+
             return true;
         }
+
         private void saveMashupMenuItem_Click(object sender, EventArgs e)
         {
             this.SaveMashup();
         }
+
         private bool SaveMashupAs()
         {
             while (true)
@@ -619,20 +719,27 @@ namespace MSR.CVE.BackMaker
                         saveFileDialog.FileName = this.currentMashup.layerList.First.First.GetDisplayName() + ".yum";
                     }
                 }
+
                 if (saveFileDialog.ShowDialog() != DialogResult.OK || saveFileDialog.FileName == null)
                 {
                     break;
                 }
+
                 string text = saveFileDialog.FileName;
                 if (Path.GetExtension(text) != ".yum")
                 {
                     text += ".yum";
                 }
+
                 if (!File.Exists(text))
                 {
                     goto IL_14A;
                 }
-                if (MessageBox.Show(string.Format("{0} already exists.\nDo you want to replace it?", text), "Overwrite Existing File?", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+
+                if (MessageBox.Show(string.Format("{0} already exists.\nDo you want to replace it?", text),
+                        "Overwrite Existing File?",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Exclamation) == DialogResult.OK)
                 {
                     try
                     {
@@ -640,34 +747,44 @@ namespace MSR.CVE.BackMaker
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(string.Format("Can't overwrite {0}:\n{1}", text, ex.Message), "Error Deleting Existing File", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                        MessageBox.Show(string.Format("Can't overwrite {0}:\n{1}", text, ex.Message),
+                            "Error Deleting Existing File",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Hand);
                         goto IL_15C;
                     }
+
                     goto IL_14A;
                 }
+
                 IL_15C:
                 if (this.currentMashup.GetFilename() != null && this.SaveMashup())
                 {
                     return true;
                 }
+
                 continue;
                 IL_14A:
                 this.currentMashup.SetFilename(text);
                 this.updateWindowTitle();
                 goto IL_15C;
             }
+
             return false;
         }
+
         private void saveMashupAsMenuItem_Click(object sender, EventArgs e)
         {
             this.SaveMashupAs();
         }
+
         private bool CloseMashup()
         {
             if (this.currentMashup == null)
             {
                 return true;
             }
+
             if (this.currentMashup.IsDirty())
             {
                 string text;
@@ -679,21 +796,28 @@ namespace MSR.CVE.BackMaker
                 {
                     text = string.Format("Save changes to mashup {0}?", this.currentMashup.GetFilename());
                 }
-                DialogResult dialogResult = MessageBox.Show(text, "Save changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+
+                DialogResult dialogResult = MessageBox.Show(text,
+                    "Save changes?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Exclamation);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return false;
                 }
+
                 if (dialogResult == DialogResult.Yes && !this.SaveMashup())
                 {
                     return false;
                 }
             }
+
             this.currentMashup.Close();
             this.currentMashup = null;
             this.SetInterfaceNoMashupOpen();
             return true;
         }
+
         private void SetInterfaceNoMashupOpen()
         {
             this.SetOptionsPanelVisibility(OptionsPanelVisibility.Nothing);
@@ -703,6 +827,7 @@ namespace MSR.CVE.BackMaker
             this.EnableMashupInterfaceItems(false);
             this.updateWindowTitle();
         }
+
         private void LoadMashup(string fileName)
         {
             MashupFileWarningList mashupFileWarningList = null;
@@ -717,51 +842,73 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Can't open {0}:\n{1}", fileName, ex.Message), "Error Opening Mashup", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show(string.Format("Can't open {0}:\n{1}", fileName, ex.Message),
+                    "Error Opening Mashup",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Hand);
                 return;
             }
+
             if (mashupFileWarningList != null)
             {
-                DialogResult dialogResult = MessageBox.Show(string.Format("Warnings for {0}:\n{1}\nContinue loading file?\n", fileName, mashupFileWarningList), "Error Reading File", MessageBoxButtons.OKCancel, MessageBoxIcon.Hand);
+                DialogResult dialogResult =
+                    MessageBox.Show(
+                        string.Format("Warnings for {0}:\n{1}\nContinue loading file?\n",
+                            fileName,
+                            mashupFileWarningList),
+                        "Error Reading File",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Hand);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return;
                 }
             }
+
             this.OpenMashup(mashup);
         }
+
         private void openMashupMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = string.Format("MapCruncher Mashup Files (*.{0})|*.{0};*.msh" + BuildConfig.theConfig.allFilesOption, "yum");
+            openFileDialog.Filter =
+                string.Format("MapCruncher Mashup Files (*.{0})|*.{0};*.msh" + BuildConfig.theConfig.allFilesOption,
+                    "yum");
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
+
             if (!this.CloseMashup())
             {
                 return;
             }
+
             this.LoadMashup(openFileDialog.FileName);
         }
+
         private void NewMashup()
         {
             if (!this.CloseMashup())
             {
                 return;
             }
+
             this.OpenMashup(new Mashup());
         }
+
         private void newMashupMenuItem_Click(object sender, EventArgs e)
         {
             this.NewMashup();
         }
+
         private void closeMashupMenuItem_Click(object sender, EventArgs e)
         {
             this.CloseMashup();
         }
+
         public void CloseView()
         {
             if (this.currentView != null)
@@ -774,6 +921,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public void OpenView(IViewManager newView)
         {
             try
@@ -787,12 +935,14 @@ namespace MSR.CVE.BackMaker
                         D.Sayf(0, "Warning: recursive open", new object[0]);
                         return;
                     }
+
                     this.opening.opening = true;
                 }
                 finally
                 {
                     Monitor.Exit(obj);
                 }
+
                 this.CloseView();
                 this.ResetOverviewWindow();
                 D.Assert(this.currentView == null);
@@ -814,8 +964,10 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         [DllImport("user32")]
         private static extern bool SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
         public void OpenSourceMap(SourceMap sourceMap)
         {
             this.FreezePainting = true;
@@ -828,34 +980,43 @@ namespace MSR.CVE.BackMaker
             {
                 drv = new DefaultReferenceView();
             }
-            SourceMapViewManager sourceMapViewManager = new SourceMapViewManager(sourceMap, this.mapTileSourceFactory, this, drv);
+
+            SourceMapViewManager sourceMapViewManager =
+                new SourceMapViewManager(sourceMap, this.mapTileSourceFactory, this, drv);
             this.OpenView(sourceMapViewManager);
             this.FreezePainting = false;
             this.currentMashup.SetLastView(sourceMap.lastView);
             this.SetupOverviewWindow(sourceMapViewManager);
         }
+
         public void OpenLayer(Layer layer)
         {
             this.OpenView(new DynamicallyCompositingLayerViewManager(layer, this.mapTileSourceFactory, this));
             this.currentMashup.SetLastView(layer.lastView);
         }
+
         public void OpenLegend(Legend legend)
         {
             this.OpenView(new LegendViewManager(legend, this.mapTileSourceFactory, this));
             this.currentMashup.SetLastView(legend.lastView);
         }
+
         private void addSourceMapMenuItem_Click(object sender, EventArgs e)
         {
             this.AddSourceMap();
         }
+
         private void addSourceMapFromUriMenuItem_Click(object sender, EventArgs e)
         {
             this.AddSourceMapFromUri();
         }
+
         public void AddSourceMap()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            string arg = string.Join(";", Array.ConvertAll<string, string>(this.mapTileSourceFactory.GetKnownFileTypes(), (string ext) => "*" + ext));
+            string arg = string.Join(";",
+                Array.ConvertAll<string, string>(this.mapTileSourceFactory.GetKnownFileTypes(),
+                    (string ext) => "*" + ext));
             string filter = string.Format("Supported Sources ({0})|{0}" + BuildConfig.theConfig.allFilesOption, arg);
             openFileDialog.Filter = filter;
             openFileDialog.FilterIndex = 1;
@@ -866,19 +1027,33 @@ namespace MSR.CVE.BackMaker
             {
                 return;
             }
+
             if (openFileDialog.FileName == null)
             {
                 return;
             }
+
             UndoAddSourceMap undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName, null, null, null, this);
             try
             {
-                FileStream fileStream = File.Open(openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                FileStream fileStream = File.Open(openFileDialog.FileName,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.ReadWrite);
                 fileStream.Close();
-                SourceMap sourceMap = new SourceMap(new FutureDocumentFromFilesystem(openFileDialog.FileName, 0), new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext), this.currentMashup.dirtyEvent, this.currentMashup.readyToLockEvent);
+                SourceMap sourceMap = new SourceMap(new FutureDocumentFromFilesystem(openFileDialog.FileName, 0),
+                    new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext),
+                    this.currentMashup.dirtyEvent,
+                    this.currentMashup.readyToLockEvent);
                 Layer addedToLayer = this.layerControls.AddSourceMap(sourceMap);
-                undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName, sourceMap, addedToLayer, this.layerControls, this);
-                new InsaneSourceMapRemover(sourceMap, this.mapTileSourceFactory, new InsaneSourceMapRemover.UndoAdddSourceMapDelegate(undoAddSourceMap.Undo));
+                undoAddSourceMap = new UndoAddSourceMap(openFileDialog.FileName,
+                    sourceMap,
+                    addedToLayer,
+                    this.layerControls,
+                    this);
+                new InsaneSourceMapRemover(sourceMap,
+                    this.mapTileSourceFactory,
+                    new InsaneSourceMapRemover.UndoAdddSourceMapDelegate(undoAddSourceMap.Undo));
                 this.OpenSourceMap(sourceMap);
             }
             catch (Exception ex)
@@ -886,46 +1061,61 @@ namespace MSR.CVE.BackMaker
                 undoAddSourceMap.Undo(ex.Message);
             }
         }
+
         public void AddSourceMapFromUri()
         {
-            SourceMap sourceMap = new SourceMap(new FutureDocumentFromUri(new Uri("http://www.srh.noaa.gov/ridge/lite/NCR/ATX_0.png"), 0), new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext), this.currentMashup.dirtyEvent, this.currentMashup.readyToLockEvent);
+            SourceMap sourceMap = new SourceMap(
+                new FutureDocumentFromUri(new Uri("http://www.srh.noaa.gov/ridge/lite/NCR/ATX_0.png"), 0),
+                new SourceMap.GetFilenameContext(this.currentMashup.GetFilenameContext),
+                this.currentMashup.dirtyEvent,
+                this.currentMashup.readyToLockEvent);
             this.layerControls.AddSourceMap(sourceMap);
             this.OpenSourceMap(sourceMap);
         }
+
         public void RemoveSourceMap(SourceMap sourceMap)
         {
             this.currentMashup.layerList.RemoveSourceMap(sourceMap);
         }
+
         public void LaunchRenderedBrowser(Uri uri)
         {
-            RenderedMashupViewer renderedMashupViewer = new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
+            RenderedMashupViewer renderedMashupViewer =
+                new RenderedMashupViewer(this.renderedTileCachePackage, this.showDMSMenuItem);
             renderedMashupViewer.AddLayersFromUri(uri);
             renderedMashupViewer.Show();
         }
+
         public UIPositionManager GetUIPositionManager()
         {
             return this.uiPosition;
         }
+
         public ViewerControlIfc GetSMViewerControl()
         {
             return this.smViewerControl;
         }
+
         public ViewerControl GetVEViewerControl()
         {
             return this.veViewerControl;
         }
+
         public SourceMapInfoPanel GetSourceMapInfoPanel()
         {
             return this.sourceMapInfoPanel;
         }
+
         public TransparencyPanel GetTransparencyPanel()
         {
             return this.transparencyPanel;
         }
+
         public LegendOptionsPanel GetLegendPanel()
         {
             return this.legendOptionsPanel1;
         }
+
         public void SetOptionsPanelVisibility(OptionsPanelVisibility optionsPanelVisibility)
         {
             if (optionsPanelVisibility == OptionsPanelVisibility.Nothing)
@@ -933,6 +1123,7 @@ namespace MSR.CVE.BackMaker
                 this.synergyExplorer.Visible = false;
                 return;
             }
+
             if (optionsPanelVisibility == OptionsPanelVisibility.SourceMapOptions)
             {
                 this.synergyExplorer.TabPages.Clear();
@@ -942,6 +1133,7 @@ namespace MSR.CVE.BackMaker
                 this.synergyExplorer.Visible = true;
                 return;
             }
+
             if (optionsPanelVisibility == OptionsPanelVisibility.LegendOptions)
             {
                 this.synergyExplorer.TabPages.Clear();
@@ -949,36 +1141,44 @@ namespace MSR.CVE.BackMaker
                 this.synergyExplorer.Visible = true;
             }
         }
+
         public CachePackage GetCachePackage()
         {
             return this.cachePackage;
         }
+
         public void LockMaps()
         {
             ((SourceMapViewManager)this.currentView).LockMaps();
             this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.LatLon);
         }
+
         public void UnlockMaps()
         {
             ((SourceMapViewManager)this.currentView).UnlockMaps();
             this.smViewerControl.SetLLZBoxLabelStyle(LLZBox.LabelStyle.XY);
         }
+
         public void SetDocumentMutable(bool mutable)
         {
             this.documentIsMutable = mutable;
             this.synergyExplorer.Enabled = mutable;
         }
+
         public bool GetDocumentMutable()
         {
             return this.documentIsMutable;
         }
+
         private void PreviewSourceMapZoom(SourceMap sourceMap)
         {
-            if (this.currentView is SourceMapViewManager && ((SourceMapViewManager)this.currentView).GetSourceMap() == sourceMap)
+            if (this.currentView is SourceMapViewManager &&
+                ((SourceMapViewManager)this.currentView).GetSourceMap() == sourceMap)
             {
                 ((SourceMapViewManager)this.currentView).PreviewSourceMapZoom();
             }
         }
+
         private void LaunchRenderWindow()
         {
             if (this.renderWindow == null)
@@ -986,17 +1186,25 @@ namespace MSR.CVE.BackMaker
                 this.renderWindow = new RenderWindow();
                 this.renderWindow.Disposed += new EventHandler(this.renderWindow_Disposed);
             }
-            this.renderWindow.Setup(this.currentMashup.GetRenderOptions(), this.currentMashup, this.mapTileSourceFactory, new RenderProgressPanel2.LaunchRenderedBrowserDelegate(this.LaunchRenderedBrowser), new RenderState.FlushRenderedTileCachePackageDelegate(this.flushRenderedTileCachePackage));
+
+            this.renderWindow.Setup(this.currentMashup.GetRenderOptions(),
+                this.currentMashup,
+                this.mapTileSourceFactory,
+                new RenderProgressPanel2.LaunchRenderedBrowserDelegate(this.LaunchRenderedBrowser),
+                new RenderState.FlushRenderedTileCachePackageDelegate(this.flushRenderedTileCachePackage));
             this.renderWindow.Visible = true;
         }
+
         private void flushRenderedTileCachePackage()
         {
             this.renderedTileCachePackage.Flush();
         }
+
         private void renderWindow_Disposed(object sender, EventArgs e)
         {
             this.renderWindow = null;
         }
+
         private void KillRenderWindow()
         {
             if (this.renderWindow != null)
@@ -1004,14 +1212,17 @@ namespace MSR.CVE.BackMaker
                 this.renderWindow.UndoConstruction();
             }
         }
+
         private void RenderLaunchButton_Click(object sender, EventArgs e)
         {
             if (this.renderWindow == null)
             {
                 this.LaunchRenderWindow();
             }
+
             this.renderWindow.BringToFront();
         }
+
         private void showSourceMapOverviewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
@@ -1019,10 +1230,17 @@ namespace MSR.CVE.BackMaker
             if (@checked && this.sourceMapOverviewWindow == null)
             {
                 this.sourceMapOverviewWindow = new SourceMapOverviewWindow();
-                this.sourceMapOverviewWindow.Initialize(new SourceMapOverviewWindow.ClosedDelegate(this.SourceMapOverviewWindowClosed), new MapDrawingOption(this.veViewerControl, this.showDMSMenuItem, false));
-                this.sourceMapOverviewWindow.viewerControl.ShowPushPins = new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showPushPinsMenuItem, true);
-                this.sourceMapOverviewWindow.viewerControl.ShowSourceCrop = new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showSourceCropToolStripMenuItem, true);
-                this.sourceMapOverviewWindow.viewerControl.ShowDMS = new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showDMSMenuItem, false);
+                this.sourceMapOverviewWindow.Initialize(
+                    new SourceMapOverviewWindow.ClosedDelegate(this.SourceMapOverviewWindowClosed),
+                    new MapDrawingOption(this.veViewerControl, this.showDMSMenuItem, false));
+                this.sourceMapOverviewWindow.viewerControl.ShowPushPins =
+                    new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showPushPinsMenuItem, true);
+                this.sourceMapOverviewWindow.viewerControl.ShowSourceCrop = new MapDrawingOption(
+                    this.sourceMapOverviewWindow.viewerControl,
+                    this.showSourceCropToolStripMenuItem,
+                    true);
+                this.sourceMapOverviewWindow.viewerControl.ShowDMS =
+                    new MapDrawingOption(this.sourceMapOverviewWindow.viewerControl, this.showDMSMenuItem, false);
                 this.sourceMapOverviewWindow.Show();
                 if (this.currentView is SourceMapViewManager)
                 {
@@ -1039,6 +1257,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         private void UpdateOverviewPins()
         {
             if (this.sourceMapOverviewWindow != null)
@@ -1046,7 +1265,8 @@ namespace MSR.CVE.BackMaker
                 List<PositionAssociationView> pinList;
                 if (this.displayedRegistration != null)
                 {
-                    Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) => new PositionAssociationView(pa, PositionAssociationView.WhichPosition.image);
+                    Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) =>
+                        new PositionAssociationView(pa, PositionAssociationView.WhichPosition.image);
                     pinList = new RegistrationDefinition(this.displayedRegistration.model, new DirtyEvent())
                     {
                         isLocked = false
@@ -1056,9 +1276,11 @@ namespace MSR.CVE.BackMaker
                 {
                     pinList = new List<PositionAssociationView>();
                 }
+
                 this.sourceMapOverviewWindow.viewerControl.setPinList(pinList);
             }
         }
+
         private void ResetOverviewWindow()
         {
             if (this.sourceMapOverviewWindow != null)
@@ -1067,55 +1289,67 @@ namespace MSR.CVE.BackMaker
                 this.sourceMapOverviewWindow.viewerControl.setPinList(new List<PositionAssociationView>());
             }
         }
+
         private void SetupOverviewWindow(SourceMapViewManager smvm)
         {
             if (this.sourceMapOverviewWindow != null)
             {
                 smvm.UpdateOverviewWindow(this.sourceMapOverviewWindow.viewerControl);
             }
+
             this.updateRegistrationDisplay();
         }
+
         public void SourceMapOverviewWindowClosed()
         {
             this.sourceMapOverviewWindow = null;
             this.showSourceMapOverviewMenuItem.Checked = false;
         }
+
         private void recordSnapViewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
             this.smViewerControl.RecordSnapView();
         }
+
         private void restoreSnapViewMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
             this.smViewerControl.RestoreSnapView();
         }
+
         private void recordSnapZoomMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
             this.smViewerControl.RecordSnapZoom();
         }
+
         private void restoreSnapZoomMenuItem_Click(object sender, EventArgs e)
         {
             ((ToolStripMenuItem)sender).Checked = false;
             this.smViewerControl.RestoreSnapZoom();
         }
+
         private void showDiagnosticsUIToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             DiagnosticUI.theDiagnostics.Visible = true;
         }
+
         private void enableDebugModeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BigDebugKnob.theKnob.debugFeaturesEnabled = !BigDebugKnob.theKnob.debugFeaturesEnabled;
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.menuStrip1 = new MenuStrip();
@@ -1177,16 +1411,16 @@ namespace MSR.CVE.BackMaker
             this.legendTabPage = new TabPage();
             this.legendOptionsPanel1 = new LegendOptionsPanel();
             this.menuStrip1.SuspendLayout();
-            ((ISupportInitialize)(this.mapSplitContainer)).BeginInit();
+            ((ISupportInitialize)this.mapSplitContainer).BeginInit();
             this.mapSplitContainer.Panel1.SuspendLayout();
             this.mapSplitContainer.Panel2.SuspendLayout();
             this.mapSplitContainer.SuspendLayout();
-            ((ISupportInitialize)(this.controlSplitContainer)).BeginInit();
+            ((ISupportInitialize)this.controlSplitContainer).BeginInit();
             this.controlSplitContainer.Panel1.SuspendLayout();
             this.controlSplitContainer.Panel2.SuspendLayout();
             this.controlSplitContainer.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((ISupportInitialize)(this.controlsSplitContainer)).BeginInit();
+            ((ISupportInitialize)this.controlsSplitContainer).BeginInit();
             this.controlsSplitContainer.Panel1.SuspendLayout();
             this.controlsSplitContainer.Panel2.SuspendLayout();
             this.controlsSplitContainer.SuspendLayout();
@@ -1199,11 +1433,11 @@ namespace MSR.CVE.BackMaker
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.mapOptionsToolStripMenuItem2,
-            this.helpToolStripMenuItem,
-            this.debugToolStripMenuItem});
+            this.menuStrip1.Items.AddRange(new ToolStripItem[]
+            {
+                this.fileToolStripMenuItem, this.mapOptionsToolStripMenuItem2, this.helpToolStripMenuItem,
+                this.debugToolStripMenuItem
+            });
             this.menuStrip1.Location = new Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new Size(1028, 36);
@@ -1212,19 +1446,13 @@ namespace MSR.CVE.BackMaker
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            this.newMashupMenuItem,
-            this.openMashupMenuItem,
-            this.saveMashupMenuItem,
-            this.saveMashupAsMenuItem,
-            this.closeMashupMenuItem,
-            this.toolStripSeparator1,
-            this.addSourceMapMenuItem,
-            this.addSourceMapFromUriMenuItem,
-            this.toolStripSeparator4,
-            this.viewRenderedMenuItem,
-            this.toolStripSeparator2,
-            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                this.newMashupMenuItem, this.openMashupMenuItem, this.saveMashupMenuItem, this.saveMashupAsMenuItem,
+                this.closeMashupMenuItem, this.toolStripSeparator1, this.addSourceMapMenuItem,
+                this.addSourceMapFromUriMenuItem, this.toolStripSeparator4, this.viewRenderedMenuItem,
+                this.toolStripSeparator2, this.exitToolStripMenuItem
+            });
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new Size(54, 32);
             this.fileToolStripMenuItem.Text = "&File";
@@ -1315,24 +1543,15 @@ namespace MSR.CVE.BackMaker
             // 
             // mapOptionsToolStripMenuItem2
             // 
-            this.mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[] {
-            this.VEroadView,
-            this.VEaerialView,
-            this.VEhybridView,
-            this.toolStripSeparator3,
-            this.showCrosshairsMenuItem,
-            this.showPushPinsMenuItem,
-            this.showDMSMenuItem,
-            this.toolStripSeparator8,
-            this.AddRegLayerMenuItem,
-            this.showSourceMapOverviewMenuItem,
-            this.snapFeaturesToolStripSeparator,
-            this.restoreSnapViewMenuItem,
-            this.recordSnapViewMenuItem,
-            this.restoreSnapZoomMenuItem,
-            this.recordSnapZoomMenuItem,
-            this.debugModeToolStripSeparator,
-            this.enableDebugModeToolStripMenuItem});
+            this.mapOptionsToolStripMenuItem2.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                this.VEroadView, this.VEaerialView, this.VEhybridView, this.toolStripSeparator3,
+                this.showCrosshairsMenuItem, this.showPushPinsMenuItem, this.showDMSMenuItem,
+                this.toolStripSeparator8, this.AddRegLayerMenuItem, this.showSourceMapOverviewMenuItem,
+                this.snapFeaturesToolStripSeparator, this.restoreSnapViewMenuItem, this.recordSnapViewMenuItem,
+                this.restoreSnapZoomMenuItem, this.recordSnapZoomMenuItem, this.debugModeToolStripSeparator,
+                this.enableDebugModeToolStripMenuItem
+            });
             this.mapOptionsToolStripMenuItem2.Name = "mapOptionsToolStripMenuItem2";
             this.mapOptionsToolStripMenuItem2.Size = new Size(65, 32);
             this.mapOptionsToolStripMenuItem2.Text = "&View";
@@ -1444,14 +1663,16 @@ namespace MSR.CVE.BackMaker
             this.enableDebugModeToolStripMenuItem.Name = "enableDebugModeToolStripMenuItem";
             this.enableDebugModeToolStripMenuItem.Size = new Size(334, 32);
             this.enableDebugModeToolStripMenuItem.Text = "Enable Debug Mode";
-            this.enableDebugModeToolStripMenuItem.Click += new EventHandler(this.enableDebugModeToolStripMenuItem_Click);
+            this.enableDebugModeToolStripMenuItem.Click +=
+                new EventHandler(this.enableDebugModeToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            this.viewMapCruncherTutorialToolStripMenuItem,
-            this.toolStripSeparator7,
-            this.aboutMSRBackMakerToolStripMenuItem});
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                this.viewMapCruncherTutorialToolStripMenuItem, this.toolStripSeparator7,
+                this.aboutMSRBackMakerToolStripMenuItem
+            });
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new Size(65, 32);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -1461,7 +1682,8 @@ namespace MSR.CVE.BackMaker
             this.viewMapCruncherTutorialToolStripMenuItem.Name = "viewMapCruncherTutorialToolStripMenuItem";
             this.viewMapCruncherTutorialToolStripMenuItem.Size = new Size(536, 32);
             this.viewMapCruncherTutorialToolStripMenuItem.Text = "MapCruncher for Microsoft Virtual Earth Help";
-            this.viewMapCruncherTutorialToolStripMenuItem.Click += new EventHandler(this.viewMapCruncherTutorialToolStripMenuItem_Click);
+            this.viewMapCruncherTutorialToolStripMenuItem.Click +=
+                new EventHandler(this.viewMapCruncherTutorialToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -1473,15 +1695,16 @@ namespace MSR.CVE.BackMaker
             this.aboutMSRBackMakerToolStripMenuItem.Name = "aboutMSRBackMakerToolStripMenuItem";
             this.aboutMSRBackMakerToolStripMenuItem.Size = new Size(536, 32);
             this.aboutMSRBackMakerToolStripMenuItem.Text = "&About MapCruncher Beta for Microsoft Virtual Earth";
-            this.aboutMSRBackMakerToolStripMenuItem.Click += new EventHandler(this.aboutMSRBackMakerToolStripMenuItem_Click);
+            this.aboutMSRBackMakerToolStripMenuItem.Click +=
+                new EventHandler(this.aboutMSRBackMakerToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
-            this.debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            this.showTileNamesMenuItem,
-            this.showSourceCropToolStripMenuItem,
-            this.showTileBoundariesMenuItem,
-            this.showDiagnosticsUIToolStripMenuItem});
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                this.showTileNamesMenuItem, this.showSourceCropToolStripMenuItem, this.showTileBoundariesMenuItem,
+                this.showDiagnosticsUIToolStripMenuItem
+            });
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new Size(83, 32);
             this.debugToolStripMenuItem.Text = "&Debug";
@@ -1509,13 +1732,14 @@ namespace MSR.CVE.BackMaker
             this.showDiagnosticsUIToolStripMenuItem.Name = "showDiagnosticsUIToolStripMenuItem";
             this.showDiagnosticsUIToolStripMenuItem.Size = new Size(269, 32);
             this.showDiagnosticsUIToolStripMenuItem.Text = "Show DiagnosticsUI";
-            this.showDiagnosticsUIToolStripMenuItem.Click += new EventHandler(this.showDiagnosticsUIToolStripMenuItem_Click_1);
+            this.showDiagnosticsUIToolStripMenuItem.Click +=
+                new EventHandler(this.showDiagnosticsUIToolStripMenuItem_Click_1);
             // 
             // mapSplitContainer
             // 
-            this.mapSplitContainer.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) 
-            | AnchorStyles.Left) 
-            | AnchorStyles.Right)));
+            this.mapSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+                                                                            | AnchorStyles.Left
+                                                                            | AnchorStyles.Right);
             this.mapSplitContainer.Location = new Point(3, 3);
             this.mapSplitContainer.Name = "mapSplitContainer";
             // 
@@ -1589,9 +1813,9 @@ namespace MSR.CVE.BackMaker
             // 
             // controlsSplitContainer
             // 
-            this.controlsSplitContainer.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) 
-            | AnchorStyles.Left) 
-            | AnchorStyles.Right)));
+            this.controlsSplitContainer.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+                                                                                 | AnchorStyles.Left
+                                                                                 | AnchorStyles.Right);
             this.controlsSplitContainer.Location = new Point(0, 0);
             this.controlsSplitContainer.Name = "controlsSplitContainer";
             this.controlsSplitContainer.Orientation = Orientation.Horizontal;
@@ -1724,16 +1948,16 @@ namespace MSR.CVE.BackMaker
             this.menuStrip1.PerformLayout();
             this.mapSplitContainer.Panel1.ResumeLayout(false);
             this.mapSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)(this.mapSplitContainer)).EndInit();
+            ((ISupportInitialize)this.mapSplitContainer).EndInit();
             this.mapSplitContainer.ResumeLayout(false);
             this.controlSplitContainer.Panel1.ResumeLayout(false);
             this.controlSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)(this.controlSplitContainer)).EndInit();
+            ((ISupportInitialize)this.controlSplitContainer).EndInit();
             this.controlSplitContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.controlsSplitContainer.Panel1.ResumeLayout(false);
             this.controlsSplitContainer.Panel2.ResumeLayout(false);
-            ((ISupportInitialize)(this.controlsSplitContainer)).EndInit();
+            ((ISupportInitialize)this.controlsSplitContainer).EndInit();
             this.controlsSplitContainer.ResumeLayout(false);
             this.synergyExplorer.ResumeLayout(false);
             this.correspondencesTab.ResumeLayout(false);
@@ -1742,7 +1966,6 @@ namespace MSR.CVE.BackMaker
             this.legendTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
     }
 }

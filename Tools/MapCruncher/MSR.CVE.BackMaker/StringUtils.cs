@@ -1,5 +1,5 @@
-using System;
 using System.Text;
+
 namespace MSR.CVE.BackMaker
 {
     public class StringUtils
@@ -16,14 +16,17 @@ namespace MSR.CVE.BackMaker
                 {
                     num2 = 0;
                 }
+
                 if (num2 > num)
                 {
                     stringBuilder.Append("\r\n_  ");
                     num2 = 0;
                 }
+
                 stringBuilder.Append(c);
                 num2++;
             }
+
             return stringBuilder.ToString();
         }
     }

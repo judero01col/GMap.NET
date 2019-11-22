@@ -1,4 +1,5 @@
 using System;
+
 namespace Jama.examples
 {
     public class MagicSquareExample
@@ -10,6 +11,7 @@ namespace Jama.examples
             {
                 array[i] = new double[n];
             }
+
             if (n % 2 == 1)
             {
                 int num = (n + 1) / 2;
@@ -57,6 +59,7 @@ namespace Jama.examples
                             array[i + num3][j + num3] = num5 + (double)(num3 * num3);
                         }
                     }
+
                     for (int i = 0; i < num3; i++)
                     {
                         for (int j = 0; j < num4; j++)
@@ -65,6 +68,7 @@ namespace Jama.examples
                             array[i][j] = array[i + num3][j];
                             array[i + num3][j] = num6;
                         }
+
                         for (int j = n - num4 + 1; j < n; j++)
                         {
                             double num6 = array[i][j];
@@ -72,6 +76,7 @@ namespace Jama.examples
                             array[i + num3][j] = num6;
                         }
                     }
+
                     double num7 = array[num4][0];
                     array[num4][0] = array[num4 + num3][0];
                     array[num4 + num3][0] = num7;
@@ -80,16 +85,20 @@ namespace Jama.examples
                     array[num4 + num3][num4] = num7;
                 }
             }
+
             return new JamaMatrix(array);
         }
+
         private static void print(string s)
         {
             Console.Out.Write(s);
         }
+
         public static string fixedWidthDoubletoString(double x, int w, int d)
         {
             throw new Exception("unimplemented");
         }
+
         public static string fixedWidthIntegertoString(int n, int w)
         {
             string text = Convert.ToString(n);
@@ -97,6 +106,7 @@ namespace Jama.examples
             {
                 text = " " + text;
             }
+
             return text;
         }
 
@@ -114,13 +124,14 @@ namespace Jama.examples
                 JamaMatrix jamaMatrix = magic(i);
                 int n = (int)jamaMatrix.trace();
                 print(fixedWidthIntegertoString(n, 10));
-                EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(jamaMatrix.plus(jamaMatrix.transpose()).times(0.5));
+                EigenvalueDecomposition eigenvalueDecomposition =
+                    new EigenvalueDecomposition(jamaMatrix.plus(jamaMatrix.transpose()).times(0.5));
                 double[] realEigenvalues = eigenvalueDecomposition.RealEigenvalues;
                 print(fixedWidthDoubletoString(realEigenvalues[i - 1], 14, 3));
                 int n2 = jamaMatrix.rank();
                 print(fixedWidthIntegertoString(n2, 7));
                 double num2 = jamaMatrix.cond();
-                print((num2 < 1.0 / num) ? fixedWidthDoubletoString(num2, 12, 3) : "         Inf");
+                print(num2 < 1.0 / num ? fixedWidthDoubletoString(num2, 12, 3) : "         Inf");
                 LUDecomposition lUDecomposition = new LUDecomposition(jamaMatrix);
                 JamaMatrix l = lUDecomposition.L;
                 JamaMatrix u = lUDecomposition.U;
@@ -136,6 +147,7 @@ namespace Jama.examples
                 print(fixedWidthDoubletoString(x, 12, 3));
                 print("\n");
             }
+
             double x2 = (double)(DateTime.Now.Ticks - now.Ticks) / 1000.0;
             print("\nElapsed Time = " + fixedWidthDoubletoString(x2, 12, 3) + " seconds\n");
             print("Adios\n");

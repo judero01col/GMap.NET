@@ -1,10 +1,10 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class SingleMaxZoomForEntireMashupCompatibilityBlob
     {
         private int _minZoom = 1;
         private int _maxZoom;
+
         public int minZoom
         {
             get
@@ -19,6 +19,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public int maxZoom
         {
             get

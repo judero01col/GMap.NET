@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker
 {
     public class DebugThreadInterrupter
@@ -8,6 +8,7 @@ namespace MSR.CVE.BackMaker
         private class ThreadRec
         {
             private Thread _thread;
+
             public Thread thread
             {
                 get
@@ -15,38 +16,49 @@ namespace MSR.CVE.BackMaker
                     return this._thread;
                 }
             }
+
             public ThreadRec(Thread thread)
             {
                 this._thread = thread;
             }
+
             public override string ToString()
             {
                 return string.Format("{0} {1}", this._thread.ManagedThreadId, this._thread.Name);
             }
         }
+
         public class ThreadWrapper
         {
             private ThreadStart threadStart;
             private DebugThreadInterrupter debugThreadInterrupter;
+
             public ThreadWrapper(ThreadStart threadStart, DebugThreadInterrupter debugThreadInterrupter)
             {
                 this.threadStart = threadStart;
                 this.debugThreadInterrupter = debugThreadInterrupter;
             }
+
             public void DoWork()
             {
                 this.threadStart();
                 this.debugThreadInterrupter.UnregisterThread(Thread.CurrentThread);
             }
         }
+
         private SortedDictionary<int, ThreadRec> threadDict = new SortedDictionary<int, ThreadRec>();
         private bool quitFlag;
-        private EventWaitHandle quitEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "DebugThreadInterrupter");
+
+        private EventWaitHandle quitEvent =
+            new EventWaitHandle(false, EventResetMode.AutoReset, "DebugThreadInterrupter");
+
         public static DebugThreadInterrupter theInstance = new DebugThreadInterrupter();
+
         public DebugThreadInterrupter()
         {
             this.AddThread("DebugThreadInterrupter", new ThreadStart(this.DoWork), ThreadPriority.Normal);
         }
+
         public void AddThread(string name, ThreadStart start, ThreadPriority priority)
         {
             ThreadWrapper @object = new ThreadWrapper(start, this);
@@ -55,16 +67,15 @@ namespace MSR.CVE.BackMaker
             thread.Name = name;
             this.RegisterThread(thread);
             thread.Start();
-            D.Sayf(1, "Started thread {0}", new object[]
-            {
-                name
-            });
+            D.Sayf(1, "Started thread {0}", new object[] {name});
         }
+
         public void Quit()
         {
             this.quitFlag = true;
             this.quitEvent.Set();
         }
+
         private void DoWork()
         {
             while (true)
@@ -75,6 +86,7 @@ namespace MSR.CVE.BackMaker
                 {
                     break;
                 }
+
                 ThreadRec threadRec = null;
                 Monitor.Enter(this);
                 try
@@ -88,12 +100,14 @@ namespace MSR.CVE.BackMaker
                 {
                     Monitor.Exit(this);
                 }
+
                 if (threadRec != null)
                 {
                     threadRec.thread.Interrupt();
                 }
             }
         }
+
         internal void RegisterThread(Thread thread)
         {
             Monitor.Enter(this);
@@ -106,6 +120,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
+
         internal void UnregisterThread(Thread thread)
         {
             Monitor.Enter(this);
@@ -119,10 +134,8 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
-            D.Sayf(1, "Exiting thread {0}", new object[]
-            {
-                threadRec
-            });
+
+            D.Sayf(1, "Exiting thread {0}", new object[] {threadRec});
         }
     }
 }

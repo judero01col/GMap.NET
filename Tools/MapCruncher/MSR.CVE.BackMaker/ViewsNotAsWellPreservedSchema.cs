@@ -1,9 +1,9 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class ViewsNotAsWellPreservedSchema : MashupXMLSchemaVersion
     {
         public static ViewsNotAsWellPreservedSchema _schema;
+
         public static ViewsNotAsWellPreservedSchema schema
         {
             get
@@ -12,9 +12,11 @@ namespace MSR.CVE.BackMaker
                 {
                     _schema = new ViewsNotAsWellPreservedSchema();
                 }
+
                 return _schema;
             }
         }
+
         private ViewsNotAsWellPreservedSchema() : base("1.5")
         {
         }

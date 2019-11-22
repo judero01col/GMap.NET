@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //
 //
@@ -18,113 +18,117 @@ using System;
 
 namespace GMap.NET.GPS
 {
-   /// <summary>
-   /// class that represents a gps coordinate in degrees, minutes, and seconds.  
-   /// </summary>
-   public class DegreesMinutesSeconds
-   {
+    /// <summary>
+    /// class that represents a gps coordinate in degrees, minutes, and seconds.  
+    /// </summary>
+    public class DegreesMinutesSeconds
+    {
 
-      bool isPositive;
-      /// <summary>
-      /// Returns true if the degrees, minutes and seconds refer to a positive value,
-      /// false otherwise.
-      /// </summary>
-      public bool IsPositive
-      {
-         get
-         {
-            return isPositive;
-         }
-      }
+        bool isPositive;
 
-      uint degrees;
-      /// <summary>
-      /// The degrees unit of the coordinate
-      /// </summary>
-      public uint Degrees
-      {
-         get
-         {
-            return degrees;
-         }
-      }
+        /// <summary>
+        /// Returns true if the degrees, minutes and seconds refer to a positive value,
+        /// false otherwise.
+        /// </summary>
+        public bool IsPositive
+        {
+            get
+            {
+                return isPositive;
+            }
+        }
 
-      uint minutes;
-      /// <summary>
-      /// The minutes unit of the coordinate
-      /// </summary>
-      public uint Minutes
-      {
-         get
-         {
-            return minutes;
-         }
-      }
+        uint degrees;
 
-      double seconds;
-      /// <summary>
-      /// The seconds unit of the coordinate
-      /// </summary>
-      public double Seconds
-      {
-         get
-         {
-            return seconds;
-         }
-      }
+        /// <summary>
+        /// The degrees unit of the coordinate
+        /// </summary>
+        public uint Degrees
+        {
+            get
+            {
+                return degrees;
+            }
+        }
 
-      /// <summary>
-      /// Constructs a new instance of DegreesMinutesSeconds converting 
-      /// from decimal degrees
-      /// </summary>
-      /// <param name="decimalDegrees">Initial value as decimal degrees</param>
-      public DegreesMinutesSeconds(double decimalDegrees)
-      {
-         isPositive = (decimalDegrees > 0);
+        uint minutes;
 
-         degrees = (uint) Math.Abs(decimalDegrees);
+        /// <summary>
+        /// The minutes unit of the coordinate
+        /// </summary>
+        public uint Minutes
+        {
+            get
+            {
+                return minutes;
+            }
+        }
 
-         double doubleMinutes = (Math.Abs(decimalDegrees) - Math.Abs((double) degrees)) * 60.0;
-         minutes = (uint) doubleMinutes;
+        double seconds;
 
-         seconds = (doubleMinutes - (double) minutes) * 60.0;
-      }
+        /// <summary>
+        /// The seconds unit of the coordinate
+        /// </summary>
+        public double Seconds
+        {
+            get
+            {
+                return seconds;
+            }
+        }
 
-      /// <summary>
-      /// Constructs a new instance of DegreesMinutesSeconds
-      /// </summary>
-      /// <param name="isPositive">True if the coordinates are positive coordinate, false if they
-      /// are negative coordinates.</param>
-      /// <param name="degrees">Degrees unit of the coordinate</param>
-      /// <param name="minutes">Minutes unit of the coordinate</param>
-      /// <param name="seconds">Seconds unit of the coordinate. This should be a positive value.</param>
-      public DegreesMinutesSeconds(bool isPositive, uint degrees, uint minutes, double seconds)
-      {
-         this.isPositive = isPositive;
-         this.degrees = degrees;
-         this.minutes = minutes;
-         this.seconds = seconds;
-      }
+        /// <summary>
+        /// Constructs a new instance of DegreesMinutesSeconds converting 
+        /// from decimal degrees
+        /// </summary>
+        /// <param name="decimalDegrees">Initial value as decimal degrees</param>
+        public DegreesMinutesSeconds(double decimalDegrees)
+        {
+            isPositive = (decimalDegrees > 0);
 
-      /// <summary>
-      /// Converts the decimal, minutes, seconds coordinate to 
-      /// decimal degrees
-      /// </summary>
-      /// <returns></returns>
-      public double ToDecimalDegrees()
-      {
-         double val = (double) degrees + ((double) minutes / 60.0) + ((double) seconds / 3600.0);
-         val = isPositive ? val : val * -1;
-         return val;
-      }
+            degrees = (uint)Math.Abs(decimalDegrees);
 
-      /// <summary>
-      /// Converts the instance to a string in format: D M' S"
-      /// </summary>
-      /// <returns>string representation of degrees, minutes, seconds</returns>
-      public override string ToString()
-      {
-         return degrees + "d " + minutes + "' " + seconds + "\"";
-      }
-   }
+            double doubleMinutes = (Math.Abs(decimalDegrees) - Math.Abs((double)degrees)) * 60.0;
+            minutes = (uint)doubleMinutes;
+
+            seconds = (doubleMinutes - (double)minutes) * 60.0;
+        }
+
+        /// <summary>
+        /// Constructs a new instance of DegreesMinutesSeconds
+        /// </summary>
+        /// <param name="isPositive">True if the coordinates are positive coordinate, false if they
+        /// are negative coordinates.</param>
+        /// <param name="degrees">Degrees unit of the coordinate</param>
+        /// <param name="minutes">Minutes unit of the coordinate</param>
+        /// <param name="seconds">Seconds unit of the coordinate. This should be a positive value.</param>
+        public DegreesMinutesSeconds(bool isPositive, uint degrees, uint minutes, double seconds)
+        {
+            this.isPositive = isPositive;
+            this.degrees = degrees;
+            this.minutes = minutes;
+            this.seconds = seconds;
+        }
+
+        /// <summary>
+        /// Converts the decimal, minutes, seconds coordinate to 
+        /// decimal degrees
+        /// </summary>
+        /// <returns></returns>
+        public double ToDecimalDegrees()
+        {
+            double val = (double)degrees + ((double)minutes / 60.0) + ((double)seconds / 3600.0);
+            val = isPositive ? val : val * -1;
+            return val;
+        }
+
+        /// <summary>
+        /// Converts the instance to a string in format: D M' S"
+        /// </summary>
+        /// <returns>string representation of degrees, minutes, seconds</returns>
+        public override string ToString()
+        {
+            return degrees + "d " + minutes + "' " + seconds + "\"";
+        }
+    }
 }

@@ -1,5 +1,5 @@
-using System;
 using System.Drawing;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class SourceMapRendererTools
@@ -18,6 +18,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     result.Width = box.Height;
                 }
             }
+
             return result;
         }
     }

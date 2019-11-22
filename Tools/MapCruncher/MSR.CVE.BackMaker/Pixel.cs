@@ -1,8 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Drawing;
 using System.Globalization;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class Pixel
@@ -14,6 +14,7 @@ namespace MSR.CVE.BackMaker
         private const string AAttr = "a";
         private PixelStruct p;
         private static RangeInt byteRange = new RangeInt(0, 255);
+
         public byte a
         {
             get
@@ -21,6 +22,7 @@ namespace MSR.CVE.BackMaker
                 return this.p.a;
             }
         }
+
         public byte r
         {
             get
@@ -28,6 +30,7 @@ namespace MSR.CVE.BackMaker
                 return this.p.r;
             }
         }
+
         public byte g
         {
             get
@@ -35,6 +38,7 @@ namespace MSR.CVE.BackMaker
                 return this.p.g;
             }
         }
+
         public byte b
         {
             get
@@ -42,34 +46,42 @@ namespace MSR.CVE.BackMaker
                 return this.p.b;
             }
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             this.p.AccumulateRobustHash(hash);
         }
+
         public Color ToColor()
         {
             return this.p.ToColor();
         }
+
         public static bool operator ==(Pixel p1, Pixel p2)
         {
             return p1.p == p2.p;
         }
+
         public static bool operator !=(Pixel p1, Pixel p2)
         {
             return !(p1 == p2);
         }
+
         public override bool Equals(object obj)
         {
             return obj is Pixel && this == (Pixel)obj;
         }
+
         public override int GetHashCode()
         {
             return this.p.GetHashCode();
         }
+
         public Pixel()
         {
             this.p = default(PixelStruct);
         }
+
         public Pixel(byte r, byte g, byte b, byte a)
         {
             this.p.a = a;
@@ -77,6 +89,7 @@ namespace MSR.CVE.BackMaker
             this.p.g = g;
             this.p.b = b;
         }
+
         public Pixel(Color c)
         {
             this.p.a = c.A;
@@ -84,6 +97,7 @@ namespace MSR.CVE.BackMaker
             this.p.g = c.G;
             this.p.b = c.B;
         }
+
         internal void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("PixelValues");
@@ -93,6 +107,7 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString("a", this.p.a.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
         }
+
         public Pixel(MashupParseContext context)
         {
             this.p.r = 0;
@@ -106,6 +121,7 @@ namespace MSR.CVE.BackMaker
             this.p.a = (byte)byteRange.Parse(context, "a");
             xMLTagReader.SkipAllSubTags();
         }
+
         public static string GetXMLTag()
         {
             return "PixelValues";

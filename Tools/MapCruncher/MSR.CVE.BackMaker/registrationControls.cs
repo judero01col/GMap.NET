@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class registrationControls : UserControl, InvalidatableViewIfc
@@ -32,6 +33,7 @@ namespace MSR.CVE.BackMaker
         private RegistrationControlRecord registrationControl;
         private DegreesMinutesSeconds dms = new DegreesMinutesSeconds();
         private MapDrawingOption _ShowDMS;
+
         public MapDrawingOption ShowDMS
         {
             set
@@ -40,14 +42,17 @@ namespace MSR.CVE.BackMaker
                 this._ShowDMS.SetInvalidatableView(this);
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.components = new Container();
@@ -77,7 +82,7 @@ namespace MSR.CVE.BackMaker
             ((ISupportInitialize)this.pinList).BeginInit();
             this.panel1.SuspendLayout();
             base.SuspendLayout();
-            this.getStartedBox.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.getStartedBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.getStartedBox.BackColor = SystemColors.ControlLightLight;
             this.getStartedBox.Controls.Add(this.textBox);
             this.getStartedBox.Location = new Point(9, 61);
@@ -95,7 +100,7 @@ namespace MSR.CVE.BackMaker
             this.textBox.Size = new Size(190, 76);
             this.textBox.TabIndex = 0;
             this.textBox.Text = "Place corresponding points under crosshairs and click Add.";
-            this.pinNameTable.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.pinNameTable.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.pinNameTable.ColumnCount = 4;
             this.pinNameTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
             this.pinNameTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
@@ -110,32 +115,34 @@ namespace MSR.CVE.BackMaker
             this.pinNameTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
             this.pinNameTable.Size = new Size(223, 24);
             this.pinNameTable.TabIndex = 10;
-            this.pinText.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.pinText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.pinNameTable.SetColumnSpan(this.pinText, 2);
             this.pinText.Location = new Point(0, 0);
             this.pinText.Margin = new Padding(0);
             this.pinText.Name = "pinText";
             this.pinText.Size = new Size(110, 20);
             this.pinText.TabIndex = 2;
-            this.addPushPinButton.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.addPushPinButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.addPushPinButton.Location = new Point(113, 0);
             this.addPushPinButton.Margin = new Padding(3, 0, 0, 0);
             this.addPushPinButton.Name = "addPushPinButton";
             this.addPushPinButton.Size = new Size(52, 23);
             this.addPushPinButton.TabIndex = 0;
             this.addPushPinButton.Text = "Add";
-            this.toolTip.SetToolTip(this.addPushPinButton, "To create a registration point, position the crosshairs over corresponding points on both maps.  Then click Add.");
+            this.toolTip.SetToolTip(this.addPushPinButton,
+                "To create a registration point, position the crosshairs over corresponding points on both maps.  Then click Add.");
             this.addPushPinButton.Click += new EventHandler(this.addPushPinButton_Click);
-            this.updatePushPinButton.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.updatePushPinButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.updatePushPinButton.Location = new Point(168, 0);
             this.updatePushPinButton.Margin = new Padding(3, 0, 0, 0);
             this.updatePushPinButton.Name = "updatePushPinButton";
             this.updatePushPinButton.Size = new Size(55, 23);
             this.updatePushPinButton.TabIndex = 8;
             this.updatePushPinButton.Text = "Update";
-            this.toolTip.SetToolTip(this.updatePushPinButton, "To move an existing point, highlight it on the list below.  Then reposition the crosshairs and click update.");
+            this.toolTip.SetToolTip(this.updatePushPinButton,
+                "To move an existing point, highlight it on the list below.  Then reposition the crosshairs and click update.");
             this.updatePushPinButton.Click += new EventHandler(this.updatePushPinButton_Click);
-            this.LockButtonTable.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.LockButtonTable.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             this.LockButtonTable.ColumnCount = 2;
             this.LockButtonTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             this.LockButtonTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
@@ -150,7 +157,8 @@ namespace MSR.CVE.BackMaker
             this.LockButtonTable.RowStyles.Add(new RowStyle());
             this.LockButtonTable.Size = new Size(156, 59);
             this.LockButtonTable.TabIndex = 9;
-            this.removePushPinButton.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.removePushPinButton.Anchor =
+                AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.removePushPinButton.Enabled = false;
             this.removePushPinButton.Location = new Point(3, 3);
             this.removePushPinButton.Name = "removePushPinButton";
@@ -159,7 +167,8 @@ namespace MSR.CVE.BackMaker
             this.removePushPinButton.Text = "Remove";
             this.toolTip.SetToolTip(this.removePushPinButton, "Removes the highlighted correspondence point.");
             this.removePushPinButton.Click += new EventHandler(this.removePushPinButton_Click);
-            this.removeAllPushpinsButton.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.removeAllPushpinsButton.Anchor =
+                AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.removeAllPushpinsButton.Enabled = false;
             this.removeAllPushpinsButton.Location = new Point(81, 3);
             this.removeAllPushpinsButton.Name = "removeAllPushpinsButton";
@@ -168,35 +177,36 @@ namespace MSR.CVE.BackMaker
             this.removeAllPushpinsButton.Text = "Remove All";
             this.toolTip.SetToolTip(this.removeAllPushpinsButton, "Removes all correspondence points.");
             this.removeAllPushpinsButton.Click += new EventHandler(this.removeAllPushpinsButton_Click);
-            this.unlockTransformButton.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.unlockTransformButton.Anchor =
+                AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.unlockTransformButton.Location = new Point(3, 32);
             this.unlockTransformButton.Name = "unlockTransformButton";
             this.unlockTransformButton.Size = new Size(72, 24);
             this.unlockTransformButton.TabIndex = 0;
             this.unlockTransformButton.Text = "Unlock";
-            this.toolTip.SetToolTip(this.unlockTransformButton, "Unlocks the source map from Virtual Earth, allowing additional points to be added.");
+            this.toolTip.SetToolTip(this.unlockTransformButton,
+                "Unlocks the source map from Virtual Earth, allowing additional points to be added.");
             this.unlockTransformButton.Click += new EventHandler(this.unlockTransformButton_Click);
-            this.lockTransformButton.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.lockTransformButton.Anchor =
+                AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.lockTransformButton.Location = new Point(81, 32);
             this.lockTransformButton.Name = "lockTransformButton";
             this.lockTransformButton.Size = new Size(72, 24);
             this.lockTransformButton.TabIndex = 0;
             this.lockTransformButton.Text = "Lock";
-            this.toolTip.SetToolTip(this.lockTransformButton, "Warps the source map to fit Virtual Earth using the existing correspondence points.");
+            this.toolTip.SetToolTip(this.lockTransformButton,
+                "Warps the source map to fit Virtual Earth using the existing correspondence points.");
             this.lockTransformButton.Click += new EventHandler(this.lockTransformButton_Click);
             this.pinList.AllowUserToAddRows = false;
             this.pinList.AllowUserToDeleteRows = false;
             this.pinList.AllowUserToOrderColumns = true;
             this.pinList.AllowUserToResizeRows = false;
-            this.pinList.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.pinList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.pinList.BackgroundColor = SystemColors.ButtonHighlight;
             this.pinList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.pinList.Columns.AddRange(new DataGridViewColumn[]
             {
-                this.pinIDcolumn,
-                this.pinNameColumn,
-                this.LocationColumn,
-                this.Error
+                this.pinIDcolumn, this.pinNameColumn, this.LocationColumn, this.Error
             });
             this.pinList.GridColor = SystemColors.ActiveCaptionText;
             this.pinList.Location = new Point(2, 32);
@@ -225,7 +235,7 @@ namespace MSR.CVE.BackMaker
             this.Error.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             this.Error.HeaderText = "Error";
             this.Error.Name = "Error";
-            this.lockStatusText.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.lockStatusText.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.lockStatusText.BackColor = SystemColors.ControlLightLight;
             this.lockStatusText.BorderStyle = BorderStyle.None;
             this.lockStatusText.Location = new Point(3, 239);
@@ -235,14 +245,15 @@ namespace MSR.CVE.BackMaker
             this.lockStatusText.Size = new Size(223, 48);
             this.lockStatusText.TabIndex = 6;
             this.lockStatusText.TabStop = false;
-            this.forceAffineCheckBox.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.forceAffineCheckBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.forceAffineCheckBox.AutoSize = true;
             this.forceAffineCheckBox.Location = new Point(9, 361);
             this.forceAffineCheckBox.Name = "forceAffineCheckBox";
             this.forceAffineCheckBox.Size = new Size(83, 17);
             this.forceAffineCheckBox.TabIndex = 11;
             this.forceAffineCheckBox.Text = "Force Affine";
-            this.toolTip.SetToolTip(this.forceAffineCheckBox, "Selecting \"Affine\" forces MapCruncher to preserve straight lines in your map.  This reduces position accuracy.");
+            this.toolTip.SetToolTip(this.forceAffineCheckBox,
+                "Selecting \"Affine\" forces MapCruncher to preserve straight lines in your map.  This reduces position accuracy.");
             this.forceAffineCheckBox.UseMnemonic = false;
             this.forceAffineCheckBox.UseVisualStyleBackColor = true;
             this.forceAffineCheckBox.CheckedChanged += new EventHandler(this.checkBox1_CheckedChanged);
@@ -272,6 +283,7 @@ namespace MSR.CVE.BackMaker
             this.panel1.PerformLayout();
             base.ResumeLayout(false);
         }
+
         public registrationControls()
         {
             this.InitializeComponent();
@@ -279,6 +291,7 @@ namespace MSR.CVE.BackMaker
             this.lockTransformButton.Enabled = false;
             this.forceAffineCheckBox.Visible = false;
         }
+
         private void WarpStyleClick(object sender, EventArgs e)
         {
             if (this.registrationControl != null)
@@ -287,10 +300,12 @@ namespace MSR.CVE.BackMaker
                 this.updateWarpStyle();
             }
         }
+
         public void setAssociationIfc(AssociationIfc ai)
         {
             this.associationIfc = ai;
         }
+
         public void SetSelected(PositionAssociation pa)
         {
             foreach (DataGridViewRow dataGridViewRow in (IEnumerable)this.pinList.Rows)
@@ -302,8 +317,10 @@ namespace MSR.CVE.BackMaker
                     return;
                 }
             }
+
             this.UnselectAll();
         }
+
         private void UnselectAll()
         {
             foreach (DataGridViewRow dataGridViewRow in this.pinList.SelectedRows)
@@ -311,6 +328,7 @@ namespace MSR.CVE.BackMaker
                 dataGridViewRow.Selected = false;
             }
         }
+
         public PositionAssociation GetSelected()
         {
             foreach (DataGridViewRow dataGridViewRow in (IEnumerable)this.pinList.Rows)
@@ -320,8 +338,10 @@ namespace MSR.CVE.BackMaker
                     return (PositionAssociation)dataGridViewRow.Tag;
                 }
             }
+
             return null;
         }
+
         public void DisplayModel(RegistrationControlRecord registrationControl)
         {
             this.registrationControl = registrationControl;
@@ -332,20 +352,18 @@ namespace MSR.CVE.BackMaker
                 foreach (PositionAssociation current in registrationControl.model.GetAssociationList())
                 {
                     DataGridViewRow dataGridViewRow = new DataGridViewRow();
-                    string text = string.Format("{0}, {1}", this.dms.FormatLatLon(current.globalPosition.pinPosition.lat), this.dms.FormatLatLon(current.globalPosition.pinPosition.lon));
-                    dataGridViewRow.CreateCells(this.pinList, new object[]
-                    {
-                        current.pinId,
-                        current.associationName,
-                        text,
-                        current.qualityMessage
-                    });
+                    string text = string.Format("{0}, {1}",
+                        this.dms.FormatLatLon(current.globalPosition.pinPosition.lat),
+                        this.dms.FormatLatLon(current.globalPosition.pinPosition.lon));
+                    dataGridViewRow.CreateCells(this.pinList,
+                        new object[] {current.pinId, current.associationName, text, current.qualityMessage});
                     dataGridViewRow.Tag = current;
                     this.pinList.Rows.Add(dataGridViewRow);
                 }
+
                 if (registrationControl.model.isLocked)
                 {
-                    this.pinText.Enabled = (this.addPushPinButton.Enabled = (this.updatePushPinButton.Enabled = false));
+                    this.pinText.Enabled = this.addPushPinButton.Enabled = this.updatePushPinButton.Enabled = false;
                     this.removePushPinButton.Enabled = false;
                     this.removeAllPushpinsButton.Enabled = false;
                     this.getStartedBox.Visible = false;
@@ -353,7 +371,7 @@ namespace MSR.CVE.BackMaker
                 else
                 {
                     bool flag = registrationControl.model.GetAssociationList().Count > 0;
-                    this.pinText.Enabled = (this.addPushPinButton.Enabled = (this.updatePushPinButton.Enabled = true));
+                    this.pinText.Enabled = this.addPushPinButton.Enabled = this.updatePushPinButton.Enabled = true;
                     this.removeAllPushpinsButton.Enabled = flag;
                     this.getStartedBox.Visible = !flag;
                 }
@@ -362,10 +380,12 @@ namespace MSR.CVE.BackMaker
             {
                 this.removePushPinButton.Enabled = false;
                 this.removeAllPushpinsButton.Enabled = false;
-                this.pinText.Enabled = (this.addPushPinButton.Enabled = (this.updatePushPinButton.Enabled = false));
+                this.pinText.Enabled = this.addPushPinButton.Enabled = this.updatePushPinButton.Enabled = false;
             }
+
             this.updateWarpStyle();
         }
+
         private void updateWarpStyle()
         {
             if (this.registrationControl == null)
@@ -376,7 +396,9 @@ namespace MSR.CVE.BackMaker
                 this.lockStatusText.Text = "";
                 return;
             }
-            this.forceAffineCheckBox.Checked = (this.registrationControl.model.warpStyle != TransformationStyleFactory.getDefaultTransformationStyle());
+
+            this.forceAffineCheckBox.Checked = this.registrationControl.model.warpStyle !=
+                                               TransformationStyleFactory.getDefaultTransformationStyle();
             if (this.registrationControl.model.isLocked)
             {
                 this.lockTransformButton.Enabled = false;
@@ -385,12 +407,14 @@ namespace MSR.CVE.BackMaker
                 this.forceAffineCheckBox.Enabled = false;
                 return;
             }
+
             bool enabled = this.registrationControl.readyToLock.ReadyToLock();
             this.lockTransformButton.Enabled = enabled;
             this.unlockTransformButton.Enabled = false;
             this.lockStatusText.Lines = this.registrationControl.model.GetLockStatusText();
             this.forceAffineCheckBox.Enabled = true;
         }
+
         private void addPushPinButton_Click(object sender, EventArgs e)
         {
             try
@@ -401,15 +425,18 @@ namespace MSR.CVE.BackMaker
             {
                 this.DisplayDuplicatePushpinMessage("Cannot add pushpin.", ex);
             }
+
             this.pinText.Text = "";
             this.UnselectAll();
         }
+
         private void updatePushPinButton_Click(object sender, EventArgs e)
         {
             if (this.pinList.SelectedRows.Count == 0)
             {
                 return;
             }
+
             int firstDisplayedScrollingRowIndex = this.pinList.FirstDisplayedScrollingRowIndex;
             PositionAssociation positionAssociation = (PositionAssociation)this.pinList.SelectedRows[0].Tag;
             try
@@ -420,14 +447,17 @@ namespace MSR.CVE.BackMaker
             {
                 this.DisplayDuplicatePushpinMessage("Cannot update pushpin.", ex);
             }
+
             this.pinText.Text = "";
             this.SetSelected(positionAssociation);
             this.pinList.FirstDisplayedScrollingRowIndex = firstDisplayedScrollingRowIndex;
         }
+
         private void DisplayDuplicatePushpinMessage(string action, DuplicatePushpinException ex)
         {
             MessageBox.Show(string.Format("{0} {1}", action, ex.ToString()), "Duplicate Pushpin");
         }
+
         private void removePushPinButton_Click(object sender, EventArgs e)
         {
             int firstDisplayedScrollingRowIndex = this.pinList.FirstDisplayedScrollingRowIndex;
@@ -438,32 +468,43 @@ namespace MSR.CVE.BackMaker
             {
                 this.pinList.FirstDisplayedScrollingRowIndex = firstDisplayedScrollingRowIndex;
             }
+
             if (this.pinList.Rows.Count > index)
             {
                 this.pinList.Rows[index].Selected = true;
                 return;
             }
+
             if (this.pinList.Rows.Count > 0)
             {
                 this.pinList.Rows[this.pinList.Rows.Count - 1].Selected = true;
             }
         }
+
         private void removeAllPushpinsButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Remove all pushpins?", "Are you sure?", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) != DialogResult.OK)
+            if (MessageBox.Show("Remove all pushpins?",
+                    "Are you sure?",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Exclamation) != DialogResult.OK)
             {
                 return;
             }
+
             while (this.pinList.Rows.Count > 0)
             {
                 this.associationIfc.RemoveAssociation((PositionAssociation)this.pinList.Rows[0].Tag);
             }
         }
+
         private void pinList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.removePushPinButton.Enabled = (this.pinList.SelectedRows.Count != 0 && this.registrationControl != null && !this.registrationControl.model.isLocked);
+            this.removePushPinButton.Enabled = this.pinList.SelectedRows.Count != 0 &&
+                                               this.registrationControl != null &&
+                                               !this.registrationControl.model.isLocked;
             this.updatePushPinButton.Enabled = this.removePushPinButton.Enabled;
         }
+
         private void pinList_ItemActivate(object sender, EventArgs e)
         {
             if (this.pinList.SelectedRows.Count > 0)
@@ -471,25 +512,33 @@ namespace MSR.CVE.BackMaker
                 this.associationIfc.ViewAssociation((PositionAssociation)this.pinList.SelectedRows[0].Tag);
             }
         }
+
         private void lockTransformButton_Click(object sender, EventArgs e)
         {
             this.associationIfc.LockMaps();
         }
+
         private void unlockTransformButton_Click(object sender, EventArgs e)
         {
             this.associationIfc.UnlockMaps();
         }
+
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (this.registrationControl != null)
             {
-                this.registrationControl.model.warpStyle = (((CheckBox)sender).Checked ? TransformationStyleFactory.getTransformationStyle(1) : TransformationStyleFactory.getDefaultTransformationStyle());
+                this.registrationControl.model.warpStyle = ((CheckBox)sender).Checked
+                    ? TransformationStyleFactory.getTransformationStyle(1)
+                    : TransformationStyleFactory.getDefaultTransformationStyle();
                 this.updateWarpStyle();
             }
         }
+
         public void InvalidateView()
         {
-            this.dms.outputMode = (this._ShowDMS.Enabled ? DegreesMinutesSeconds.OutputMode.DMS : DegreesMinutesSeconds.OutputMode.DecimalDegrees);
+            this.dms.outputMode = this._ShowDMS.Enabled
+                ? DegreesMinutesSeconds.OutputMode.DMS
+                : DegreesMinutesSeconds.OutputMode.DecimalDegrees;
             this.DisplayModel(this.registrationControl);
         }
     }

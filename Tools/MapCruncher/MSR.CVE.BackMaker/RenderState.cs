@@ -1,17 +1,18 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
+using MSR.CVE.BackMaker.ImagePipeline;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderState : ITileWorkFeedback
     {
         public delegate void FlushRenderedTileCachePackageDelegate();
+
         private enum States
         {
             ReadyToRender,
@@ -20,15 +21,19 @@ namespace MSR.CVE.BackMaker
             Aborted,
             DoneRendering
         }
+
         private class RenderAborted : Exception
         {
         }
+
         private class RenderDisposed : Exception
         {
         }
+
         private class SetupFailed : Exception
         {
             private string prettyMessage;
+
             public SetupFailed(bool pretty, string m) : base(m)
             {
                 if (pretty)
@@ -36,49 +41,63 @@ namespace MSR.CVE.BackMaker
                     this.prettyMessage = m;
                 }
             }
+
             public override string ToString()
             {
                 if (this.prettyMessage != null)
                 {
                     return this.prettyMessage;
                 }
+
                 return base.ToString();
             }
         }
+
         private class LayerApplierMaker
         {
             private CachePackage cachePackage;
-            private Dictionary<IRenderableSource, OneLayerBoundApplier> dict = new Dictionary<IRenderableSource, OneLayerBoundApplier>();
+
+            private Dictionary<IRenderableSource, OneLayerBoundApplier> dict =
+                new Dictionary<IRenderableSource, OneLayerBoundApplier>();
+
             public LayerApplierMaker(CachePackage cachePackage)
             {
                 this.cachePackage = cachePackage;
             }
+
             public OneLayerBoundApplier MakeApplier(IRenderableSource source, Layer layer)
             {
                 if (!this.dict.ContainsKey(source))
                 {
                     this.dict[source] = new OneLayerBoundApplier(source, layer, this.cachePackage);
                 }
+
                 return this.dict[source];
             }
         }
+
         private class ProposedTileSet : Dictionary<TileAddress, CompositeTileUnit>
         {
-            public CompositeTileUnit MakeLayeredTileWork(TileAddress tileAddress, Layer layer, RenderOutputMethod renderOutput, string outputFilename, OutputTileType outputTileType)
+            public CompositeTileUnit MakeLayeredTileWork(TileAddress tileAddress, Layer layer,
+                RenderOutputMethod renderOutput, string outputFilename, OutputTileType outputTileType)
             {
                 if (!base.ContainsKey(tileAddress))
                 {
-                    base[tileAddress] = new CompositeTileUnit(layer, tileAddress, renderOutput, outputFilename, outputTileType);
+                    base[tileAddress] =
+                        new CompositeTileUnit(layer, tileAddress, renderOutput, outputFilename, outputTileType);
                 }
+
                 return base[tileAddress];
             }
         }
+
         private class SourceMapRenderInfo
         {
             public SourceMap sourceMap;
             public IRenderableSource warpedMapTileSource;
             public MapRectangle renderBoundsBoundingBox;
         }
+
         private const int sortPseudoLayer = 1;
         private const int TileCountReportInterval = 10000;
         private const int UnreasonablyManyTiles = 1000000;
@@ -93,7 +112,10 @@ namespace MSR.CVE.BackMaker
         private bool disposeFlag;
         private States _state;
         private bool pauseRenderingFlag;
-        private EventWaitHandle startRenderEvent = new CountedEventWaitHandle(false, EventResetMode.AutoReset, "RenderState.startRenderEvent");
+
+        private EventWaitHandle startRenderEvent =
+            new CountedEventWaitHandle(false, EventResetMode.AutoReset, "RenderState.startRenderEvent");
+
         private MercatorCoordinateSystem mercatorCoordinateSystem = new MercatorCoordinateSystem();
         private RenderOutputMethod renderOutput;
         private List<TileRectangle> boundsList;
@@ -114,6 +136,7 @@ namespace MSR.CVE.BackMaker
         private string[] lastRenderedImageLabel = new string[0];
         private StreamWriter logWriter;
         public static string SourceDataDirName = "SourceData";
+
         private States state
         {
             get
@@ -126,25 +149,33 @@ namespace MSR.CVE.BackMaker
                 this.renderUI.uiChanged();
             }
         }
-        public RenderState(Mashup mashupDocument, RenderUIIfc renderUI, FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage, MapTileSourceFactory mapTileSourceFactory)
+
+        public RenderState(Mashup mashupDocument, RenderUIIfc renderUI,
+            FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage,
+            MapTileSourceFactory mapTileSourceFactory)
         {
             this._mashupDocument_UseScratchCopy = mashupDocument;
             this.renderUI = renderUI;
             this.flushRenderedTileCachePackage = flushRenderedTileCachePackage;
             this.mapTileSourceFactory = mapTileSourceFactory;
-            DebugThreadInterrupter.theInstance.AddThread("RenderState", new ThreadStart(this.ThreadTask), ThreadPriority.BelowNormal);
+            DebugThreadInterrupter.theInstance.AddThread("RenderState",
+                new ThreadStart(this.ThreadTask),
+                ThreadPriority.BelowNormal);
             ResourceCounter resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("RenderState", -1);
             resourceCounter.crement(1);
             this.complaintBox = new RenderComplaintBox(new RenderComplaintBox.AnnounceDelegate(this.PostMessage));
         }
+
         private void OpenLog()
         {
             if (this.logWriter == null)
             {
-                this.logWriter = new StreamWriter(new FileStream(FileUtilities.MakeTempFilename(".", "RenderLog"), FileMode.Create));
+                this.logWriter =
+                    new StreamWriter(new FileStream(FileUtilities.MakeTempFilename(".", "RenderLog"), FileMode.Create));
                 this.logWriter.AutoFlush = true;
             }
         }
+
         internal void Dispose()
         {
             this.disposeFlag = true;
@@ -158,52 +189,55 @@ namespace MSR.CVE.BackMaker
                 this.logWriter = null;
             }
         }
+
         internal void RenderClick()
         {
             switch (this.state)
             {
-            case States.ReadyToRender:
-            case States.Paused:
-                this.startRenderEvent.Set();
-                this.renderUI.uiChanged();
-                return;
-            case States.Rendering:
-                this.pauseRenderingFlag = true;
-                this.renderUI.uiChanged();
-                return;
-            default:
-                return;
+                case States.ReadyToRender:
+                case States.Paused:
+                    this.startRenderEvent.Set();
+                    this.renderUI.uiChanged();
+                    return;
+                case States.Rendering:
+                    this.pauseRenderingFlag = true;
+                    this.renderUI.uiChanged();
+                    return;
+                default:
+                    return;
             }
         }
+
         internal void UI_UpdateRenderControlButtonLabel(Button renderControlButton)
         {
             switch (this.state)
             {
-            case States.ReadyToRender:
-                renderControlButton.Text = "Start";
-                renderControlButton.Enabled = true;
-                return;
-            case States.Rendering:
-                renderControlButton.Text = "Pause";
-                renderControlButton.Enabled = true;
-                return;
-            case States.Paused:
-                renderControlButton.Text = "Resume";
-                renderControlButton.Enabled = true;
-                return;
-            case States.Aborted:
-                renderControlButton.Text = "Render Aborted.";
-                renderControlButton.Enabled = false;
-                return;
-            case States.DoneRendering:
-                renderControlButton.Text = "Render Complete.";
-                renderControlButton.Enabled = false;
-                return;
-            default:
-                D.Assert(false, "Invalid state.");
-                return;
+                case States.ReadyToRender:
+                    renderControlButton.Text = "Start";
+                    renderControlButton.Enabled = true;
+                    return;
+                case States.Rendering:
+                    renderControlButton.Text = "Pause";
+                    renderControlButton.Enabled = true;
+                    return;
+                case States.Paused:
+                    renderControlButton.Text = "Resume";
+                    renderControlButton.Enabled = true;
+                    return;
+                case States.Aborted:
+                    renderControlButton.Text = "Render Aborted.";
+                    renderControlButton.Enabled = false;
+                    return;
+                case States.DoneRendering:
+                    renderControlButton.Text = "Render Complete.";
+                    renderControlButton.Enabled = false;
+                    return;
+                default:
+                    D.Assert(false, "Invalid state.");
+                    return;
             }
         }
+
         public void StartRender()
         {
             this.OpenLog();
@@ -211,39 +245,48 @@ namespace MSR.CVE.BackMaker
             {
                 throw new Exception("I kind of imagined that you'd only call this to implement renderOnLaunch.");
             }
+
             this.startRenderEvent.Set();
             this.renderUI.uiChanged();
         }
+
         internal string UI_GetStatusString()
         {
             return this.statusString;
         }
+
         internal List<string> UI_GetPostedMessages()
         {
             return this.postedMessages;
         }
+
         private void PostStatus(string statusString)
         {
             if (this.logWriter != null)
             {
                 this.logWriter.Write("STATUS: " + statusString + "\n");
             }
+
             this.statusString = statusString;
             this.renderUI.uiChanged();
         }
+
         public void PostMessage(string message)
         {
             if (this.logWriter != null)
             {
                 this.logWriter.Write(message + "\n");
             }
+
             this.postedMessages.Add(message);
             this.renderUI.uiChanged();
         }
+
         public void PostComplaint(NonredundantRenderComplaint complaint)
         {
             this.complaintBox.Complain(complaint);
         }
+
         public void PostImageResult(ImageRef image, Layer layer, string sourceMapName, TileAddress address)
         {
             //using (MemoryStream m = new MemoryStream())
@@ -267,18 +310,16 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
+
             if (imageRef2 != null)
             {
                 imageRef2.Dispose();
             }
-            this.lastRenderedImageLabel = new string[]
-            {
-                layer.displayName,
-                sourceMapName,
-                address.ToString()
-            };
+
+            this.lastRenderedImageLabel = new string[] {layer.displayName, sourceMapName, address.ToString()};
             this.renderUI.uiChanged();
         }
+
         private void ThreadTask()
         {
             try
@@ -289,19 +330,23 @@ namespace MSR.CVE.BackMaker
             {
                 this.PostMessage(string.Format("Didn't expect to see an exception here: {0}", arg));
             }
+
             Exception failure = null;
             if (this.state != States.DoneRendering)
             {
                 failure = new Exception("Rendering incomplete.");
             }
+
             this.renderUI.notifyRenderComplete(failure);
         }
+
         private void CheckSignal()
         {
             if (this.disposeFlag)
             {
                 throw new RenderDisposed();
             }
+
             if (this.pauseRenderingFlag)
             {
                 this.state = States.Paused;
@@ -312,6 +357,7 @@ namespace MSR.CVE.BackMaker
                 this.renderUI.uiChanged();
             }
         }
+
         private void RenderAll()
         {
             try
@@ -320,6 +366,7 @@ namespace MSR.CVE.BackMaker
                 {
                     this.OpenLog();
                 }
+
                 this.startRenderEvent.WaitOne();
                 this.CheckSignal();
                 this.state = States.Rendering;
@@ -336,7 +383,9 @@ namespace MSR.CVE.BackMaker
                 this.PostStatus("Creating XML mashup descriptor");
                 CrunchedFile crunchedFile = this.CreateCrunchedFileDescriptor();
                 this.PostStatus("Creating HTML sample file");
-                this.sampleHTMLUri = SampleHTMLWriter.Write(this.mashupScratchCopy, new SampleHTMLWriter.PostMessageDelegate(this.PostMessage), this.renderOutput);
+                this.sampleHTMLUri = SampleHTMLWriter.Write(this.mashupScratchCopy,
+                    new SampleHTMLWriter.PostMessageDelegate(this.PostMessage),
+                    this.renderOutput);
                 this.CopySourceData();
                 this.CheckSignal();
                 this.PostStatus("Checking for reusable tiles from prior render");
@@ -360,11 +409,13 @@ namespace MSR.CVE.BackMaker
                     {
                         this.renderUI.uiChanged();
                     }
+
                     if (this.logWriter != null)
                     {
                         this.logWriter.Write("Completed: " + renderWorkUnit + "\n");
                     }
                 }
+
                 this.CommitManifest();
                 this.PostStatus("Render complete.");
                 this.state = States.DoneRendering;
@@ -383,6 +434,7 @@ namespace MSR.CVE.BackMaker
                 this.state = States.Aborted;
             }
         }
+
         private Mashup DuplicateMashupDocumentForRender()
         {
             Mashup mashup = this._mashupDocument_UseScratchCopy.Duplicate();
@@ -394,12 +446,15 @@ namespace MSR.CVE.BackMaker
                     list.Add(current);
                 }
             }
+
             foreach (Layer current2 in list)
             {
                 mashup.layerList.Remove(current2);
             }
+
             return mashup;
         }
+
         private void EstimateOuterLoop()
         {
             this.state = States.Rendering;
@@ -434,6 +489,7 @@ namespace MSR.CVE.BackMaker
                         D.Say(0, string.Format("ConstructRenderListThread failed: {0}", ex));
                         continue;
                     }
+
                     list2.Sort();
                     List<RangeDescriptor> list3 = new List<RangeDescriptor>();
                     this.rangeQueryData[current] = list3;
@@ -443,11 +499,14 @@ namespace MSR.CVE.BackMaker
                         {
                             break;
                         }
+
                         if (current2 is CompositeTileUnit)
                         {
-                            this.rangeQueryData[current].Add(new RangeDescriptor(((CompositeTileUnit)current2).GetTileAddress()));
+                            this.rangeQueryData[current]
+                                .Add(new RangeDescriptor(((CompositeTileUnit)current2).GetTileAddress()));
                         }
                     }
+
                     list.AddRange(list2);
                     this.estimateProgressLayerCount++;
                     this.estimateProgressSourceMapCount = 0;
@@ -455,28 +514,34 @@ namespace MSR.CVE.BackMaker
                     this.renderUI.uiChanged();
                 }
             }
+
             if (list.Count == 0)
             {
                 this.PostMessage("Nothing to render.");
                 flag = false;
             }
+
             if (flag)
             {
                 this.PostStatus("Sorting");
                 list.Sort();
                 this.renderQueue = new Queue<RenderWorkUnit>(list);
                 this.initialQueueSize = this.renderQueue.Count;
-                string message = string.Format("Estimated output size: {0} tiles, about {1:f}MB", this.renderQueue.Count, (double)this.renderQueue.Count * 0.085);
+                string message = string.Format("Estimated output size: {0} tiles, about {1:f}MB",
+                    this.renderQueue.Count,
+                    (double)this.renderQueue.Count * 0.085);
                 this.estimateProgressLayerCount++;
                 this.PostStatus(message);
                 this.PostMessage(message);
                 D.Say(0, "EstimateOuterLoop ends");
                 return;
             }
+
             this.state = States.Aborted;
             this.PostStatus("Estimation canceled.");
             throw new RenderAborted();
         }
+
         private void SetupRenderOutput()
         {
             try
@@ -490,6 +555,7 @@ namespace MSR.CVE.BackMaker
                     {
                         throw new SetupFailed(true, "Please select an output folder.");
                     }
+
                     FileOutputMethod fileOutputMethod = new FileOutputMethod(renderToFileOptions.outputFolder);
                     this.PostStatus(string.Format("Creating {0}", renderToFileOptions.outputFolder));
                     try
@@ -500,6 +566,7 @@ namespace MSR.CVE.BackMaker
                     {
                         throw new SetupFailed(true, ex.Message);
                     }
+
                     baseMethod = fileOutputMethod;
                 }
                 else
@@ -508,6 +575,7 @@ namespace MSR.CVE.BackMaker
                     {
                         throw new Exception("Unimplemented renderToOptions type");
                     }
+
                     RenderToS3Options renderToS3Options = (RenderToS3Options)renderToOptions;
                     S3Credentials s3Credentials;
                     try
@@ -516,12 +584,19 @@ namespace MSR.CVE.BackMaker
                     }
                     catch (Exception arg)
                     {
-                        throw new SetupFailed(false, string.Format("Can't load credentials file {0}: {1}", renderToS3Options.s3credentialsFilename, arg));
+                        throw new SetupFailed(false,
+                            string.Format("Can't load credentials file {0}: {1}",
+                                renderToS3Options.s3credentialsFilename,
+                                arg));
                     }
+
                     S3Adaptor s3adaptor = new S3Adaptor(s3Credentials.accessKeyId, s3Credentials.secretAccessKey);
-                    S3OutputMethod s3OutputMethod = new S3OutputMethod(s3adaptor, renderToS3Options.s3bucket, renderToS3Options.s3pathPrefix);
+                    S3OutputMethod s3OutputMethod = new S3OutputMethod(s3adaptor,
+                        renderToS3Options.s3bucket,
+                        renderToS3Options.s3pathPrefix);
                     baseMethod = s3OutputMethod;
                 }
+
                 if (BuildConfig.theConfig.usingManifests)
                 {
                     this.renderOutput = new ManifestOutputMethod(baseMethod);
@@ -540,6 +615,7 @@ namespace MSR.CVE.BackMaker
                 throw new RenderAborted();
             }
         }
+
         private void CommitManifest()
         {
             if (this.renderOutput is ManifestOutputMethod)
@@ -547,6 +623,7 @@ namespace MSR.CVE.BackMaker
                 ((ManifestOutputMethod)this.renderOutput).CommitChanges();
             }
         }
+
         private void DebugEmitRenderPlan(Queue<RenderWorkUnit> renderQueue)
         {
             FileStream fileStream = new FileStream("RenderPlan.txt", FileMode.Create, FileAccess.Write);
@@ -555,24 +632,32 @@ namespace MSR.CVE.BackMaker
             {
                 streamWriter.WriteLine(current.ToString());
             }
+
             streamWriter.Close();
             fileStream.Close();
         }
+
         private List<RenderWorkUnit> EstimateOneLayer(Layer layer, List<TileRectangle> boundsList)
         {
             if (layer.Count == 0)
             {
                 return new List<RenderWorkUnit>();
             }
+
             this.EstimateLayer_SetupUI(layer);
             int spillCountBefore = this.EstimateLayer_PrepareToSelectRenderingStrategy();
             List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront = this.EstimateLayer_MakeSourceMapList(layer);
-            ProposedTileSet proposedTileSet = this.EstimateLayer_MakeProposedTileSet(layer, boundsList, sourceMapRenderInfosBackToFront);
+            ProposedTileSet proposedTileSet =
+                this.EstimateLayer_MakeProposedTileSet(layer, boundsList, sourceMapRenderInfosBackToFront);
             bool useStagedRendering = this.EstimateLayer_SelectRenderingStrategy(layer, spillCountBefore);
             List<CompositeTileUnit> list = new List<CompositeTileUnit>(proposedTileSet.Values);
             list.Sort();
-            return this.EstimateLayer_CreateRenderList(layer, sourceMapRenderInfosBackToFront, useStagedRendering, list);
+            return this.EstimateLayer_CreateRenderList(layer,
+                sourceMapRenderInfosBackToFront,
+                useStagedRendering,
+                list);
         }
+
         private void EstimateLayer_SetupUI(Layer layer)
         {
             this.estimateProgressSourceMapCount = 0;
@@ -581,13 +666,16 @@ namespace MSR.CVE.BackMaker
             {
                 this.estimateProgressSourceMapsThisLayer = 1;
             }
+
             this.renderUI.uiChanged();
         }
+
         private int EstimateLayer_PrepareToSelectRenderingStrategy()
         {
             this.mapTileSourceFactory.PurgeOpenSourceDocumentCache();
             return this.mapTileSourceFactory.GetOpenSourceDocumentCacheSpillCount();
         }
+
         private List<SourceMapRenderInfo> EstimateLayer_MakeSourceMapList(Layer layer)
         {
             List<SourceMapRenderInfo> list = new List<SourceMapRenderInfo>();
@@ -599,27 +687,35 @@ namespace MSR.CVE.BackMaker
                 sourceMapRenderInfo.sourceMap = current;
                 if (!current.ReadyToLock())
                 {
-                    this.PostMessage(string.Format("Skipping SourceMap {0} because it's not ready to lock.", current.GetDisplayName()));
+                    this.PostMessage(string.Format("Skipping SourceMap {0} because it's not ready to lock.",
+                        current.GetDisplayName()));
                 }
                 else
                 {
                     try
                     {
-                        sourceMapRenderInfo.warpedMapTileSource = this.mapTileSourceFactory.CreateRenderableWarpedSource(current);
+                        sourceMapRenderInfo.warpedMapTileSource =
+                            this.mapTileSourceFactory.CreateRenderableWarpedSource(current);
                     }
                     catch (Exception ex)
                     {
-                        this.PostMessage(string.Format("Skipping SourceMap {0} because locking is failing: {1}.", current.GetDisplayName(), ex.ToString()));
+                        this.PostMessage(string.Format("Skipping SourceMap {0} because locking is failing: {1}.",
+                            current.GetDisplayName(),
+                            ex.ToString()));
                         continue;
                     }
+
                     list.Add(sourceMapRenderInfo);
                     this.estimateProgressSourceMapCount++;
                     this.renderUI.uiChanged();
                 }
             }
+
             return list;
         }
-        private ProposedTileSet EstimateLayer_MakeProposedTileSet(Layer layer, List<TileRectangle> boundsList, List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront)
+
+        private ProposedTileSet EstimateLayer_MakeProposedTileSet(Layer layer, List<TileRectangle> boundsList,
+            List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront)
         {
             int num = 0;
             MapRectangle rect = layer.renderClip.rect;
@@ -627,17 +723,23 @@ namespace MSR.CVE.BackMaker
             foreach (SourceMapRenderInfo current in sourceMapRenderInfosBackToFront)
             {
                 this.AddCredit(current.warpedMapTileSource.GetRendererCredit());
-                current.warpedMapTileSource.GetOpenDocumentFuture(FutureFeatures.Cached).Realize("EstimateLayer_MakeProposedTileSet");
-                BoundsPresent boundsPresent = (BoundsPresent)current.warpedMapTileSource.GetUserBounds(null, FutureFeatures.Cached).Realize("RenderState.EstimateOneLayer");
+                current.warpedMapTileSource.GetOpenDocumentFuture(FutureFeatures.Cached)
+                    .Realize("EstimateLayer_MakeProposedTileSet");
+                BoundsPresent boundsPresent = (BoundsPresent)current.warpedMapTileSource
+                    .GetUserBounds(null, FutureFeatures.Cached).Realize("RenderState.EstimateOneLayer");
                 current.renderBoundsBoundingBox = boundsPresent.GetRenderRegion().GetBoundingBox();
                 if (rect != null)
                 {
                     current.renderBoundsBoundingBox = current.renderBoundsBoundingBox.ClipTo(rect);
                 }
-                current.renderBoundsBoundingBox = current.renderBoundsBoundingBox.ClipTo(CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
-                RenderBounds renderBounds = this.mercatorCoordinateSystem.MakeRenderBounds(current.renderBoundsBoundingBox);
+
+                current.renderBoundsBoundingBox = current.renderBoundsBoundingBox.ClipTo(
+                    CoordinateSystemUtilities.GetRangeAsMapRectangle(MercatorCoordinateSystem.theInstance));
+                RenderBounds renderBounds =
+                    this.mercatorCoordinateSystem.MakeRenderBounds(current.renderBoundsBoundingBox);
                 string fileSuffix = "." + this.mashupScratchCopy.GetRenderOptions().outputTileType.extn;
-                RenderedTileNamingScheme renderedTileNamingScheme = new VENamingScheme(layer.GetFilesystemName(), fileSuffix);
+                RenderedTileNamingScheme renderedTileNamingScheme =
+                    new VENamingScheme(layer.GetFilesystemName(), fileSuffix);
                 boundsPresent.Dispose();
                 this.PostStatus(string.Format("(counting {0})", current.sourceMap.displayName));
                 int num2 = Math.Max(current.sourceMap.sourceMapRenderOptions.minZoom, renderBounds.MinZoom);
@@ -649,33 +751,53 @@ namespace MSR.CVE.BackMaker
                 for (int i = num2; i <= num3; i++)
                 {
                     TileRectangle tileRectangle = renderBounds.tileRectangle[i];
-                    for (int j = tileRectangle.TopLeft.TileY; j <= tileRectangle.BottomRight.TileY; j += tileRectangle.StrideY)
+                    for (int j = tileRectangle.TopLeft.TileY;
+                        j <= tileRectangle.BottomRight.TileY;
+                        j += tileRectangle.StrideY)
                     {
-                        for (int k = tileRectangle.TopLeft.TileX; k <= tileRectangle.BottomRight.TileX; k += tileRectangle.StrideX)
+                        for (int k = tileRectangle.TopLeft.TileX;
+                            k <= tileRectangle.BottomRight.TileX;
+                            k += tileRectangle.StrideX)
                         {
                             TileAddress tileAddress = new TileAddress(k, j, i);
-                            proposedTileSet.MakeLayeredTileWork(tileAddress, layer, this.renderOutput.MakeChildMethod(renderedTileNamingScheme.GetFilePrefix()), renderedTileNamingScheme.GetTileFilename(tileAddress), this.mashupScratchCopy.GetRenderOptions().outputTileType);
+                            proposedTileSet.MakeLayeredTileWork(tileAddress,
+                                layer,
+                                this.renderOutput.MakeChildMethod(renderedTileNamingScheme.GetFilePrefix()),
+                                renderedTileNamingScheme.GetTileFilename(tileAddress),
+                                this.mashupScratchCopy.GetRenderOptions().outputTileType);
                             this.CheckSignal();
                             if (!this.complainedAboutInsaneTileCount && proposedTileSet.Count > 1000000)
                             {
-                                DialogResult dialogResult = MessageBox.Show(string.Format("Estimate exceeds {0} tiles; consider canceling the estimation and selecting lower max zoom levels.", 1000000), "That's a lot of tiles.", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+                                DialogResult dialogResult = MessageBox.Show(
+                                    string.Format(
+                                        "Estimate exceeds {0} tiles; consider canceling the estimation and selecting lower max zoom levels.",
+                                        1000000),
+                                    "That's a lot of tiles.",
+                                    MessageBoxButtons.OKCancel,
+                                    MessageBoxIcon.Exclamation);
                                 if (dialogResult == DialogResult.Cancel)
                                 {
                                     throw new RenderAborted();
                                 }
                             }
+
                             num++;
                             if (num % 10000 == 0)
                             {
-                                this.PostStatus(string.Format("(counting {0} ... {1} tiles)", current.sourceMap.displayName, proposedTileSet.Count));
+                                this.PostStatus(string.Format("(counting {0} ... {1} tiles)",
+                                    current.sourceMap.displayName,
+                                    proposedTileSet.Count));
                             }
                         }
                     }
                 }
+
                 this.estimateProgressSourceMapCount++;
             }
+
             return proposedTileSet;
         }
+
         private void AddCredit(string rendererCredit)
         {
             if (rendererCredit != null && !this.credits.ContainsKey(rendererCredit))
@@ -684,29 +806,40 @@ namespace MSR.CVE.BackMaker
                 this.PostMessage(rendererCredit);
             }
         }
+
         private bool EstimateLayer_SelectRenderingStrategy(Layer layer, int spillCountBefore)
         {
             bool result = false;
             int openSourceDocumentCacheSpillCount = this.mapTileSourceFactory.GetOpenSourceDocumentCacheSpillCount();
             if (openSourceDocumentCacheSpillCount == spillCountBefore)
             {
-                this.mapTileSourceFactory.CreateUnwarpedSource(layer.First).GetOpenDocumentFuture(FutureFeatures.Cached).Realize("RenderState.EstimateOneLayer spill test");
+                this.mapTileSourceFactory.CreateUnwarpedSource(layer.First).GetOpenDocumentFuture(FutureFeatures.Cached)
+                    .Realize("RenderState.EstimateOneLayer spill test");
                 openSourceDocumentCacheSpillCount = this.mapTileSourceFactory.GetOpenSourceDocumentCacheSpillCount();
             }
+
             if (openSourceDocumentCacheSpillCount != spillCountBefore)
             {
-                this.PostMessage(string.Format("Layer {0} spills memory; using staged rendering plan.", layer.GetDisplayName()));
+                this.PostMessage(string.Format("Layer {0} spills memory; using staged rendering plan.",
+                    layer.GetDisplayName()));
                 result = true;
             }
+
             return result;
         }
-        private List<RenderWorkUnit> EstimateLayer_CreateRenderList(Layer layer, List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront, bool useStagedRendering, List<CompositeTileUnit> compositeTileUnits)
+
+        private List<RenderWorkUnit> EstimateLayer_CreateRenderList(Layer layer,
+            List<SourceMapRenderInfo> sourceMapRenderInfosBackToFront, bool useStagedRendering,
+            List<CompositeTileUnit> compositeTileUnits)
         {
             VETileSource vETileSource = null;
-            if (layer.simulateTransparencyWithVEBackingLayer != null && layer.simulateTransparencyWithVEBackingLayer != "")
+            if (layer.simulateTransparencyWithVEBackingLayer != null &&
+                layer.simulateTransparencyWithVEBackingLayer != "")
             {
-                vETileSource = new VETileSource(this.mapTileSourceFactory.GetCachePackage(), layer.simulateTransparencyWithVEBackingLayer);
+                vETileSource = new VETileSource(this.mapTileSourceFactory.GetCachePackage(),
+                    layer.simulateTransparencyWithVEBackingLayer);
             }
+
             this.PostStatus(string.Format("Organizing {0}", layer.displayName));
             LayerApplierMaker layerApplierMaker = new LayerApplierMaker(this.mapTileSourceFactory.GetCachePackage());
             List<RenderWorkUnit> list = new List<RenderWorkUnit>();
@@ -718,7 +851,10 @@ namespace MSR.CVE.BackMaker
                 {
                     current.AddSupplier(layerApplierMaker.MakeApplier(vETileSource, layer));
                 }
-                MapRectangle mapRectangle = CoordinateSystemUtilities.TileAddressToMapRectangle(this.mercatorCoordinateSystem, current.GetTileAddress());
+
+                MapRectangle mapRectangle =
+                    CoordinateSystemUtilities.TileAddressToMapRectangle(this.mercatorCoordinateSystem,
+                        current.GetTileAddress());
                 foreach (SourceMapRenderInfo current2 in sourceMapRenderInfosBackToFront)
                 {
                     if (mapRectangle.intersects(current2.renderBoundsBoundingBox))
@@ -726,6 +862,7 @@ namespace MSR.CVE.BackMaker
                         current.AddSupplier(layerApplierMaker.MakeApplier(current2.warpedMapTileSource, layer));
                     }
                 }
+
                 list.Add(current);
                 if (useStagedRendering)
                 {
@@ -734,11 +871,14 @@ namespace MSR.CVE.BackMaker
                         list.Add(current3);
                     }
                 }
+
                 num++;
                 this.CheckSignal();
             }
+
             return list;
         }
+
         private void ArrangeLayerDirectories(RenderOutputMethod baseOutputMethod)
         {
             try
@@ -767,13 +907,15 @@ namespace MSR.CVE.BackMaker
                     {
                     }
                 }
+
                 if (!(this.mashupScratchCopy.GetRenderOptions().renderToOptions is RenderToFileOptions))
                 {
                     D.Sayf(0, "TODO: Generalize to S3 by recording layer manifest", new object[0]);
                 }
                 else
                 {
-                    string outputFolder = ((RenderToFileOptions)this.mashupScratchCopy.GetRenderOptions().renderToOptions).outputFolder;
+                    string outputFolder =
+                        ((RenderToFileOptions)this.mashupScratchCopy.GetRenderOptions().renderToOptions).outputFolder;
                     string[] directories = Directory.GetDirectories(outputFolder, "Layer_*");
                     for (int i = 0; i < directories.Length; i++)
                     {
@@ -785,6 +927,7 @@ namespace MSR.CVE.BackMaker
                         }
                     }
                 }
+
                 foreach (string current2 in dictionary2.Keys)
                 {
                     this.CheckSignal();
@@ -797,9 +940,13 @@ namespace MSR.CVE.BackMaker
                     }
                     catch (Exception arg)
                     {
-                        this.PostMessage(string.Format("Failed to remove stale directory {0}; ignoring. Exception was {1}", current2, arg));
+                        this.PostMessage(string.Format(
+                            "Failed to remove stale directory {0}; ignoring. Exception was {1}",
+                            current2,
+                            arg));
                     }
                 }
+
                 foreach (Layer current3 in this.mashupScratchCopy.layerList)
                 {
                     string filesystemName2 = current3.GetFilesystemName();
@@ -811,10 +958,13 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception ex)
             {
-                this.PostMessage(string.Format("Cannot prepare output directory: {0}. Please correct the problem or select a different render output directory.", ex.Message));
+                this.PostMessage(string.Format(
+                    "Cannot prepare output directory: {0}. Please correct the problem or select a different render output directory.",
+                    ex.Message));
                 throw new RenderAborted();
             }
         }
+
         private void PurgeDirectory(RenderOutputMethod baseOutputMethod, string dirName)
         {
             RenderOutputMethod method = baseOutputMethod.MakeChildMethod(dirName);
@@ -826,12 +976,16 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception exception)
             {
-                this.PostMessage(string.Format("Cannot delete {0} directory: {1}. Please correct the problem or select a different render output directory.", dirName, exception.Message));
+                this.PostMessage(string.Format(
+                    "Cannot delete {0} directory: {1}. Please correct the problem or select a different render output directory.",
+                    dirName,
+                    exception.Message));
                 this.pauseRenderingFlag = true;
                 this.CheckSignal();
                 goto Label_0019;
             }
         }
+
         private void RenderLegends()
         {
             RenderOutputMethod renderOutputMethod = this.renderOutput.MakeChildMethod("legends");
@@ -857,9 +1011,13 @@ namespace MSR.CVE.BackMaker
                             this.PostMessage(string.Format("Skipping {0}: {1}", text, arg));
                             continue;
                         }
+
                         try
                         {
-                            RenderOutputUtil.SaveImage(imageRef, renderOutputMethod, text, ImageTypeMapper.ByExtension(Path.GetExtension(text)).imageFormat);
+                            RenderOutputUtil.SaveImage(imageRef,
+                                renderOutputMethod,
+                                text,
+                                ImageTypeMapper.ByExtension(Path.GetExtension(text)).imageFormat);
                         }
                         catch (Exception arg2)
                         {
@@ -869,64 +1027,83 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         private void RenderThumbnails(CrunchedFile crunchedFile)
         {
             RenderOutputMethod thumbnailOutput = this.renderOutput.MakeChildMethod("thumbnails");
-            foreach (int current in new List<int>
-            {
-                200,
-                500
-            })
+            foreach (int current in new List<int> {200, 500})
             {
                 foreach (Layer current2 in this.mashupScratchCopy.layerList)
                 {
                     CrunchedLayer crunchedLayer = crunchedFile[current2];
                     if (current2.SomeSourceMapIsReadyToLock())
                     {
-                        this.RenderThumbnail(thumbnailOutput, crunchedLayer, ForceValidFilename(string.Format("{0}_{1}.png", current2.displayName, current)), new CompositeTileSource(current2, this.mapTileSourceFactory), current);
+                        this.RenderThumbnail(thumbnailOutput,
+                            crunchedLayer,
+                            ForceValidFilename(string.Format("{0}_{1}.png", current2.displayName, current)),
+                            new CompositeTileSource(current2, this.mapTileSourceFactory),
+                            current);
                     }
+
                     foreach (SourceMap current3 in current2)
                     {
                         if (current3.ReadyToLock())
                         {
                             SourceMapRecord thumbnailCollection = crunchedLayer[current3];
-                            this.RenderThumbnail(thumbnailOutput, thumbnailCollection, ForceValidFilename(string.Format("{0}_{1}_{2}.png", current2.displayName, current3.displayName, current)), this.mapTileSourceFactory.CreateDisplayableWarpedSource(current3), current);
+                            this.RenderThumbnail(thumbnailOutput,
+                                thumbnailCollection,
+                                ForceValidFilename(string.Format("{0}_{1}_{2}.png",
+                                    current2.displayName,
+                                    current3.displayName,
+                                    current)),
+                                this.mapTileSourceFactory.CreateDisplayableWarpedSource(current3),
+                                current);
                         }
                     }
                 }
             }
         }
-        private void RenderThumbnail(RenderOutputMethod thumbnailOutput, ThumbnailCollection thumbnailCollection, string thumbnailFilename, IDisplayableSource displayableSource, int maxImageDimension)
+
+        private void RenderThumbnail(RenderOutputMethod thumbnailOutput, ThumbnailCollection thumbnailCollection,
+            string thumbnailFilename, IDisplayableSource displayableSource, int maxImageDimension)
         {
             this.PostStatus("Rendering thumbnail " + thumbnailFilename);
             LatentRegionHolder latentRegionHolder = new LatentRegionHolder(new DirtyEvent(), new DirtyEvent());
-            Present present = displayableSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached).Realize("RenderState.RenderThumbnails");
+            Present present = displayableSource.GetUserBounds(latentRegionHolder, FutureFeatures.Cached)
+                .Realize("RenderState.RenderThumbnails");
             if (!(present is BoundsPresent))
             {
                 this.PostMessage(string.Format("Failure writing thumbnail {0}; skipping.", thumbnailFilename, present));
                 return;
             }
+
             MapRectangle boundingBox = ((BoundsPresent)present).GetRenderRegion().GetBoundingBox();
             new MercatorCoordinateSystem();
             LatLon nW = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetSW());
             LatLon sE = MercatorCoordinateSystem.LatLonToMercator(boundingBox.GetNE());
             MapRectangle mapRectangle = new MapRectangle(nW, sE);
             Size size = mapRectangle.SizeWithAspectRatio(maxImageDimension);
-            IFuturePrototype imagePrototype = displayableSource.GetImagePrototype(new ImageParameterFromRawBounds(size), FutureFeatures.Cached);
+            IFuturePrototype imagePrototype =
+                displayableSource.GetImagePrototype(new ImageParameterFromRawBounds(size), FutureFeatures.Cached);
             IFuture future = imagePrototype.Curry(new ParamDict(new object[]
             {
-                TermName.ImageBounds,
-                new MapRectangleParameter(boundingBox)
+                TermName.ImageBounds, new MapRectangleParameter(boundingBox)
             }));
             Present present2 = future.Realize("RenderState.RenderThumbnails");
             if (!(present2 is ImageRef))
             {
-                this.PostMessage(string.Format("Failure writing thumbnail {0}; skipping: {1}", thumbnailFilename, present2));
+                this.PostMessage(string.Format("Failure writing thumbnail {0}; skipping: {1}",
+                    thumbnailFilename,
+                    present2));
                 return;
             }
+
             try
             {
-                RenderOutputUtil.SaveImage((ImageRef)present2, thumbnailOutput, thumbnailFilename, ImageTypeMapper.ByExtension(Path.GetExtension(thumbnailFilename)).imageFormat);
+                RenderOutputUtil.SaveImage((ImageRef)present2,
+                    thumbnailOutput,
+                    thumbnailFilename,
+                    ImageTypeMapper.ByExtension(Path.GetExtension(thumbnailFilename)).imageFormat);
                 thumbnailCollection.Add(new ThumbnailRecord("thumbnails/" + thumbnailFilename, size));
             }
             catch (Exception arg)
@@ -934,23 +1111,35 @@ namespace MSR.CVE.BackMaker
                 this.PostMessage(string.Format("Failed to save {0}: {1}", thumbnailFilename, arg));
             }
         }
+
         private CrunchedFile CreateCrunchedFileDescriptor()
         {
             CrunchedFile crunchedFile = null;
             CrunchedFile result;
             try
             {
-                string sourceMashupFilename = this.mashupScratchCopy.GetRenderOptions().publishSourceData ? string.Format("{0}/{1}", SourceDataDirName, this.mashupScratchCopy.GetPublishedFilename()) : null;
-                crunchedFile = new CrunchedFile(this.mashupScratchCopy, this.rangeQueryData, this.renderOutput, sourceMashupFilename, this.boundsList, this.mapTileSourceFactory);
+                string sourceMashupFilename = this.mashupScratchCopy.GetRenderOptions().publishSourceData
+                    ? string.Format("{0}/{1}", SourceDataDirName, this.mashupScratchCopy.GetPublishedFilename())
+                    : null;
+                crunchedFile = new CrunchedFile(this.mashupScratchCopy,
+                    this.rangeQueryData,
+                    this.renderOutput,
+                    sourceMashupFilename,
+                    this.boundsList,
+                    this.mapTileSourceFactory);
                 result = crunchedFile;
             }
             catch (Exception arg)
             {
-                this.PostMessage(string.Format("Couldn't generate XML output file {0}: {1}", this.CrunchedFileLocation(crunchedFile), arg));
+                this.PostMessage(string.Format("Couldn't generate XML output file {0}: {1}",
+                    this.CrunchedFileLocation(crunchedFile),
+                    arg));
                 result = null;
             }
+
             return result;
         }
+
         private void WriteCrunchedFileDescriptor(CrunchedFile crunchedFile)
         {
             try
@@ -962,9 +1151,12 @@ namespace MSR.CVE.BackMaker
             }
             catch (Exception arg)
             {
-                this.PostMessage(string.Format("Couldn't write XML output file {0}: {1}", this.CrunchedFileLocation(crunchedFile), arg));
+                this.PostMessage(string.Format("Couldn't write XML output file {0}: {1}",
+                    this.CrunchedFileLocation(crunchedFile),
+                    arg));
             }
         }
+
         private string CrunchedFileLocation(CrunchedFile crunchedFile)
         {
             string result;
@@ -976,34 +1168,44 @@ namespace MSR.CVE.BackMaker
             {
                 result = "in " + this.mashupScratchCopy.GetRenderOptions().renderToOptions.ToString();
             }
+
             return result;
         }
+
         private void CopySourceData()
         {
             if (this.mashupScratchCopy.GetRenderOptions().publishSourceData)
             {
                 this.PostStatus("Copying Source Data");
                 RenderOutputMethod renderOutputMethod = this.renderOutput.MakeChildMethod(SourceDataDirName);
-                Stream stream = renderOutputMethod.CreateFile(this.mashupScratchCopy.GetPublishedFilename(), "text/xml");
+                Stream stream =
+                    renderOutputMethod.CreateFile(this.mashupScratchCopy.GetPublishedFilename(), "text/xml");
                 this.mashupScratchCopy.WriteXML(stream);
                 stream.Close();
                 foreach (Layer current in this.mashupScratchCopy.layerList)
                 {
                     foreach (SourceMap current2 in current)
                     {
-                        SourceDocument sourceDocument = current2.documentFuture.RealizeSynchronously(this.mapTileSourceFactory.GetCachePackage());
+                        SourceDocument sourceDocument =
+                            current2.documentFuture.RealizeSynchronously(this.mapTileSourceFactory.GetCachePackage());
                         string filesystemAbsolutePath = sourceDocument.localDocument.GetFilesystemAbsolutePath();
                         this.PostStatus(string.Format("Copying {0}", current2.GetDisplayName()));
-                        RenderOutputUtil.CopyFile(filesystemAbsolutePath, renderOutputMethod, Path.GetFileName(filesystemAbsolutePath), ImageTypeMapper.ByExtension(Path.GetExtension(filesystemAbsolutePath)).mimeType);
+                        RenderOutputUtil.CopyFile(filesystemAbsolutePath,
+                            renderOutputMethod,
+                            Path.GetFileName(filesystemAbsolutePath),
+                            ImageTypeMapper.ByExtension(Path.GetExtension(filesystemAbsolutePath)).mimeType);
                     }
                 }
             }
         }
+
         private void CopyFile(string sourceFile, string targetDirectory, string mimeType)
         {
             this.CopyFileWithRename(sourceFile, targetDirectory, Path.GetFileName(sourceFile), mimeType);
         }
-        private void CopyFileWithRename(string sourceFile, string targetDirectory, string targetFilename, string mimeType)
+
+        private void CopyFileWithRename(string sourceFile, string targetDirectory, string targetFilename,
+            string mimeType)
         {
             try
             {
@@ -1015,6 +1217,7 @@ namespace MSR.CVE.BackMaker
                 this.PostMessage(string.Format("Failed to copy {0}: {1}", sourceFile, ex.ToString()));
             }
         }
+
         internal void UI_UpdateProgress(ProgressBar renderProgressBar)
         {
             if (this.mashupScratchCopy != null)
@@ -1028,34 +1231,40 @@ namespace MSR.CVE.BackMaker
                 {
                     num5 = 0;
                 }
+
                 if (num5 > this.initialQueueSize)
                 {
                     num5 = this.initialQueueSize;
                 }
+
                 double num6 = (double)num3 * 1.0 / (double)num2 * 0.1;
                 double num7 = 0.0;
                 if (num4 > 0)
                 {
                     num7 = (double)num5 * 1.0 / (double)num4 * 0.9;
                 }
+
                 double num8 = num6 + num7;
                 num8 = Math.Max(Math.Min(num8, 1.0), 0.0);
                 renderProgressBar.Minimum = 0;
                 renderProgressBar.Maximum = 1000;
                 renderProgressBar.Value = (int)(1000.0 * num8);
-                renderProgressBar.Enabled = (this.state == States.Rendering);
+                renderProgressBar.Enabled = this.state == States.Rendering;
                 return;
             }
+
             renderProgressBar.Minimum = 0;
             renderProgressBar.Maximum = 0;
             renderProgressBar.Value = 0;
             renderProgressBar.Enabled = false;
         }
+
         internal void UI_UpdateLinks(LinkLabel previewRenderedResultsLinkLabel, LinkLabel viewInBrowserLinkLabel)
         {
-            previewRenderedResultsLinkLabel.Visible = (this.renderedXMLDescriptor != null);
-            viewInBrowserLinkLabel.Visible = (this.sampleHTMLUri != null);
+            previewRenderedResultsLinkLabel.Visible = this.renderedXMLDescriptor != null;
+            viewInBrowserLinkLabel.Visible = this.sampleHTMLUri != null;
         }
+
         internal ImageRef UI_GetLastRenderedImageRef()
         {
             Monitor.Enter(this);
@@ -1076,20 +1285,25 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
+
             return result;
         }
+
         internal string[] UI_GetTileDisplayLabel()
         {
             return this.lastRenderedImageLabel;
         }
+
         public Uri GetRenderedXMLDescriptor()
         {
             return this.renderedXMLDescriptor;
         }
+
         public Uri GetSampleHTMLUri()
         {
             return this.sampleHTMLUri;
         }
+
         public static string ForceValidFilename(string inStr)
         {
             string text = "";
@@ -1102,6 +1316,7 @@ namespace MSR.CVE.BackMaker
                     text += c;
                 }
             }
+
             return text;
         }
     }

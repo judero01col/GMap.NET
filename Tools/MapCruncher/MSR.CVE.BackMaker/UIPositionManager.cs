@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class UIPositionManager : PositionUpdateIfc
@@ -10,6 +9,7 @@ namespace MSR.CVE.BackMaker
         private MapPosition _smPos;
         private MapPosition _vePos;
         private MapPosition slavedPos;
+
         public UIPositionManager(ViewerControl smViewer, ViewerControl veViewer)
         {
             this._smPos = new MapPosition(this);
@@ -20,31 +20,38 @@ namespace MSR.CVE.BackMaker
             this.veUpdate = veViewer;
             this.slaved = false;
         }
+
         public void SetPositionMemory(PositionMemoryIfc positionMemory)
         {
             this.positionMemory = positionMemory;
         }
+
         public MapPosition GetSMPos()
         {
             if (this.slaved)
             {
                 return this.slavedPos;
             }
+
             return this._smPos;
         }
+
         public MapPosition GetVEPos()
         {
             if (this.slaved)
             {
                 return this.slavedPos;
             }
+
             return this._vePos;
         }
+
         private void UpdatePositions()
         {
             this.smUpdate.PositionUpdated(this.GetSMPos().llz);
             this.veUpdate.PositionUpdated(this.GetVEPos().llz);
         }
+
         public void switchSlaved()
         {
             this.slaved = true;
@@ -56,10 +63,12 @@ namespace MSR.CVE.BackMaker
             {
                 this.slavedPos = new MapPosition(this);
             }
+
             this._smPos = null;
             this._vePos = null;
             this.UpdatePositions();
         }
+
         public void switchFree()
         {
             this.slaved = false;
@@ -72,20 +81,24 @@ namespace MSR.CVE.BackMaker
             {
                 prototype = new MapPosition(null);
             }
+
             this._vePos = new MapPosition(prototype, this);
             this._smPos = new MapPosition(prototype, this);
             this.slavedPos = null;
             this.UpdatePositions();
         }
+
         public void PositionUpdated(LatLonZoom llz)
         {
             this.PositionUpdated();
         }
+
         public void ForceInteractiveUpdate()
         {
             this.smUpdate.ForceInteractiveUpdate();
             this.veUpdate.ForceInteractiveUpdate();
         }
+
         internal void PositionUpdated()
         {
             this.UpdatePositions();
@@ -96,6 +109,7 @@ namespace MSR.CVE.BackMaker
                     this.positionMemory.NotePositionLocked(this.GetVEPos());
                     return;
                 }
+
                 this.positionMemory.NotePositionUnlocked(this.GetSMPos().llz, this.GetVEPos());
             }
         }

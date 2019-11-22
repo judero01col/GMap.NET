@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     internal class BuildConfig
@@ -29,6 +30,7 @@ namespace MSR.CVE.BackMaker
         private CfgString _hostHome = new CfgString("hostHome", null);
         private CfgString _mapCruncherHomeSite = new CfgString("mapCruncherHomeSite", null);
         private Dictionary<string, ParseableCfg> _configurationDict;
+
         public string editionName
         {
             get
@@ -40,6 +42,7 @@ namespace MSR.CVE.BackMaker
                 this._editionName.value = value;
             }
         }
+
         public bool debugModeEnabled
         {
             get
@@ -51,6 +54,7 @@ namespace MSR.CVE.BackMaker
                 this._debugModeEnabled.value = value;
             }
         }
+
         public bool forceAffineControlVisible
         {
             get
@@ -62,6 +66,7 @@ namespace MSR.CVE.BackMaker
                 this._forceAffineControlVisible.value = value;
             }
         }
+
         public bool enableS3
         {
             get
@@ -73,6 +78,7 @@ namespace MSR.CVE.BackMaker
                 this._enableS3.value = value;
             }
         }
+
         public int autoMaxZoomOffset
         {
             get
@@ -84,6 +90,7 @@ namespace MSR.CVE.BackMaker
                 this._autoMaxZoomOffset.value = value;
             }
         }
+
         public bool usingManifests
         {
             get
@@ -95,6 +102,7 @@ namespace MSR.CVE.BackMaker
                 this._usingManifests.value = value;
             }
         }
+
         public bool debugRefs
         {
             get
@@ -106,6 +114,7 @@ namespace MSR.CVE.BackMaker
                 this._debugRefs.value = value;
             }
         }
+
         public bool logInteractiveRenders
         {
             get
@@ -117,6 +126,7 @@ namespace MSR.CVE.BackMaker
                 this._logInteractiveRenders.value = value;
             }
         }
+
         public string allFilesOption
         {
             get
@@ -128,6 +138,7 @@ namespace MSR.CVE.BackMaker
                 this._allFilesOption.value = value;
             }
         }
+
         public bool suppressFoxitMessages
         {
             get
@@ -139,6 +150,7 @@ namespace MSR.CVE.BackMaker
                 this._suppressFoxitMessages.value = value;
             }
         }
+
         public bool enableSnapFeatures
         {
             get
@@ -150,6 +162,7 @@ namespace MSR.CVE.BackMaker
                 this._enableSnapFeatures.value = value;
             }
         }
+
         public string veFormatUpdateURL
         {
             get
@@ -161,6 +174,7 @@ namespace MSR.CVE.BackMaker
                 this._veFormatUpdateURL.value = value;
             }
         }
+
         public bool injectTemporaryTileFailures
         {
             get
@@ -172,6 +186,7 @@ namespace MSR.CVE.BackMaker
                 this._injectTemporaryTileFailures.value = value;
             }
         }
+
         public int debugLevel
         {
             get
@@ -183,6 +198,7 @@ namespace MSR.CVE.BackMaker
                 this._debugLevel.value = value;
             }
         }
+
         public string mapControl
         {
             get
@@ -194,6 +210,7 @@ namespace MSR.CVE.BackMaker
                 this._mapControl.value = value;
             }
         }
+
         public string hostHome
         {
             get
@@ -205,6 +222,7 @@ namespace MSR.CVE.BackMaker
                 this._hostHome.value = value;
             }
         }
+
         public string mapCruncherHomeSite
         {
             get
@@ -216,6 +234,7 @@ namespace MSR.CVE.BackMaker
                 this._mapCruncherHomeSite.value = value;
             }
         }
+
         private Dictionary<string, ParseableCfg> configurationDict
         {
             get
@@ -240,9 +259,11 @@ namespace MSR.CVE.BackMaker
                     this.AddCfg(this._hostHome);
                     this.AddCfg(this._mapCruncherHomeSite);
                 }
+
                 return this._configurationDict;
             }
         }
+
         public static Stream OpenConfigFile(string name)
         {
             string codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase;
@@ -251,6 +272,7 @@ namespace MSR.CVE.BackMaker
             string path2 = Path.Combine(directoryName, name);
             return new FileStream(path2, FileMode.Open, FileAccess.Read);
         }
+
         public static void Initialize()
         {
             try
@@ -264,6 +286,7 @@ namespace MSR.CVE.BackMaker
                 catch (Exception)
                 {
                 }
+
                 XmlDocument xmlDocument = new XmlDocument();
                 xmlDocument.Load(inStream);
                 XmlNode xmlNode = xmlDocument.GetElementsByTagName("Build")[0];
@@ -277,6 +300,7 @@ namespace MSR.CVE.BackMaker
                 {
                     buildConfig = VEConfig();
                 }
+
                 foreach (XmlNode xmlNode2 in xmlDocument.GetElementsByTagName("Parameter"))
                 {
                     string value2 = xmlNode2.Attributes["Name"].Value;
@@ -290,24 +314,22 @@ namespace MSR.CVE.BackMaker
                         }
                         catch (Exception ex)
                         {
-                            D.Sayf(0, "Unable to parse field {0} value {1}: {2}", new object[]
-                            {
-                                value2,
-                                value3,
-                                ex.Message
-                            });
+                            D.Sayf(0,
+                                "Unable to parse field {0} value {1}: {2}",
+                                new object[] {value2, value3, ex.Message});
                             continue;
                         }
                     }
-                    D.Sayf(0, "Unrecognized field name {0}", new object[]
-                    {
-                        value2
-                    });
+
+                    D.Sayf(0, "Unrecognized field name {0}", new object[] {value2});
                 }
+
                 if (xmlNode.Attributes["AutoMaxZoomOffset"] != null)
                 {
-                    buildConfig.autoMaxZoomOffset = Convert.ToInt32(xmlNode.Attributes["AutoMaxZoomOffset"].Value, CultureInfo.InvariantCulture);
+                    buildConfig.autoMaxZoomOffset = Convert.ToInt32(xmlNode.Attributes["AutoMaxZoomOffset"].Value,
+                        CultureInfo.InvariantCulture);
                 }
+
                 theConfig = buildConfig;
             }
             catch (Exception)
@@ -322,6 +344,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         private static BuildConfig VEConfig()
         {
             return new BuildConfig
@@ -338,6 +361,7 @@ namespace MSR.CVE.BackMaker
                 mapCruncherHomeSite = "http://www.mapcruncher.com/"
             };
         }
+
         private static BuildConfig MSRConfig(string name)
         {
             BuildConfig buildConfig = new BuildConfig();
@@ -357,12 +381,15 @@ namespace MSR.CVE.BackMaker
             buildConfig.mapCruncherHomeSite = "http://research.microsoft.com/mapcruncher/";
             return buildConfig;
         }
+
         private void Reconfigure()
         {
         }
+
         private BuildConfig()
         {
         }
+
         private void AddCfg(ParseableCfg cfg)
         {
             this._configurationDict[cfg.name] = cfg;

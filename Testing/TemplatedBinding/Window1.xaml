@@ -1,8 +1,8 @@
 ﻿<Window x:Class="TemplatedBinding.Window1"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:map="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
-    Title="TemplatedBinding demo" Height="814" Width="914" WindowStartupLocation="CenterScreen">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:map="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+        Title="TemplatedBinding demo" Height="814" Width="914" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" />
@@ -12,7 +12,7 @@
         <ItemsControl Grid.Row="0" Name="locations" Background="SeaShell">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True"></WrapPanel>
+                    <WrapPanel IsItemsHost="True" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -24,7 +24,8 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <TextBox FontSize="16" FontWeight="Bold" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Text="{Binding Path=Location}"></TextBox>
+                            <TextBox FontSize="16" FontWeight="Bold" Grid.Row="0" HorizontalContentAlignment="Center"
+                                     VerticalContentAlignment="Stretch" Text="{Binding Path=Location}" />
                             <ContentPresenter Grid.Row="1" Content="{Binding Path=Map}" />
                         </Grid>
                     </Border>
@@ -32,6 +33,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <map:GMapControl Grid.Row="1" Name="UserMap"></map:GMapControl>
+        <map:GMapControl Grid.Row="1" Name="UserMap" />
     </Grid>
 </Window>

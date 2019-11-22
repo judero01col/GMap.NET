@@ -1,20 +1,24 @@
 using System;
 using System.IO;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class RenderedTileFetch : Verb
     {
         private RenderedTileNamingScheme namingScheme;
+
         public RenderedTileFetch(RenderedTileNamingScheme namingScheme)
         {
             this.namingScheme = namingScheme;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("RenderedTileFetch(");
             this.namingScheme.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
+
         public Present Evaluate(Present[] paramList)
         {
             Present result;
@@ -37,6 +41,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 result = new PresentFailureCode(ex);
             }
+
             return result;
         }
     }

@@ -1,12 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class FetchDocumentFuture : FutureBase, IFuturePrototype
     {
         private IFuture documentFuture;
         private static Dictionary<string, string> _knownExtensions;
+
         private static Dictionary<string, string> knownExtensions
         {
             get
@@ -24,13 +25,16 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     _knownExtensions.Add("tiff", "WPF");
                     _knownExtensions.Add("bmp", "WPF");
                 }
+
                 return _knownExtensions;
             }
         }
+
         public FetchDocumentFuture(IFuture documentFuture)
         {
             this.documentFuture = documentFuture;
         }
+
         public override Present Realize(string refCredit)
         {
             Present present = this.documentFuture.Realize(refCredit);
@@ -38,6 +42,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 return PresentFailureCode.FailedCast(present, "FetchDocumentFuture");
             }
+
             SourceDocument sourceDocument = (SourceDocument)present;
             string filesystemAbsolutePath = sourceDocument.localDocument.GetFilesystemAbsolutePath();
             Present[] paramList = new Present[]
@@ -50,12 +55,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 text = text.Substring(1);
             }
+
             Verb verb = null;
             string a = null;
             if (knownExtensions.ContainsKey(text))
             {
                 a = knownExtensions[text];
             }
+
             if (a == "FoxIt")
             {
                 verb = new FoxitOpenVerb();
@@ -74,18 +81,22 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     }
                 }
             }
+
             if (verb == null)
             {
                 return new PresentFailureCode(new UnknownImageTypeException("Unknown file type " + text));
             }
+
             return verb.Evaluate(paramList);
         }
+
         public override void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("FetchDocumentFuture(");
             this.documentFuture.AccumulateRobustHash(hash);
             hash.Accumulate(")");
         }
+
         public static string[] GetKnownFileTypes()
         {
             return new List<string>(knownExtensions.Keys).ToArray();

@@ -1,12 +1,14 @@
 using System;
 using System.Drawing;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class ImageRef : Present, IDisposable
     {
         private ImageRefCounted resource;
         private string refCredit;
+
         public GDIBigLockedImage image
         {
             get
@@ -14,9 +16,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return this.resource.image;
             }
         }
+
         public ImageRef(ImageRefCounted resource) : this(resource, "new")
         {
         }
+
         public ImageRef(ImageRefCounted resource, string refCredit)
         {
             resource.refCreditCounter++;
@@ -24,14 +28,17 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             resource.AddRef(this.refCredit);
             this.resource = resource;
         }
+
         public void Dispose()
         {
             this.resource.DropRef(this.refCredit);
         }
+
         public Present Duplicate(string refCredit)
         {
             return new ImageRef(this.resource, refCredit);
         }
+
         public ImageRef Copy()
         {
             GDIBigLockedImage image;
@@ -46,6 +53,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(image);
             }
+
             return result;
         }
     }

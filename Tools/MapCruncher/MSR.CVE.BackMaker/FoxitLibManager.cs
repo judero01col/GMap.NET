@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     public class FoxitLibManager
@@ -6,6 +7,7 @@ namespace MSR.CVE.BackMaker
         private static FoxitLibManager _theInstance;
         private FoxitLibWorker _foxitLib = new FoxitLibWorker();
         public Exception loadException = new Exception("unknown exception");
+
         public static FoxitLibManager theInstance
         {
             get
@@ -14,9 +16,11 @@ namespace MSR.CVE.BackMaker
                 {
                     _theInstance = new FoxitLibManager();
                 }
+
                 return _theInstance;
             }
         }
+
         public FoxitLibWorker foxitLib
         {
             get

@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class S3CredentialsForm : Form
@@ -13,14 +13,17 @@ namespace MSR.CVE.BackMaker
         private TextBox s3AccessKeyId;
         private Button saveButton;
         private Button cancelButton;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.label2 = new Label();
@@ -42,17 +45,17 @@ namespace MSR.CVE.BackMaker
             this.label5.Size = new Size(77, 13);
             this.label5.TabIndex = 16;
             this.label5.Text = "Access Key ID";
-            this.s3SecretAccessKey.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.s3SecretAccessKey.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.s3SecretAccessKey.Location = new Point(12, 71);
             this.s3SecretAccessKey.Name = "s3SecretAccessKey";
             this.s3SecretAccessKey.Size = new Size(355, 20);
             this.s3SecretAccessKey.TabIndex = 15;
-            this.s3AccessKeyId.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.s3AccessKeyId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.s3AccessKeyId.Location = new Point(12, 22);
             this.s3AccessKeyId.Name = "s3AccessKeyId";
             this.s3AccessKeyId.Size = new Size(355, 20);
             this.s3AccessKeyId.TabIndex = 14;
-            this.saveButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             this.saveButton.DialogResult = DialogResult.Yes;
             this.saveButton.Location = new Point(292, 123);
             this.saveButton.Name = "saveButton";
@@ -60,7 +63,7 @@ namespace MSR.CVE.BackMaker
             this.saveButton.TabIndex = 18;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             this.cancelButton.DialogResult = DialogResult.Cancel;
             this.cancelButton.Location = new Point(211, 123);
             this.cancelButton.Name = "cancelButton";
@@ -82,15 +85,18 @@ namespace MSR.CVE.BackMaker
             base.ResumeLayout(false);
             base.PerformLayout();
         }
+
         public S3CredentialsForm()
         {
             this.InitializeComponent();
         }
+
         internal void Initialize(S3Credentials s3c)
         {
             this.s3AccessKeyId.Text = s3c.accessKeyId;
             this.s3SecretAccessKey.Text = s3c.secretAccessKey;
         }
+
         internal void LoadResult(S3Credentials s3c)
         {
             s3c.accessKeyId = this.s3AccessKeyId.Text;

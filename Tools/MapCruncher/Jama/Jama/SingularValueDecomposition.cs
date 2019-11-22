@@ -1,5 +1,6 @@
-using Jama.util;
 using System;
+using Jama.util;
+
 namespace Jama
 {
     [Serializable]
@@ -10,6 +11,7 @@ namespace Jama
         private double[] s;
         private int m;
         private int n;
+
         public virtual double[] SingularValues
         {
             get
@@ -17,6 +19,7 @@ namespace Jama
                 return this.s;
             }
         }
+
         public virtual JamaMatrix S
         {
             get
@@ -29,11 +32,14 @@ namespace Jama
                     {
                         array[i][j] = 0.0;
                     }
+
                     array[i][i] = this.s[i];
                 }
+
                 return jamaMatrix;
             }
         }
+
         public SingularValueDecomposition(JamaMatrix Arg)
         {
             double[][] arrayCopy = Arg.ArrayCopy;
@@ -46,11 +52,13 @@ namespace Jama
             {
                 this.U[i] = new double[num];
             }
+
             this.V = new double[this.n][];
             for (int j = 0; j < this.n; j++)
             {
                 this.V[j] = new double[this.n];
             }
+
             double[] array = new double[this.n];
             double[] array2 = new double[this.m];
             bool flag = true;
@@ -66,44 +74,53 @@ namespace Jama
                     {
                         this.s[k] = Maths.hypot(this.s[k], arrayCopy[i][k]);
                     }
+
                     if (this.s[k] != 0.0)
                     {
                         if (arrayCopy[k][k] < 0.0)
                         {
                             this.s[k] = -this.s[k];
                         }
+
                         for (int i = k; i < this.m; i++)
                         {
                             arrayCopy[i][k] /= this.s[k];
                         }
+
                         arrayCopy[k][k] += 1.0;
                     }
+
                     this.s[k] = -this.s[k];
                 }
+
                 for (int l = k + 1; l < this.n; l++)
                 {
-                    if (k < num2 & this.s[k] != 0.0)
+                    if ((k < num2) & (this.s[k] != 0.0))
                     {
                         double num4 = 0.0;
                         for (int i = k; i < this.m; i++)
                         {
                             num4 += arrayCopy[i][k] * arrayCopy[i][l];
                         }
+
                         num4 = -num4 / arrayCopy[k][k];
                         for (int i = k; i < this.m; i++)
                         {
                             arrayCopy[i][l] += num4 * arrayCopy[i][k];
                         }
                     }
+
                     array[l] = arrayCopy[k][l];
                 }
-                if (flag & k < num2)
+
+                if (flag & (k < num2))
                 {
                     for (int i = k; i < this.m; i++)
                     {
                         this.U[i][k] = arrayCopy[i][k];
                     }
                 }
+
                 if (k < num3)
                 {
                     array[k] = 0.0;
@@ -111,25 +128,30 @@ namespace Jama
                     {
                         array[k] = Maths.hypot(array[k], array[i]);
                     }
+
                     if (array[k] != 0.0)
                     {
                         if (array[k + 1] < 0.0)
                         {
                             array[k] = -array[k];
                         }
+
                         for (int i = k + 1; i < this.n; i++)
                         {
                             array[i] /= array[k];
                         }
+
                         array[k + 1] += 1.0;
                     }
+
                     array[k] = -array[k];
-                    if (k + 1 < this.m & array[k] != 0.0)
+                    if ((k + 1 < this.m) & (array[k] != 0.0))
                     {
                         for (int i = k + 1; i < this.m; i++)
                         {
                             array2[i] = 0.0;
                         }
+
                         for (int l = k + 1; l < this.n; l++)
                         {
                             for (int i = k + 1; i < this.m; i++)
@@ -137,6 +159,7 @@ namespace Jama
                                 array2[i] += array[l] * arrayCopy[i][l];
                             }
                         }
+
                         for (int l = k + 1; l < this.n; l++)
                         {
                             double num4 = -array[l] / array[k + 1];
@@ -146,6 +169,7 @@ namespace Jama
                             }
                         }
                     }
+
                     if (flag2)
                     {
                         for (int i = k + 1; i < this.n; i++)
@@ -155,19 +179,23 @@ namespace Jama
                     }
                 }
             }
+
             int m = Math.Min(this.n, this.m + 1);
             if (num2 < this.n)
             {
                 this.s[num2] = arrayCopy[num2][num2];
             }
+
             if (this.m < m)
             {
                 this.s[m - 1] = 0.0;
             }
+
             if (num3 + 1 < m)
             {
                 array[num3] = arrayCopy[num3][m - 1];
             }
+
             array[m - 1] = 0.0;
             if (flag)
             {
@@ -177,8 +205,10 @@ namespace Jama
                     {
                         this.U[i][l] = 0.0;
                     }
+
                     this.U[l][l] = 1.0;
                 }
+
                 for (int k = num2 - 1; k >= 0; k--)
                 {
                     if (this.s[k] != 0.0)
@@ -190,16 +220,19 @@ namespace Jama
                             {
                                 num4 += this.U[i][k] * this.U[i][l];
                             }
+
                             num4 = -num4 / this.U[k][k];
                             for (int i = k; i < this.m; i++)
                             {
                                 this.U[i][l] += num4 * this.U[i][k];
                             }
                         }
+
                         for (int i = k; i < this.m; i++)
                         {
                             this.U[i][k] = -this.U[i][k];
                         }
+
                         this.U[k][k] = 1.0 + this.U[k][k];
                         for (int i = 0; i < k - 1; i++)
                         {
@@ -212,15 +245,17 @@ namespace Jama
                         {
                             this.U[i][k] = 0.0;
                         }
+
                         this.U[k][k] = 1.0;
                     }
                 }
             }
+
             if (flag2)
             {
                 for (int k = this.n - 1; k >= 0; k--)
                 {
-                    if (k < num3 & array[k] != 0.0)
+                    if ((k < num3) & (array[k] != 0.0))
                     {
                         for (int l = k + 1; l < num; l++)
                         {
@@ -229,6 +264,7 @@ namespace Jama
                             {
                                 num4 += this.V[i][k] * this.V[i][l];
                             }
+
                             num4 = -num4 / this.V[k + 1][k];
                             for (int i = k + 1; i < this.n; i++)
                             {
@@ -236,13 +272,16 @@ namespace Jama
                             }
                         }
                     }
+
                     for (int i = 0; i < this.n; i++)
                     {
                         this.V[i][k] = 0.0;
                     }
+
                     this.V[k][k] = 1.0;
                 }
             }
+
             int num5 = m - 1;
             int num6 = 0;
             double num7 = Math.Pow(2.0, -52.0);
@@ -256,12 +295,14 @@ namespace Jama
                     {
                         break;
                     }
+
                     if (Math.Abs(array[k]) <= num8 + num7 * (Math.Abs(this.s[k]) + Math.Abs(this.s[k + 1])))
                     {
                         array[k] = 0.0;
                         break;
                     }
                 }
+
                 int num9;
                 if (k == m - 2)
                 {
@@ -276,13 +317,15 @@ namespace Jama
                         {
                             break;
                         }
-                        double num4 = ((n != m) ? Math.Abs(array[n]) : 0.0) + ((n != k + 1) ? Math.Abs(array[n - 1]) : 0.0);
+
+                        double num4 = (n != m ? Math.Abs(array[n]) : 0.0) + (n != k + 1 ? Math.Abs(array[n - 1]) : 0.0);
                         if (Math.Abs(this.s[n]) <= num8 + num7 * num4)
                         {
                             this.s[n] = 0.0;
                             break;
                         }
                     }
+
                     if (n == k)
                     {
                         num9 = 3;
@@ -300,189 +343,212 @@ namespace Jama
                         }
                     }
                 }
+
                 k++;
                 switch (num9)
                 {
-                case 1:
-                {
-                    double num10 = array[m - 2];
-                    array[m - 2] = 0.0;
-                    for (int l = m - 2; l >= k; l--)
+                    case 1:
                     {
-                        double num4 = Maths.hypot(this.s[l], num10);
-                        double num11 = this.s[l] / num4;
-                        double num12 = num10 / num4;
-                        this.s[l] = num4;
-                        if (l != k)
+                        double num10 = array[m - 2];
+                        array[m - 2] = 0.0;
+                        for (int l = m - 2; l >= k; l--)
                         {
-                            num10 = -num12 * array[l - 1];
-                            array[l - 1] = num11 * array[l - 1];
-                        }
-                        if (flag2)
-                        {
-                            for (int i = 0; i < this.n; i++)
+                            double num4 = Maths.hypot(this.s[l], num10);
+                            double num11 = this.s[l] / num4;
+                            double num12 = num10 / num4;
+                            this.s[l] = num4;
+                            if (l != k)
                             {
-                                num4 = num11 * this.V[i][l] + num12 * this.V[i][m - 1];
-                                this.V[i][m - 1] = -num12 * this.V[i][l] + num11 * this.V[i][m - 1];
-                                this.V[i][l] = num4;
+                                num10 = -num12 * array[l - 1];
+                                array[l - 1] = num11 * array[l - 1];
+                            }
+
+                            if (flag2)
+                            {
+                                for (int i = 0; i < this.n; i++)
+                                {
+                                    num4 = num11 * this.V[i][l] + num12 * this.V[i][m - 1];
+                                    this.V[i][m - 1] = -num12 * this.V[i][l] + num11 * this.V[i][m - 1];
+                                    this.V[i][l] = num4;
+                                }
                             }
                         }
+
+                        break;
                     }
-                    break;
-                }
-                case 2:
-                {
-                    double num10 = array[k - 1];
-                    array[k - 1] = 0.0;
-                    for (int l = k; l < m; l++)
+                    case 2:
                     {
-                        double num4 = Maths.hypot(this.s[l], num10);
-                        double num11 = this.s[l] / num4;
-                        double num12 = num10 / num4;
-                        this.s[l] = num4;
-                        num10 = -num12 * array[l];
-                        array[l] = num11 * array[l];
-                        if (flag)
+                        double num10 = array[k - 1];
+                        array[k - 1] = 0.0;
+                        for (int l = k; l < m; l++)
                         {
-                            for (int i = 0; i < this.m; i++)
+                            double num4 = Maths.hypot(this.s[l], num10);
+                            double num11 = this.s[l] / num4;
+                            double num12 = num10 / num4;
+                            this.s[l] = num4;
+                            num10 = -num12 * array[l];
+                            array[l] = num11 * array[l];
+                            if (flag)
                             {
-                                num4 = num11 * this.U[i][l] + num12 * this.U[i][k - 1];
-                                this.U[i][k - 1] = -num12 * this.U[i][l] + num11 * this.U[i][k - 1];
-                                this.U[i][l] = num4;
+                                for (int i = 0; i < this.m; i++)
+                                {
+                                    num4 = num11 * this.U[i][l] + num12 * this.U[i][k - 1];
+                                    this.U[i][k - 1] = -num12 * this.U[i][l] + num11 * this.U[i][k - 1];
+                                    this.U[i][l] = num4;
+                                }
                             }
                         }
+
+                        break;
                     }
-                    break;
-                }
-                case 3:
-                {
-                    double num13 = Math.Max(Math.Max(Math.Max(Math.Max(Math.Abs(this.s[m - 1]), Math.Abs(this.s[m - 2])), Math.Abs(array[m - 2])), Math.Abs(this.s[k])), Math.Abs(array[k]));
-                    double num14 = this.s[m - 1] / num13;
-                    double num15 = this.s[m - 2] / num13;
-                    double num16 = array[m - 2] / num13;
-                    double num17 = this.s[k] / num13;
-                    double num18 = array[k] / num13;
-                    double num19 = ((num15 + num14) * (num15 - num14) + num16 * num16) / 2.0;
-                    double num20 = num14 * num16 * (num14 * num16);
-                    double num21 = 0.0;
-                    if (num19 != 0.0 | num20 != 0.0)
+                    case 3:
                     {
-                        num21 = Math.Sqrt(num19 * num19 + num20);
-                        if (num19 < 0.0)
+                        double num13 =
+                            Math.Max(Math.Max(Math.Max(Math.Max(Math.Abs(this.s[m - 1]), Math.Abs(this.s[m - 2])),
+                                        Math.Abs(array[m - 2])),
+                                    Math.Abs(this.s[k])),
+                                Math.Abs(array[k]));
+                        double num14 = this.s[m - 1] / num13;
+                        double num15 = this.s[m - 2] / num13;
+                        double num16 = array[m - 2] / num13;
+                        double num17 = this.s[k] / num13;
+                        double num18 = array[k] / num13;
+                        double num19 = ((num15 + num14) * (num15 - num14) + num16 * num16) / 2.0;
+                        double num20 = num14 * num16 * (num14 * num16);
+                        double num21 = 0.0;
+                        if ((num19 != 0.0) | (num20 != 0.0))
                         {
-                            num21 = -num21;
+                            num21 = Math.Sqrt(num19 * num19 + num20);
+                            if (num19 < 0.0)
+                            {
+                                num21 = -num21;
+                            }
+
+                            num21 = num20 / (num19 + num21);
                         }
-                        num21 = num20 / (num19 + num21);
+
+                        double num10 = (num17 + num14) * (num17 - num14) + num21;
+                        double num22 = num17 * num18;
+                        for (int l = k; l < m - 1; l++)
+                        {
+                            double num4 = Maths.hypot(num10, num22);
+                            double num11 = num10 / num4;
+                            double num12 = num22 / num4;
+                            if (l != k)
+                            {
+                                array[l - 1] = num4;
+                            }
+
+                            num10 = num11 * this.s[l] + num12 * array[l];
+                            array[l] = num11 * array[l] - num12 * this.s[l];
+                            num22 = num12 * this.s[l + 1];
+                            this.s[l + 1] = num11 * this.s[l + 1];
+                            if (flag2)
+                            {
+                                for (int i = 0; i < this.n; i++)
+                                {
+                                    num4 = num11 * this.V[i][l] + num12 * this.V[i][l + 1];
+                                    this.V[i][l + 1] = -num12 * this.V[i][l] + num11 * this.V[i][l + 1];
+                                    this.V[i][l] = num4;
+                                }
+                            }
+
+                            num4 = Maths.hypot(num10, num22);
+                            num11 = num10 / num4;
+                            num12 = num22 / num4;
+                            this.s[l] = num4;
+                            num10 = num11 * array[l] + num12 * this.s[l + 1];
+                            this.s[l + 1] = -num12 * array[l] + num11 * this.s[l + 1];
+                            num22 = num12 * array[l + 1];
+                            array[l + 1] = num11 * array[l + 1];
+                            if (flag && l < this.m - 1)
+                            {
+                                for (int i = 0; i < this.m; i++)
+                                {
+                                    num4 = num11 * this.U[i][l] + num12 * this.U[i][l + 1];
+                                    this.U[i][l + 1] = -num12 * this.U[i][l] + num11 * this.U[i][l + 1];
+                                    this.U[i][l] = num4;
+                                }
+                            }
+                        }
+
+                        array[m - 2] = num10;
+                        num6++;
+                        break;
                     }
-                    double num10 = (num17 + num14) * (num17 - num14) + num21;
-                    double num22 = num17 * num18;
-                    for (int l = k; l < m - 1; l++)
-                    {
-                        double num4 = Maths.hypot(num10, num22);
-                        double num11 = num10 / num4;
-                        double num12 = num22 / num4;
-                        if (l != k)
+                    case 4:
+                        if (this.s[k] <= 0.0)
                         {
-                            array[l - 1] = num4;
-                        }
-                        num10 = num11 * this.s[l] + num12 * array[l];
-                        array[l] = num11 * array[l] - num12 * this.s[l];
-                        num22 = num12 * this.s[l + 1];
-                        this.s[l + 1] = num11 * this.s[l + 1];
-                        if (flag2)
-                        {
-                            for (int i = 0; i < this.n; i++)
+                            this.s[k] = this.s[k] < 0.0 ? -this.s[k] : 0.0;
+                            if (flag2)
                             {
-                                num4 = num11 * this.V[i][l] + num12 * this.V[i][l + 1];
-                                this.V[i][l + 1] = -num12 * this.V[i][l] + num11 * this.V[i][l + 1];
-                                this.V[i][l] = num4;
+                                for (int i = 0; i <= num5; i++)
+                                {
+                                    this.V[i][k] = -this.V[i][k];
+                                }
                             }
                         }
-                        num4 = Maths.hypot(num10, num22);
-                        num11 = num10 / num4;
-                        num12 = num22 / num4;
-                        this.s[l] = num4;
-                        num10 = num11 * array[l] + num12 * this.s[l + 1];
-                        this.s[l + 1] = -num12 * array[l] + num11 * this.s[l + 1];
-                        num22 = num12 * array[l + 1];
-                        array[l + 1] = num11 * array[l + 1];
-                        if (flag && l < this.m - 1)
+
+                        while (k < num5)
                         {
-                            for (int i = 0; i < this.m; i++)
+                            if (this.s[k] >= this.s[k + 1])
                             {
-                                num4 = num11 * this.U[i][l] + num12 * this.U[i][l + 1];
-                                this.U[i][l + 1] = -num12 * this.U[i][l] + num11 * this.U[i][l + 1];
-                                this.U[i][l] = num4;
+                                break;
                             }
-                        }
-                    }
-                    array[m - 2] = num10;
-                    num6++;
-                    break;
-                }
-                case 4:
-                    if (this.s[k] <= 0.0)
-                    {
-                        this.s[k] = ((this.s[k] < 0.0) ? (-this.s[k]) : 0.0);
-                        if (flag2)
-                        {
-                            for (int i = 0; i <= num5; i++)
+
+                            double num4 = this.s[k];
+                            this.s[k] = this.s[k + 1];
+                            this.s[k + 1] = num4;
+                            if (flag2 && k < this.n - 1)
                             {
-                                this.V[i][k] = -this.V[i][k];
+                                for (int i = 0; i < this.n; i++)
+                                {
+                                    num4 = this.V[i][k + 1];
+                                    this.V[i][k + 1] = this.V[i][k];
+                                    this.V[i][k] = num4;
+                                }
                             }
-                        }
-                    }
-                    while (k < num5)
-                    {
-                        if (this.s[k] >= this.s[k + 1])
-                        {
-                            break;
-                        }
-                        double num4 = this.s[k];
-                        this.s[k] = this.s[k + 1];
-                        this.s[k + 1] = num4;
-                        if (flag2 && k < this.n - 1)
-                        {
-                            for (int i = 0; i < this.n; i++)
+
+                            if (flag && k < this.m - 1)
                             {
-                                num4 = this.V[i][k + 1];
-                                this.V[i][k + 1] = this.V[i][k];
-                                this.V[i][k] = num4;
+                                for (int i = 0; i < this.m; i++)
+                                {
+                                    num4 = this.U[i][k + 1];
+                                    this.U[i][k + 1] = this.U[i][k];
+                                    this.U[i][k] = num4;
+                                }
                             }
+
+                            k++;
                         }
-                        if (flag && k < this.m - 1)
-                        {
-                            for (int i = 0; i < this.m; i++)
-                            {
-                                num4 = this.U[i][k + 1];
-                                this.U[i][k + 1] = this.U[i][k];
-                                this.U[i][k] = num4;
-                            }
-                        }
-                        k++;
-                    }
-                    num6 = 0;
-                    m--;
-                    break;
+
+                        num6 = 0;
+                        m--;
+                        break;
                 }
             }
         }
+
         public virtual JamaMatrix getU()
         {
             return new JamaMatrix(this.U, this.m, Math.Min(this.m + 1, this.n));
         }
+
         public virtual JamaMatrix getV()
         {
             return new JamaMatrix(this.V, this.n, this.n);
         }
+
         public virtual double norm2()
         {
             return this.s[0];
         }
+
         public virtual double cond()
         {
             return this.s[0] / this.s[Math.Min(this.m, this.n) - 1];
         }
+
         public virtual int rank()
         {
             double num = Math.Pow(2.0, -52.0);
@@ -495,6 +561,7 @@ namespace Jama
                     num3++;
                 }
             }
+
             return num3;
         }
     }

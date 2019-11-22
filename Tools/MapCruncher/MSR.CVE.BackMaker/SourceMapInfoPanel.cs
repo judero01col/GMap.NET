@@ -1,13 +1,15 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class SourceMapInfoPanel : UserControl
     {
         public delegate void PreviewSourceMapZoomDelegate(SourceMap sourceMap);
+
         private SourceMap sourceMap;
         private bool needUpdate;
         private PreviewSourceMapZoomDelegate previewSourceMapZoom;
@@ -21,6 +23,7 @@ namespace MSR.CVE.BackMaker
         private Label label3;
         private TextBox textBox7;
         private NumericUpDown closestZoomUpDown;
+
         public SourceMapInfoPanel()
         {
             this.InitializeComponent();
@@ -31,10 +34,12 @@ namespace MSR.CVE.BackMaker
             this.closestZoomUpDown.Minimum = mercatorCoordinateSystem.GetZoomRange().min;
             this.closestZoomUpDown.Maximum = mercatorCoordinateSystem.GetZoomRange().max;
         }
+
         public void Initialize(PreviewSourceMapZoomDelegate previewSourceMapZoom)
         {
             this.previewSourceMapZoom = previewSourceMapZoom;
         }
+
         private void descriptionTextBox_LostFocus(object sender, EventArgs e)
         {
             if (this.sourceMap != null)
@@ -42,6 +47,7 @@ namespace MSR.CVE.BackMaker
                 this.sourceMap.sourceMapInfo.mapDescription = ((TextBox)sender).Text;
             }
         }
+
         private void mapHomePageTextBox_LostFocus(object sender, EventArgs e)
         {
             if (this.sourceMap != null)
@@ -49,6 +55,7 @@ namespace MSR.CVE.BackMaker
                 this.sourceMap.sourceMapInfo.mapHomePage = ((TextBox)sender).Text;
             }
         }
+
         private void mapFileURLTextBox_LostFocus(object sender, EventArgs e)
         {
             if (this.sourceMap != null)
@@ -56,19 +63,23 @@ namespace MSR.CVE.BackMaker
                 this.sourceMap.sourceMapInfo.mapFileURL = ((TextBox)sender).Text;
             }
         }
+
         public void Configure(SourceMap sourceMap)
         {
             if (this.sourceMap != null)
             {
                 this.sourceMap.sourceMapRenderOptions.dirtyEvent.Remove(new DirtyListener(this.ZoomChangedHandler));
             }
+
             this.sourceMap = sourceMap;
             if (this.sourceMap != null)
             {
                 this.sourceMap.sourceMapRenderOptions.dirtyEvent.Add(new DirtyListener(this.ZoomChangedHandler));
             }
+
             this.update();
         }
+
         private void update()
         {
             if (this.sourceMap != null)
@@ -83,20 +94,24 @@ namespace MSR.CVE.BackMaker
                 this.mapHomePageTextBox.Text = "";
                 this.mapDescriptionTextBox.Text = "";
             }
+
             if (this.sourceMap == null || this.sourceMap.sourceMapRenderOptions.maxZoom == -1)
             {
                 this.closestZoomUpDown.Value = this.closestZoomUpDown.Minimum;
                 this.closestZoomUpDown.Enabled = false;
                 return;
             }
+
             this.closestZoomUpDown.Value = this.sourceMap.sourceMapRenderOptions.maxZoom;
             this.closestZoomUpDown.Enabled = true;
         }
+
         private void ZoomChangedHandler()
         {
             this.needUpdate = true;
             base.Invalidate();
         }
+
         private void closestZoomUpDown_ValueChanged(object sender, EventArgs e)
         {
             if (this.sourceMap != null)
@@ -105,27 +120,33 @@ namespace MSR.CVE.BackMaker
                 this.previewSourceMapZoom(this.sourceMap);
             }
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             if (D.CustomPaintDisabled())
             {
                 return;
             }
+
             if (this.needUpdate)
             {
                 this.update();
                 this.needUpdate = false;
             }
+
             base.OnPaint(e);
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.label1 = new Label();
@@ -146,7 +167,7 @@ namespace MSR.CVE.BackMaker
             this.label1.Size = new Size(75, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Map File URL:";
-            this.mapFileURLTextBox.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.mapFileURLTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.mapFileURLTextBox.Location = new Point(6, 20);
             this.mapFileURLTextBox.Name = "mapFileURLTextBox";
             this.mapFileURLTextBox.Size = new Size(300, 20);
@@ -157,12 +178,13 @@ namespace MSR.CVE.BackMaker
             this.label2.Size = new Size(157, 13);
             this.label2.TabIndex = 0;
             this.label2.Text = "Map description and comments:";
-            this.mapHomePageTextBox.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.mapHomePageTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.mapHomePageTextBox.Location = new Point(6, 68);
             this.mapHomePageTextBox.Name = "mapHomePageTextBox";
             this.mapHomePageTextBox.Size = new Size(300, 20);
             this.mapHomePageTextBox.TabIndex = 1;
-            this.mapDescriptionTextBox.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.mapDescriptionTextBox.Anchor =
+                AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.mapDescriptionTextBox.Location = new Point(6, 116);
             this.mapDescriptionTextBox.Multiline = true;
             this.mapDescriptionTextBox.Name = "mapDescriptionTextBox";
@@ -181,7 +203,7 @@ namespace MSR.CVE.BackMaker
             this.panel1.Name = "panel1";
             this.panel1.Size = new Size(309, 365);
             this.panel1.TabIndex = 2;
-            this.textBox7.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.textBox7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             this.textBox7.BackColor = SystemColors.ControlLight;
             this.textBox7.BorderStyle = BorderStyle.None;
             this.textBox7.Location = new Point(6, 345);
@@ -190,7 +212,7 @@ namespace MSR.CVE.BackMaker
             this.textBox7.TabIndex = 9;
             this.textBox7.TabStop = false;
             this.textBox7.Text = "Maximum (Closest) Zoom";
-            this.closestZoomUpDown.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.closestZoomUpDown.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             this.closestZoomUpDown.Location = new Point(260, 342);
             this.closestZoomUpDown.Name = "closestZoomUpDown";
             this.closestZoomUpDown.Size = new Size(46, 20);

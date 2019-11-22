@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     internal class ConfigurationException : Exception
@@ -6,6 +7,7 @@ namespace MSR.CVE.BackMaker
         public ConfigurationException(string message, Exception innerException) : base(message, innerException)
         {
         }
+
         public ConfigurationException(string message) : base(message)
         {
         }

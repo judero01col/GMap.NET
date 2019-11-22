@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class OpenDocumentSensitivePrioritizer : OpenDocumentStateObserverIfc
@@ -8,16 +8,20 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private class ODSPFutureSet : Dictionary<int, OpenDocumentSensitivePrioritizedFuture>
         {
         }
+
         private class DocToFuturesDict : Dictionary<IFuture, ODSPFutureSet>
         {
         }
+
         private SizeSensitiveCache openDocumentCache;
         private DocToFuturesDict docToFuturesDict = new DocToFuturesDict();
+
         public OpenDocumentSensitivePrioritizer(SizeSensitiveCache openDocumentCache)
         {
             this.openDocumentCache = openDocumentCache;
             openDocumentCache.AddCallback(this);
         }
+
         internal void Realizing(OpenDocumentSensitivePrioritizedFuture openDocumentSensitivePrioritizedFuture)
         {
             Monitor.Enter(this);
@@ -30,9 +34,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     {
                         this.docToFuturesDict[openDocumentFuture] = new ODSPFutureSet();
                     }
-                    D.Assert(!this.docToFuturesDict[openDocumentFuture].ContainsKey(openDocumentSensitivePrioritizedFuture.identity));
-                    this.docToFuturesDict[openDocumentFuture][openDocumentSensitivePrioritizedFuture.identity] = openDocumentSensitivePrioritizedFuture;
-                    openDocumentSensitivePrioritizedFuture.DocumentStateChanged(this.openDocumentCache.Contains(openDocumentFuture));
+
+                    D.Assert(!this.docToFuturesDict[openDocumentFuture]
+                        .ContainsKey(openDocumentSensitivePrioritizedFuture.identity));
+                    this.docToFuturesDict[openDocumentFuture][openDocumentSensitivePrioritizedFuture.identity] =
+                        openDocumentSensitivePrioritizedFuture;
+                    openDocumentSensitivePrioritizedFuture.DocumentStateChanged(
+                        this.openDocumentCache.Contains(openDocumentFuture));
                 }
             }
             finally
@@ -40,6 +48,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         internal void Complete(OpenDocumentSensitivePrioritizedFuture openDocumentSensitivePrioritizedFuture)
         {
             Monitor.Enter(this);
@@ -48,7 +57,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 IFuture openDocumentFuture = openDocumentSensitivePrioritizedFuture.GetOpenDocumentFuture();
                 if (openDocumentFuture != null)
                 {
-                    bool condition = this.docToFuturesDict[openDocumentFuture].Remove(openDocumentSensitivePrioritizedFuture.identity);
+                    bool condition = this.docToFuturesDict[openDocumentFuture]
+                        .Remove(openDocumentSensitivePrioritizedFuture.identity);
                     D.Assert(condition);
                 }
             }
@@ -57,6 +67,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         public void DocumentStateChanged(IFuture documentFuture, bool isOpen)
         {
             Monitor.Enter(this);
@@ -64,7 +75,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 if (this.docToFuturesDict.ContainsKey(documentFuture))
                 {
-                    foreach (OpenDocumentSensitivePrioritizedFuture current in this.docToFuturesDict[documentFuture].Values)
+                    foreach (OpenDocumentSensitivePrioritizedFuture current in this.docToFuturesDict[documentFuture]
+                        .Values)
                     {
                         current.DocumentStateChanged(isOpen);
                     }

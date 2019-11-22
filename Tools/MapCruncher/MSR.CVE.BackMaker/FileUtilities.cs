@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+
 namespace MSR.CVE.BackMaker
 {
     public static class FileUtilities
@@ -15,8 +16,10 @@ namespace MSR.CVE.BackMaker
                 {
                     break;
                 }
+
                 num++;
             }
+
             return text;
         }
     }

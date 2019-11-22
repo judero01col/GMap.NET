@@ -1,9 +1,9 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class NoTagIdentities : MashupXMLSchemaVersion
     {
         public static NoTagIdentities _schema;
+
         public static NoTagIdentities schema
         {
             get
@@ -12,9 +12,11 @@ namespace MSR.CVE.BackMaker
                 {
                     _schema = new NoTagIdentities();
                 }
+
                 return _schema;
             }
         }
+
         private NoTagIdentities() : base("1.6")
         {
         }

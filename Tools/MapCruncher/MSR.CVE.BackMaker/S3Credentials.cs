@@ -1,7 +1,7 @@
-using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     internal class S3Credentials
@@ -15,6 +15,7 @@ namespace MSR.CVE.BackMaker
         private string _fileName;
         private string _accessKeyId;
         private string _secretAccessKey;
+
         public string fileName
         {
             get
@@ -22,6 +23,7 @@ namespace MSR.CVE.BackMaker
                 return this._fileName;
             }
         }
+
         public string accessKeyId
         {
             get
@@ -33,6 +35,7 @@ namespace MSR.CVE.BackMaker
                 this._accessKeyId = value;
             }
         }
+
         public string secretAccessKey
         {
             get
@@ -44,6 +47,7 @@ namespace MSR.CVE.BackMaker
                 this._secretAccessKey = value;
             }
         }
+
         public S3Credentials(string fileName, bool createIfFileAbsent)
         {
             this._fileName = fileName;
@@ -60,8 +64,10 @@ namespace MSR.CVE.BackMaker
                     this._secretAccessKey = "";
                     return;
                 }
+
                 throw;
             }
+
             D.Assert(fileName == null || Path.GetFullPath(fileName).ToLower().Equals(fileName.ToLower()));
             bool flag = false;
             XmlTextReader reader = new XmlTextReader(input);
@@ -70,19 +76,24 @@ namespace MSR.CVE.BackMaker
             {
                 while (mashupParseContext.reader.Read() && !flag)
                 {
-                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element && mashupParseContext.reader.Name == "S3Credentials")
+                    if (mashupParseContext.reader.NodeType == XmlNodeType.Element &&
+                        mashupParseContext.reader.Name == "S3Credentials")
                     {
                         flag = true;
                         this.ReadXML(mashupParseContext);
                     }
                 }
+
                 mashupParseContext.Dispose();
             }
+
             if (!flag)
             {
-                throw new InvalidMashupFile(mashupParseContext, string.Format("{0} doesn't appear to be a valid {1} file.", fileName, "S3Credentials"));
+                throw new InvalidMashupFile(mashupParseContext,
+                    string.Format("{0} doesn't appear to be a valid {1} file.", fileName, "S3Credentials"));
             }
         }
+
         public void ReadXML(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("S3Credentials");
@@ -106,14 +117,17 @@ namespace MSR.CVE.BackMaker
                     }
                 }
             }
+
             context.AssertPresent(this._accessKeyId, "AccessKeyId");
             context.AssertPresent(this._secretAccessKey, "SecretAccessKeyTag");
         }
+
         public void WriteXML()
         {
             D.Assert(this._fileName != null);
             this.WriteXML(this._fileName);
         }
+
         private void WriteXML(string saveName)
         {
             XmlTextWriter xmlTextWriter = new XmlTextWriter(saveName, Encoding.UTF8);
@@ -123,6 +137,7 @@ namespace MSR.CVE.BackMaker
                 this.WriteXML(wc);
             }
         }
+
         private void WriteXML(MashupWriteContext wc)
         {
             XmlTextWriter writer = wc.writer;

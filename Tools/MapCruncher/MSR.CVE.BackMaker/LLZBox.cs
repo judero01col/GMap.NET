@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class LLZBox : UserControl, InvalidatableViewIfc
@@ -11,6 +12,7 @@ namespace MSR.CVE.BackMaker
             LatLon,
             XY
         }
+
         private DegreesMinutesSeconds dms = new DegreesMinutesSeconds();
         private MapDrawingOption _ShowDMS;
         private LatLonEditIfc latLonEdit;
@@ -23,6 +25,7 @@ namespace MSR.CVE.BackMaker
         private Label latLabel_text;
         private TextBox lonText;
         private TextBox latText;
+
         public MapDrawingOption ShowDMS
         {
             set
@@ -31,12 +34,14 @@ namespace MSR.CVE.BackMaker
                 this._ShowDMS.SetInvalidatableView(this);
             }
         }
+
         public LLZBox()
         {
             this.InitializeComponent();
             this.latText.LostFocus += new EventHandler(this.latText_TextChanged);
             this.lonText.LostFocus += new EventHandler(this.lonText_TextChanged);
         }
+
         private void latText_TextChanged(object sender, EventArgs e)
         {
             try
@@ -49,6 +54,7 @@ namespace MSR.CVE.BackMaker
                 this.PositionChanged(this.lastValue);
             }
         }
+
         private void lonText_TextChanged(object sender, EventArgs e)
         {
             try
@@ -61,52 +67,62 @@ namespace MSR.CVE.BackMaker
                 this.PositionChanged(this.lastValue);
             }
         }
+
         public void configureEditable(LatLonEditIfc latLonEdit)
         {
             this.latLonEdit = latLonEdit;
             this.latText.ReadOnly = false;
             this.lonText.ReadOnly = false;
         }
+
         public void setName(string name)
         {
             this.groupBox.Text = name;
         }
+
         public void PositionChanged(LatLonZoom llz)
         {
             this.lastValue = llz;
             this.InvalidateView();
         }
+
         public void InvalidateView()
         {
-            this.dms.outputMode = (this._ShowDMS.Enabled ? DegreesMinutesSeconds.OutputMode.DMS : DegreesMinutesSeconds.OutputMode.DecimalDegrees);
+            this.dms.outputMode = this._ShowDMS.Enabled
+                ? DegreesMinutesSeconds.OutputMode.DMS
+                : DegreesMinutesSeconds.OutputMode.DecimalDegrees;
             this.latText.Text = this.dms.FormatLatLon(this.lastValue.lat);
             this.lonText.Text = this.dms.FormatLatLon(this.lastValue.lon);
             this.zoomLabel.Text = this.lastValue.zoom.ToString();
         }
+
         public void SetLabelStyle(LabelStyle labelStyle)
         {
             switch (labelStyle)
             {
-            case LabelStyle.LatLon:
-                this.latLabel_text.Text = "Latitude";
-                this.lonLabel_text.Text = "Longitude";
-                return;
-            case LabelStyle.XY:
-                this.latLabel_text.Text = "Y";
-                this.lonLabel_text.Text = "X";
-                return;
-            default:
-                return;
+                case LabelStyle.LatLon:
+                    this.latLabel_text.Text = "Latitude";
+                    this.lonLabel_text.Text = "Longitude";
+                    return;
+                case LabelStyle.XY:
+                    this.latLabel_text.Text = "Y";
+                    this.lonLabel_text.Text = "X";
+                    return;
+                default:
+                    return;
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.groupBox = new GroupBox();

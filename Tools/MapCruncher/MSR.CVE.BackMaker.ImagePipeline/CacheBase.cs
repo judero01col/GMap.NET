@@ -1,7 +1,7 @@
-using MSR.CVE.BackMaker.MCDebug;
-using System;
 using System.Collections.Generic;
 using System.Threading;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public abstract class CacheBase : IRobustlyHashable
@@ -12,15 +12,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Present,
             Unknown
         }
+
         internal string hashName;
         internal Dictionary<IFuture, CacheRecord> cache;
         private ResourceCounter resourceCounter;
+
         public CacheBase(string hashName)
         {
             this.hashName = hashName;
             this.cache = new Dictionary<IFuture, CacheRecord>();
             this.resourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("Cache:" + hashName, -1);
         }
+
         public void Dispose()
         {
             Dictionary<IFuture, CacheRecord> dictionary = this.cache;
@@ -30,19 +33,25 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.Remove(current, RemoveExpectation.Absent);
             }
         }
+
         internal abstract void Touch(CacheRecord record, bool recordIsNew);
+
         internal virtual void TouchAfterUnlocked(CacheRecord record, bool recordIsNew)
         {
         }
+
         protected abstract void Clean();
         internal abstract CacheRecord NewRecord(IFuture future);
+
         internal virtual void Remove(CacheRecord record, RemoveExpectation removeExpectation)
         {
             Monitor.Enter(this);
             try
             {
                 bool flag = this.cache.Remove(record.GetFuture());
-                D.Assert(removeExpectation == RemoveExpectation.Unknown || removeExpectation == RemoveExpectation.Present == flag, "Remove didn't meet expectations. That could suggest a mutating hash.");
+                D.Assert(removeExpectation == RemoveExpectation.Unknown ||
+                         removeExpectation == RemoveExpectation.Present == flag,
+                    "Remove didn't meet expectations. That could suggest a mutating hash.");
                 this.resourceCounter.crement(-1);
                 record.DropReference();
             }
@@ -51,6 +60,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         public Present Lookup(IFuture future)
         {
             Monitor.Enter(this);
@@ -61,6 +71,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     return null;
                 }
+
                 cacheRecord = this.cache[future];
                 this.Touch(cacheRecord, false);
                 cacheRecord.AddReference();
@@ -69,10 +80,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             Present result = cacheRecord.WaitResult("lookup", this.hashName);
             cacheRecord.DropReference();
             return result;
         }
+
         public bool Contains(IFuture future)
         {
             Monitor.Enter(this);
@@ -93,8 +106,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             return result;
         }
+
         public virtual Present Get(IFuture future, string refCredit)
         {
             bool flag = false;
@@ -121,6 +136,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         cacheRecord = this.cache[future];
                         recordIsNew = false;
                     }
+
                     this.Touch(cacheRecord, recordIsNew);
                     cacheRecord.AddReference();
                 }
@@ -128,30 +144,32 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 {
                     Monitor.Exit(this);
                 }
+
                 this.TouchAfterUnlocked(cacheRecord, recordIsNew);
                 if (flag)
                 {
                     cacheRecord.Process();
                     flag2 = true;
                 }
+
                 Present present = cacheRecord.WaitResult(refCredit, this.hashName);
                 cacheRecord.DropReference();
                 if (present is IEvictable && ((IEvictable)present).EvictMeNow())
                 {
-                    D.Sayf(0, "Evicting canceled request for {0}", new object[]
-                    {
-                        future
-                    });
+                    D.Sayf(0, "Evicting canceled request for {0}", new object[] {future});
                     this.Evict(future);
                 }
+
                 result = present;
             }
             finally
             {
                 D.Assert(!flag || flag2);
             }
+
             return result;
         }
+
         internal void Evict(IFuture future)
         {
             Monitor.Enter(this);
@@ -169,6 +187,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate(string.Format("Cache({0})", this.hashName));

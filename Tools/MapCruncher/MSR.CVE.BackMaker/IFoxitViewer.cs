@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+
 namespace MSR.CVE.BackMaker
 {
     public interface IFoxitViewer : IDisposable

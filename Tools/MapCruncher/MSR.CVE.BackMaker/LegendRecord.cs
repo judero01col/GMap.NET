@@ -1,6 +1,6 @@
-using System;
 using System.Drawing;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class LegendRecord
@@ -13,6 +13,7 @@ namespace MSR.CVE.BackMaker
         internal string urlSuffix;
         private string displayName;
         internal Size imageDimensions;
+
         public LegendRecord(string urlPrefix, string urlSuffix, string displayName, Size imageDimensions)
         {
             this.url = string.Format("{0}/{1}", urlPrefix, urlSuffix);
@@ -20,6 +21,7 @@ namespace MSR.CVE.BackMaker
             this.displayName = displayName;
             this.imageDimensions = imageDimensions;
         }
+
         public LegendRecord(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("Legend");
@@ -35,8 +37,10 @@ namespace MSR.CVE.BackMaker
                     this.imageDimensions = XMLUtils.ReadSize(context);
                 }
             }
+
             context.AssertPresent(obj, "Size");
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("Legend");
@@ -45,6 +49,7 @@ namespace MSR.CVE.BackMaker
             XMLUtils.WriteSize(this.imageDimensions, writer);
             writer.WriteEndElement();
         }
+
         internal static string GetXMLTag()
         {
             return "Legend";

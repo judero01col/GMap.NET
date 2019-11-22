@@ -1,15 +1,17 @@
 using Jama;
-using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class SlowGeneralPolyPointTransformer : IPolyPointTransformer
     {
         private JamaMatrix matrix;
+
         public SlowGeneralPolyPointTransformer(int polynomialDegree, JamaMatrix matrix) : base(matrix)
         {
             this.polynomialDegree = polynomialDegree;
             this.matrix = matrix;
         }
+
         public override void doTransform(PointD p0, PointD p1)
         {
             JamaMatrix jamaMatrix = new JamaMatrix(1, 2);

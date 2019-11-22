@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal class TileAddressEnumerator : IEnumerator<TileDisplayDescriptor>, IDisposable, IEnumerator
@@ -11,6 +12,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private TileDisplayDescriptor current;
         private int screenTileCountX;
         private int screenTileCountY;
+
         public TileDisplayDescriptor Current
         {
             get
@@ -18,6 +20,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return this.current;
             }
         }
+
         object IEnumerator.Current
         {
             get
@@ -25,17 +28,25 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return this.Current;
             }
         }
+
         public TileAddressEnumerator(TileDisplayDescriptorArray tad)
         {
             this.tad = tad;
         }
+
         public void Dispose()
         {
         }
+
         private void SetPaintLocation()
         {
-            this.current.paintLocation = new Rectangle(this.tad.topLeftTileOffset.X + this.tad.tileSize.Width * this.screenTileCountX, this.tad.topLeftTileOffset.Y + this.tad.tileSize.Height * this.screenTileCountY, this.tad.tileSize.Width, this.tad.tileSize.Height);
+            this.current.paintLocation = new Rectangle(
+                this.tad.topLeftTileOffset.X + this.tad.tileSize.Width * this.screenTileCountX,
+                this.tad.topLeftTileOffset.Y + this.tad.tileSize.Height * this.screenTileCountY,
+                this.tad.tileSize.Width,
+                this.tad.tileSize.Height);
         }
+
         public bool MoveNext()
         {
             bool result;
@@ -64,7 +75,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         }
                         else
                         {
-                            this.current.tileAddress.TileY = this.tad.layout.YValueOneTileSouth(this.current.tileAddress);
+                            this.current.tileAddress.TileY =
+                                this.tad.layout.YValueOneTileSouth(this.current.tileAddress);
                             this.screenTileCountY++;
                             this.current.tileAddress.TileX = this.tad.topLeftTile.TileX;
                             this.screenTileCountX = 0;
@@ -77,11 +89,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                         this.screenTileCountX++;
                         result = true;
                     }
+
                     this.SetPaintLocation();
                 }
             }
+
             return result;
         }
+
         public void Reset()
         {
             this.reset = true;

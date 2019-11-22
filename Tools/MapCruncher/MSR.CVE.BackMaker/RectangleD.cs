@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows;
+
 namespace MSR.CVE.BackMaker
 {
     public class RectangleD
@@ -9,6 +10,7 @@ namespace MSR.CVE.BackMaker
         private double _y;
         private double _width;
         private double _height;
+
         public double X
         {
             get
@@ -20,6 +22,7 @@ namespace MSR.CVE.BackMaker
                 this._x = value;
             }
         }
+
         public double Y
         {
             get
@@ -31,6 +34,7 @@ namespace MSR.CVE.BackMaker
                 this._y = value;
             }
         }
+
         public double Width
         {
             get
@@ -42,6 +46,7 @@ namespace MSR.CVE.BackMaker
                 this._width = value;
             }
         }
+
         public double Height
         {
             get
@@ -53,6 +58,7 @@ namespace MSR.CVE.BackMaker
                 this._height = value;
             }
         }
+
         public double Left
         {
             get
@@ -60,6 +66,7 @@ namespace MSR.CVE.BackMaker
                 return this._x;
             }
         }
+
         public double Right
         {
             get
@@ -67,6 +74,7 @@ namespace MSR.CVE.BackMaker
                 return this._x + this._width;
             }
         }
+
         public double Top
         {
             get
@@ -74,6 +82,7 @@ namespace MSR.CVE.BackMaker
                 return this._y;
             }
         }
+
         public double Bottom
         {
             get
@@ -81,6 +90,7 @@ namespace MSR.CVE.BackMaker
                 return this._y + this._height;
             }
         }
+
         public RectangleD(double x, double y, double width, double height)
         {
             this._x = x;
@@ -88,10 +98,12 @@ namespace MSR.CVE.BackMaker
             this._width = width;
             this._height = height;
         }
+
         public RectangleF ToRectangleF()
         {
             return new RectangleF((float)this.X, (float)this.Y, (float)this.Width, (float)this.Height);
         }
+
         public RectangleD Round()
         {
             int num = (int)Math.Round(this.Left);
@@ -100,6 +112,7 @@ namespace MSR.CVE.BackMaker
             int num4 = (int)Math.Round(this.Bottom);
             return new RectangleD((double)num, (double)num2, (double)(num3 - num), (double)(num4 - num2));
         }
+
         public Int32Rect ToInt32Rect()
         {
             int num = (int)Math.Round(this.Left);
@@ -108,16 +121,13 @@ namespace MSR.CVE.BackMaker
             int num4 = (int)Math.Round(this.Bottom);
             return new Int32Rect(num, num2, num3 - num, num4 - num2);
         }
+
         public override string ToString()
         {
-            return string.Format("RectangleD(x{0}, y{1}, w{2}, h{3})", new object[]
-            {
-                this._x,
-                this._y,
-                this._width,
-                this._height
-            });
+            return string.Format("RectangleD(x{0}, y{1}, w{2}, h{3})",
+                new object[] {this._x, this._y, this._width, this._height});
         }
+
         public RectangleD Intersect(RectangleD r1)
         {
             double num = Math.Max(this.Left, r1.Left);
@@ -126,10 +136,15 @@ namespace MSR.CVE.BackMaker
             double num4 = Math.Min(this.Bottom, r1.Bottom);
             return new RectangleD(num, num3, num2 - num, num4 - num3);
         }
+
         public RectangleD Grow(double margin)
         {
-            return new RectangleD(this.X - margin, this.Y - margin, this.Width + 2.0 * margin, this.Height + 2.0 * margin);
+            return new RectangleD(this.X - margin,
+                this.Y - margin,
+                this.Width + 2.0 * margin,
+                this.Height + 2.0 * margin);
         }
+
         internal bool IntIsEmpty()
         {
             Int32Rect int32Rect = this.ToInt32Rect();

@@ -1,10 +1,10 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class DirtyString
     {
         private string _myValue;
         public DirtyEvent dirtyEvent;
+
         public string myValue
         {
             get
@@ -13,6 +13,7 @@ namespace MSR.CVE.BackMaker
                 {
                     return "";
                 }
+
                 return this._myValue;
             }
             set
@@ -24,6 +25,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public DirtyString(DirtyEvent parentDirtyEvent)
         {
             this.dirtyEvent = new DirtyEvent(parentDirtyEvent);

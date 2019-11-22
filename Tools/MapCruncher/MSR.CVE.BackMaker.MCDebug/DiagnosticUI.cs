@@ -4,16 +4,24 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker.MCDebug
 {
     public class DiagnosticUI : Form, ListUIIfc
     {
         private delegate void CACDelegate();
+
         private delegate void UQLDelegate();
+
         private static DiagnosticUI _theDiagnostics;
         private Dictionary<string, ResourceCounter> resourceCountersByName = new Dictionary<string, ResourceCounter>();
-        private Dictionary<ResourceCounter, DataGridViewRow> resourceCounterToGridRow = new Dictionary<ResourceCounter, DataGridViewRow>();
-        private EventWaitHandle queueListChangedEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "DiagnosticUI.queueListChangedEvent");
+
+        private Dictionary<ResourceCounter, DataGridViewRow> resourceCounterToGridRow =
+            new Dictionary<ResourceCounter, DataGridViewRow>();
+
+        private EventWaitHandle queueListChangedEvent =
+            new EventWaitHandle(false, EventResetMode.AutoReset, "DiagnosticUI.queueListChangedEvent");
+
         private List<string> newResourceNames = new List<string>();
         private bool canInvoke;
         private List<object> queueList;
@@ -24,6 +32,7 @@ namespace MSR.CVE.BackMaker.MCDebug
         private DataGridViewTextBoxColumn Count;
         private ListBox renderQueueListBox;
         private SplitContainer splitContainer1;
+
         public static DiagnosticUI theDiagnostics
         {
             get
@@ -32,26 +41,33 @@ namespace MSR.CVE.BackMaker.MCDebug
                 {
                     _theDiagnostics = new DiagnosticUI();
                 }
+
                 return _theDiagnostics;
             }
         }
+
         public DiagnosticUI()
         {
             this.InitializeComponent();
             base.Shown += new EventHandler(this.DiagnosticUI_Shown);
             base.Closing += new CancelEventHandler(this.DiagnosticUI_Closing);
-            DebugThreadInterrupter.theInstance.AddThread("QueueListRedrawThread", new ThreadStart(this.UpdateQueueListThread), ThreadPriority.BelowNormal);
+            DebugThreadInterrupter.theInstance.AddThread("QueueListRedrawThread",
+                new ThreadStart(this.UpdateQueueListThread),
+                ThreadPriority.BelowNormal);
         }
+
         private void DiagnosticUI_Closing(object sender, CancelEventArgs e)
         {
             this.canInvoke = false;
         }
+
         private void DiagnosticUI_Shown(object sender, EventArgs e)
         {
             this.CreateAllCounters();
             this.canInvoke = true;
             this.queueListChangedEvent.Set();
         }
+
         public ResourceCounter fetchResourceCounter(string resourceName, int period)
         {
             Monitor.Enter(this);
@@ -60,25 +76,33 @@ namespace MSR.CVE.BackMaker.MCDebug
             {
                 if (!this.resourceCountersByName.ContainsKey(resourceName))
                 {
-                    this.resourceCountersByName[resourceName] = new ResourceCounter(resourceName, period, new ResourceCounter.NotifyDelegate(this.ResourceCounterCallback));
+                    this.resourceCountersByName[resourceName] = new ResourceCounter(resourceName,
+                        period,
+                        new ResourceCounter.NotifyDelegate(this.ResourceCounterCallback));
                     if (this.canInvoke)
                     {
-                        DebugThreadInterrupter.theInstance.AddThread("DiagnosticUI.CreateAllCountersInvokeThread", new ThreadStart(this.CreateAllCountersInvokeThread), ThreadPriority.Normal);
+                        DebugThreadInterrupter.theInstance.AddThread("DiagnosticUI.CreateAllCountersInvokeThread",
+                            new ThreadStart(this.CreateAllCountersInvokeThread),
+                            ThreadPriority.Normal);
                     }
                 }
+
                 result = this.resourceCountersByName[resourceName];
             }
             finally
             {
                 Monitor.Exit(this);
             }
+
             return result;
         }
+
         private void CreateAllCountersInvokeThread()
         {
             CACDelegate method = new CACDelegate(this.CreateAllCounters);
             base.Invoke(method);
         }
+
         private void CreateAllCounters()
         {
             foreach (string current in this.resourceCountersByName.Keys)
@@ -94,6 +118,7 @@ namespace MSR.CVE.BackMaker.MCDebug
                 }
             }
         }
+
         private void ResourceCounterCallback(ResourceCounter resourceCounter)
         {
             if (this.canInvoke)
@@ -107,11 +132,13 @@ namespace MSR.CVE.BackMaker.MCDebug
                 }
             }
         }
+
         public void listChanged(List<object> prefix)
         {
             this.queueList = prefix;
             this.queueListChangedEvent.Set();
         }
+
         private void updateQueueList()
         {
             List<object> list = this.queueList;
@@ -120,8 +147,10 @@ namespace MSR.CVE.BackMaker.MCDebug
             {
                 this.renderQueueListBox.Items.Add(current);
             }
+
             this.renderQueueListBox.Refresh();
         }
+
         private void UpdateQueueListThread()
         {
             Thread.CurrentThread.IsBackground = true;
@@ -137,14 +166,17 @@ namespace MSR.CVE.BackMaker.MCDebug
                 }
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.resourceCountersGridView = new DataGridView();
@@ -159,12 +191,9 @@ namespace MSR.CVE.BackMaker.MCDebug
             base.SuspendLayout();
             this.resourceCountersGridView.AllowUserToAddRows = false;
             this.resourceCountersGridView.AllowUserToDeleteRows = false;
-            this.resourceCountersGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.resourceCountersGridView.Columns.AddRange(new DataGridViewColumn[]
-            {
-                this.resourceName,
-                this.Count
-            });
+            this.resourceCountersGridView.ColumnHeadersHeightSizeMode =
+                DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.resourceCountersGridView.Columns.AddRange(new DataGridViewColumn[] {this.resourceName, this.Count});
             this.resourceCountersGridView.Dock = DockStyle.Fill;
             this.resourceCountersGridView.Location = new Point(0, 0);
             this.resourceCountersGridView.Name = "resourceCountersGridView";

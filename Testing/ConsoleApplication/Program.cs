@@ -15,7 +15,7 @@ namespace ConsoleApplication
     class test
     {
         //const int batchSize = 3;
-        const int logSize = 8;//1024 * 8;
+        const int logSize = 8; //1024 * 8;
         readonly PointLatLng[] gpsLog = new PointLatLng[logSize];
         int logCounter;
         bool logFull;
@@ -34,8 +34,8 @@ namespace ConsoleApplication
                     yield return l;
                 }
                 else
-                {                    
-                    if(MercatorProjection.Instance.GetDistance(l, last) > 0.1)
+                {
+                    if (MercatorProjection.Instance.GetDistance(l, last) > 0.1)
                     {
                         last = l;
                         yield return l;
@@ -81,6 +81,7 @@ namespace ConsoleApplication
                 {
                     Debug.Write(l.Lat + " ");
                 }
+
                 Debug.WriteLine("");
                 Debug.WriteLine("-----------");
             }
@@ -109,10 +110,11 @@ namespace ConsoleApplication
 
                 //GMaps.Instance.PrimaryCache.DeleteOlderThan(DateTime.MaxValue, type);
 
-                var import = Directory.GetFiles(@"T:\tiles\Layer_NewLayer\", "*.jpg", SearchOption.AllDirectories).Where(p => p.Contains("Layer_") && !p.Contains("black")).ToList();
+                var import = Directory.GetFiles(@"T:\tiles\Layer_NewLayer\", "*.jpg", SearchOption.AllDirectories)
+                    .Where(p => p.Contains("Layer_") && !p.Contains("black")).ToList();
 
                 int total = import.Count;
-                
+
                 foreach (var i in import)
                 {
                     //using (Bitmap pic = new Bitmap(i))
@@ -149,7 +151,7 @@ namespace ConsoleApplication
                 Debug.WriteLine("import: " + ex);
             }
 
-            if(false)
+            if (false)
             {
                 var dirs = Directory.GetDirectories(@"D:\Temp\tmap\TOP50LKS");
                 foreach (var dir in dirs)
@@ -226,10 +228,12 @@ namespace ConsoleApplication
                     {
                         if (!string.IsNullOrEmpty(pl.PostalCodeNumber))
                         {
-                            Debug.WriteLine("Accuracy: " + pl.Accuracy + ", " + pl.Address + ", PostalCodeNumber: " + pl.PostalCodeNumber);
+                            Debug.WriteLine("Accuracy: " + pl.Accuracy + ", " + pl.Address + ", PostalCodeNumber: " +
+                                            pl.PostalCodeNumber);
                         }
                     }
                 }
+
                 return;
             }
 
@@ -253,7 +257,14 @@ namespace ConsoleApplication
                     GDirections s;
                     //var x = GMapProviders.GoogleMap.GetDirections(out s, "Lithuania,Vilnius", "Lithuania,Kaunas", false, false, false, true);
                     //if(x == DirectionsStatusCode.OK)
-                    var x = GMapProviders.GoogleMap.GetDirections(out s, pp1.Value, pp2.Value, false, false, false, false, true);
+                    var x = GMapProviders.GoogleMap.GetDirections(out s,
+                        pp1.Value,
+                        pp2.Value,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true);
                     {
                         Debug.WriteLine(s.Summary + ", " + s.Copyrights);
                         Debug.WriteLine(s.StartAddress + " -> " + s.EndAddress);
@@ -414,7 +425,7 @@ namespace ConsoleApplication
                 PointLatLng p2 = new PointLatLng(-34.608, -58.348);
 
                 //Sets up a array to contain the x and y coordinates
-                double[] xy = new double[4] { p1.Lng, p1.Lat, p2.Lng, p2.Lat };
+                double[] xy = new double[4] {p1.Lng, p1.Lat, p2.Lng, p2.Lat};
 
                 //An array for the z coordinate
                 double[] z = new double[1];
@@ -422,7 +433,7 @@ namespace ConsoleApplication
 
                 ProjectionInfo pStart = KnownCoordinateSystems.Geographic.World.WGS1984;
                 ProjectionInfo pEnd = new ProjectionInfo();
-                
+
                 //ProjectionInfo pEnd = new ProjectionInfo("+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=4200000 +y_0=-1300000 +ellps=WGS84 +datum=WGS84 +to_meter=0.03125 +no_defs");
                 //ProjectionInfo pEnd = new ProjectionInfo("+proj=tmerc +lat_0=-34.629269 +lon_0=-58.4633 +k=0.9999980000000001 +x_0=100000 +y_0=100000 +ellps=intl +units=m +no_defs");
 

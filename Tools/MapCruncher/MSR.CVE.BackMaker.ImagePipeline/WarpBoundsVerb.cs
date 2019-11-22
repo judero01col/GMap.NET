@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal class WarpBoundsVerb : Verb
     {
         private IImageTransformer imageTransformer;
+
         public WarpBoundsVerb(IImageTransformer imageTransformer)
         {
             this.imageTransformer = imageTransformer;
         }
+
         public Present Evaluate(Present[] paramList)
         {
             D.Assert(paramList.Length == 1);
@@ -28,9 +31,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 List<LatLon> list2 = parametricLine.Interpolate(numSteps);
                 list.AddRange(list2.ConvertAll<LatLon>((LatLon inp) => robustPointTransform.getTransformedPoint(inp)));
             }
+
             RenderRegion renderRegion2 = new RenderRegion(list, new DirtyEvent());
             return new BoundsPresent(renderRegion2);
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("WarpBoundsVerb(");

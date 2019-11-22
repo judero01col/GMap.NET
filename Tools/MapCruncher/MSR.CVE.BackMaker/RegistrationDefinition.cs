@@ -1,7 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class RegistrationDefinition : IRobustlyHashable
@@ -12,6 +13,7 @@ namespace MSR.CVE.BackMaker
         private TransformationStyle _warpStyle = TransformationStyleFactory.getDefaultTransformationStyle();
         public DirtyEvent dirtyEvent;
         private static string RegistrationDefinitionTag = "RegistrationDefinition";
+
         public TransformationStyle warpStyle
         {
             get
@@ -27,10 +29,12 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public RegistrationDefinition(DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = new DirtyEvent(dirtyEvent);
         }
+
         public RegistrationDefinition(RegistrationDefinition prototype, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = new DirtyEvent(dirtyEvent);
@@ -39,8 +43,10 @@ namespace MSR.CVE.BackMaker
                 this.associationList.AddRange(prototype.associationList);
                 this.isLocked = prototype.isLocked;
             }
+
             this.SetNextPinID();
         }
+
         private void SetNextPinID()
         {
             int num = -1;
@@ -48,43 +54,53 @@ namespace MSR.CVE.BackMaker
             {
                 num = Math.Max(num, current.pinId);
             }
+
             this.nextPinId = num + 1;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             foreach (PositionAssociation current in this.associationList)
             {
                 current.AccumulateRobustHash(hash);
             }
+
             this.warpStyle.AccumulateRobustHash(hash);
         }
+
         public override int GetHashCode()
         {
             return RobustHashTools.GetHashCode(this);
         }
+
         public void AddAssociation(PositionAssociation positionAssociaton)
         {
             if (positionAssociaton.pinId == -1)
             {
                 positionAssociaton.pinId = this.nextPinId;
             }
+
             if (positionAssociaton.associationName == "")
             {
                 positionAssociaton.associationName = string.Format("Pin{0}", positionAssociaton.pinId);
             }
+
             this.nextPinId = Math.Max(this.nextPinId, positionAssociaton.pinId) + 1;
             this.associationList.Add(positionAssociaton);
             this.dirtyEvent.SetDirty();
         }
+
         public void RemoveAssociation(PositionAssociation assoc)
         {
             this.associationList.Remove(assoc);
             this.dirtyEvent.SetDirty();
         }
+
         public List<PositionAssociation> GetAssociationList()
         {
             return this.associationList;
         }
+
         internal PositionAssociation GetAssocByName(string name)
         {
             foreach (PositionAssociation current in this.associationList)
@@ -94,20 +110,25 @@ namespace MSR.CVE.BackMaker
                     return current;
                 }
             }
+
             return null;
         }
+
         internal bool ReadyToLock()
         {
             return this.associationList.Count >= this.warpStyle.getCorrespondencesRequired();
         }
+
         internal string[] GetLockStatusText()
         {
             return this.warpStyle.getDescriptionStrings(this.associationList.Count).ToArray();
         }
+
         public static string GetXMLTag()
         {
             return RegistrationDefinitionTag;
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(RegistrationDefinitionTag);
@@ -116,8 +137,10 @@ namespace MSR.CVE.BackMaker
             {
                 current.WriteXML(writer);
             }
+
             writer.WriteEndElement();
         }
+
         public RegistrationDefinition(MashupParseContext context, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = new DirtyEvent(dirtyEvent);

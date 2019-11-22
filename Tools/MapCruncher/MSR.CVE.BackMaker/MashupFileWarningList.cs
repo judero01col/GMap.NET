@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+
 namespace MSR.CVE.BackMaker
 {
     public class MashupFileWarningList : List<MashupFileWarning>
@@ -11,6 +11,7 @@ namespace MSR.CVE.BackMaker
             {
                 text = text + current + "\n";
             }
+
             return text;
         }
     }

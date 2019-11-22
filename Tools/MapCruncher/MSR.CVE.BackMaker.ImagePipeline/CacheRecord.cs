@@ -1,6 +1,7 @@
-using MSR.CVE.BackMaker.MCDebug;
 using System;
 using System.Threading;
+using MSR.CVE.BackMaker.MCDebug;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     internal abstract class CacheRecord
@@ -9,8 +10,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private EventWaitHandle wait;
         internal Present _present;
         private int refs;
-        private static ResourceCounter cacheRecordsCompletedResourceCounter = DiagnosticUI.theDiagnostics.fetchResourceCounter("cacheRecordsCompleted", -1);
-        private static ResourceCounter cacheRecordsExtant = DiagnosticUI.theDiagnostics.fetchResourceCounter("cacheRecordsExtant", -1);
+
+        private static ResourceCounter cacheRecordsCompletedResourceCounter =
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("cacheRecordsCompleted", -1);
+
+        private static ResourceCounter cacheRecordsExtant =
+            DiagnosticUI.theDiagnostics.fetchResourceCounter("cacheRecordsExtant", -1);
+
         internal Present present
         {
             get
@@ -19,12 +25,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             }
             set
             {
-                int num = (this._present != null) ? 1 : 0;
-                int num2 = (value != null) ? 1 : 0;
+                int num = this._present != null ? 1 : 0;
+                int num2 = value != null ? 1 : 0;
                 cacheRecordsCompletedResourceCounter.crement(num2 - num);
                 this._present = value;
             }
         }
+
         public CacheRecord(IFuture future)
         {
             this.future = future;
@@ -32,6 +39,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.refs = 1;
             cacheRecordsExtant.crement(1);
         }
+
         public void Dispose()
         {
             if (this.present != null)
@@ -39,6 +47,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.present.Dispose();
                 this.present = null;
             }
+
             Monitor.Enter(this);
             try
             {
@@ -52,8 +61,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             cacheRecordsExtant.crement(-1);
         }
+
         public void Process()
         {
             try
@@ -64,6 +75,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 this.present = new PresentFailureCode(ex);
             }
+
             D.Assert(this.present != null);
             Monitor.Enter(this);
             try
@@ -77,6 +89,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         public Present WaitResult(string refCredit, string debugCacheName)
         {
             Monitor.Enter(this);
@@ -89,28 +102,35 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 Monitor.Exit(this);
             }
+
             if (waitHandle != null)
             {
                 waitHandle.WaitOne();
             }
+
             return this.Duplicate(refCredit);
         }
+
         public Present Duplicate(string refCredit)
         {
             return this.present.Duplicate(refCredit);
         }
+
         internal IFuture GetFuture()
         {
             return this.future;
         }
+
         public override string ToString()
         {
             if (this.present != null)
             {
                 return "CacheRecord(present)";
             }
+
             return "CacheRecord(processing)";
         }
+
         internal void AddReference()
         {
             Monitor.Enter(this);
@@ -123,6 +143,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 Monitor.Exit(this);
             }
         }
+
         internal void DropReference()
         {
             Monitor.Enter(this);
@@ -130,12 +151,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             try
             {
                 this.refs--;
-                flag = (this.refs == 0);
+                flag = this.refs == 0;
             }
             finally
             {
                 Monitor.Exit(this);
             }
+
             if (flag)
             {
                 this.Dispose();

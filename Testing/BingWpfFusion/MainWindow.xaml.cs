@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using GMap.NET;
@@ -10,7 +9,7 @@ using Microsoft.Maps.MapControl.WPF;
 namespace BingMapsWpfUsingCache
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -32,10 +31,7 @@ namespace BingMapsWpfUsingCache
             {
                 pin.Location = map.Center;
 
-                pin.ToolTip = new Label()
-                {
-                    Content = "GMap.NET fusion power! ;}"
-                };
+                pin.ToolTip = new Label() {Content = "GMap.NET fusion power! ;}"};
             }
             map.Children.Add(pin);
         }

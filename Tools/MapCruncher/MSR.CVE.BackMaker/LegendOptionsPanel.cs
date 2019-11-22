@@ -1,9 +1,10 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class LegendOptionsPanel : UserControl
@@ -11,15 +12,18 @@ namespace MSR.CVE.BackMaker
         internal class CallbackIgnorinator
         {
             private LegendOptionsPanel lop;
+
             public CallbackIgnorinator(LegendOptionsPanel lop)
             {
                 this.lop = lop;
             }
+
             public void Callback(AsyncRef asyncRef)
             {
                 this.lop.AsyncReadyCallback(this);
             }
         }
+
         private IContainer components;
         private Label label1;
         private NumericUpDown renderedSizeSpinner;
@@ -31,14 +35,17 @@ namespace MSR.CVE.BackMaker
         private InterestList previewInterest;
         private CallbackIgnorinator waitingForCI;
         private bool needUpdate;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.label1 = new Label();
@@ -52,7 +59,7 @@ namespace MSR.CVE.BackMaker
             this.label1.Size = new Size(75, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Rendered size";
-            this.renderedSizeSpinner.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
+            this.renderedSizeSpinner.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             NumericUpDown arg_B6_0 = this.renderedSizeSpinner;
             int[] array = new int[4];
             array[0] = 50;
@@ -74,7 +81,7 @@ namespace MSR.CVE.BackMaker
             int[] array4 = new int[4];
             array4[0] = 50;
             arg_163_0.Value = new decimal(array4);
-            this.previewPanel.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.previewPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.previewPanel.Location = new Point(10, 50);
             this.previewPanel.Name = "previewPanel";
             this.previewPanel.Size = new Size(228, 235);
@@ -90,6 +97,7 @@ namespace MSR.CVE.BackMaker
             base.ResumeLayout(false);
             base.PerformLayout();
         }
+
         public LegendOptionsPanel()
         {
             this.InitializeComponent();
@@ -98,6 +106,7 @@ namespace MSR.CVE.BackMaker
             this.renderedSizeSpinner.Minimum = Legend.renderedSizeRange.min;
             this.renderedSizeSpinner.Maximum = Legend.renderedSizeRange.max;
         }
+
         public void Configure(Legend legend, IDisplayableSource displayableSource)
         {
             Monitor.Enter(this);
@@ -114,14 +123,17 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
+
             if (this._legend == legend)
             {
                 return;
             }
+
             if (this._legend != null)
             {
                 this._legend.dirtyEvent.Remove(new DirtyListener(this.LegendChanged));
             }
+
             this._legend = legend;
             this.displayableSource = displayableSource;
             if (this._legend != null)
@@ -129,10 +141,12 @@ namespace MSR.CVE.BackMaker
                 this._legend.dirtyEvent.Add(new DirtyListener(this.LegendChanged));
                 this.LegendChanged();
             }
-            base.Enabled = (this._legend != null);
+
+            base.Enabled = this._legend != null;
             this.UpdatePreviewImage(null);
             this.UpdatePreviewPanel();
         }
+
         private void UpdatePreviewImage(ImageRef imageRef)
         {
             Monitor.Enter(this);
@@ -143,6 +157,7 @@ namespace MSR.CVE.BackMaker
                     this.previewImage.Dispose();
                     this.previewImage = null;
                 }
+
                 if (imageRef != null)
                 {
                     this.previewImage = (ImageRef)imageRef.Duplicate("LegendOptionsPanel.UpdatePreviewImage");
@@ -152,28 +167,34 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
+
             base.Invalidate();
         }
+
         private void LegendChanged()
         {
             this.renderedSizeSpinner.Value = this._legend.renderedSize;
             this.UpdatePreviewPanel();
         }
+
         private void renderedSizeSpinner_ValueChanged(object sender, EventArgs e)
         {
             this._legend.renderedSize = (int)this.renderedSizeSpinner.Value;
         }
+
         private void UpdatePreviewPanel()
         {
             this.needUpdate = true;
             base.Invalidate();
         }
+
         private void HandleUpdate()
         {
             if (!this.needUpdate)
             {
                 return;
             }
+
             this.needUpdate = false;
             Monitor.Enter(this);
             try
@@ -184,15 +205,18 @@ namespace MSR.CVE.BackMaker
                     this.previewInterest = null;
                     this.waitingForCI = null;
                 }
+
                 if (this._legend != null)
                 {
                     try
                     {
-                        IFuture renderedLegendFuture = this._legend.GetRenderedLegendFuture(this.displayableSource, (FutureFeatures)5);
+                        IFuture renderedLegendFuture =
+                            this._legend.GetRenderedLegendFuture(this.displayableSource, (FutureFeatures)5);
                         if (this.previewFuture != renderedLegendFuture)
                         {
                             this.previewFuture = renderedLegendFuture;
-                            AsyncRef asyncRef = (AsyncRef)renderedLegendFuture.Realize("LegendOptionsPanel.UpdatePreviewPanel");
+                            AsyncRef asyncRef =
+                                (AsyncRef)renderedLegendFuture.Realize("LegendOptionsPanel.UpdatePreviewPanel");
                             if (asyncRef.present == null)
                             {
                                 this.waitingForCI = new CallbackIgnorinator(this);
@@ -222,6 +246,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
+
         internal void AsyncReadyCallback(CallbackIgnorinator ci)
         {
             if (ci == this.waitingForCI)
@@ -229,6 +254,7 @@ namespace MSR.CVE.BackMaker
                 this.UpdatePreviewPanel();
             }
         }
+
         private void previewPanel_Paint(object sender, PaintEventArgs e)
         {
             this.HandleUpdate();
@@ -245,6 +271,7 @@ namespace MSR.CVE.BackMaker
             {
                 Monitor.Exit(this);
             }
+
             if (imageRef != null)
             {
                 try
@@ -254,7 +281,10 @@ namespace MSR.CVE.BackMaker
                     try
                     {
                         Image image2 = imageRef.image.IPromiseIAmHoldingGDISLockSoPleaseGiveMeTheImage();
-                        e.Graphics.DrawImage(image2, new Rectangle(new Point(0, 0), this.previewPanel.Size), new Rectangle(new Point(0, 0), this.previewPanel.Size), GraphicsUnit.Pixel);
+                        e.Graphics.DrawImage(image2,
+                            new Rectangle(new Point(0, 0), this.previewPanel.Size),
+                            new Rectangle(new Point(0, 0), this.previewPanel.Size),
+                            GraphicsUnit.Pixel);
                     }
                     finally
                     {
@@ -265,10 +295,16 @@ namespace MSR.CVE.BackMaker
                 {
                     D.Say(0, "Absorbing that disturbing bug wherein the mostRecentTile image is corrupt.");
                 }
+
                 imageRef.Dispose();
                 return;
             }
-            e.Graphics.DrawRectangle(new Pen(Color.Black), 0, 0, this.previewPanel.Size.Width - 1, this.previewPanel.Height - 1);
+
+            e.Graphics.DrawRectangle(new Pen(Color.Black),
+                0,
+                0,
+                this.previewPanel.Size.Width - 1,
+                this.previewPanel.Height - 1);
         }
     }
 }

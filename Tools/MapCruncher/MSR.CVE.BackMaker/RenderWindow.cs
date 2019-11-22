@@ -1,7 +1,7 @@
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderWindow : Form
@@ -10,14 +10,17 @@ namespace MSR.CVE.BackMaker
         private RenderOptionsPanel renderOptionsPanel;
         private RenderProgressPanel2 renderProgressPanel;
         private GroupBox groupBox1;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.groupBox1 = new GroupBox();
@@ -28,8 +31,8 @@ namespace MSR.CVE.BackMaker
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Bottom) 
-            | AnchorStyles.Left)));
+            this.groupBox1.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+                                                                    | AnchorStyles.Left);
             this.groupBox1.BackColor = SystemColors.Control;
             this.groupBox1.Controls.Add(this.renderOptionsPanel);
             this.groupBox1.Location = new Point(2, 3);
@@ -51,9 +54,9 @@ namespace MSR.CVE.BackMaker
             // 
             // renderProgressPanel
             // 
-            this.renderProgressPanel.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) 
-            | AnchorStyles.Left) 
-            | AnchorStyles.Right)));
+            this.renderProgressPanel.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Bottom
+                                                                              | AnchorStyles.Left
+                                                                              | AnchorStyles.Right);
             this.renderProgressPanel.BackColor = SystemColors.Control;
             this.renderProgressPanel.Location = new Point(280, 12);
             this.renderProgressPanel.Margin = new Padding(4, 4, 4, 4);
@@ -70,28 +73,38 @@ namespace MSR.CVE.BackMaker
             this.Text = "Render";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
+
         public RenderWindow()
         {
             this.InitializeComponent();
             base.FormClosed += new FormClosedEventHandler(this.RenderWindow_FormClosed);
         }
+
         private void RenderWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.UndoConstruction();
         }
+
         internal void UndoConstruction()
         {
             this.renderOptionsPanel.SetRenderOptions(null);
             this.renderProgressPanel.UndoConstruction();
             base.Dispose();
         }
-        internal void Setup(RenderOptions renderOptions, Mashup currentMashup, MapTileSourceFactory mapTileSourceFactory, RenderProgressPanel2.LaunchRenderedBrowserDelegate LaunchRenderedBrowser, RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
+
+        internal void Setup(RenderOptions renderOptions, Mashup currentMashup,
+            MapTileSourceFactory mapTileSourceFactory,
+            RenderProgressPanel2.LaunchRenderedBrowserDelegate LaunchRenderedBrowser,
+            RenderState.FlushRenderedTileCachePackageDelegate flushRenderedTileCachePackage)
         {
             this.renderOptionsPanel.SetRenderOptions(renderOptions);
-            this.renderProgressPanel.Setup(currentMashup, mapTileSourceFactory, LaunchRenderedBrowser, flushRenderedTileCachePackage);
+            this.renderProgressPanel.Setup(currentMashup,
+                mapTileSourceFactory,
+                LaunchRenderedBrowser,
+                flushRenderedTileCachePackage);
         }
+
         internal void StartRender(RenderProgressPanel2.RenderCompleteDelegate renderCompleteDelegate)
         {
             this.renderProgressPanel.StartRender(renderCompleteDelegate);

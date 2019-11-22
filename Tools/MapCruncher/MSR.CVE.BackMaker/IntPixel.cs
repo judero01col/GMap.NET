@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public struct IntPixel
@@ -7,6 +6,7 @@ namespace MSR.CVE.BackMaker
         public int g;
         public int r;
         public int a;
+
         public static IntPixel BlackPixel()
         {
             IntPixel result;
@@ -16,6 +16,7 @@ namespace MSR.CVE.BackMaker
             result.a = 0;
             return result;
         }
+
         public void addWeighted(double weight, PixelStruct pix)
         {
             this.r += (int)(weight * (double)pix.r);
@@ -23,14 +24,15 @@ namespace MSR.CVE.BackMaker
             this.b += (int)(weight * (double)pix.b);
             this.a += (int)(weight * (double)pix.a);
         }
+
         public PixelStruct AsPixel()
         {
             PixelStruct struct2;
-            struct2.r = (this.r > 0xff) ? ((byte)0xff) : ((byte)this.r);
-            struct2.g = (this.g > 0xff) ? ((byte)0xff) : ((byte)this.g);
-            struct2.b = (this.b > 0xff) ? ((byte)0xff) : ((byte)this.b);
-            struct2.a = (this.a > 0xff) ? ((byte)0xff) : ((byte)this.a);
-            return struct2;            
+            struct2.r = this.r > 0xff ? (byte)0xff : (byte)this.r;
+            struct2.g = this.g > 0xff ? (byte)0xff : (byte)this.g;
+            struct2.b = this.b > 0xff ? (byte)0xff : (byte)this.b;
+            struct2.a = this.a > 0xff ? (byte)0xff : (byte)this.a;
+            return struct2;
         }
     }
 }

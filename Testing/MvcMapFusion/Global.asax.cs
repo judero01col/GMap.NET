@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using GMap.NET.MapProviders;
 using GMap.NET;
-using System.Diagnostics;
-using System.Net;
-using System.ComponentModel;
-using System.Threading;
 using GMap.NET.WindowsPresentation;
 
 namespace MvcMapFusion
@@ -31,14 +27,8 @@ namespace MvcMapFusion
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new
-                {
-                    controller = "Home",
-                    action = "Index",
-                    id = UrlParameter.Optional
-                } // Parameter defaults
+                new {controller = "Home", action = "Index", id = UrlParameter.Optional} // Parameter defaults
             );
-
         }
 
         static BackgroundWorker worker;
@@ -67,10 +57,10 @@ namespace MvcMapFusion
                 worker.WorkerSupportsCancellation = true;
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
 
-                base.Application.Set("BackgroundWorker", worker);                
-            }           
+                base.Application.Set("BackgroundWorker", worker);
+            }
 
-            worker.RunWorkerAsync(); 
+            worker.RunWorkerAsync();
         }
 
         void Application_End()
@@ -78,13 +68,13 @@ namespace MvcMapFusion
             BackgroundWorker w = (BackgroundWorker)base.Application.Get("BackgroundWorker");
             if (w != null)
             {
-                w.CancelAsync();               
+                w.CancelAsync();
             }
         }
 
         static void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Debug.WriteLine("worker_RunWorkerCompleted");            
+            Debug.WriteLine("worker_RunWorkerCompleted");
         }
 
         static void worker_DoWork(object sender, DoWorkEventArgs e)

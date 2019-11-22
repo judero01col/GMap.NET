@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class CachePackage : IDisposable
@@ -15,6 +16,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public MemoryCache asyncCache;
         public MemoryCache documentFetchCache;
         public DiskCache diskCache;
+
         private string suffix
         {
             get
@@ -22,6 +24,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 return "-" + this.identifier;
             }
         }
+
         public CachePackage()
         {
             this.identifier = "root";
@@ -30,10 +33,12 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.openDocumentPrioritizer = new OpenDocumentSensitivePrioritizer(this.openSourceDocumentCache);
             this.diskCache = new DiskCache();
         }
+
         private CachePackage(string identifier)
         {
             this.identifier = identifier;
         }
+
         public CachePackage DeriveCache(string identifier)
         {
             CachePackage cachePackage = new CachePackage(identifier);
@@ -43,6 +48,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             cachePackage.Flush();
             return cachePackage;
         }
+
         public void Flush()
         {
             this.PreflushDispose();
@@ -54,6 +60,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.asyncCache = new AsyncRecordCache("asyncCache" + this.suffix, true);
             this.documentFetchCache = new MemoryCache("documentCache" + this.suffix, 10000);
         }
+
         private void PreflushDispose()
         {
             if (this.computeAsyncScheduler != null)
@@ -67,6 +74,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.documentFetchCache.Dispose();
             }
         }
+
         public void Dispose()
         {
             this.PreflushDispose();
@@ -76,12 +84,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.diskCache.Dispose();
             }
         }
+
         public void ClearSchedulers()
         {
             if (this.computeAsyncScheduler != null)
             {
                 this.computeAsyncScheduler.Clear();
             }
+
             if (this.networkAsyncScheduler != null)
             {
                 this.networkAsyncScheduler.Clear();

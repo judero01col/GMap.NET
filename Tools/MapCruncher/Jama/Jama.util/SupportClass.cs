@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+
 public class SupportClass
 {
     [Serializable]
@@ -15,6 +16,7 @@ public class SupportClass
             Currency,
             Percent
         }
+
         private NumberFormatInfo numberFormat;
         private int numberFormatType;
         private bool groupingActivated;
@@ -23,6 +25,7 @@ public class SupportClass
         private int minIntDigits;
         private int maxFractionDigits;
         private int minFractionDigits;
+
         public bool GroupingUsed
         {
             get
@@ -34,6 +37,7 @@ public class SupportClass
                 this.groupingActivated = value;
             }
         }
+
         public int MinIntDigits
         {
             get
@@ -45,6 +49,7 @@ public class SupportClass
                 this.minIntDigits = value;
             }
         }
+
         public int MaxIntDigits
         {
             get
@@ -56,6 +61,7 @@ public class SupportClass
                 this.maxIntDigits = value;
             }
         }
+
         public int MinFractionDigits
         {
             get
@@ -67,6 +73,7 @@ public class SupportClass
                 this.minFractionDigits = value;
             }
         }
+
         public int MaxFractionDigits
         {
             get
@@ -78,6 +85,7 @@ public class SupportClass
                 this.maxFractionDigits = value;
             }
         }
+
         public TextNumberFormat()
         {
             this.numberFormat = new NumberFormatInfo();
@@ -89,6 +97,7 @@ public class SupportClass
             this.maxFractionDigits = 3;
             this.minFractionDigits = 0;
         }
+
         public void setMaximumIntegerDigits(int newValue)
         {
             this.maxIntDigits = newValue;
@@ -105,6 +114,7 @@ public class SupportClass
                 }
             }
         }
+
         public void setMinimumIntegerDigits(int newValue)
         {
             this.minIntDigits = newValue;
@@ -120,6 +130,7 @@ public class SupportClass
                 }
             }
         }
+
         public void setMaximumFractionDigits(int newValue)
         {
             this.maxFractionDigits = newValue;
@@ -136,6 +147,7 @@ public class SupportClass
                 }
             }
         }
+
         public void setMinimumFractionDigits(int newValue)
         {
             this.minFractionDigits = newValue;
@@ -151,6 +163,7 @@ public class SupportClass
                 }
             }
         }
+
         private TextNumberFormat(formatTypes theType, int digits)
         {
             this.numberFormat = NumberFormatInfo.CurrentInfo;
@@ -162,6 +175,7 @@ public class SupportClass
             this.maxFractionDigits = 3;
             this.minFractionDigits = 0;
         }
+
         private TextNumberFormat(formatTypes theType, CultureInfo cultureNumberFormat, int digits)
         {
             this.numberFormat = cultureNumberFormat.NumberFormat;
@@ -173,38 +187,46 @@ public class SupportClass
             this.maxFractionDigits = 3;
             this.minFractionDigits = 0;
         }
+
         public static TextNumberFormat getTextNumberInstance()
         {
             return new TextNumberFormat(formatTypes.Number, 3);
         }
+
         public static TextNumberFormat getTextNumberCurrencyInstance()
         {
             TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Currency, 3);
             return textNumberFormat.setToCurrencyNumberFormatDefaults(textNumberFormat);
         }
+
         public static TextNumberFormat getTextNumberPercentInstance()
         {
             TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Percent, 3);
             return textNumberFormat.setToPercentNumberFormatDefaults(textNumberFormat);
         }
+
         public static TextNumberFormat getTextNumberInstance(CultureInfo culture)
         {
             return new TextNumberFormat(formatTypes.Number, culture, 3);
         }
+
         public static TextNumberFormat getTextNumberCurrencyInstance(CultureInfo culture)
         {
             TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Currency, culture, 3);
             return textNumberFormat.setToCurrencyNumberFormatDefaults(textNumberFormat);
         }
+
         public static TextNumberFormat getTextNumberPercentInstance(CultureInfo culture)
         {
             TextNumberFormat textNumberFormat = new TextNumberFormat(formatTypes.Percent, culture, 3);
             return textNumberFormat.setToPercentNumberFormatDefaults(textNumberFormat);
         }
+
         public object Clone()
         {
             return this;
         }
+
         public override bool Equals(object obj)
         {
             bool result;
@@ -215,40 +237,62 @@ public class SupportClass
             else
             {
                 TextNumberFormat textNumberFormat = (TextNumberFormat)obj;
-                result = (this.numberFormat == textNumberFormat.numberFormat && this.numberFormatType == textNumberFormat.numberFormatType && this.groupingActivated == textNumberFormat.groupingActivated && this.separator == textNumberFormat.separator && this.maxIntDigits == textNumberFormat.maxIntDigits && this.minIntDigits == textNumberFormat.minIntDigits && this.maxFractionDigits == textNumberFormat.maxFractionDigits && this.minFractionDigits == textNumberFormat.minFractionDigits);
+                result = this.numberFormat == textNumberFormat.numberFormat &&
+                         this.numberFormatType == textNumberFormat.numberFormatType &&
+                         this.groupingActivated == textNumberFormat.groupingActivated &&
+                         this.separator == textNumberFormat.separator &&
+                         this.maxIntDigits == textNumberFormat.maxIntDigits &&
+                         this.minIntDigits == textNumberFormat.minIntDigits &&
+                         this.maxFractionDigits == textNumberFormat.maxFractionDigits &&
+                         this.minFractionDigits == textNumberFormat.minFractionDigits;
             }
+
             return result;
         }
+
         public override int GetHashCode()
         {
-            return this.numberFormat.GetHashCode() ^ this.numberFormatType ^ this.groupingActivated.GetHashCode() ^ this.separator.GetHashCode() ^ this.maxIntDigits ^ this.minIntDigits ^ this.maxFractionDigits ^ this.minFractionDigits;
+            return this.numberFormat.GetHashCode() ^ this.numberFormatType ^ this.groupingActivated.GetHashCode() ^
+                   this.separator.GetHashCode() ^ this.maxIntDigits ^ this.minIntDigits ^ this.maxFractionDigits ^
+                   this.minFractionDigits;
         }
+
         public string FormatDouble(double number)
         {
             string result;
             if (this.groupingActivated)
             {
-                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat));
+                result = this.SetIntDigits(
+                    number.ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat));
             }
             else
             {
-                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat).Replace(this.separator, ""));
+                result = this.SetIntDigits(number
+                    .ToString(this.GetCurrentFormatString() + this.GetNumberOfDigits(number), this.numberFormat)
+                    .Replace(this.separator, ""));
             }
+
             return result;
         }
+
         public string FormatLong(long number)
         {
             string result;
             if (this.groupingActivated)
             {
-                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.minFractionDigits, this.numberFormat));
+                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.minFractionDigits,
+                    this.numberFormat));
             }
             else
             {
-                result = this.SetIntDigits(number.ToString(this.GetCurrentFormatString() + this.minFractionDigits, this.numberFormat).Replace(this.separator, ""));
+                result = this.SetIntDigits(number
+                    .ToString(this.GetCurrentFormatString() + this.minFractionDigits, this.numberFormat)
+                    .Replace(this.separator, ""));
             }
+
             return result;
         }
+
         private string SetIntDigits(string number)
         {
             string str = "";
@@ -263,11 +307,13 @@ public class SupportClass
             {
                 text = number.Replace(this.numberFormat.NumberGroupSeparator, "");
             }
+
             text = text.PadLeft(this.MinIntDigits, '0');
             if ((i = text.Length - this.MaxIntDigits) > 0)
             {
                 text = text.Remove(0, i);
             }
+
             if (this.groupingActivated)
             {
                 for (i = text.Length; i > 3; i -= 3)
@@ -275,6 +321,7 @@ public class SupportClass
                     text = text.Insert(i - 3, this.numberFormat.NumberGroupSeparator);
                 }
             }
+
             text += str;
             string result;
             if (text.Length == 0)
@@ -285,64 +332,73 @@ public class SupportClass
             {
                 result = text;
             }
+
             return result;
         }
+
         public static CultureInfo[] GetAvailableCultures()
         {
             return CultureInfo.GetCultures(CultureTypes.AllCultures);
         }
+
         private string GetCurrentFormatString()
         {
             string result = "n";
             switch (this.numberFormatType)
             {
-            case 0:
-                result = "n";
-                break;
-            case 1:
-                result = "n";
-                break;
-            case 2:
-                result = "c";
-                break;
-            case 3:
-                result = "p";
-                break;
+                case 0:
+                    result = "n";
+                    break;
+                case 1:
+                    result = "n";
+                    break;
+                case 2:
+                    result = "c";
+                    break;
+                case 3:
+                    result = "p";
+                    break;
             }
+
             return result;
         }
+
         private string GetSeparator(int numberFormatType)
         {
             string result = " ";
             switch (numberFormatType)
             {
-            case 0:
-                result = this.numberFormat.NumberGroupSeparator;
-                break;
-            case 1:
-                result = this.numberFormat.NumberGroupSeparator;
-                break;
-            case 2:
-                result = this.numberFormat.CurrencyGroupSeparator;
-                break;
-            case 3:
-                result = this.numberFormat.PercentGroupSeparator;
-                break;
+                case 0:
+                    result = this.numberFormat.NumberGroupSeparator;
+                    break;
+                case 1:
+                    result = this.numberFormat.NumberGroupSeparator;
+                    break;
+                case 2:
+                    result = this.numberFormat.CurrencyGroupSeparator;
+                    break;
+                case 3:
+                    result = this.numberFormat.PercentGroupSeparator;
+                    break;
             }
+
             return result;
         }
+
         private TextNumberFormat setToCurrencyNumberFormatDefaults(TextNumberFormat format)
         {
             format.maxFractionDigits = 2;
             format.minFractionDigits = 2;
             return format;
         }
+
         private TextNumberFormat setToPercentNumberFormatDefaults(TextNumberFormat format)
         {
             format.maxFractionDigits = 0;
             format.minFractionDigits = 0;
             return format;
         }
+
         private int GetNumberOfDigits(double number)
         {
             int num = 0;
@@ -352,17 +408,22 @@ public class SupportClass
                 num2 *= 10.0;
                 num++;
             }
-            return (num < this.minFractionDigits) ? this.minFractionDigits : ((num < this.maxFractionDigits) ? num : this.maxFractionDigits);
+
+            return num < this.minFractionDigits ? this.minFractionDigits :
+                num < this.maxFractionDigits ? num : this.maxFractionDigits;
         }
     }
+
     private class BackStringReader : StringReader
     {
         private char[] buffer;
         private int position = 1;
+
         public BackStringReader(string s) : base(s)
         {
             this.buffer = new char[this.position];
         }
+
         public override int Read()
         {
             int result;
@@ -374,8 +435,10 @@ public class SupportClass
             {
                 result = base.Read();
             }
+
             return result;
         }
+
         public override int Read(char[] array, int index, int count)
         {
             int num = this.buffer.Length - this.position;
@@ -392,11 +455,13 @@ public class SupportClass
                     {
                         num = count;
                     }
+
                     Array.Copy(this.buffer, this.position, array, index, num);
                     count -= num;
                     index += num;
                     this.position += num;
                 }
+
                 if (count > 0)
                 {
                     count = base.Read(array, index, count);
@@ -421,21 +486,26 @@ public class SupportClass
                     result = num;
                 }
             }
+
             return result;
         }
+
         public void UnRead(int unReadChar)
         {
             this.position--;
             this.buffer[this.position] = (char)unReadChar;
         }
+
         public void UnRead(char[] array, int index, int count)
         {
             this.Move(array, index, count);
         }
+
         public void UnRead(char[] array)
         {
             this.Move(array, 0, array.Length - 1);
         }
+
         private void Move(char[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
@@ -444,6 +514,7 @@ public class SupportClass
             }
         }
     }
+
     public class StreamTokenizerSupport
     {
         private const string TOKEN = "Token[";
@@ -496,6 +567,7 @@ public class SupportClass
         public double nval;
         public string sval;
         public int ttype;
+
         private int read()
         {
             int result;
@@ -514,8 +586,10 @@ public class SupportClass
                     result = this.inStringReader.Read();
                 }
             }
+
             return result;
         }
+
         private void unread(int ch)
         {
             if (this.inReader != null)
@@ -534,6 +608,7 @@ public class SupportClass
                 }
             }
         }
+
         private void init()
         {
             this.buf = new StringBuilder();
@@ -547,6 +622,7 @@ public class SupportClass
             this.QuoteChar(34);
             this.ParseNumbers();
         }
+
         private void setAttributes(int low, int hi, sbyte attrib)
         {
             int num = Math.Max(0, low);
@@ -556,11 +632,13 @@ public class SupportClass
                 this.attribute[i] = attrib;
             }
         }
+
         private bool isWordChar(int data)
         {
             char c = (char)data;
             return data != -1 && (c > 'ÿ' || this.attribute[(int)c] == 1 || this.attribute[(int)c] == 16);
         }
+
         public StreamTokenizerSupport(StringReader reader)
         {
             string text = "";
@@ -568,20 +646,26 @@ public class SupportClass
             {
                 text += (char)num;
             }
+
             reader.Close();
             this.inStringReader = new BackStringReader(text);
             this.init();
         }
+
         public StreamTokenizerSupport(StreamReader reader)
         {
-            this.inReader = new BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream, 2, reader.CurrentEncoding);
+            this.inReader = new BackReader(new StreamReader(reader.BaseStream, reader.CurrentEncoding).BaseStream,
+                2,
+                reader.CurrentEncoding);
             this.init();
         }
+
         public StreamTokenizerSupport(Stream stream)
         {
             this.inStream = new BackInputStream(new BufferedStream(stream), 2);
             this.init();
         }
+
         public virtual void CommentChar(int ch)
         {
             if (ch >= 0 && ch <= 255)
@@ -589,18 +673,22 @@ public class SupportClass
                 this.attribute[ch] = 4;
             }
         }
+
         public virtual void EOLIsSignificant(bool flag)
         {
             this.eolIsSignificant = flag;
         }
+
         public virtual int Lineno()
         {
             return this.lineno;
         }
+
         public virtual void LowerCaseMode(bool flag)
         {
             this.lowerCaseMode = flag;
         }
+
         public virtual int NextToken()
         {
             char c = '\0';
@@ -626,443 +714,105 @@ public class SupportClass
                     c = (char)num3;
                     switch (num2)
                     {
-                    case 0:
-                        if (num3 == -1)
-                        {
-                            this.ttype = -1;
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            if (c > 'ÿ')
-                            {
-                                this.buf.Append(c);
-                                this.ttype = -3;
-                                num2 = 1;
-                            }
-                            else
-                            {
-                                if (this.attribute[(int)c] == 4)
-                                {
-                                    num2 = 7;
-                                }
-                                else
-                                {
-                                    if (this.attribute[(int)c] == 1)
-                                    {
-                                        this.buf.Append(c);
-                                        this.ttype = -3;
-                                        num2 = 1;
-                                    }
-                                    else
-                                    {
-                                        if (this.attribute[(int)c] == 16)
-                                        {
-                                            this.ttype = -2;
-                                            this.buf.Append(c);
-                                            if (c == '-')
-                                            {
-                                                num2 = 2;
-                                            }
-                                            else
-                                            {
-                                                if (c == '.')
-                                                {
-                                                    num2 = 4;
-                                                }
-                                                else
-                                                {
-                                                    num2 = 3;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (this.attribute[(int)c] == 8)
-                                            {
-                                                c2 = c;
-                                                this.ttype = (int)c;
-                                                num2 = 6;
-                                            }
-                                            else
-                                            {
-                                                if ((this.slashSlashComments || this.slashStarComments) && c == '/')
-                                                {
-                                                    num2 = 10;
-                                                }
-                                                else
-                                                {
-                                                    if (this.attribute[(int)c] == 0)
-                                                    {
-                                                        this.ttype = (int)c;
-                                                        num2 = 100;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (c == '\n' || c == '\r')
-                                                        {
-                                                            this.lineno++;
-                                                            if (this.eolIsSignificant)
-                                                            {
-                                                                this.ttype = 10;
-                                                                if (c == '\n')
-                                                                {
-                                                                    num2 = 100;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (c == '\r')
-                                                                    {
-                                                                        num2 = 8;
-                                                                    }
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (c == '\r')
-                                                                {
-                                                                    num2 = 9;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 1:
-                        if (this.isWordChar(num3))
-                        {
-                            this.buf.Append(c);
-                        }
-                        else
-                        {
-                            if (num3 != -1)
-                            {
-                                this.unread((int)c);
-                            }
-                            this.sval = this.buf.ToString();
-                            num2 = 100;
-                        }
-                        break;
-                    case 2:
-                        if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
-                        {
-                            if (this.attribute[(int)c] == 4 && char.IsNumber(c))
-                            {
-                                this.buf.Append(c);
-                                num2 = 3;
-                            }
-                            else
-                            {
-                                if (num3 != -1)
-                                {
-                                    this.unread((int)c);
-                                }
-                                this.ttype = 45;
-                                num2 = 100;
-                            }
-                        }
-                        else
-                        {
-                            this.buf.Append(c);
-                            if (c == '.')
-                            {
-                                num2 = 4;
-                            }
-                            else
-                            {
-                                num2 = 3;
-                            }
-                        }
-                        break;
-                    case 3:
-                        if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
-                        {
-                            if (char.IsNumber(c) && this.attribute[(int)c] == 1)
-                            {
-                                this.buf.Append(c);
-                            }
-                            else
-                            {
-                                if (c == '.' && this.attribute[(int)c] == 2)
-                                {
-                                    this.buf.Append(c);
-                                }
-                                else
-                                {
-                                    if (num3 != -1 && this.attribute[(int)c] == 4 && char.IsNumber(c))
-                                    {
-                                        this.buf.Append(c);
-                                    }
-                                    else
-                                    {
-                                        if (num3 != -1)
-                                        {
-                                            this.unread((int)c);
-                                        }
-                                        try
-                                        {
-                                            this.nval = double.Parse(this.buf.ToString());
-                                        }
-                                        catch (FormatException)
-                                        {
-                                        }
-                                        num2 = 100;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.buf.Append(c);
-                            if (c == '.')
-                            {
-                                num2 = 4;
-                            }
-                        }
-                        break;
-                    case 4:
-                        if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
-                        {
-                            if (this.attribute[(int)c] == 4 && char.IsNumber(c))
-                            {
-                                this.buf.Append(c);
-                            }
-                            else
-                            {
-                                if (num3 != -1)
-                                {
-                                    this.unread((int)c);
-                                }
-                                string text = this.buf.ToString();
-                                if (text.Equals("-."))
-                                {
-                                    this.unread(46);
-                                    this.ttype = 45;
-                                }
-                                else
-                                {
-                                    if (text.Equals(".") && 1 == this.attribute[(int)c3])
-                                    {
-                                        this.ttype = 46;
-                                    }
-                                    else
-                                    {
-                                        try
-                                        {
-                                            this.nval = double.Parse(text);
-                                        }
-                                        catch (FormatException)
-                                        {
-                                        }
-                                    }
-                                }
-                                num2 = 100;
-                            }
-                        }
-                        else
-                        {
-                            this.buf.Append(c);
-                            num2 = 5;
-                        }
-                        break;
-                    case 5:
-                        if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
-                        {
-                            if (num3 != -1)
-                            {
-                                this.unread((int)c);
-                            }
-                            try
-                            {
-                                this.nval = double.Parse(this.buf.ToString());
-                            }
-                            catch (FormatException)
-                            {
-                            }
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            this.buf.Append(c);
-                        }
-                        break;
-                    case 6:
-                        if (num3 == -1 || c == c2 || c == '\r' || c == '\n')
-                        {
-                            this.sval = this.buf.ToString();
-                            if (c == '\r' || c == '\n')
-                            {
-                                this.unread((int)c);
-                            }
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            if (c == '\\')
-                            {
-                                num2 = 13;
-                            }
-                            else
-                            {
-                                this.buf.Append(c);
-                            }
-                        }
-                        break;
-                    case 7:
-                        if (num3 == -1)
-                        {
-                            this.ttype = -1;
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            if (c == '\n' || c == '\r')
-                            {
-                                this.unread((int)c);
-                                num2 = 0;
-                            }
-                        }
-                        break;
-                    case 8:
-                        if (c != '\n' && num3 != -1)
-                        {
-                            this.unread((int)c);
-                        }
-                        num2 = 100;
-                        break;
-                    case 9:
-                        if (c != '\n' && num3 != -1)
-                        {
-                            this.unread((int)c);
-                        }
-                        num2 = 0;
-                        break;
-                    case 10:
-                        if (c == '*')
-                        {
-                            num2 = 12;
-                        }
-                        else
-                        {
-                            if (c == '/')
-                            {
-                                num2 = 7;
-                            }
-                            else
-                            {
-                                if (num3 != -1)
-                                {
-                                    this.unread((int)c);
-                                }
-                                this.ttype = 47;
-                                num2 = 100;
-                            }
-                        }
-                        break;
-                    case 11:
-                        if (num3 == -1)
-                        {
-                            this.ttype = -1;
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            if (c == '/')
-                            {
-                                num2 = 0;
-                            }
-                            else
-                            {
-                                if (c != '*')
-                                {
-                                    num2 = 12;
-                                }
-                            }
-                        }
-                        break;
-                    case 12:
-                        if (c == '*')
-                        {
-                            num2 = 11;
-                        }
-                        if (c == '\n')
-                        {
-                            this.lineno++;
-                        }
-                        else
-                        {
+                        case 0:
                             if (num3 == -1)
                             {
                                 this.ttype = -1;
                                 num2 = 100;
                             }
-                        }
-                        break;
-                    case 13:
-                        if (num3 == -1)
-                        {
-                            this.sval = this.buf.ToString();
-                            num2 = 100;
-                        }
-                        else
-                        {
-                            num2 = 6;
-                            if (c == 'a')
-                            {
-                                this.buf.Append(7);
-                            }
                             else
                             {
-                                if (c == 'b')
+                                if (c > 'ÿ')
                                 {
-                                    this.buf.Append('\b');
+                                    this.buf.Append(c);
+                                    this.ttype = -3;
+                                    num2 = 1;
                                 }
                                 else
                                 {
-                                    if (c == 'f')
+                                    if (this.attribute[(int)c] == 4)
                                     {
-                                        this.buf.Append(12);
+                                        num2 = 7;
                                     }
                                     else
                                     {
-                                        if (c == 'n')
+                                        if (this.attribute[(int)c] == 1)
                                         {
-                                            this.buf.Append('\n');
+                                            this.buf.Append(c);
+                                            this.ttype = -3;
+                                            num2 = 1;
                                         }
                                         else
                                         {
-                                            if (c == 'r')
+                                            if (this.attribute[(int)c] == 16)
                                             {
-                                                this.buf.Append('\r');
-                                            }
-                                            else
-                                            {
-                                                if (c == 't')
+                                                this.ttype = -2;
+                                                this.buf.Append(c);
+                                                if (c == '-')
                                                 {
-                                                    this.buf.Append('\t');
+                                                    num2 = 2;
                                                 }
                                                 else
                                                 {
-                                                    if (c == 'v')
+                                                    if (c == '.')
                                                     {
-                                                        this.buf.Append(11);
+                                                        num2 = 4;
                                                     }
                                                     else
                                                     {
-                                                        if (c >= '0' && c <= '7')
+                                                        num2 = 3;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (this.attribute[(int)c] == 8)
+                                                {
+                                                    c2 = c;
+                                                    this.ttype = (int)c;
+                                                    num2 = 6;
+                                                }
+                                                else
+                                                {
+                                                    if ((this.slashSlashComments || this.slashStarComments) && c == '/')
+                                                    {
+                                                        num2 = 10;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (this.attribute[(int)c] == 0)
                                                         {
-                                                            num = (int)(c - '0');
-                                                            num2 = 14;
+                                                            this.ttype = (int)c;
+                                                            num2 = 100;
                                                         }
                                                         else
                                                         {
-                                                            this.buf.Append(c);
+                                                            if (c == '\n' || c == '\r')
+                                                            {
+                                                                this.lineno++;
+                                                                if (this.eolIsSignificant)
+                                                                {
+                                                                    this.ttype = 10;
+                                                                    if (c == '\n')
+                                                                    {
+                                                                        num2 = 100;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (c == '\r')
+                                                                        {
+                                                                            num2 = 8;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (c == '\r')
+                                                                    {
+                                                                        num2 = 9;
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -1071,12 +821,302 @@ public class SupportClass
                                     }
                                 }
                             }
-                        }
-                        break;
-                    case 14:
-                        if (num3 == -1 || c < '0' || c > '7')
-                        {
-                            this.buf.Append((char)num);
+
+                            break;
+                        case 1:
+                            if (this.isWordChar(num3))
+                            {
+                                this.buf.Append(c);
+                            }
+                            else
+                            {
+                                if (num3 != -1)
+                                {
+                                    this.unread((int)c);
+                                }
+
+                                this.sval = this.buf.ToString();
+                                num2 = 100;
+                            }
+
+                            break;
+                        case 2:
+                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
+                            {
+                                if (this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                {
+                                    this.buf.Append(c);
+                                    num2 = 3;
+                                }
+                                else
+                                {
+                                    if (num3 != -1)
+                                    {
+                                        this.unread((int)c);
+                                    }
+
+                                    this.ttype = 45;
+                                    num2 = 100;
+                                }
+                            }
+                            else
+                            {
+                                this.buf.Append(c);
+                                if (c == '.')
+                                {
+                                    num2 = 4;
+                                }
+                                else
+                                {
+                                    num2 = 3;
+                                }
+                            }
+
+                            break;
+                        case 3:
+                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-')
+                            {
+                                if (char.IsNumber(c) && this.attribute[(int)c] == 1)
+                                {
+                                    this.buf.Append(c);
+                                }
+                                else
+                                {
+                                    if (c == '.' && this.attribute[(int)c] == 2)
+                                    {
+                                        this.buf.Append(c);
+                                    }
+                                    else
+                                    {
+                                        if (num3 != -1 && this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                        {
+                                            this.buf.Append(c);
+                                        }
+                                        else
+                                        {
+                                            if (num3 != -1)
+                                            {
+                                                this.unread((int)c);
+                                            }
+
+                                            try
+                                            {
+                                                this.nval = double.Parse(this.buf.ToString());
+                                            }
+                                            catch (FormatException)
+                                            {
+                                            }
+
+                                            num2 = 100;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                this.buf.Append(c);
+                                if (c == '.')
+                                {
+                                    num2 = 4;
+                                }
+                            }
+
+                            break;
+                        case 4:
+                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
+                            {
+                                if (this.attribute[(int)c] == 4 && char.IsNumber(c))
+                                {
+                                    this.buf.Append(c);
+                                }
+                                else
+                                {
+                                    if (num3 != -1)
+                                    {
+                                        this.unread((int)c);
+                                    }
+
+                                    string text = this.buf.ToString();
+                                    if (text.Equals("-."))
+                                    {
+                                        this.unread(46);
+                                        this.ttype = 45;
+                                    }
+                                    else
+                                    {
+                                        if (text.Equals(".") && 1 == this.attribute[(int)c3])
+                                        {
+                                            this.ttype = 46;
+                                        }
+                                        else
+                                        {
+                                            try
+                                            {
+                                                this.nval = double.Parse(text);
+                                            }
+                                            catch (FormatException)
+                                            {
+                                            }
+                                        }
+                                    }
+
+                                    num2 = 100;
+                                }
+                            }
+                            else
+                            {
+                                this.buf.Append(c);
+                                num2 = 5;
+                            }
+
+                            break;
+                        case 5:
+                            if (num3 == -1 || this.attribute[(int)c] != 16 || c == '-' || c == '.')
+                            {
+                                if (num3 != -1)
+                                {
+                                    this.unread((int)c);
+                                }
+
+                                try
+                                {
+                                    this.nval = double.Parse(this.buf.ToString());
+                                }
+                                catch (FormatException)
+                                {
+                                }
+
+                                num2 = 100;
+                            }
+                            else
+                            {
+                                this.buf.Append(c);
+                            }
+
+                            break;
+                        case 6:
+                            if (num3 == -1 || c == c2 || c == '\r' || c == '\n')
+                            {
+                                this.sval = this.buf.ToString();
+                                if (c == '\r' || c == '\n')
+                                {
+                                    this.unread((int)c);
+                                }
+
+                                num2 = 100;
+                            }
+                            else
+                            {
+                                if (c == '\\')
+                                {
+                                    num2 = 13;
+                                }
+                                else
+                                {
+                                    this.buf.Append(c);
+                                }
+                            }
+
+                            break;
+                        case 7:
+                            if (num3 == -1)
+                            {
+                                this.ttype = -1;
+                                num2 = 100;
+                            }
+                            else
+                            {
+                                if (c == '\n' || c == '\r')
+                                {
+                                    this.unread((int)c);
+                                    num2 = 0;
+                                }
+                            }
+
+                            break;
+                        case 8:
+                            if (c != '\n' && num3 != -1)
+                            {
+                                this.unread((int)c);
+                            }
+
+                            num2 = 100;
+                            break;
+                        case 9:
+                            if (c != '\n' && num3 != -1)
+                            {
+                                this.unread((int)c);
+                            }
+
+                            num2 = 0;
+                            break;
+                        case 10:
+                            if (c == '*')
+                            {
+                                num2 = 12;
+                            }
+                            else
+                            {
+                                if (c == '/')
+                                {
+                                    num2 = 7;
+                                }
+                                else
+                                {
+                                    if (num3 != -1)
+                                    {
+                                        this.unread((int)c);
+                                    }
+
+                                    this.ttype = 47;
+                                    num2 = 100;
+                                }
+                            }
+
+                            break;
+                        case 11:
+                            if (num3 == -1)
+                            {
+                                this.ttype = -1;
+                                num2 = 100;
+                            }
+                            else
+                            {
+                                if (c == '/')
+                                {
+                                    num2 = 0;
+                                }
+                                else
+                                {
+                                    if (c != '*')
+                                    {
+                                        num2 = 12;
+                                    }
+                                }
+                            }
+
+                            break;
+                        case 12:
+                            if (c == '*')
+                            {
+                                num2 = 11;
+                            }
+
+                            if (c == '\n')
+                            {
+                                this.lineno++;
+                            }
+                            else
+                            {
+                                if (num3 == -1)
+                                {
+                                    this.ttype = -1;
+                                    num2 = 100;
+                                }
+                            }
+
+                            break;
+                        case 13:
                             if (num3 == -1)
                             {
                                 this.sval = this.buf.ToString();
@@ -1084,36 +1124,113 @@ public class SupportClass
                             }
                             else
                             {
-                                this.unread((int)c);
                                 num2 = 6;
+                                if (c == 'a')
+                                {
+                                    this.buf.Append(7);
+                                }
+                                else
+                                {
+                                    if (c == 'b')
+                                    {
+                                        this.buf.Append('\b');
+                                    }
+                                    else
+                                    {
+                                        if (c == 'f')
+                                        {
+                                            this.buf.Append(12);
+                                        }
+                                        else
+                                        {
+                                            if (c == 'n')
+                                            {
+                                                this.buf.Append('\n');
+                                            }
+                                            else
+                                            {
+                                                if (c == 'r')
+                                                {
+                                                    this.buf.Append('\r');
+                                                }
+                                                else
+                                                {
+                                                    if (c == 't')
+                                                    {
+                                                        this.buf.Append('\t');
+                                                    }
+                                                    else
+                                                    {
+                                                        if (c == 'v')
+                                                        {
+                                                            this.buf.Append(11);
+                                                        }
+                                                        else
+                                                        {
+                                                            if (c >= '0' && c <= '7')
+                                                            {
+                                                                num = (int)(c - '0');
+                                                                num2 = 14;
+                                                            }
+                                                            else
+                                                            {
+                                                                this.buf.Append(c);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        }
-                        else
-                        {
-                            int num4 = num * 8 + (int)(c - '0');
-                            if (num4 < 256)
+
+                            break;
+                        case 14:
+                            if (num3 == -1 || c < '0' || c > '7')
                             {
-                                num = num4;
+                                this.buf.Append((char)num);
+                                if (num3 == -1)
+                                {
+                                    this.sval = this.buf.ToString();
+                                    num2 = 100;
+                                }
+                                else
+                                {
+                                    this.unread((int)c);
+                                    num2 = 6;
+                                }
                             }
                             else
                             {
-                                this.buf.Append((char)num);
-                                this.buf.Append(c);
-                                num2 = 6;
+                                int num4 = num * 8 + (int)(c - '0');
+                                if (num4 < 256)
+                                {
+                                    num = num4;
+                                }
+                                else
+                                {
+                                    this.buf.Append((char)num);
+                                    this.buf.Append(c);
+                                    num2 = 6;
+                                }
                             }
-                        }
-                        break;
+
+                            break;
                     }
-                }
-                while (num2 != 100);
+                } while (num2 != 100);
+
                 if (this.ttype == -3 && this.lowerCaseMode)
                 {
                     this.sval = this.sval.ToLower();
                 }
+
                 result = this.ttype;
             }
+
             return result;
         }
+
         public virtual void OrdinaryChar(int ch)
         {
             if (ch >= 0 && ch <= 255)
@@ -1121,19 +1238,23 @@ public class SupportClass
                 this.attribute[ch] = 0;
             }
         }
+
         public virtual void OrdinaryChars(int low, int hi)
         {
             this.setAttributes(low, hi, 0);
         }
+
         public virtual void ParseNumbers()
         {
             for (int i = 48; i <= 57; i++)
             {
                 this.attribute[i] = 16;
             }
+
             this.attribute[46] = 16;
             this.attribute[45] = 16;
         }
+
         public virtual void PushBack()
         {
             if (this.ttype != -4)
@@ -1141,6 +1262,7 @@ public class SupportClass
                 this.pushedback = true;
             }
         }
+
         public virtual void QuoteChar(int ch)
         {
             if (ch >= 0 && ch <= 255)
@@ -1148,44 +1270,50 @@ public class SupportClass
                 this.attribute[ch] = 8;
             }
         }
+
         public virtual void ResetSyntax()
         {
             this.OrdinaryChars(0, 255);
         }
+
         public virtual void SlashSlashComments(bool flag)
         {
             this.slashSlashComments = flag;
         }
+
         public virtual void SlashStarComments(bool flag)
         {
             this.slashStarComments = flag;
         }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("Token[");
             int num = this.ttype;
             switch (num)
             {
-            case -4:
-                stringBuilder.Append("NOTHING");
-                break;
-            case -3:
-                stringBuilder.Append(this.sval);
-                break;
-            case -2:
-                stringBuilder.Append("number=");
-                stringBuilder.Append(this.nval);
-                break;
-            case -1:
-                stringBuilder.Append("EOF");
-                break;
-            default:
-                if (num == 10)
-                {
-                    stringBuilder.Append("EOL");
-                }
-                break;
+                case -4:
+                    stringBuilder.Append("NOTHING");
+                    break;
+                case -3:
+                    stringBuilder.Append(this.sval);
+                    break;
+                case -2:
+                    stringBuilder.Append("number=");
+                    stringBuilder.Append(this.nval);
+                    break;
+                case -1:
+                    stringBuilder.Append("EOF");
+                    break;
+                default:
+                    if (num == 10)
+                    {
+                        stringBuilder.Append("EOL");
+                    }
+
+                    break;
             }
+
             if (this.ttype > 0)
             {
                 if (this.attribute[this.ttype] == 8)
@@ -1200,44 +1328,54 @@ public class SupportClass
                     stringBuilder.Append('\'');
                 }
             }
+
             stringBuilder.Append("], Line ");
             stringBuilder.Append(this.lineno);
             return stringBuilder.ToString();
         }
+
         public virtual void WhitespaceChars(int low, int hi)
         {
             this.setAttributes(low, hi, 2);
         }
+
         public virtual void WordChars(int low, int hi)
         {
             this.setAttributes(low, hi, 1);
         }
     }
+
     public class BackReader : StreamReader
     {
         private char[] buffer;
         private int position = 1;
+
         public BackReader(Stream streamReader, int size, Encoding encoding) : base(streamReader, encoding)
         {
             this.buffer = new char[size];
             this.position = size;
         }
+
         public BackReader(Stream streamReader, Encoding encoding) : base(streamReader, encoding)
         {
             this.buffer = new char[this.position];
         }
+
         public bool MarkSupported()
         {
             return false;
         }
+
         public void Mark(int position)
         {
             throw new IOException("Mark operations are not allowed");
         }
+
         public void Reset()
         {
             throw new IOException("Mark operations are not allowed");
         }
+
         public override int Read()
         {
             int result;
@@ -1249,8 +1387,10 @@ public class SupportClass
             {
                 result = base.Read();
             }
+
             return result;
         }
+
         public override int Read(char[] array, int index, int count)
         {
             int num = this.buffer.Length - this.position;
@@ -1267,11 +1407,13 @@ public class SupportClass
                     {
                         num = count;
                     }
+
                     Array.Copy(this.buffer, this.position, array, index, num);
                     count -= num;
                     index += num;
                     this.position += num;
                 }
+
                 if (count > 0)
                 {
                     count = base.Read(array, index, count);
@@ -1296,25 +1438,31 @@ public class SupportClass
                     result = num;
                 }
             }
+
             return result;
         }
+
         public bool IsReady()
         {
             return this.position >= this.buffer.Length || this.BaseStream.Position >= this.BaseStream.Length;
         }
+
         public void UnRead(int unReadChar)
         {
             this.position--;
             this.buffer[this.position] = (char)unReadChar;
         }
+
         public void UnRead(char[] array, int index, int count)
         {
             this.Move(array, index, count);
         }
+
         public void UnRead(char[] array)
         {
             this.Move(array, 0, array.Length - 1);
         }
+
         private void Move(char[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
@@ -1323,23 +1471,28 @@ public class SupportClass
             }
         }
     }
+
     public class BackInputStream : BinaryReader
     {
         private byte[] buffer;
         private int position = 1;
+
         public BackInputStream(Stream streamReader, int size) : base(streamReader)
         {
             this.buffer = new byte[size];
             this.position = size;
         }
+
         public BackInputStream(Stream streamReader) : base(streamReader)
         {
             this.buffer = new byte[this.position];
         }
+
         public bool MarkSupported()
         {
             return false;
         }
+
         public override int Read()
         {
             int result;
@@ -1351,8 +1504,10 @@ public class SupportClass
             {
                 result = base.Read();
             }
+
             return result;
         }
+
         public virtual int Read(sbyte[] array, int index, int count)
         {
             int num = count + index;
@@ -1363,16 +1518,20 @@ public class SupportClass
                 array2[index++] = this.buffer[this.position++];
                 num2++;
             }
+
             if (index < num)
             {
                 num2 += base.Read(array2, index, num - index);
             }
+
             for (int i = 0; i < array2.Length; i++)
             {
                 array[i] = (sbyte)array2[i];
             }
+
             return num2;
         }
+
         public void UnRead(int element)
         {
             this.position--;
@@ -1381,18 +1540,22 @@ public class SupportClass
                 this.buffer[this.position] = (byte)element;
             }
         }
+
         public void UnRead(byte[] array, int index, int count)
         {
             this.Move(array, index, count);
         }
+
         public void UnRead(byte[] array)
         {
             this.Move(array, 0, array.Length - 1);
         }
+
         public long Skip(long numberOfBytes)
         {
             return this.BaseStream.Seek(numberOfBytes, SeekOrigin.Current) - this.BaseStream.Position;
         }
+
         private void Move(byte[] array, int index, int count)
         {
             for (int i = index + count; i >= index; i--)
@@ -1401,7 +1564,9 @@ public class SupportClass
             }
         }
     }
+
     public static Random Random = new Random();
+
     public static byte[] ToByteArray(sbyte[] sbyteArray)
     {
         byte[] array = null;
@@ -1413,12 +1578,15 @@ public class SupportClass
                 array[i] = (byte)sbyteArray[i];
             }
         }
+
         return array;
     }
+
     public static byte[] ToByteArray(string sourceString)
     {
         return Encoding.UTF8.GetBytes(sourceString);
     }
+
     public static byte[] ToByteArray(object[] tempObjectArray)
     {
         byte[] array = null;
@@ -1430,8 +1598,10 @@ public class SupportClass
                 array[i] = (byte)tempObjectArray[i];
             }
         }
+
         return array;
     }
+
     public static sbyte[] ToSByteArray(byte[] byteArray)
     {
         sbyte[] array = null;
@@ -1443,23 +1613,28 @@ public class SupportClass
                 array[i] = (sbyte)byteArray[i];
             }
         }
+
         return array;
     }
+
     public static void WriteStackTrace(Exception throwable, TextWriter stream)
     {
         stream.Write(throwable.StackTrace);
         stream.Flush();
     }
+
     public static void Serialize(Stream stream, object objectToSend)
     {
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         binaryFormatter.Serialize(stream, objectToSend);
     }
+
     public static void Serialize(BinaryWriter binaryWriter, object objectToSend)
     {
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         binaryFormatter.Serialize(binaryWriter.BaseStream, objectToSend);
     }
+
     public static object Deserialize(BinaryReader binaryReader)
     {
         BinaryFormatter binaryFormatter = new BinaryFormatter();

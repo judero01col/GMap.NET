@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderOptionsPanel : UserControl
@@ -18,14 +19,17 @@ namespace MSR.CVE.BackMaker
         private bool needReload;
         private RenderOptions renderOptions;
         private Control renderToControl;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.components = new Container();
@@ -44,10 +48,11 @@ namespace MSR.CVE.BackMaker
             this.publishSourcesCheckbox.Name = "publishSourcesCheckbox";
             this.publishSourcesCheckbox.Size = new Size(15, 14);
             this.publishSourcesCheckbox.TabIndex = 15;
-            this.publishSourceMapsTip.SetToolTip(this.publishSourcesCheckbox, "Provides site visitors with all of the data needed to re-render your crunchup.");
+            this.publishSourceMapsTip.SetToolTip(this.publishSourcesCheckbox,
+                "Provides site visitors with all of the data needed to re-render your crunchup.");
             this.publishSourcesCheckbox.UseVisualStyleBackColor = true;
             this.publishSourcesCheckbox.CheckedChanged += new EventHandler(this.publishSourcesCheckbox_CheckedChanged);
-            this.publishSourcesLabel.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.publishSourcesLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.publishSourcesLabel.BackColor = SystemColors.ControlLightLight;
             this.publishSourcesLabel.BorderStyle = BorderStyle.None;
             this.publishSourcesLabel.Location = new Point(24, 198);
@@ -57,7 +62,8 @@ namespace MSR.CVE.BackMaker
             this.publishSourcesLabel.Size = new Size(305, 35);
             this.publishSourcesLabel.TabIndex = 16;
             this.publishSourcesLabel.Text = "Copy source maps and crunchup data to output folder";
-            this.publishSourceMapsTip.SetToolTip(this.publishSourcesLabel, "Provides site visitors with all of the data needed to re-render your crunchup.");
+            this.publishSourceMapsTip.SetToolTip(this.publishSourcesLabel,
+                "Provides site visitors with all of the data needed to re-render your crunchup.");
             this.publishSourcesLabel.TextChanged += new EventHandler(this.textBox1_TextChanged);
             this.publishSourceMapsTip.Popup += new PopupEventHandler(this.publishSourceMapsTip_Popup);
             this.permitCompositionCheckbox.AutoSize = true;
@@ -67,7 +73,8 @@ namespace MSR.CVE.BackMaker
             this.permitCompositionCheckbox.TabIndex = 15;
             this.permitCompositionCheckbox.Text = "Permit composition";
             this.permitCompositionCheckbox.UseVisualStyleBackColor = true;
-            this.permitCompositionCheckbox.CheckedChanged += new EventHandler(this.permitCompositionCheckbox_CheckedChanged);
+            this.permitCompositionCheckbox.CheckedChanged +=
+                new EventHandler(this.permitCompositionCheckbox_CheckedChanged);
             this.panel1.BackColor = SystemColors.ControlLightLight;
             this.panel1.Controls.Add(this.renderToS3radio);
             this.panel1.Controls.Add(this.label1);
@@ -112,19 +119,24 @@ namespace MSR.CVE.BackMaker
             base.Controls.Add(this.panel1);
             base.Name = "RenderOptionsPanel";
             base.Size = new Size(332, 362);
-            this.publishSourceMapsTip.SetToolTip(this, "Use the Render tab after the maps are locked to create your mashup.");
+            this.publishSourceMapsTip.SetToolTip(this,
+                "Use the Render tab after the maps are locked to create your mashup.");
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             base.ResumeLayout(false);
         }
+
         public RenderOptionsPanel()
         {
             this.InitializeComponent();
-            this.publishSourceMapsTip.SetToolTip(this.permitCompositionCheckbox, "Places the " + CrunchedFile.CrunchedFilename + " file into the public domain so that it may be composed with other map applications.");
+            this.publishSourceMapsTip.SetToolTip(this.permitCompositionCheckbox,
+                "Places the " + CrunchedFile.CrunchedFilename +
+                " file into the public domain so that it may be composed with other map applications.");
             string caption = "Provides site visitors with all of the data needed to re-render your crunchup.";
             this.publishSourceMapsTip.SetToolTip(this.publishSourcesCheckbox, caption);
             this.publishSourceMapsTip.SetToolTip(this.publishSourcesLabel, caption);
         }
+
         public void SetRenderOptions(RenderOptions renderOptions)
         {
             if (!BuildConfig.theConfig.enableS3)
@@ -132,45 +144,54 @@ namespace MSR.CVE.BackMaker
                 this.renderToFileRadio.Visible = false;
                 this.renderToS3radio.Visible = false;
             }
+
             if (this.renderOptions != null)
             {
                 this.renderOptions.dirtyEvent.Remove(new DirtyListener(this.PromptReload));
             }
+
             this.renderOptions = renderOptions;
             if (this.renderOptions != null)
             {
                 this.renderOptions.dirtyEvent.Add(new DirtyListener(this.PromptReload));
             }
+
             this.PromptReload();
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             if (D.CustomPaintDisabled())
             {
                 return;
             }
+
             if (this.needReload)
             {
                 this.Reload();
             }
+
             base.OnPaint(e);
         }
+
         private void PromptReload()
         {
             this.needReload = true;
             base.Invalidate();
         }
+
         private void Reload()
         {
             this.needReload = false;
-            base.Enabled = (this.renderOptions != null);
+            base.Enabled = this.renderOptions != null;
             if (this.renderOptions != null)
             {
                 this.publishSourcesCheckbox.Checked = this.renderOptions.publishSourceData;
                 this.permitCompositionCheckbox.Checked = this.renderOptions.permitComposition;
-                this.renderToFileRadio.Checked = (this.renderOptions.renderToOptions is RenderToFileOptions);
-                this.renderToS3radio.Checked = (this.renderOptions.renderToOptions is RenderToS3Options);
-                if (this.renderOptions.renderToOptions is RenderToFileOptions && !(this.renderToControl is RenderToFileControl))
+                this.renderToFileRadio.Checked = this.renderOptions.renderToOptions is RenderToFileOptions;
+                this.renderToS3radio.Checked = this.renderOptions.renderToOptions is RenderToS3Options;
+                if (this.renderOptions.renderToOptions is RenderToFileOptions &&
+                    !(this.renderToControl is RenderToFileControl))
                 {
                     this.destroyRenderToControl();
                     RenderToFileControl renderToFileControl = new RenderToFileControl();
@@ -178,7 +199,9 @@ namespace MSR.CVE.BackMaker
                     renderToFileControl.Location = new Point(0, 46);
                     this.renderToControl = renderToFileControl;
                 }
-                if (this.renderOptions.renderToOptions is RenderToS3Options && !(this.renderToControl is RenderToS3Control))
+
+                if (this.renderOptions.renderToOptions is RenderToS3Options &&
+                    !(this.renderToControl is RenderToS3Control))
                 {
                     this.destroyRenderToControl();
                     RenderToS3Control renderToS3Control = new RenderToS3Control();
@@ -186,11 +209,13 @@ namespace MSR.CVE.BackMaker
                     renderToS3Control.Location = new Point(0, 46);
                     this.renderToControl = renderToS3Control;
                 }
-                this.renderToControl.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+
+                this.renderToControl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
                 this.renderToControl.Size = new Size(this.panel1.Width, this.renderToControl.Height);
                 this.panel1.Controls.Add(this.renderToControl);
             }
         }
+
         private void destroyRenderToControl()
         {
             if (this.renderToControl != null)
@@ -199,27 +224,34 @@ namespace MSR.CVE.BackMaker
                 this.renderToControl = null;
             }
         }
+
         private void publishSourcesCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             this.renderOptions.publishSourceData = ((CheckBox)sender).Checked;
         }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             this.publishSourcesCheckbox_CheckedChanged(sender, e);
         }
+
         private void permitCompositionCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             this.renderOptions.permitComposition = ((CheckBox)sender).Checked;
         }
+
         private void publishSourceMapsTip_Popup(object sender, PopupEventArgs e)
         {
         }
+
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
         }
+
         private void label1_Click(object sender, EventArgs e)
         {
         }
+
         private void renderToFileRadio_CheckedChanged(object sender, EventArgs e)
         {
             if (this.renderToFileRadio.Checked && !(this.renderOptions.renderToOptions is RenderToFileOptions))
@@ -227,6 +259,7 @@ namespace MSR.CVE.BackMaker
                 this.renderOptions.renderToOptions = new RenderToFileOptions(this.renderOptions.dirtyEvent);
             }
         }
+
         private void renderToS3radio_CheckedChanged(object sender, EventArgs e)
         {
             if (this.renderToS3radio.Checked && !(this.renderOptions.renderToOptions is RenderToS3Options))

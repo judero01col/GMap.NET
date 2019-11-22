@@ -1,7 +1,7 @@
+using System.Drawing;
 using Jama;
 using MSR.CVE.BackMaker.ImagePipeline;
-using System;
-using System.Drawing;
+
 namespace MSR.CVE.BackMaker
 {
     internal class DynamicallyCompositingLayerViewManager : IViewManager
@@ -9,12 +9,15 @@ namespace MSR.CVE.BackMaker
         private Layer layer;
         private MapTileSourceFactory mapTileSourceFactory;
         private ViewControlIfc viewControl;
-        public DynamicallyCompositingLayerViewManager(Layer layer, MapTileSourceFactory mapTileSourceFactory, ViewControlIfc viewControl)
+
+        public DynamicallyCompositingLayerViewManager(Layer layer, MapTileSourceFactory mapTileSourceFactory,
+            ViewControlIfc viewControl)
         {
             this.layer = layer;
             this.mapTileSourceFactory = mapTileSourceFactory;
             this.viewControl = viewControl;
         }
+
         public void Activate()
         {
             ViewerControlIfc sMViewerControl = this.viewControl.GetSMViewerControl();
@@ -27,6 +30,7 @@ namespace MSR.CVE.BackMaker
                     sMViewerControl.AddLayer(displayableSource);
                 }
             }
+
             uIPositionManager.SetPositionMemory(this.layer);
             LayerView layerView = (LayerView)this.layer.lastView;
             this.viewControl.GetUIPositionManager().switchSlaved();
@@ -36,6 +40,7 @@ namespace MSR.CVE.BackMaker
                 uIPositionManager.GetVEPos().setStyle(layerView.GetReferenceMapView().style);
                 return;
             }
+
             MapRectangle mapRectangle = null;
             try
             {
@@ -47,18 +52,22 @@ namespace MSR.CVE.BackMaker
             catch (InsufficientCorrespondencesException)
             {
             }
+
             LatLonZoom position;
             if (mapRectangle != null)
             {
                 Size size = new Size(600, 600);
-                position = this.viewControl.GetVEViewerControl().GetCoordinateSystem().GetBestViewContaining(mapRectangle, size);
+                position = this.viewControl.GetVEViewerControl().GetCoordinateSystem()
+                    .GetBestViewContaining(mapRectangle, size);
             }
             else
             {
                 position = this.viewControl.GetVEViewerControl().GetCoordinateSystem().GetDefaultView();
             }
+
             uIPositionManager.GetVEPos().setPosition(position);
         }
+
         public void Dispose()
         {
             UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
@@ -74,6 +83,7 @@ namespace MSR.CVE.BackMaker
             this.viewControl.setDisplayedRegistration(null);
             this.viewControl.GetCachePackage().ClearSchedulers();
         }
+
         public object GetViewedObject()
         {
             return this.layer;

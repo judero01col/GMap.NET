@@ -1,5 +1,5 @@
-using System;
 using System.Drawing.Imaging;
+
 namespace MSR.CVE.BackMaker
 {
     public class OutputTileType
@@ -9,6 +9,7 @@ namespace MSR.CVE.BackMaker
         public static OutputTileType PNG = new OutputTileType("png", ImageFormat.Png);
         public static OutputTileType JPG = new OutputTileType("jpg", ImageFormat.Jpeg);
         public static OutputTileType IPIC = new OutputTileType("ipic", null);
+
         public string extn
         {
             get
@@ -16,6 +17,7 @@ namespace MSR.CVE.BackMaker
                 return this._extn;
             }
         }
+
         public ImageFormat imageFormat
         {
             get
@@ -24,25 +26,30 @@ namespace MSR.CVE.BackMaker
                 return this._imageFormat;
             }
         }
+
         private OutputTileType(string extn, ImageFormat imageFormat)
         {
             this._extn = extn;
             this._imageFormat = imageFormat;
         }
+
         public static OutputTileType Parse(string extn)
         {
             if (extn == "png")
             {
                 return PNG;
             }
+
             if (extn == "jpg")
             {
                 return JPG;
             }
+
             if (extn == "ipic")
             {
                 return IPIC;
             }
+
             throw new UnknownImageTypeException(string.Format("Unrecognized output type {0}", extn));
         }
     }

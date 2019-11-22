@@ -1,5 +1,6 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     internal class LegendViewManager : IViewManager
@@ -7,6 +8,7 @@ namespace MSR.CVE.BackMaker
         private Legend legend;
         private ViewControlIfc viewControl;
         private MapTileSourceFactory mapTileSourceFactory;
+
         private SourceMap sourceMap
         {
             get
@@ -14,12 +16,14 @@ namespace MSR.CVE.BackMaker
                 return this.legend.sourceMap;
             }
         }
+
         public LegendViewManager(Legend legend, MapTileSourceFactory mapTileSourceFactory, ViewControlIfc viewControl)
         {
             this.legend = legend;
             this.mapTileSourceFactory = mapTileSourceFactory;
             this.viewControl = viewControl;
         }
+
         public void Activate()
         {
             UIPositionManager uIPositionManager = this.viewControl.GetUIPositionManager();
@@ -31,23 +35,28 @@ namespace MSR.CVE.BackMaker
                 {
                     throw new Exception("unimpl");
                 }
+
                 this.SetupNonpreviewView();
                 uIPositionManager.GetSMPos().setPosition(lastView.GetSourceMapView());
                 uIPositionManager.GetVEPos().setPosition(lastView.GetReferenceMapView());
                 flag = true;
                 this.viewControl.SetVEMapStyle(lastView.GetReferenceMapView().style);
             }
+
             if (!flag)
             {
                 this.SetupNonpreviewView();
                 uIPositionManager.GetSMPos().setPosition(new ContinuousCoordinateSystem().GetDefaultView());
                 uIPositionManager.GetVEPos().setPosition(this.DefaultReferenceMapPosition());
             }
+
             uIPositionManager.SetPositionMemory(this.legend);
             this.viewControl.SetOptionsPanelVisibility(OptionsPanelVisibility.LegendOptions);
-            this.viewControl.GetLegendPanel().Configure(this.legend, this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap));
+            this.viewControl.GetLegendPanel().Configure(this.legend,
+                this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap));
             uIPositionManager.PositionUpdated();
         }
+
         public void Dispose()
         {
             this.viewControl.GetCachePackage().ClearSchedulers();
@@ -61,16 +70,24 @@ namespace MSR.CVE.BackMaker
             this.viewControl.setDisplayedRegistration(null);
             this.legend = null;
         }
+
         private void SetupNonpreviewView()
         {
-            this.viewControl.GetSMViewerControl().SetBaseLayer(new LegendDisplayableSourceWrapper(this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap), this.legend.latentRegionHolder));
+            this.viewControl.GetSMViewerControl().SetBaseLayer(new LegendDisplayableSourceWrapper(
+                this.mapTileSourceFactory.CreateDisplayableUnwarpedSource(this.sourceMap),
+                this.legend.latentRegionHolder));
             this.viewControl.GetSMViewerControl().SetLatentRegionHolder(this.legend.latentRegionHolder);
             this.viewControl.GetUIPositionManager().switchFree();
         }
+
         internal LatLonZoom DefaultReferenceMapPosition()
         {
-            return SourceMapViewManager.DefaultReferenceMapPosition(this.sourceMap, this.mapTileSourceFactory, this.viewControl, null);
+            return SourceMapViewManager.DefaultReferenceMapPosition(this.sourceMap,
+                this.mapTileSourceFactory,
+                this.viewControl,
+                null);
         }
+
         public object GetViewedObject()
         {
             return this.legend;

@@ -1,4 +1,5 @@
 using System;
+
 namespace Jama.util
 {
     public class Maths
@@ -23,6 +24,7 @@ namespace Jama.util
                     num = 0.0;
                 }
             }
+
             return num;
         }
     }

@@ -1,6 +1,6 @@
-using System;
 using System.Threading;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     internal class NameWatchingTreeNode : TreeNode
@@ -9,10 +9,12 @@ namespace MSR.CVE.BackMaker
         {
             this.Init(tag);
         }
+
         public NameWatchingTreeNode(HasDisplayNameIfc tag, TreeNode[] children) : base(null, children)
         {
             this.Init(tag);
         }
+
         private void Init(HasDisplayNameIfc tag)
         {
             base.Tag = tag;
@@ -22,6 +24,7 @@ namespace MSR.CVE.BackMaker
                 ((SourceMap)tag).readyToLockChangedEvent.Add(new DirtyListener(this.UpdateNameListener));
             }
         }
+
         public void Dispose()
         {
             if (base.Tag is SourceMap)
@@ -29,6 +32,7 @@ namespace MSR.CVE.BackMaker
                 ((SourceMap)base.Tag).readyToLockChangedEvent.Remove(new DirtyListener(this.UpdateNameListener));
             }
         }
+
         private void UpdateNameListener()
         {
             Monitor.Enter(this);
@@ -44,6 +48,7 @@ namespace MSR.CVE.BackMaker
                 Monitor.Exit(this);
             }
         }
+
         private void UpdateName()
         {
             string text = ((HasDisplayNameIfc)base.Tag).GetDisplayName();
@@ -51,6 +56,7 @@ namespace MSR.CVE.BackMaker
             {
                 text += " (!)";
             }
+
             base.Text = text;
         }
     }

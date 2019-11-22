@@ -1,11 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
+
 namespace MSR.CVE.BackMaker
 {
     public static class ImageTypeMapper
     {
         private static List<ImageTypeMapping> mappings = InitMappings();
+
         private static List<ImageTypeMapping> InitMappings()
         {
             return new List<ImageTypeMapping>
@@ -22,36 +23,46 @@ namespace MSR.CVE.BackMaker
                 new ImageTypeMapping("gif", "image/gif", ImageFormat.Gif)
             };
         }
+
         public static ImageTypeMapping ByExtension(string extension)
         {
             if (extension[0] == '.')
             {
                 extension = extension.Substring(1);
             }
+
             extension = extension.ToLower();
-            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.extension == extension);
+            ImageTypeMapping imageTypeMapping =
+                mappings.Find((ImageTypeMapping candidate) => candidate.extension == extension);
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(extension);
             }
+
             return imageTypeMapping;
         }
+
         public static ImageTypeMapping ByMimeType(string mimeType)
         {
-            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.mimeType == mimeType);
+            ImageTypeMapping imageTypeMapping =
+                mappings.Find((ImageTypeMapping candidate) => candidate.mimeType == mimeType);
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(mimeType);
             }
+
             return imageTypeMapping;
         }
+
         public static ImageTypeMapping ByImageFormat(ImageFormat imageFormat)
         {
-            ImageTypeMapping imageTypeMapping = mappings.Find((ImageTypeMapping candidate) => candidate.ImageFormatEquals(imageFormat));
+            ImageTypeMapping imageTypeMapping =
+                mappings.Find((ImageTypeMapping candidate) => candidate.ImageFormatEquals(imageFormat));
             if (imageTypeMapping == null)
             {
                 throw new UnknownImageTypeException(imageFormat.ToString());
             }
+
             return imageTypeMapping;
         }
     }

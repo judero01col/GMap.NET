@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class StrongHash : IRobustHash
@@ -14,48 +15,59 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private byte[] hashValue;
         private int shortHashValue;
         private static UTF8Encoding encoding = new UTF8Encoding();
+
         public static bool operator ==(StrongHash h1, StrongHash h2)
         {
             return h1.Equals(h2);
         }
+
         public static bool operator !=(StrongHash h1, StrongHash h2)
         {
             return !h1.Equals(h2);
         }
+
         private void accBytes(byte[] buf)
         {
             this.ms.Write(buf, 0, buf.Length);
         }
+
         public void Accumulate(int input)
         {
             this.accBytes(BitConverter.GetBytes(input));
         }
+
         public void Accumulate(long input)
         {
             this.accBytes(BitConverter.GetBytes(input));
         }
+
         public void Accumulate(Size size)
         {
             this.Accumulate(size.Width);
             this.Accumulate(size.Height);
         }
+
         public void Accumulate(double value)
         {
             this.Accumulate(value.GetHashCode());
         }
+
         public void Accumulate(string value)
         {
             this.accBytes(encoding.GetBytes(value));
         }
+
         public void Accumulate(bool value)
         {
             this.accBytes(BitConverter.GetBytes(value));
         }
+
         public override int GetHashCode()
         {
             this.DoHash();
             return this.shortHashValue;
         }
+
         private void DoHash()
         {
             if (this.hashValue == null)
@@ -69,6 +81,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 this.ms = null;
             }
         }
+
         private void ComputeShortHashValue()
         {
             int num = 0;
@@ -76,8 +89,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 num = num * 131 + (int)this.hashValue[i];
             }
+
             this.shortHashValue = num;
         }
+
         public override bool Equals(object obj)
         {
             if (obj is StrongHash)
@@ -87,8 +102,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                 strongHash.DoHash();
                 return this.ArraysEqual(strongHash);
             }
+
             return false;
         }
+
         private bool ArraysEqual(StrongHash rh2)
         {
             bool result = true;
@@ -107,8 +124,10 @@ namespace MSR.CVE.BackMaker.ImagePipeline
                     }
                 }
             }
+
             return result;
         }
+
         public override string ToString()
         {
             StrongHash strongHash = new StrongHash();
@@ -116,22 +135,26 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             strongHash.DoHash();
             return ByteArrayToHex(strongHash.hashValue);
         }
+
         public static string ByteArrayToHex(byte[] byteArray)
         {
             StringBuilder stringBuilder = new StringBuilder(byteArray.Length * 2);
             for (int i = 0; i < byteArray.Length; i++)
             {
                 byte b = byteArray[i];
-                int index = b >> 4 & 15;
+                int index = (b >> 4) & 15;
                 int index2 = (int)(b & 15);
                 stringBuilder.Append("0123456789ABCDEF"[index]);
                 stringBuilder.Append("0123456789ABCDEF"[index2]);
             }
+
             return stringBuilder.ToString();
         }
+
         public StrongHash()
         {
         }
+
         public StrongHash(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("StrongHash");
@@ -139,6 +162,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             this.ComputeShortHashValue();
             xMLTagReader.SkipAllSubTags();
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             this.DoHash();

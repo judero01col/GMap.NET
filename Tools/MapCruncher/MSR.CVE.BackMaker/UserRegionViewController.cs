@@ -1,9 +1,10 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     internal class UserRegionViewController
@@ -13,6 +14,7 @@ namespace MSR.CVE.BackMaker
             public LatLonZoom center;
             public Size size;
             public bool valid;
+
             public override bool Equals(object o2)
             {
                 if (o2 is State)
@@ -20,16 +22,20 @@ namespace MSR.CVE.BackMaker
                     State state = (State)o2;
                     return this.center == state.center && this.size == state.size && this.valid == state.valid;
                 }
+
                 return false;
             }
+
             public override int GetHashCode()
             {
                 return this.center.GetHashCode() ^ this.size.GetHashCode();
             }
+
             public override string ToString()
             {
                 return string.Format("{0} {1}", this.center, this.size);
             }
+
             public State(State state)
             {
                 this.center = state.center;
@@ -37,6 +43,7 @@ namespace MSR.CVE.BackMaker
                 this.valid = state.valid;
             }
         }
+
         private class ClickableThing
         {
             public enum ClickedWhich
@@ -44,38 +51,46 @@ namespace MSR.CVE.BackMaker
                 Vertex,
                 Segment
             }
+
             public TracedScreenPoint vertexLocation;
             public GraphicsPath path;
             public ClickedWhich clickedWhich;
             public int pointIndex;
         }
+
         private class VertexMouseAction : ViewerControl.MouseAction
         {
             private UserRegionViewController controller;
             private int draggedVertexIndex;
+
             public VertexMouseAction(UserRegionViewController controller, int draggedVertexIndex)
             {
                 this.controller = controller;
                 this.draggedVertexIndex = draggedVertexIndex;
             }
+
             public void Dragged(Point diff)
             {
                 this.controller.DragVertex(diff, this.draggedVertexIndex);
             }
+
             public Cursor GetCursor(bool dragging)
             {
                 return Cursors.Arrow;
             }
+
             public void OnPopup(ContextMenu menu)
             {
                 MenuItem menuItem = menu.MenuItems.Add("Remove corner", new EventHandler(this.RemoveCorner));
                 menuItem.Enabled = this.controller.RemoveEnabled();
             }
+
             public void RemoveCorner(object sender, EventArgs e)
             {
                 this.controller.RemoveCorner(this.draggedVertexIndex);
             }
         }
+
         private class SegmentMouseAction : ViewerControl.MouseAction
         {
             private UserRegionViewController controller;
@@ -83,6 +98,7 @@ namespace MSR.CVE.BackMaker
             private Point clickedPoint;
             private int menuIncarnation;
             private static int menuIncarnationCounter;
+
             public SegmentMouseAction(UserRegionViewController controller, int originalVertexIndex, Point clickedPoint)
             {
                 this.controller = controller;
@@ -91,24 +107,29 @@ namespace MSR.CVE.BackMaker
                 this.menuIncarnation = menuIncarnationCounter;
                 this.clickedPoint = clickedPoint;
             }
+
             public void Dragged(Point diff)
             {
             }
+
             public Cursor GetCursor(bool dragging)
             {
                 return Cursors.Cross;
             }
+
             public void OnPopup(ContextMenu menu)
             {
                 menu.MenuItems.Add("Add corner", new EventHandler(this.AddCorner));
                 D.Say(0, string.Format("Updating menu from incarnation {0}", this.menuIncarnation));
             }
+
             public void AddCorner(object sender, EventArgs e)
             {
                 D.Say(0, string.Format("AddCorner from incarnation {0}", this.menuIncarnation));
                 this.controller.AddCorner(this.clickedPoint, this.originalVertexIndex);
             }
         }
+
         private const int vertexRadius = 3;
         private const int edgeClickWidth = 4;
         private const int vertexClickRadius = 4;
@@ -121,7 +142,9 @@ namespace MSR.CVE.BackMaker
         private Brush segmentFillBrush;
         private State lastState;
         private ClickableThing[] clickableThings;
-        public UserRegionViewController(CoordinateSystemIfc csi, SVDisplayParams svdp, LatentRegionHolder latentRegionHolder, IDisplayableSource unwarpedMapTileSource)
+
+        public UserRegionViewController(CoordinateSystemIfc csi, SVDisplayParams svdp,
+            LatentRegionHolder latentRegionHolder, IDisplayableSource unwarpedMapTileSource)
         {
             this.csi = csi;
             this.svdp = svdp;
@@ -131,13 +154,18 @@ namespace MSR.CVE.BackMaker
             this.vertexStrokePen = new Pen(Color.DarkBlue, 1f);
             this.segmentFillBrush = new SolidBrush(Color.DarkBlue);
         }
+
         private void UpdateState(State state)
         {
             if (state.Equals(this.lastState))
             {
                 return;
             }
-            TracedScreenPoint[] path = this.GetUserRegion().GetPath(CoordinateSystemUtilities.GetBounds(this.csi, state.center, state.size), state.center.zoom, this.csi);
+
+            TracedScreenPoint[] path = this.GetUserRegion()
+                .GetPath(CoordinateSystemUtilities.GetBounds(this.csi, state.center, state.size),
+                    state.center.zoom,
+                    this.csi);
             List<TracedScreenPoint> list = new List<TracedScreenPoint>();
             int length = path.GetLength(0);
             for (int i = 0; i < length; i++)
@@ -149,6 +177,7 @@ namespace MSR.CVE.BackMaker
                     list.Add(path[i]);
                 }
             }
+
             list.ToArray();
             int count = list.Count;
             List<ClickableThing> list2 = new List<ClickableThing>();
@@ -171,20 +200,24 @@ namespace MSR.CVE.BackMaker
                 clickableThing2.clickedWhich = ClickableThing.ClickedWhich.Segment;
                 clickableThing2.pointIndex = j;
             }
+
             list2.AddRange(list3);
             this.clickableThings = list2.ToArray();
             this.lastState = new State(state);
         }
+
         internal RenderRegion GetUserRegion()
         {
             return this.latentRegionHolder.renderRegion;
         }
+
         internal void Paint(PaintSpecification e, LatLonZoom center, Size size)
         {
             if (this.GetUserRegion() == null)
             {
                 return;
             }
+
             State state;
             state.center = center;
             state.size = size;
@@ -197,12 +230,14 @@ namespace MSR.CVE.BackMaker
                 e.Graphics.FillPath(this.segmentFillBrush, clickableThing.path);
             }
         }
+
         internal ViewerControl.MouseAction ImminentAction(MouseEventArgs e)
         {
             if (this.clickableThings == null)
             {
                 return null;
             }
+
             int i = 0;
             while (i < this.clickableThings.GetLength(0))
             {
@@ -213,6 +248,7 @@ namespace MSR.CVE.BackMaker
                     {
                         return new SegmentMouseAction(this, clickableThing.vertexLocation.originalIndex, e.Location);
                     }
+
                     return new VertexMouseAction(this, clickableThing.vertexLocation.originalIndex);
                 }
                 else
@@ -220,8 +256,10 @@ namespace MSR.CVE.BackMaker
                     i++;
                 }
             }
+
             return null;
         }
+
         internal void DragVertex(Point diff, int draggedVertexIndex)
         {
             LatLon point = this.GetUserRegion().GetPoint(draggedVertexIndex);
@@ -231,27 +269,34 @@ namespace MSR.CVE.BackMaker
             this.GetUserRegion().UpdatePoint(draggedVertexIndex, translationInLatLon.latlon);
             this.Invalidate();
         }
+
         internal void AddCorner(Point newCornerPoint, int originalVertexIndex)
         {
             LatLonZoom center = this.svdp.MapCenter();
-            Point offsetInPixels = new Point(this.svdp.ScreenCenter().X - newCornerPoint.X, this.svdp.ScreenCenter().Y - newCornerPoint.Y);
+            Point offsetInPixels = new Point(this.svdp.ScreenCenter().X - newCornerPoint.X,
+                this.svdp.ScreenCenter().Y - newCornerPoint.Y);
             LatLonZoom translationInLatLon = this.csi.GetTranslationInLatLon(center, offsetInPixels);
             D.Say(0, string.Format("newCornerPosition= {0}", translationInLatLon));
             this.GetUserRegion().InsertPoint(originalVertexIndex + 1, translationInLatLon.latlon);
             this.Invalidate();
         }
+
         internal void RemoveCorner(int originalVertexIndex)
         {
             this.GetUserRegion().RemovePoint(originalVertexIndex);
             this.Invalidate();
         }
+
         internal bool RemoveEnabled()
         {
             return this.GetUserRegion().Count > 3;
         }
+
         private void Invalidate()
         {
-            AsyncRef asyncRef = (AsyncRef)this.displayableSource.GetUserBounds(this.latentRegionHolder, (FutureFeatures)7).Realize("UserRegionViewController.Invalidate");
+            AsyncRef asyncRef = (AsyncRef)this.displayableSource
+                .GetUserBounds(this.latentRegionHolder, (FutureFeatures)7)
+                .Realize("UserRegionViewController.Invalidate");
             asyncRef.ProcessSynchronously();
             asyncRef.Dispose();
             this.svdp.InvalidateView();

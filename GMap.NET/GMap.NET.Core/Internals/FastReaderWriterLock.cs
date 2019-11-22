@@ -2,12 +2,11 @@
 #define UseFastResourceLock
 #endif
 using System;
+using System.Runtime.InteropServices;
 
 namespace GMap.NET.Internals
 {
 #if !MONO
-    using System.Runtime.InteropServices;
-
 #endif
 
     /// <summary>

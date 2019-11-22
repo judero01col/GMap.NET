@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -11,8 +12,6 @@ namespace GMap.NET.CacheProviders
 #if SQLite
 
 #if !MONO
-    using System.Data.SQLite;
-
 #else
    using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
    using SQLiteTransaction = Mono.Data.Sqlite.SqliteTransaction;

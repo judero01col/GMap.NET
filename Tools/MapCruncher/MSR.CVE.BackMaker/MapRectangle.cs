@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
-    using ImagePipeline;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Xml;
-
     public class MapRectangle : IRobustlyHashable
     {
         public LatLon ll0;
@@ -41,11 +41,14 @@ namespace MSR.CVE.BackMaker
                     list.Add(new LatLon(context, coordSys));
                 }
             }
+
             reader.SkipAllSubTags();
             if (list.Count != 2)
             {
-                throw new InvalidMashupFile(context, string.Format("{0} should contain exactly 2 {1} subtags", "MapRectangle", LatLon.GetXMLTag()));
+                throw new InvalidMashupFile(context,
+                    string.Format("{0} should contain exactly 2 {1} subtags", "MapRectangle", LatLon.GetXMLTag()));
             }
+
             this.ll0 = list[0];
             this.ll1 = list[1];
             this.AssertOrder();
@@ -70,7 +73,11 @@ namespace MSR.CVE.BackMaker
             {
                 return new MapRectangle(ll.lat, ll.lon, ll.lat, ll.lon);
             }
-            return new MapRectangle(Math.Min(ll.lat, box.lat0), Math.Min(ll.lon, box.lon0), Math.Max(ll.lat, box.lat1), Math.Max(ll.lon, box.lon1));
+
+            return new MapRectangle(Math.Min(ll.lat, box.lat0),
+                Math.Min(ll.lon, box.lon0),
+                Math.Max(ll.lat, box.lat1),
+                Math.Max(ll.lon, box.lon1));
         }
 
         private void AssertOrder()
@@ -81,7 +88,7 @@ namespace MSR.CVE.BackMaker
         private static bool betweenInclusive(double subject, double low, double high)
         {
             D.Assert(low <= high);
-            return ((low <= subject) && (subject <= high));
+            return low <= subject && subject <= high;
         }
 
         internal MapRectangle ClipTo(MapRectangle clipRect)
@@ -99,12 +106,13 @@ namespace MSR.CVE.BackMaker
             {
                 return false;
             }
-            return (this == rectangle);
+
+            return this == rectangle;
         }
 
         public string FilenameString()
         {
-            return string.Format("rect.{0}.{1}.{2}.{3}", new object[] { this.lat0, this.lon0, this.lat1, this.lon1 });
+            return string.Format("rect.{0}.{1}.{2}.{3}", new object[] {this.lat0, this.lon0, this.lat1, this.lon1});
         }
 
         internal LatLon GetCenter()
@@ -114,7 +122,7 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return (this.ll0.GetHashCode() ^ this.ll1.GetHashCode());
+            return this.ll0.GetHashCode() ^ this.ll1.GetHashCode();
         }
 
         internal LatLon GetNE()
@@ -144,7 +152,10 @@ namespace MSR.CVE.BackMaker
 
         internal MapRectangle GrowFraction(double p)
         {
-            return new MapRectangle(this.lat0 - (p * (this.lat1 - this.lat0)), this.lon0 - (p * (this.lon1 - this.lon0)), this.lat1 + (p * (this.lat1 - this.lat0)), this.lon1 + (p * (this.lon1 - this.lon0)));
+            return new MapRectangle(this.lat0 - p * (this.lat1 - this.lat0),
+                this.lon0 - p * (this.lon1 - this.lon0),
+                this.lat1 + p * (this.lat1 - this.lat0),
+                this.lon1 + p * (this.lon1 - this.lon0));
         }
 
         internal MapRectangle Intersect(MapRectangle other)
@@ -158,27 +169,30 @@ namespace MSR.CVE.BackMaker
 
         public bool intersects(MapRectangle othr)
         {
-            bool flag = ((betweenInclusive(this.ll0.lat, othr.ll0.lat, othr.ll1.lat) || betweenInclusive(this.ll1.lat, othr.ll0.lat, othr.ll1.lat)) || betweenInclusive(othr.ll0.lat, this.ll0.lat, this.ll1.lat)) || betweenInclusive(othr.ll1.lat, this.ll0.lat, this.ll1.lat);
-            bool flag2 = ((betweenInclusive(this.ll0.lon, othr.ll0.lon, othr.ll1.lon) || betweenInclusive(this.ll1.lon, othr.ll0.lon, othr.ll1.lon)) || betweenInclusive(othr.ll0.lon, this.ll0.lon, this.ll1.lon)) || betweenInclusive(othr.ll1.lon, this.ll0.lon, this.ll1.lon);
-            return (flag && flag2);
+            bool flag = betweenInclusive(this.ll0.lat, othr.ll0.lat, othr.ll1.lat) ||
+                        betweenInclusive(this.ll1.lat, othr.ll0.lat, othr.ll1.lat) ||
+                        betweenInclusive(othr.ll0.lat, this.ll0.lat, this.ll1.lat) ||
+                        betweenInclusive(othr.ll1.lat, this.ll0.lat, this.ll1.lat);
+            bool flag2 = betweenInclusive(this.ll0.lon, othr.ll0.lon, othr.ll1.lon) ||
+                         betweenInclusive(this.ll1.lon, othr.ll0.lon, othr.ll1.lon) ||
+                         betweenInclusive(othr.ll0.lon, this.ll0.lon, this.ll1.lon) ||
+                         betweenInclusive(othr.ll1.lon, this.ll0.lon, this.ll1.lon);
+            return flag && flag2;
         }
 
         public bool IsEmpty()
         {
             if (this.lat1 > this.lat0)
             {
-                return (this.lon1 <= this.lon0);
+                return this.lon1 <= this.lon0;
             }
+
             return true;
         }
 
         public static MapRectangle MapRectangleIgnoreOrder(LatLon NW, LatLon SE)
         {
-            return new MapRectangle
-            {
-                ll0 = new LatLon(SE.lat, NW.lon),
-                ll1 = new LatLon(NW.lat, SE.lon)
-            };
+            return new MapRectangle {ll0 = new LatLon(SE.lat, NW.lon), ll1 = new LatLon(NW.lat, SE.lon)};
         }
 
         public static bool operator ==(MapRectangle mr1, MapRectangle mr2)
@@ -187,11 +201,13 @@ namespace MSR.CVE.BackMaker
             {
                 return true;
             }
+
             if (ReferenceEquals(mr1, null) || ReferenceEquals(mr2, null))
             {
                 return false;
             }
-            return ((mr1.ll0 == mr2.ll0) && (mr1.ll1 == mr2.ll1));
+
+            return mr1.ll0 == mr2.ll0 && mr1.ll1 == mr2.ll1;
         }
 
         public static bool operator !=(MapRectangle mr1, MapRectangle mr2)
@@ -204,8 +220,9 @@ namespace MSR.CVE.BackMaker
             double num = (this.lat1 - this.lat0) / (this.lon1 - this.lon0);
             if (num > 1.0)
             {
-                return new Size((int)(((double)longDimension) / num), longDimension);
+                return new Size((int)((double)longDimension / num), longDimension);
             }
+
             return new Size(longDimension, (int)(longDimension * num));
         }
 
@@ -217,13 +234,19 @@ namespace MSR.CVE.BackMaker
 
         public override string ToString()
         {
-            return string.Format("MapRectangle({0},{1},{2},{3})", new object[] { this.lat0, this.lon0, this.lat1, this.lon1 });
+            return string.Format("MapRectangle({0},{1},{2},{3})",
+                new object[] {this.lat0, this.lon0, this.lat1, this.lon1});
         }
 
         internal MapRectangle Transform(IPointTransformer transformer)
         {
             MapRectangle box = null;
-            return AddToBoundingBox(AddToBoundingBox(AddToBoundingBox(AddToBoundingBox(box, transformer.getTransformedPoint((PointD)this.GetSW())), transformer.getTransformedPoint((PointD)this.GetSE())), transformer.getTransformedPoint((PointD)this.GetNW())), transformer.getTransformedPoint((PointD)this.GetNE()));
+            return AddToBoundingBox(
+                AddToBoundingBox(
+                    AddToBoundingBox(AddToBoundingBox(box, transformer.getTransformedPoint((PointD)this.GetSW())),
+                        transformer.getTransformedPoint((PointD)this.GetSE())),
+                    transformer.getTransformedPoint((PointD)this.GetNW())),
+                transformer.getTransformedPoint((PointD)this.GetNE()));
         }
 
         internal static MapRectangle Union(MapRectangle box1, MapRectangle box2)
@@ -232,10 +255,12 @@ namespace MSR.CVE.BackMaker
             {
                 return box2;
             }
+
             if (box2 == null)
             {
                 return box1;
             }
+
             return AddToBoundingBox(AddToBoundingBox(box1, box2.GetSW()), box2.GetNE());
         }
 
@@ -267,7 +292,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return (this.ll1.lat - this.ll0.lat);
+                return this.ll1.lat - this.ll0.lat;
             }
         }
 
@@ -291,7 +316,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return (this.ll1.lon - this.ll0.lon);
+                return this.ll1.lon - this.ll0.lon;
             }
         }
     }

@@ -1,10 +1,11 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderedMashupViewer : Form
@@ -26,6 +27,7 @@ namespace MSR.CVE.BackMaker
         private ToolStripMenuItem printToolStripMenuItem;
         private ToolStripMenuItem pageSetupToolStripMenuItem;
         private ToolStripMenuItem printPreviewToolStripMenuItem;
+
         public RenderedMashupViewer(CachePackage cachePackage, ToolStripMenuItem dmsMenuItem)
         {
             this.InitializeComponent();
@@ -38,37 +40,45 @@ namespace MSR.CVE.BackMaker
             this.printDoc = new PrintDocument();
             this.printDoc.PrintPage += new PrintPageEventHandler(this.PrintPage);
         }
+
         private MapPosition GetMapPos()
         {
             return this.mapPos;
         }
+
         private void SetVEMapStyle(string s)
         {
             if (!VirtualEarthWebDownloader.StyleIsValid(s))
             {
                 return;
             }
-            this.VEroadView.Checked = (s == VirtualEarthWebDownloader.RoadStyle);
-            this.VEaerialView.Checked = (s == VirtualEarthWebDownloader.AerialStyle);
-            this.VEhybridView.Checked = (s == VirtualEarthWebDownloader.HybridStyle);
+
+            this.VEroadView.Checked = s == VirtualEarthWebDownloader.RoadStyle;
+            this.VEaerialView.Checked = s == VirtualEarthWebDownloader.AerialStyle;
+            this.VEhybridView.Checked = s == VirtualEarthWebDownloader.HybridStyle;
             this.viewer.SetBaseLayer(new VETileSource(this.cachePackage, s));
         }
+
         private void VEroadView_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.RoadStyle);
         }
+
         private void VEaerialView_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.AerialStyle);
         }
+
         private void VEhybridView_Click(object sender, EventArgs e)
         {
             this.SetVEMapStyle(VirtualEarthWebDownloader.HybridStyle);
         }
+
         private void addLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.addLayers(RenderedLayerSelector.GetLayerSelector(this.viewer, this.cachePackage));
         }
+
         private void addLayers(RenderedLayerDisplayInfo displayInfo)
         {
             if (displayInfo != null)
@@ -77,23 +87,24 @@ namespace MSR.CVE.BackMaker
                 {
                     this.mashupLayersMenuItem.DropDownItems.Add(current);
                 }
+
                 this.mapPos.setPosition(displayInfo.defaultView);
             }
         }
+
         internal void AddLayersFromUri(Uri uri)
         {
             this.addLayers(RenderedLayerSelector.GetLayerSelector(this.viewer, this.cachePackage, uri));
         }
+
         private void printToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (new PrintDialog
-            {
-                Document = this.printDoc
-            }.ShowDialog() == DialogResult.OK)
+            if (new PrintDialog {Document = this.printDoc}.ShowDialog() == DialogResult.OK)
             {
                 this.printDoc.Print();
             }
         }
+
         private void pageSetupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PageSetupDialog pageSetupDialog = new PageSetupDialog();
@@ -105,17 +116,19 @@ namespace MSR.CVE.BackMaker
             pageSetupDialog.ShowDialog();
             this.DebugPrintSettings();
         }
+
         private void DebugPrintSettings()
         {
-            D.Say(0, string.Format("Printer {0} Paper {1} Width {2} Landscape {3} Color {4}", new object[]
-            {
-                this.printDoc.PrinterSettings.PrinterName,
-                this.printDoc.DefaultPageSettings.PaperSize,
-                this.printDoc.DefaultPageSettings.PaperSize.Width,
-                this.printDoc.DefaultPageSettings.Landscape,
-                this.printDoc.DefaultPageSettings.Color
-            }));
+            D.Say(0,
+                string.Format("Printer {0} Paper {1} Width {2} Landscape {3} Color {4}",
+                    new object[]
+                    {
+                        this.printDoc.PrinterSettings.PrinterName, this.printDoc.DefaultPageSettings.PaperSize,
+                        this.printDoc.DefaultPageSettings.PaperSize.Width,
+                        this.printDoc.DefaultPageSettings.Landscape, this.printDoc.DefaultPageSettings.Color
+                    }));
         }
+
         private void PrintPage(object sender, PrintPageEventArgs e)
         {
             e.Graphics.TranslateTransform((float)e.MarginBounds.X, (float)e.MarginBounds.Y);
@@ -131,21 +144,22 @@ namespace MSR.CVE.BackMaker
             this.viewer.PaintPrintWindow(e2, num);
             e.Graphics.EndContainer(container);
         }
+
         private void printPreviewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new PrintPreviewDialog
-            {
-                Document = this.printDoc
-            }.ShowDialog();
+            new PrintPreviewDialog {Document = this.printDoc}.ShowDialog();
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             ComponentResourceManager resources = new ComponentResourceManager(typeof(RenderedMashupViewer));
@@ -166,9 +180,7 @@ namespace MSR.CVE.BackMaker
             base.SuspendLayout();
             this.menuStrip1.Items.AddRange(new ToolStripItem[]
             {
-                this.fileToolStripMenuItem,
-                this.vEBackgroundToolStripMenuItem,
-                this.mashupLayersMenuItem
+                this.fileToolStripMenuItem, this.vEBackgroundToolStripMenuItem, this.mashupLayersMenuItem
             });
             this.menuStrip1.Location = new Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -177,9 +189,7 @@ namespace MSR.CVE.BackMaker
             this.menuStrip1.Text = "menuStrip1";
             this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.pageSetupToolStripMenuItem,
-                this.printPreviewToolStripMenuItem,
-                this.printToolStripMenuItem
+                this.pageSetupToolStripMenuItem, this.printPreviewToolStripMenuItem, this.printToolStripMenuItem
             });
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new Size(35, 20);
@@ -199,9 +209,7 @@ namespace MSR.CVE.BackMaker
             this.printToolStripMenuItem.Click += new EventHandler(this.printToolStripMenuItem_Click);
             this.vEBackgroundToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.VEroadView,
-                this.VEaerialView,
-                this.VEhybridView
+                this.VEroadView, this.VEaerialView, this.VEhybridView
             });
             this.vEBackgroundToolStripMenuItem.Name = "vEBackgroundToolStripMenuItem";
             this.vEBackgroundToolStripMenuItem.Size = new Size(90, 20);
@@ -220,8 +228,7 @@ namespace MSR.CVE.BackMaker
             this.VEhybridView.Click += new EventHandler(this.VEhybridView_Click);
             this.mashupLayersMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.addLayerToolStripMenuItem,
-                this.toolStripSeparator1
+                this.addLayerToolStripMenuItem, this.toolStripSeparator1
             });
             this.mashupLayersMenuItem.Name = "mashupLayersMenuItem";
             this.mashupLayersMenuItem.Size = new Size(91, 20);

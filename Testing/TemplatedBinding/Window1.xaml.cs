@@ -1,109 +1,112 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using GMap.NET.WindowsPresentation;
 using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
 
 namespace TemplatedBinding
 {
-   class MapArr : INotifyPropertyChanged
-   {
-      public event PropertyChangedEventHandler PropertyChanged;
-      void OnPropertyChanged(string name)
-      {
-         if(PropertyChanged != null)
-         {
-            PropertyChanged(this, new PropertyChangedEventArgs(name));
-         }
-      }
+    class MapArr : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-      GMapControl map;
-      public GMapControl Map
-      {
-         get
-         {
-            return map;
-         }
-         set
-         {
-            map = value;
-            OnPropertyChanged("Map");
-         }
-      }
+        void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
-      string location;
-      public string Location
-      {
-         get
-         {
-            return location;
-         }
-         set
-         {
-            location = value;
-            OnPropertyChanged("Location");
-         }
-      }
+        GMapControl map;
 
-      public MapArr(GMapControl m, string location)
-      {
-         Map = m;
-         Location = location;
+        public GMapControl Map
+        {
+            get
+            {
+                return map;
+            }
+            set
+            {
+                map = value;
+                OnPropertyChanged("Map");
+            }
+        }
 
-         Map.SetPositionByKeywords(Location);
-      }
-   }
+        string location;
 
-   /// <summary>
-   /// Interaction logic for Window1.xaml
-   /// </summary>
-   public partial class Window1 : Window
-   {
-      public Window1()
-      {
-         InitializeComponent();
+        public string Location
+        {
+            get
+            {
+                return location;
+            }
+            set
+            {
+                location = value;
+                OnPropertyChanged("Location");
+            }
+        }
 
-         ObservableCollection<MapArr> mapCtrl = new ObservableCollection<MapArr>();
+        public MapArr(GMapControl m, string location)
+        {
+            Map = m;
+            Location = location;
 
-         // 1
-         {
-            GMapControl map = new GMapControl();
-            map.MapProvider = GMapProviders.OpenStreetMap;
-            map.MinZoom = 4;
-            map.MaxZoom = map.MinZoom + 3;
-            map.Zoom = map.MinZoom;
-            mapCtrl.Add(new MapArr(map, "Holand"));
-         }
+            Map.SetPositionByKeywords(Location);
+        }
+    }
 
-         // 2
-         {
-            GMapControl map = new GMapControl();
-            map.MapProvider = GMapProviders.OpenStreetMap;
-            map.MinZoom = 4;
-            map.MaxZoom = map.MinZoom + 3;
-            map.Zoom = map.MinZoom;
-            mapCtrl.Add(new MapArr(map, "New York"));
-         }
+    /// <summary>
+    ///     Interaction logic for Window1.xaml
+    /// </summary>
+    public partial class Window1 : Window
+    {
+        public Window1()
+        {
+            InitializeComponent();
 
-         // 3
-         {
-            GMapControl map = new GMapControl();
-            map.MapProvider = GMapProviders.OpenStreetMap;
-            map.MinZoom = 4;
-            map.MaxZoom = map.MinZoom + 3;
-            map.Zoom = map.MinZoom;
-            mapCtrl.Add(new MapArr(map, "Lithuania"));
-         }
+            ObservableCollection<MapArr> mapCtrl = new ObservableCollection<MapArr>();
 
-         // main
-         UserMap.MapProvider = GMapProviders.GoogleMap;
-         UserMap.MinZoom = 5;
-         UserMap.MaxZoom = 13;
-         UserMap.Zoom = 5;
-         UserMap.SetPositionByKeywords("Leuven");
+            // 1
+            {
+                GMapControl map = new GMapControl();
+                map.MapProvider = GMapProviders.OpenStreetMap;
+                map.MinZoom = 4;
+                map.MaxZoom = map.MinZoom + 3;
+                map.Zoom = map.MinZoom;
+                mapCtrl.Add(new MapArr(map, "Holand"));
+            }
 
-         // add all maps
-         locations.ItemsSource = mapCtrl;
-      }
-   }
+            // 2
+            {
+                GMapControl map = new GMapControl();
+                map.MapProvider = GMapProviders.OpenStreetMap;
+                map.MinZoom = 4;
+                map.MaxZoom = map.MinZoom + 3;
+                map.Zoom = map.MinZoom;
+                mapCtrl.Add(new MapArr(map, "New York"));
+            }
+
+            // 3
+            {
+                GMapControl map = new GMapControl();
+                map.MapProvider = GMapProviders.OpenStreetMap;
+                map.MinZoom = 4;
+                map.MaxZoom = map.MinZoom + 3;
+                map.Zoom = map.MinZoom;
+                mapCtrl.Add(new MapArr(map, "Lithuania"));
+            }
+
+            // main
+            UserMap.MapProvider = GMapProviders.GoogleMap;
+            UserMap.MinZoom = 5;
+            UserMap.MaxZoom = 13;
+            UserMap.Zoom = 5;
+            UserMap.SetPositionByKeywords("Leuven");
+
+            // add all maps
+            locations.ItemsSource = mapCtrl;
+        }
+    }
 }

@@ -1,8 +1,9 @@
-using MSR.CVE.BackMaker;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker;
+
 namespace BackMaker
 {
     public class ProgramInstance
@@ -13,6 +14,7 @@ namespace BackMaker
         private bool renderOnLaunch;
         private string startDocumentPath;
         private static int applicationResultCode;
+
         private void ParseArgs(string[] argsArray)
         {
             List<string> list = new List<string>(argsArray);
@@ -22,6 +24,7 @@ namespace BackMaker
                 {
                     throw new UsageException();
                 }
+
                 if (list[0][0] == '-')
                 {
                     if (list[0] == "-render")
@@ -35,6 +38,7 @@ namespace BackMaker
                         {
                             throw new Exception(string.Format("Unrecognized flag {0}", list[0]));
                         }
+
                         this.remoteFoxitServer = new RemoteFoxitServer();
                         list.RemoveAt(0);
                         this.remoteFoxitServer.ConsumeArgs(list);
@@ -47,6 +51,7 @@ namespace BackMaker
                 }
             }
         }
+
         public int Main(string[] args)
         {
             Thread.CurrentThread.Name = "Main";
@@ -60,7 +65,8 @@ namespace BackMaker
                     BuildConfig.Initialize();
                     if (BuildConfig.theConfig.buildConfiguration == "Broken")
                     {
-                        throw new ConfigurationException("MapCruncher configuration is broken. Please reinstall MapCruncher.");
+                        throw new ConfigurationException(
+                            "MapCruncher configuration is broken. Please reinstall MapCruncher.");
                     }
 
                     if (this.remoteFoxitServer != null)
@@ -68,6 +74,7 @@ namespace BackMaker
                         int result = this.remoteFoxitServer.Run();
                         return result;
                     }
+
                     Application.EnableVisualStyles();
                     mainAppForm = new MainAppForm(this.startDocumentPath, this.renderOnLaunch);
                     mainAppForm.StartUpApplication();
@@ -79,6 +86,7 @@ namespace BackMaker
                     int result = 2;
                     return result;
                 }
+
                 Application.Run(mainAppForm);
             }
             finally
@@ -89,8 +97,10 @@ namespace BackMaker
                     mainAppForm.UndoConstruction();
                 }
             }
+
             return applicationResultCode;
         }
+
         public static void SetApplicationResultCode(int rc)
         {
             applicationResultCode = rc;

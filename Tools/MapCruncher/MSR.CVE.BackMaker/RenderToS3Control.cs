@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace MSR.CVE.BackMaker
 {
     public class RenderToS3Control : UserControl
@@ -17,14 +18,17 @@ namespace MSR.CVE.BackMaker
         private Button editButton;
         private ToolTip toolTip1;
         private RenderToS3Options renderToS3Options;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.components = new Container();
@@ -56,28 +60,30 @@ namespace MSR.CVE.BackMaker
             this.label5.Size = new Size(59, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Credentials";
-            this.s3PathPrefix.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.s3PathPrefix.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.s3PathPrefix.Location = new Point(68, 89);
             this.s3PathPrefix.Name = "s3PathPrefix";
             this.s3PathPrefix.Size = new Size(277, 20);
             this.s3PathPrefix.TabIndex = 11;
-            this.s3Bucket.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.s3Bucket.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.s3Bucket.Location = new Point(68, 59);
             this.s3Bucket.Name = "s3Bucket";
             this.s3Bucket.Size = new Size(277, 20);
             this.s3Bucket.TabIndex = 10;
-            this.s3CredentialsFilename.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.s3CredentialsFilename.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             this.s3CredentialsFilename.Location = new Point(68, 6);
             this.s3CredentialsFilename.Name = "s3CredentialsFilename";
             this.s3CredentialsFilename.Size = new Size(275, 20);
             this.s3CredentialsFilename.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.s3CredentialsFilename, "Path to file containing credentials for render upload");
+            this.toolTip1.SetToolTip(this.s3CredentialsFilename,
+                "Path to file containing credentials for render upload");
             this.credentialsBrowseButton.Location = new Point(68, 32);
             this.credentialsBrowseButton.Name = "credentialsBrowseButton";
             this.credentialsBrowseButton.Size = new Size(66, 20);
             this.credentialsBrowseButton.TabIndex = 16;
             this.credentialsBrowseButton.Text = "Select...";
-            this.toolTip1.SetToolTip(this.credentialsBrowseButton, "Select existing or create new credentials file from browser.");
+            this.toolTip1.SetToolTip(this.credentialsBrowseButton,
+                "Select existing or create new credentials file from browser.");
             this.credentialsBrowseButton.UseVisualStyleBackColor = true;
             this.credentialsBrowseButton.Click += new EventHandler(this.credentialsBrowseButton_Click);
             this.editButton.Location = new Point(140, 32);
@@ -104,6 +110,7 @@ namespace MSR.CVE.BackMaker
             base.ResumeLayout(false);
             base.PerformLayout();
         }
+
         public RenderToS3Control()
         {
             this.InitializeComponent();
@@ -112,28 +119,34 @@ namespace MSR.CVE.BackMaker
             this.s3Bucket.LostFocus += new EventHandler(this.s3Bucket_LostFocus);
             this.s3PathPrefix.LostFocus += new EventHandler(this.s3PathPrefix_LostFocus);
         }
+
         private void s3PathPrefix_LostFocus(object sender, EventArgs e)
         {
             this.renderToS3Options.s3pathPrefix = this.s3PathPrefix.Text;
         }
+
         private void s3Bucket_LostFocus(object sender, EventArgs e)
         {
             this.renderToS3Options.s3bucket = this.s3Bucket.Text;
         }
+
         private void s3Credentials_LostFocus(object sender, EventArgs e)
         {
             this.renderToS3Options.s3credentialsFilename = this.s3CredentialsFilename.Text;
             this.UpdateButtons();
         }
+
         private void UpdateButtons()
         {
             this.editButton.Enabled = this.FileIsReadable();
         }
+
         public void Configure(RenderToS3Options renderToS3Options)
         {
             this.renderToS3Options = renderToS3Options;
             this.Reload();
         }
+
         private void Reload()
         {
             if (this.renderToS3Options != null)
@@ -144,6 +157,7 @@ namespace MSR.CVE.BackMaker
                 this.s3PathPrefix.Text = this.renderToS3Options.s3pathPrefix;
             }
         }
+
         private bool FileIsReadable()
         {
             bool result;
@@ -156,8 +170,10 @@ namespace MSR.CVE.BackMaker
             {
                 result = false;
             }
+
             return result;
         }
+
         private void credentialsBrowseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -170,6 +186,7 @@ namespace MSR.CVE.BackMaker
             {
                 return;
             }
+
             this.renderToS3Options.s3credentialsFilename = openFileDialog.FileName;
             if (!this.FileIsReadable())
             {
@@ -179,12 +196,15 @@ namespace MSR.CVE.BackMaker
                     this.renderToS3Options.s3credentialsFilename = "";
                 }
             }
+
             this.Reload();
         }
+
         private void editButton_Click(object sender, EventArgs e)
         {
             this.EditFile();
         }
+
         private void EditFile()
         {
             S3Credentials s3Credentials = new S3Credentials(this.renderToS3Options.s3credentialsFilename, true);

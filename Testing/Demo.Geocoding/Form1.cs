@@ -1,17 +1,13 @@
-﻿using GMap.NET;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Demo.Geocoding
 {
@@ -121,17 +117,13 @@ namespace Demo.Geocoding
             label1.Text = "Total: " + Total;
             label2.Text = "Exito: " + Exito;
             label3.Text = "Falla: " + Falla;
-
-
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
             //MainMap.Overlays.Add(objects);
 
             MainMap.ImportFromKmz("D:\\BARRANQUILLA.kmz");
-
-           
         }
 
         public Task ProcesarDatos(string Country, string Department, string City, string Address)
@@ -140,7 +132,9 @@ namespace Demo.Geocoding
             {
                 GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
-                string fulladress = (string.IsNullOrEmpty(Country) ? "" : Country + ", ") + (string.IsNullOrEmpty(Department) ? "" : Department + ", ") + (string.IsNullOrEmpty(City) ? "" : City + ", " + Address);
+                string fulladress = (string.IsNullOrEmpty(Country) ? "" : Country + ", ") +
+                                    (string.IsNullOrEmpty(Department) ? "" : Department + ", ") +
+                                    (string.IsNullOrEmpty(City) ? "" : City + ", " + Address);
 
                 PointLatLng? pos = GMapProviders.GoogleMap.GetPoint(fulladress, out status);
 
@@ -160,12 +154,10 @@ namespace Demo.Geocoding
 
                 if (Exito % 100 == 0)
                 {
-                    
                 }
 
                 if (Total == Exito + Falla)
                 {
-                    
                 }
             });
             return task;
@@ -175,7 +167,9 @@ namespace Demo.Geocoding
         {
             GeoCoderStatusCode status = GeoCoderStatusCode.UNKNOWN_ERROR;
 
-            string fulladress = (string.IsNullOrEmpty(Country) ? "" : Country + ", ") + (string.IsNullOrEmpty(Department) ? "" : Department + ", ") + (string.IsNullOrEmpty(City) ? "" : City + ", " + Address);
+            string fulladress = (string.IsNullOrEmpty(Country) ? "" : Country + ", ") +
+                                (string.IsNullOrEmpty(Department) ? "" : Department + ", ") +
+                                (string.IsNullOrEmpty(City) ? "" : City + ", " + Address);
 
             PointLatLng? pos = GMapProviders.GoogleMap.GetPoint(fulladress, out status);
 

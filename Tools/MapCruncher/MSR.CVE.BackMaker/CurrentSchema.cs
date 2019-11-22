@@ -1,9 +1,9 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class CurrentSchema : MashupXMLSchemaVersion
     {
         public static CurrentSchema _schema;
+
         public static CurrentSchema schema
         {
             get
@@ -12,9 +12,11 @@ namespace MSR.CVE.BackMaker
                 {
                     _schema = new CurrentSchema();
                 }
+
                 return _schema;
             }
         }
+
         private CurrentSchema() : base("1.7")
         {
         }

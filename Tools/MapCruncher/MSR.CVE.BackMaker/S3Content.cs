@@ -1,9 +1,9 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class S3Content
     {
         private byte[] bytes;
+
         public byte[] Bytes
         {
             get
@@ -11,6 +11,7 @@ namespace MSR.CVE.BackMaker
                 return this.bytes;
             }
         }
+
         public S3Content(byte[] bytes)
         {
             this.bytes = bytes;

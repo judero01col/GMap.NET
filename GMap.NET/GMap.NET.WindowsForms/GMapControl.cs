@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,18 +7,16 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using GMap.NET.Internals;
 using GMap.NET.MapProviders;
 using GMap.NET.ObjectModel;
+using GMap.NET.Projections;
 
 namespace GMap.NET.WindowsForms
 {
 #if !PocketPC
-    using System.Runtime.Serialization.Formatters.Binary;
-    using System.Collections.Generic;
-    using Projections;
-
 #else
    using OpenNETCF.ComponentModel;
 #endif

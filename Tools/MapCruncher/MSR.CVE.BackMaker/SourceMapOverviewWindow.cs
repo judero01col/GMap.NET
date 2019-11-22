@@ -1,25 +1,30 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class SourceMapOverviewWindow : Form
     {
         public delegate void ClosedDelegate();
+
         private IContainer components;
         public ViewerControl viewerControl;
         private MapPosition mapPos;
         private ClosedDelegate closedDelegate;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && this.components != null)
             {
                 this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
+
         private void InitializeComponent()
         {
             this.viewerControl = new ViewerControl();
@@ -39,12 +44,14 @@ namespace MSR.CVE.BackMaker
             base.TopMost = true;
             base.ResumeLayout(false);
         }
+
         public SourceMapOverviewWindow()
         {
             this.InitializeComponent();
             this.mapPos = new MapPosition(this.viewerControl);
             this.viewerControl.Initialize(new MapPositionDelegate(this.GetMapPos), "Overview");
         }
+
         public void Initialize(ClosedDelegate closedDelegate, MapDrawingOption ShowDMS)
         {
             this.closedDelegate = closedDelegate;
@@ -52,14 +59,17 @@ namespace MSR.CVE.BackMaker
             this.mapPos.setPosition(new ContinuousCoordinateSystem().GetDefaultView());
             base.Closed += new EventHandler(this.SourceMapOverviewWindow_Closed);
         }
+
         private void SourceMapOverviewWindow_Closed(object sender, EventArgs e)
         {
             this.closedDelegate();
         }
+
         private MapPosition GetMapPos()
         {
             return this.mapPos;
         }
+
         private void SetDefaultView()
         {
             this.mapPos.setPosition(this.viewerControl.GetCoordinateSystem().GetDefaultView());

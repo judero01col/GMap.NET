@@ -1,6 +1,6 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public abstract class RenderedTileNamingScheme
@@ -12,34 +12,42 @@ namespace MSR.CVE.BackMaker
         private const string FileSuffixAttr = "FileSuffix";
         protected string filePrefix;
         protected string fileSuffix;
+
         protected RenderedTileNamingScheme(string filePrefix, string fileSuffix)
         {
             this.filePrefix = filePrefix;
             D.Assert(fileSuffix.StartsWith("."));
             this.fileSuffix = fileSuffix;
         }
+
         public abstract string GetSchemeName();
         public abstract string GetTileFilename(TileAddress ta);
+
         public string GetRenderPath(TileAddress ta)
         {
             return this.GetFilePrefix() + "\\" + this.GetTileFilename(ta);
         }
+
         public static string GetXMLTag()
         {
             return "TileNamingScheme";
         }
+
         public string GetSchemeTag()
         {
             return "Type";
         }
+
         internal string GetFilePrefix()
         {
             return this.filePrefix;
         }
+
         public string GetFileSuffix()
         {
             return this.fileSuffix;
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("TileNamingScheme");
@@ -49,6 +57,7 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString("FileSuffix", this.fileSuffix);
             writer.WriteEndElement();
         }
+
         public static RenderedTileNamingScheme ReadXML(MashupParseContext context)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("TileNamingScheme");
@@ -60,12 +69,15 @@ namespace MSR.CVE.BackMaker
             {
                 throw new InvalidMashupFile(context, string.Format("Invalid contents in {0} tag.", "TileNamingScheme"));
             }
+
             if (attribute == VENamingScheme.SchemeName)
             {
                 return new VENamingScheme(attribute2, attribute3);
             }
+
             throw new InvalidMashupFile(context, "Unknown type: " + attribute);
         }
+
         internal void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate("RenderedTileNamingScheme(");

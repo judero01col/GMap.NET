@@ -1,4 +1,5 @@
 using System;
+
 namespace MSR.CVE.BackMaker
 {
     public class PositionAssociationView
@@ -9,25 +10,28 @@ namespace MSR.CVE.BackMaker
             source,
             global
         }
+
         private PositionAssociation assoc;
         private WhichPosition whichPosition;
+
         public DisplayablePosition position
         {
             get
             {
                 switch (this.whichPosition)
                 {
-                case WhichPosition.image:
-                    return this.assoc.imagePosition;
-                case WhichPosition.source:
-                    return this.assoc.sourcePosition;
-                case WhichPosition.global:
-                    return this.assoc.globalPosition;
-                default:
-                    throw new Exception("booogus.");
+                    case WhichPosition.image:
+                        return this.assoc.imagePosition;
+                    case WhichPosition.source:
+                        return this.assoc.sourcePosition;
+                    case WhichPosition.global:
+                        return this.assoc.globalPosition;
+                    default:
+                        throw new Exception("booogus.");
                 }
             }
         }
+
         public string associationName
         {
             get
@@ -35,6 +39,7 @@ namespace MSR.CVE.BackMaker
                 return this.assoc.associationName;
             }
         }
+
         public int pinId
         {
             get
@@ -42,6 +47,7 @@ namespace MSR.CVE.BackMaker
                 return this.assoc.pinId;
             }
         }
+
         public PositionAssociationView(PositionAssociation assoc, WhichPosition whichPosition)
         {
             this.assoc = assoc;

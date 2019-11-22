@@ -1,4 +1,3 @@
-using System;
 namespace MSR.CVE.BackMaker
 {
     public class SingleMaxZoomForEntireMashupSchema : MashupXMLSchemaVersion
@@ -7,6 +6,7 @@ namespace MSR.CVE.BackMaker
         internal static string ZoomLevelsTag = "ZoomLevels";
         internal static string MinZoomTag = "MinZoom";
         internal static string MaxZoomTag = "MaxZoom";
+
         public static SingleMaxZoomForEntireMashupSchema schema
         {
             get
@@ -15,9 +15,11 @@ namespace MSR.CVE.BackMaker
                 {
                     _schema = new SingleMaxZoomForEntireMashupSchema();
                 }
+
                 return _schema;
             }
         }
+
         private SingleMaxZoomForEntireMashupSchema() : base("1.4")
         {
         }

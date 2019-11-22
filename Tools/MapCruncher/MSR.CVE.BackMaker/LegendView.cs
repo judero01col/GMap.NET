@@ -1,6 +1,6 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Globalization;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class LegendView : IMapView, ICurrentView
@@ -12,6 +12,7 @@ namespace MSR.CVE.BackMaker
         private static string previewAttr = "ShowingPreview";
         private static string sourceMapViewTag = "SourceMapPosition";
         private static string referenceMapViewTag = "ReferenceMapPosition";
+
         public Legend legend
         {
             get
@@ -19,6 +20,7 @@ namespace MSR.CVE.BackMaker
                 return this._legend;
             }
         }
+
         public bool showingPreview
         {
             get
@@ -26,10 +28,12 @@ namespace MSR.CVE.BackMaker
                 return this._showingPreview;
             }
         }
+
         public object GetViewedObject()
         {
             return this.legend;
         }
+
         public LegendView(Legend legend, bool showingPreview, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
             this._legend = legend;
@@ -37,6 +41,7 @@ namespace MSR.CVE.BackMaker
             this.sourceMapView = sourceMapView;
             this.referenceMapView = referenceMapView;
         }
+
         public LegendView(Legend legend, MashupParseContext context)
         {
             this._legend = legend;
@@ -68,19 +73,23 @@ namespace MSR.CVE.BackMaker
                         {
                             if (xMLTagReader3.TagIs(MapPosition.GetXMLTag(context.version)))
                             {
-                                this.referenceMapView = new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
+                                this.referenceMapView =
+                                    new MapPosition(context, null, MercatorCoordinateSystem.theInstance);
                             }
                         }
                     }
                 }
             }
+
             context.AssertPresent(obj, sourceMapViewTag);
             context.AssertPresent(this.referenceMapView, referenceMapViewTag);
         }
+
         public static string GetXMLTag()
         {
             return "LegendView";
         }
+
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(GetXMLTag());
@@ -93,10 +102,12 @@ namespace MSR.CVE.BackMaker
             wc.writer.WriteEndElement();
             wc.writer.WriteEndElement();
         }
+
         public MapPosition GetReferenceMapView()
         {
             return this.referenceMapView;
         }
+
         public LatLonZoom GetSourceMapView()
         {
             return this.sourceMapView;

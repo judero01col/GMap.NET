@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+
 namespace MSR.CVE.BackMaker
 {
     public class IgnoredTags : Dictionary<string, bool>
@@ -11,8 +11,10 @@ namespace MSR.CVE.BackMaker
             {
                 text = text + current.Key + " ";
             }
+
             return text;
         }
+
         public void Add(string tagName)
         {
             base[tagName] = true;

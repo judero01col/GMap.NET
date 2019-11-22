@@ -1,5 +1,5 @@
-using System;
 using System.Drawing;
+
 namespace MSR.CVE.BackMaker
 {
     public class PaintSpecification
@@ -8,6 +8,7 @@ namespace MSR.CVE.BackMaker
         public Rectangle ClipRectangle;
         public Size Size;
         public bool SynchronousTiles;
+
         public PaintSpecification(Graphics Graphics, Rectangle ClipRectangle, Size Size, bool SynchronousTiles)
         {
             this.Graphics = Graphics;
@@ -15,6 +16,7 @@ namespace MSR.CVE.BackMaker
             this.Size = Size;
             this.SynchronousTiles = SynchronousTiles;
         }
+
         public void ResetClip()
         {
             this.Graphics.SetClip(this.ClipRectangle);

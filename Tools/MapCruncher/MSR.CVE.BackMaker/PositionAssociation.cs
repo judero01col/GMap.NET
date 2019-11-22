@@ -1,7 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
 using System;
 using System.Globalization;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class PositionAssociation : IRobustlyHashable
@@ -18,6 +19,7 @@ namespace MSR.CVE.BackMaker
         private static string pinIdAttr = "pinId";
         private static string SourcePositionTag = "SourcePosition";
         private static string GlobalPositionTag = "GlobalPosition";
+
         public int pinId
         {
             get
@@ -30,6 +32,7 @@ namespace MSR.CVE.BackMaker
                 this.dirtyEvent.SetDirty();
             }
         }
+
         public string associationName
         {
             get
@@ -42,6 +45,7 @@ namespace MSR.CVE.BackMaker
                 this.dirtyEvent.SetDirty();
             }
         }
+
         public string qualityMessage
         {
             get
@@ -53,6 +57,7 @@ namespace MSR.CVE.BackMaker
                 this._qualityMessage = value;
             }
         }
+
         public DisplayablePosition imagePosition
         {
             get
@@ -60,6 +65,7 @@ namespace MSR.CVE.BackMaker
                 return this._imagePosition;
             }
         }
+
         public DisplayablePosition sourcePosition
         {
             get
@@ -67,6 +73,7 @@ namespace MSR.CVE.BackMaker
                 return this._sourcePosition;
             }
         }
+
         public DisplayablePosition globalPosition
         {
             get
@@ -74,7 +81,9 @@ namespace MSR.CVE.BackMaker
                 return this._globalPosition;
             }
         }
-        public PositionAssociation(string associationName, LatLonZoom imagePosition, LatLonZoom sourcePosition, LatLonZoom globalPosition, DirtyEvent dirtyEvent)
+
+        public PositionAssociation(string associationName, LatLonZoom imagePosition, LatLonZoom sourcePosition,
+            LatLonZoom globalPosition, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
             this._pinId = -1;
@@ -83,20 +92,25 @@ namespace MSR.CVE.BackMaker
             this._sourcePosition = new DisplayablePosition(sourcePosition);
             this._globalPosition = new DisplayablePosition(globalPosition);
         }
+
         public override int GetHashCode()
         {
-            return this._sourcePosition.GetHashCode() ^ this._globalPosition.GetHashCode() ^ this._pinId ^ this._associationName.GetHashCode();
+            return this._sourcePosition.GetHashCode() ^ this._globalPosition.GetHashCode() ^ this._pinId ^
+                   this._associationName.GetHashCode();
         }
+
         public void UpdateAssociation(LatLonZoom sourceLLZ, LatLonZoom globalLLZ)
         {
             this._sourcePosition = new DisplayablePosition(sourceLLZ);
             this._globalPosition = new DisplayablePosition(globalLLZ);
             this.dirtyEvent.SetDirty();
         }
+
         public static string XMLTag()
         {
             return PositionAssociationTag;
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(PositionAssociationTag);
@@ -110,6 +124,7 @@ namespace MSR.CVE.BackMaker
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
+
         public PositionAssociation(MashupParseContext context, DirtyEvent dirtyEvent)
         {
             this.dirtyEvent = dirtyEvent;
@@ -120,6 +135,7 @@ namespace MSR.CVE.BackMaker
             {
                 this.associationName = "";
             }
+
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(SourcePositionTag))
@@ -129,7 +145,8 @@ namespace MSR.CVE.BackMaker
                     {
                         if (xMLTagReader2.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                         {
-                            this._sourcePosition = new DisplayablePosition(context, ContinuousCoordinateSystem.theInstance);
+                            this._sourcePosition =
+                                new DisplayablePosition(context, ContinuousCoordinateSystem.theInstance);
                             this._imagePosition = new DisplayablePosition(this._sourcePosition.pinPosition);
                         }
                     }
@@ -143,17 +160,21 @@ namespace MSR.CVE.BackMaker
                         {
                             if (xMLTagReader3.TagIs(DisplayablePosition.GetXMLTag(context.version)))
                             {
-                                this._globalPosition = new DisplayablePosition(context, MercatorCoordinateSystem.theInstance);
+                                this._globalPosition =
+                                    new DisplayablePosition(context, MercatorCoordinateSystem.theInstance);
                             }
                         }
                     }
                 }
             }
+
             if (this._sourcePosition == null || this._globalPosition == null)
             {
-                throw new Exception(string.Format("Pin {0} does not have a source and/or global position defined", this.associationName));
+                throw new Exception(string.Format("Pin {0} does not have a source and/or global position defined",
+                    this.associationName));
             }
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             this._sourcePosition.pinPosition.AccumulateRobustHash(hash);

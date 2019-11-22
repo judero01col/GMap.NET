@@ -1,5 +1,5 @@
-using System;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class SourceMapInfo
@@ -13,6 +13,7 @@ namespace MSR.CVE.BackMaker
         private string _mapFileURL = "";
         private string _mapHomePage = "";
         private string _mapDescription = "";
+
         public string mapFileURL
         {
             get
@@ -28,6 +29,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public string mapHomePage
         {
             get
@@ -43,6 +45,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public string mapDescription
         {
             get
@@ -58,14 +61,17 @@ namespace MSR.CVE.BackMaker
                 }
             }
         }
+
         public SourceMapInfo(DirtyEvent parentDirty)
         {
             this.dirtyEvent = new DirtyEvent(parentDirty);
         }
+
         public static string GetXMLTag()
         {
             return "SourceMapInfo";
         }
+
         public void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("SourceMapInfo");
@@ -78,6 +84,7 @@ namespace MSR.CVE.BackMaker
             XMLUtils.WriteStringXml(writer, "MapDescription", this.mapDescription);
             writer.WriteEndElement();
         }
+
         public SourceMapInfo(MashupParseContext context, DirtyEvent parentDirty)
         {
             this.dirtyEvent = new DirtyEvent(parentDirty);

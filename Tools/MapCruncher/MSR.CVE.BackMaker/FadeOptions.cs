@@ -1,8 +1,8 @@
-using MSR.CVE.BackMaker.ImagePipeline;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using MSR.CVE.BackMaker.ImagePipeline;
+
 namespace MSR.CVE.BackMaker
 {
     public class FadeOptions
@@ -16,15 +16,18 @@ namespace MSR.CVE.BackMaker
         private double _fadeBase = 1.0;
         private Dictionary<int, double> _zoomToFadeMap = new Dictionary<int, double>();
         public static RangeDouble FadeRange = new RangeDouble(0.0, 1.0);
+
         public FadeOptions(DirtyEvent dirty)
         {
             this.dirty = dirty;
         }
+
         public FadeOptions(FadeOptions prototype)
         {
             this._fadeBase = prototype._fadeBase;
             this._zoomToFadeMap = new Dictionary<int, double>(prototype._zoomToFadeMap);
         }
+
         public FadeOptions(MashupParseContext context, DirtyEvent dirty)
         {
             this.dirty = dirty;
@@ -39,17 +42,21 @@ namespace MSR.CVE.BackMaker
                     double value = FadeRange.Parse(context, "FadeValue");
                     if (this._zoomToFadeMap.ContainsKey(requiredAttributeInt))
                     {
-                        throw new InvalidMashupFile(context, string.Format("Fade specified twice for zoom level {0}", requiredAttributeInt));
+                        throw new InvalidMashupFile(context,
+                            string.Format("Fade specified twice for zoom level {0}", requiredAttributeInt));
                     }
+
                     this._zoomToFadeMap[requiredAttributeInt] = value;
                     xMLTagReader2.SkipAllSubTags();
                 }
             }
         }
+
         internal static string GetXMLTag()
         {
             return "FadeOptions";
         }
+
         internal void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement("FadeOptions");
@@ -58,19 +65,24 @@ namespace MSR.CVE.BackMaker
             {
                 writer.WriteStartElement("FadeAtZoom");
                 writer.WriteAttributeString("ZoomLevel", current.ToString(CultureInfo.InvariantCulture));
-                writer.WriteAttributeString("FadeValue", this._zoomToFadeMap[current].ToString(CultureInfo.InvariantCulture));
+                writer.WriteAttributeString("FadeValue",
+                    this._zoomToFadeMap[current].ToString(CultureInfo.InvariantCulture));
                 writer.WriteEndElement();
             }
+
             writer.WriteEndElement();
         }
+
         internal double GetFadeForZoomLevel(int zoomLevel)
         {
             if (this._zoomToFadeMap.ContainsKey(zoomLevel))
             {
                 return this._zoomToFadeMap[zoomLevel];
             }
+
             return this._fadeBase;
         }
+
         public void AccumulateRobustHash(IRobustHash hash)
         {
             hash.Accumulate(this._fadeBase);

@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+
 namespace MSR.CVE.BackMaker
 {
     internal class DegreesMinutesSeconds
@@ -9,8 +10,13 @@ namespace MSR.CVE.BackMaker
             DMS,
             DecimalDegrees
         }
-        private Regex dmsRegex = new Regex("\r\n(?<Sign>-?)\r\n(?<Degrees>\\d+)\r\n\\s*\r\n([°dD])?\r\n\\s*\r\n\r\n(\r\n  (?<Minutes>\\d+)\r\n  \\s*\r\n  (['mM])?\r\n  \\s*\r\n\r\n  (\r\n    (?<Seconds>\\d+(\\.\\d+)?)\r\n    \\s*\r\n    ([\"sS])?\r\n  )?\r\n)?", RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace);
+
+        private Regex dmsRegex = new Regex(
+            "\r\n(?<Sign>-?)\r\n(?<Degrees>\\d+)\r\n\\s*\r\n([°dD])?\r\n\\s*\r\n\r\n(\r\n  (?<Minutes>\\d+)\r\n  \\s*\r\n  (['mM])?\r\n  \\s*\r\n\r\n  (\r\n    (?<Seconds>\\d+(\\.\\d+)?)\r\n    \\s*\r\n    ([\"sS])?\r\n  )?\r\n)?",
+            RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace);
+
         public OutputMode outputMode = OutputMode.DecimalDegrees;
+
         public double ParseLatLon(string str)
         {
             try
@@ -21,10 +27,11 @@ namespace MSR.CVE.BackMaker
             catch (FormatException)
             {
             }
+
             Match match = this.dmsRegex.Match(str);
             if (match.Success)
             {
-                double num = (match.Groups["Sign"].Length > 0) ? -1.0 : 1.0;
+                double num = match.Groups["Sign"].Length > 0 ? -1.0 : 1.0;
                 double num2 = Convert.ToDouble(match.Groups["Degrees"].Value);
                 double num3 = 0.0;
                 double num4 = 0.0;
@@ -42,10 +49,13 @@ namespace MSR.CVE.BackMaker
                 catch
                 {
                 }
+
                 return num * (num2 + num3 * 0.016666666666666666 + num4 * 0.00027777777777777778);
             }
+
             throw new FormatException("Unable to parse lat/lon.");
         }
+
         public string FormatLatLon(double value)
         {
             string result;
@@ -58,6 +68,7 @@ namespace MSR.CVE.BackMaker
                     num = -1;
                     num2 = -value;
                 }
+
                 int num3 = (int)num2;
                 double num4 = num2 - (double)num3;
                 int num5 = (int)(num4 * 60.0);
@@ -77,6 +88,7 @@ namespace MSR.CVE.BackMaker
                     result = null;
                 }
             }
+
             return result;
         }
     }

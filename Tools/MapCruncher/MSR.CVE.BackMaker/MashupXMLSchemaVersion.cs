@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
+
 namespace MSR.CVE.BackMaker
 {
     public class MashupXMLSchemaVersion
@@ -13,6 +13,7 @@ namespace MSR.CVE.BackMaker
         public const string mpStyleAttr = "style";
         private string _versionNumberString;
         private static List<MashupXMLSchemaVersion> _AcceptedVersions;
+
         public string versionNumberString
         {
             get
@@ -20,6 +21,7 @@ namespace MSR.CVE.BackMaker
                 return this._versionNumberString;
             }
         }
+
         public static List<MashupXMLSchemaVersion> AcceptedVersions
         {
             get
@@ -27,24 +29,30 @@ namespace MSR.CVE.BackMaker
                 return _AcceptedVersions;
             }
         }
+
         protected MashupXMLSchemaVersion(string versionNumberString)
         {
             this._versionNumberString = versionNumberString;
         }
+
         public void WriteXMLAttribute(XmlTextWriter writer)
         {
             writer.WriteAttributeString("Version", this.versionNumberString);
         }
+
         public static MashupXMLSchemaVersion ReadXMLAttribute(XmlTextReader reader)
         {
             string versionString = reader.GetAttribute("Version");
-            MashupXMLSchemaVersion mashupXMLSchemaVersion = AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi._versionNumberString == versionString);
+            MashupXMLSchemaVersion mashupXMLSchemaVersion =
+                AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi._versionNumberString == versionString);
             if (mashupXMLSchemaVersion == null)
             {
                 throw new InvalidMashupFile(reader, string.Format("Unknown mashup file version {0}", versionString));
             }
+
             return mashupXMLSchemaVersion;
         }
+
         static MashupXMLSchemaVersion()
         {
             _AcceptedVersions = new List<MashupXMLSchemaVersion>();
