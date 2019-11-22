@@ -40,12 +40,12 @@ namespace BSE.Windows.Forms
         #endregion
 
         #region FieldsPrivate
-        private Color m_backgroundColor;
-        private Color m_valueColor;
-        private Color m_borderColor;
-        private int m_iMinimum;
-        private int m_iMaximum;
-        private int m_iValue;
+        private Color _backgroundColor;
+        private Color _valueColor;
+        private Color _borderColor;
+        private int _iMinimum;
+        private int _iMaximum;
+        private int _iValue;
         #endregion
 
         #region Properties
@@ -60,12 +60,12 @@ namespace BSE.Windows.Forms
         [Description("The color used for the background rectangle of this control.")]
         public Color BackgroundColor
         {
-            get { return this.m_backgroundColor; }
+            get { return this._backgroundColor; }
             set
             {
-                if (this.m_backgroundColor != value)
+                if (this._backgroundColor != value)
                 {
-                    this.m_backgroundColor = value;
+                    this._backgroundColor = value;
                     OnBackgroundColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -81,12 +81,12 @@ namespace BSE.Windows.Forms
         [Description("The color used for the value rectangle of this control.")]
         public Color ValueColor
         {
-            get { return this.m_valueColor; }
+            get { return this._valueColor; }
             set
             {
-                if (this.m_valueColor != value)
+                if (this._valueColor != value)
                 {
-                    this.m_valueColor = value;
+                    this._valueColor = value;
                     OnValueColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -100,12 +100,12 @@ namespace BSE.Windows.Forms
         /// </value>
         public Color BorderColor
         {
-            get { return this.m_borderColor; }
+            get { return this._borderColor; }
             set
             {
-                if (this.m_borderColor != value)
+                if (this._borderColor != value)
                 {
-                    this.m_borderColor = value;
+                    this._borderColor = value;
                     OnBorderColorChanged(this, EventArgs.Empty);
                 }
             }
@@ -131,24 +131,24 @@ namespace BSE.Windows.Forms
         [Description("The upper bound of range this ProgressBar is working with.")]
         public int Maximum
         {
-            get { return this.m_iMaximum; }
+            get { return this._iMaximum; }
             set
             {
-                if (this.m_iMaximum != value)
+                if (this._iMaximum != value)
                 {
                     if (value < 0)
                     {
                         object[] args = new object[] { "Maximum", value.ToString(CultureInfo.CurrentCulture), "Maximum" };
                         throw new ArgumentOutOfRangeException("Maximum", string.Format(CultureInfo.InvariantCulture, Resources.IDS_InvalidLowBoundArgument, args));
                     }
-                    if (this.m_iMinimum > value)
+                    if (this._iMinimum > value)
                     {
-                        this.m_iMinimum = value;
+                        this._iMinimum = value;
                     }
-                    this.m_iMaximum = value;
-                    if (this.m_iValue > this.m_iMaximum)
+                    this._iMaximum = value;
+                    if (this._iValue > this._iMaximum)
                     {
-                        this.m_iValue = this.m_iMaximum;
+                        this._iValue = this._iMaximum;
                     }
                     UpdatePos();
                 }
@@ -165,24 +165,24 @@ namespace BSE.Windows.Forms
         [Description("The lower bound of range this ProgressBar is working with.")]
         public int Minimum
         {
-            get { return this.m_iMinimum; }
+            get { return this._iMinimum; }
             set
             {
-                if (this.m_iMinimum != value)
+                if (this._iMinimum != value)
                 {
                     if (value < 0)
                     {
                         object[] args = new object[] { "Minimum", value.ToString(CultureInfo.CurrentCulture), "Minimum" };
                         throw new ArgumentOutOfRangeException("Minimum", string.Format(CultureInfo.InvariantCulture, Resources.IDS_InvalidLowBoundArgument, args));
                     }
-                    if (this.m_iMaximum < value)
+                    if (this._iMaximum < value)
                     {
-                        this.m_iMaximum = value;
+                        this._iMaximum = value;
                     }
-                    this.m_iMinimum = value;
-                    if (this.m_iValue < this.m_iMinimum)
+                    this._iMinimum = value;
+                    if (this._iValue < this._iMinimum)
                     {
-                        this.m_iValue = this.m_iMinimum;
+                        this._iValue = this._iMinimum;
                     }
                     UpdatePos();
                 }
@@ -199,16 +199,16 @@ namespace BSE.Windows.Forms
         [Description("The current value for the ProgressBar, in the range specified by the minimum and maximum properties.")]
         public int Value
         {
-            get { return this.m_iValue; }
+            get { return this._iValue; }
             set
             {
-                if (this.m_iValue != value)
+                if (this._iValue != value)
                 {
-                    if ((value < this.m_iMinimum) || (value > this.m_iMaximum))
+                    if ((value < this._iMinimum) || (value > this._iMaximum))
                     {
                         throw new ArgumentOutOfRangeException("Value", string.Format(CultureInfo.InvariantCulture, Resources.IDS_InvalidBoundArgument, new object[] { "Value", value.ToString(CultureInfo.CurrentCulture), "'minimum'", "'maximum'" }));
                     }
-                    this.m_iValue = value;
+                    this._iValue = value;
                     UpdatePos();
                 }
             }
@@ -228,10 +228,10 @@ namespace BSE.Windows.Forms
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
 
-            this.m_iMaximum = 100;
-            this.m_backgroundColor = Color.FromArgb(20, 20, 255);
-            this.m_valueColor = Color.FromArgb(255, 0, 255);
-            this.m_borderColor = SystemColors.ActiveBorder;
+            this._iMaximum = 100;
+            this._backgroundColor = Color.FromArgb(20, 20, 255);
+            this._valueColor = Color.FromArgb(255, 0, 255);
+            this._borderColor = SystemColors.ActiveBorder;
             this.BackColor = Color.Transparent;
         }
         #endregion
@@ -243,15 +243,15 @@ namespace BSE.Windows.Forms
         /// <param name="e">A PaintEventArgs that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            using (UseAntiAlias antiAlias = new UseAntiAlias(e.Graphics))
+            using (var antiAlias = new UseAntiAlias(e.Graphics))
             {
                 Graphics graphics = e.Graphics;
                         DrawProgressBar(
                             graphics,
                             this.ClientRectangle,
-                            this.m_backgroundColor,
-                            this.m_valueColor,
-                            this.m_borderColor,
+                            this._backgroundColor,
+                            this._valueColor,
+                            this._borderColor,
                             this.RightToLeft,
                             this.Minimum,
                             this.Maximum,
@@ -259,7 +259,7 @@ namespace BSE.Windows.Forms
 
                 if (string.IsNullOrEmpty(this.Text) == false)
                 {
-                    using (UseClearTypeGridFit useClearTypeGridFit = new UseClearTypeGridFit(graphics))
+                    using (var useClearTypeGridFit = new UseClearTypeGridFit(graphics))
                     {
                         using (SolidBrush textBrush = new SolidBrush(this.ForeColor))
                         {

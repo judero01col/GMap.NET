@@ -1,14 +1,11 @@
-using System;
-using System.Collections;
+ï»¿using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Data;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using Demo.WindowsForms.Properties;
-using System.Diagnostics;
 
 namespace BSE.Windows.Forms
 {
@@ -20,7 +17,7 @@ namespace BSE.Windows.Forms
    /// You can use a Panel to group collections of controls such as the XPanderPanelList control.
    /// On top of the Panel there is the captionbar. This captionbar may contain an image and text.
    /// According to it's dockstyle and properties the panel is collapsable and/or closable.</remarks>
-   /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
+   /// <copyright>Copyright Â© 2006-2008 Uwe Eichkorn
    /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
    /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
    /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -1062,7 +1059,7 @@ namespace BSE.Windows.Forms
          }
       }
 
-      // Helper method to safely set a component’s property
+      // Helper method to safely set a componentâ€™s property
       private void SetProperty(string propertyName, object value)
       {
          // Get property
