@@ -2209,15 +2209,9 @@ namespace GMap.NET.WindowsForms
                     }
                 }
 
-                if (!OverlayObjet && Core.mouseDown == GPoint.Empty)
+                if (!OverlayObjet && Core.mouseDown != GPoint.Empty)
                     OnMapClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
-            }
-
-            //m_mousepos = e.Location;
-            //if(HelperLineOption == HelperLineOptions.ShowAlways)
-            //{
-            //   base.Invalidate();
-            //}            
+            }                       
         }
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
@@ -2301,7 +2295,7 @@ namespace GMap.NET.WindowsForms
                     }
                 }
 
-                if (!OverlayObjet && Core.mouseDown == GPoint.Empty)
+                if (!OverlayObjet && Core.mouseDown != GPoint.Empty)
                     OnMapDoubleClick?.Invoke(FromLocalToLatLng(e.X, e.Y), e);
             }
         }

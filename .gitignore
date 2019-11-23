@@ -238,3 +238,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Testing/MvcMapFusion/Views/Shared/LeafletJS
+packages/
