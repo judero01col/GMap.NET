@@ -25,6 +25,35 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
+## Version 1.9.9.5
+
+#### GMap.NET.Core
+- None
+
+#### GMap.NET.WinForms
+- Add event OnMapClick
+- Add event OnMapDoubleClick
+
+#### GMap.NET.WinPresentation
+- None
+
+## Version 1.9.9
+
+#### GMap.NET
+Project converted to .NET Core 3.0 (Contributed by @zgabi)
+
+#### GMap.NET.Core
+- Add default image proxy class. (Contributed by @zgabi)
+- Added decode and encode polyline methods in the PureProjection class
+- Code organization
+
+#### GMap.NET.WinForms
+- Add event OnMapClick
+
+#### GMap.NET.WinPresentation
+- Adding an additional check if any Mouse button is being pressed on OnMouseMove event on GMapControl before calling BeginDrag
+code formatting. (Contributed by @zgabi)
+
 ## Version 1.9.7.2
 
 Library migrated to .Net Core and published new Nuget packages.
