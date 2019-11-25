@@ -20,38 +20,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("78A3830F-5EE3-432C-A32E-91B7AF6BBCB9");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "YandexHybridMap";
+            get;
+        } = new Guid("78A3830F-5EE3-432C-A32E-91B7AF6BBCB9");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "YandexHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {YandexSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {YandexSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

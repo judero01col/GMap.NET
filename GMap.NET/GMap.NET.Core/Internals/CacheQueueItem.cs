@@ -9,10 +9,10 @@
         public byte[] Img;
         public CacheUsage CacheType;
 
-        public CacheQueueItem(RawTile tile, byte[] Img, CacheUsage cacheType)
+        public CacheQueueItem(RawTile tile, byte[] img, CacheUsage cacheType)
         {
             Tile = tile;
-            this.Img = Img;
+            this.Img = img;
             CacheType = cacheType;
         }
 

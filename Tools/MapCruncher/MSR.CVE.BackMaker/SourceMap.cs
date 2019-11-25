@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Xml;
 using MSR.CVE.BackMaker.ImagePipeline;
 
 namespace MSR.CVE.BackMaker
@@ -27,12 +26,8 @@ namespace MSR.CVE.BackMaker
         private const string ReferenceContextValue = "Reference";
         private const string SnapZoomTag = "SnapZoom";
         private const string ZoomAttr = "Zoom";
-        private GeneralDocumentFuture _documentFuture;
         private string _displayName;
         private GetFilenameContext filenameContextDelegate;
-        private SourceMapInfo _sourceMapInfo;
-        private SourceMapRenderOptions _sourceMapRenderOptions;
-        private TransparencyOptions _transparencyOptions;
         private bool _expanded;
         public RegistrationDefinition registration;
         public LatentRegionHolder latentRegionHolder;
@@ -71,10 +66,7 @@ namespace MSR.CVE.BackMaker
 
         public GeneralDocumentFuture documentFuture
         {
-            get
-            {
-                return _documentFuture;
-            }
+            get;
         }
 
         public string displayName
@@ -92,26 +84,17 @@ namespace MSR.CVE.BackMaker
 
         public SourceMapInfo sourceMapInfo
         {
-            get
-            {
-                return _sourceMapInfo;
-            }
+            get;
         }
 
         public SourceMapRenderOptions sourceMapRenderOptions
         {
-            get
-            {
-                return _sourceMapRenderOptions;
-            }
+            get;
         }
 
         public TransparencyOptions transparencyOptions
         {
-            get
-            {
-                return _transparencyOptions;
-            }
+            get;
         }
 
         public ICurrentView lastView
@@ -127,12 +110,12 @@ namespace MSR.CVE.BackMaker
         {
             dirtyEvent = new DirtyEvent(parentDirty);
             readyToLockChangedEvent = new DirtyEvent(parentReadyToLockEvent);
-            _documentFuture = new GeneralDocumentFuture(documentDescriptor);
+            documentFuture = new GeneralDocumentFuture(documentDescriptor);
             _displayName = documentDescriptor.GetDefaultDisplayName();
             this.filenameContextDelegate = filenameContextDelegate;
-            _sourceMapInfo = new SourceMapInfo(dirtyEvent);
-            _sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
-            _transparencyOptions = new TransparencyOptions(dirtyEvent);
+            sourceMapInfo = new SourceMapInfo(dirtyEvent);
+            sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
+            transparencyOptions = new TransparencyOptions(dirtyEvent);
             registration = new RegistrationDefinition(dirtyEvent);
             registration.dirtyEvent.Add(readyToLockChangedEvent);
             latentRegionHolder = new LatentRegionHolder(dirtyEvent, readyToLockChangedEvent);
@@ -171,10 +154,10 @@ namespace MSR.CVE.BackMaker
             writer.WriteAttributeString("DisplayName", displayName);
             writer.WriteAttributeString("Expanded", _expanded.ToString(CultureInfo.InvariantCulture));
             wc.WriteIdentityAttr(this);
-            _documentFuture.WriteXML(wc, filenameContextDelegate());
-            _sourceMapInfo.WriteXML(writer);
-            _sourceMapRenderOptions.WriteXML(writer);
-            _transparencyOptions.WriteXML(writer);
+            documentFuture.WriteXML(wc, filenameContextDelegate());
+            sourceMapInfo.WriteXML(writer);
+            sourceMapRenderOptions.WriteXML(writer);
+            transparencyOptions.WriteXML(writer);
             if (_lastView != null)
             {
                 _lastView.WriteXML(writer);
@@ -221,7 +204,7 @@ namespace MSR.CVE.BackMaker
                 string path = Path.Combine(filenameContextDelegate(), attribute);
                 int pageNumber = 0;
                 context.GetAttributeInt("PageNumber", ref pageNumber);
-                _documentFuture = new GeneralDocumentFuture(new FutureDocumentFromFilesystem(path, pageNumber));
+                documentFuture = new GeneralDocumentFuture(new FutureDocumentFromFilesystem(path, pageNumber));
             }
 
             context.GetAttributeBoolean("Expanded", ref _expanded);
@@ -239,17 +222,17 @@ namespace MSR.CVE.BackMaker
                 {
                     if (xMLTagReader.TagIs(GeneralDocumentFuture.GetXMLTag()))
                     {
-                        context.AssertUnique(_documentFuture);
-                        _documentFuture = new GeneralDocumentFuture(context, filenameContextDelegate());
+                        context.AssertUnique(documentFuture);
+                        documentFuture = new GeneralDocumentFuture(context, filenameContextDelegate());
                     }
                     else
                     {
                         if (xMLTagReader.TagIs(LocalDocumentDescriptor.GetXMLTag()))
                         {
-                            context.AssertUnique(_documentFuture);
+                            context.AssertUnique(documentFuture);
                             var localDocumentDescriptor =
                                 new LocalDocumentDescriptor(context, filenameContextDelegate());
-                            _documentFuture = new GeneralDocumentFuture(
+                            documentFuture = new GeneralDocumentFuture(
                                 new FutureDocumentFromFilesystem(localDocumentDescriptor.GetFilesystemAbsolutePath(),
                                     localDocumentDescriptor.GetPageNumber()));
                         }
@@ -296,22 +279,22 @@ namespace MSR.CVE.BackMaker
                                     {
                                         if (xMLTagReader.TagIs(SourceMapInfo.GetXMLTag()))
                                         {
-                                            context.AssertUnique(_sourceMapInfo);
-                                            _sourceMapInfo = new SourceMapInfo(context, dirtyEvent);
+                                            context.AssertUnique(sourceMapInfo);
+                                            sourceMapInfo = new SourceMapInfo(context, dirtyEvent);
                                         }
                                         else
                                         {
                                             if (xMLTagReader.TagIs(SourceMapRenderOptions.GetXMLTag()))
                                             {
-                                                context.AssertUnique(_sourceMapRenderOptions);
-                                                _sourceMapRenderOptions =
+                                                context.AssertUnique(sourceMapRenderOptions);
+                                                sourceMapRenderOptions =
                                                     new SourceMapRenderOptions(context, dirtyEvent);
                                             }
                                             else
                                             {
                                                 if (xMLTagReader.TagIs(TransparencyOptions.GetXMLTag()))
                                                 {
-                                                    _transparencyOptions =
+                                                    transparencyOptions =
                                                         new TransparencyOptions(context, dirtyEvent);
                                                 }
                                                 else
@@ -478,19 +461,19 @@ namespace MSR.CVE.BackMaker
                 {
                     if (xMLTagReader.TagIs("MapFileURL"))
                     {
-                        _sourceMapInfo.mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
+                        sourceMapInfo.mapFileURL = XMLUtils.ReadStringXml(context, "MapFileURL");
                     }
                     else
                     {
                         if (xMLTagReader.TagIs("MapHomePage"))
                         {
-                            _sourceMapInfo.mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
+                            sourceMapInfo.mapHomePage = XMLUtils.ReadStringXml(context, "MapHomePage");
                         }
                         else
                         {
                             if (xMLTagReader.TagIs("MapDescription"))
                             {
-                                _sourceMapInfo.mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
+                                sourceMapInfo.mapDescription = XMLUtils.ReadStringXml(context, "MapDescription");
                             }
                         }
                     }
@@ -503,7 +486,7 @@ namespace MSR.CVE.BackMaker
             }
             else
             {
-                _displayName = _documentFuture.documentFuture.GetDefaultDisplayName();
+                _displayName = documentFuture.documentFuture.GetDefaultDisplayName();
             }
 
             if (_lastView == null && mapPosition != null && mapPosition2 != null)
@@ -511,7 +494,7 @@ namespace MSR.CVE.BackMaker
                 _lastView = new SourceMapRegistrationView(this, mapPosition.llz, mapPosition2);
             }
 
-            if (_documentFuture == null)
+            if (documentFuture == null)
             {
                 throw new Exception("Source Map element missing document descriptor tag");
             }
@@ -527,33 +510,33 @@ namespace MSR.CVE.BackMaker
                 legendList = new LegendList(this, dirtyEvent, readyToLockChangedEvent);
             }
 
-            if (_sourceMapInfo == null)
+            if (sourceMapInfo == null)
             {
-                _sourceMapInfo = new SourceMapInfo(dirtyEvent);
+                sourceMapInfo = new SourceMapInfo(dirtyEvent);
             }
 
-            if (_sourceMapRenderOptions == null)
+            if (sourceMapRenderOptions == null)
             {
-                _sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
+                sourceMapRenderOptions = new SourceMapRenderOptions(dirtyEvent);
             }
 
-            if (_transparencyOptions == null)
+            if (transparencyOptions == null)
             {
-                _transparencyOptions = new TransparencyOptions(dirtyEvent);
+                transparencyOptions = new TransparencyOptions(dirtyEvent);
             }
         }
 
         public void AccumulateRobustHash(IRobustHash hash)
         {
-            _documentFuture.AccumulateRobustHash(hash);
+            documentFuture.AccumulateRobustHash(hash);
             AccumulateRobustHash_Common(hash);
-            _sourceMapRenderOptions.AccumulateRobustHash(hash);
+            sourceMapRenderOptions.AccumulateRobustHash(hash);
         }
 
         public void AccumulateRobustHash_PerTile(CachePackage cachePackage, IRobustHash hash)
         {
             hash.Accumulate("SourceMap:");
-            var sourceDocument = _documentFuture.RealizeSynchronously(cachePackage);
+            var sourceDocument = documentFuture.RealizeSynchronously(cachePackage);
             sourceDocument.localDocument.AccumulateRobustHash(hash);
             AccumulateRobustHash_Common(hash);
         }
@@ -570,7 +553,7 @@ namespace MSR.CVE.BackMaker
                 hash.Accumulate("null-render-region");
             }
 
-            _transparencyOptions.AccumulateRobustHash(hash);
+            transparencyOptions.AccumulateRobustHash(hash);
         }
 
         public bool ReadyToLock()

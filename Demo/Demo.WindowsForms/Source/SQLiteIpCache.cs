@@ -17,7 +17,6 @@ namespace Demo.WindowsForms
    using System.Text;
    using System;
    using System.Diagnostics;
-   using System.Globalization;
 
    /// <summary>
    /// ultra fast cache system for tiles

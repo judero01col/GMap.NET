@@ -7,7 +7,6 @@ namespace Demo.WindowsForms.CustomMarkers
    using GMap.NET;
    using System;
    using System.Runtime.Serialization;
-   using System.Drawing.Drawing2D;
 
    [Serializable]
    public class GMapMarkerRect : GMapMarker, ISerializable

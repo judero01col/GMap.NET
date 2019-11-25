@@ -15,10 +15,10 @@ namespace Demo.WindowsPresentation
 
 #if DEBUG
 
-        private int counter;
-        readonly Typeface tf = new Typeface("GenericSansSerif");
+        private int _counter;
+        readonly Typeface _tf = new Typeface("GenericSansSerif");
         readonly FlowDirection fd = new FlowDirection();
-        private readonly Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         ///     any custom drawing here
@@ -26,20 +26,20 @@ namespace Demo.WindowsPresentation
         /// <param name="drawingContext"></param>
         protected override void OnRender(DrawingContext drawingContext)
         {
-            stopwatch.Reset();
-            stopwatch.Start();
+            _stopwatch.Reset();
+            _stopwatch.Start();
 
             base.OnRender(drawingContext);
-            stopwatch.Stop();
+            _stopwatch.Stop();
 
             var text =
                 new FormattedText(
                     string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Zoom) + "z, " + MapProvider + ", refresh: " +
-                    counter++ + ", load: " + ElapsedMilliseconds + "ms, render: " + stopwatch.ElapsedMilliseconds +
+                    _counter++ + ", load: " + ElapsedMilliseconds + "ms, render: " + _stopwatch.ElapsedMilliseconds +
                     "ms",
                     CultureInfo.InvariantCulture,
                     fd,
-                    tf,
+                    _tf,
                     20,
                     Brushes.Blue);
             drawingContext.DrawText(text, new Point(text.Height, text.Height));

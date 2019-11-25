@@ -25,25 +25,12 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("E03CFEDF-9277-49B3-9912-D805347F934B");
-
-        public override Guid Id
-        {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider";
+        public override Guid Id { get; } = new Guid("E03CFEDF-9277-49B3-9912-D805347F934B");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider";
 
         public override PureProjection Projection
         {
@@ -53,18 +40,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

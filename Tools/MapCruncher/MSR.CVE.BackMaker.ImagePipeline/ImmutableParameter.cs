@@ -1,22 +1,17 @@
-using System;
+﻿using System;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public abstract class ImmutableParameter<T> : Parameter, IRobustlyHashable, Present, IDisposable
     {
-        private T _value;
-
         public T value
         {
-            get
-            {
-                return _value;
-            }
+            get;
         }
 
         public ImmutableParameter(T value)
         {
-            _value = value;
+            this.value = value;
         }
 
         public Present Duplicate(string refCredit)

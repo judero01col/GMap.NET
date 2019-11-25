@@ -1,29 +1,25 @@
-using System;
+﻿using System;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class PresentFailureCode : Present, IDisposable
     {
-        private Exception _ex;
         private string provenance;
 
         public Exception exception
         {
-            get
-            {
-                return _ex;
-            }
+            get;
         }
 
         public PresentFailureCode(PresentFailureCode innerFailure, string provenance)
         {
             this.provenance = provenance + innerFailure.provenance;
-            _ex = innerFailure._ex;
+            exception = innerFailure.exception;
         }
 
         public PresentFailureCode(Exception ex)
         {
-            _ex = ex;
+            exception = ex;
         }
 
         public PresentFailureCode(string str) : this(new Exception(str))

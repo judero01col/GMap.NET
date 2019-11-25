@@ -123,7 +123,7 @@ namespace GMap.NET.Internals
         /// </summary>
         public PureImageCache ImageCacheSecond;
 
-        string cache;
+        string _cache;
 
         /// <summary>
         ///     local cache location
@@ -132,11 +132,11 @@ namespace GMap.NET.Internals
         {
             get
             {
-                return cache;
+                return _cache;
             }
             set
             {
-                cache = value;
+                _cache = value;
 #if SQLite
                 if (ImageCache is SQLitePureImageCache)
                 {
@@ -234,7 +234,7 @@ namespace GMap.NET.Internals
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(cache, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir = Path.Combine(_cache, type.ToString()) + Path.DirectorySeparatorChar;
 
                 // precrete dir
                 if (!Directory.Exists(dir))
@@ -263,7 +263,7 @@ namespace GMap.NET.Internals
             {
                 ConvertToHash(ref url);
 
-                string dir = Path.Combine(cache, type.ToString()) + Path.DirectorySeparatorChar;
+                string dir = Path.Combine(_cache, type.ToString()) + Path.DirectorySeparatorChar;
                 string file = dir + url + ".txt";
 
                 if (File.Exists(file))

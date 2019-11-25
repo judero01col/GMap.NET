@@ -907,70 +907,70 @@ namespace GMap.NET.Internals
 
         [DllImport("kernel32.dll")]
         public static extern bool CloseHandle(
-            [In] IntPtr Handle
+            [In] IntPtr handle
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr CreateEvent(
-            [In] [Optional] IntPtr EventAttributes,
-            [In] bool ManualReset,
-            [In] bool InitialState,
-            [In] [Optional] string Name
+            [In] [Optional] IntPtr eventAttributes,
+            [In] bool manualReset,
+            [In] bool initialState,
+            [In] [Optional] string name
         );
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr CreateSemaphore(
-            [In] [Optional] IntPtr SemaphoreAttributes,
-            [In] int InitialCount,
-            [In] int MaximumCount,
-            [In] [Optional] string Name
+            [In] [Optional] IntPtr semaphoreAttributes,
+            [In] int initialCount,
+            [In] int maximumCount,
+            [In] [Optional] string name
         );
 
         [DllImport("kernel32.dll")]
         public static extern bool ReleaseSemaphore(
-            [In] IntPtr SemaphoreHandle,
-            [In] int ReleaseCount,
-            [In] IntPtr PreviousCount // out int
+            [In] IntPtr semaphoreHandle,
+            [In] int releaseCount,
+            [In] IntPtr previousCount // out int
         );
 
         [DllImport("kernel32.dll")]
         public static extern bool ResetEvent(
-            [In] IntPtr EventHandle
+            [In] IntPtr eventHandle
         );
 
         [DllImport("kernel32.dll")]
         public static extern bool SetEvent(
-            [In] IntPtr EventHandle
+            [In] IntPtr eventHandle
         );
 
         [DllImport("kernel32.dll")]
         public static extern int WaitForSingleObject(
-            [In] IntPtr Handle,
-            [In] int Milliseconds
+            [In] IntPtr handle,
+            [In] int milliseconds
         );
 
         [DllImport("ntdll.dll")]
         public static extern int NtCreateKeyedEvent(
-            [Out] out IntPtr KeyedEventHandle,
-            [In] int DesiredAccess,
-            [In] [Optional] IntPtr ObjectAttributes,
-            [In] int Flags
+            [Out] out IntPtr keyedEventHandle,
+            [In] int desiredAccess,
+            [In] [Optional] IntPtr objectAttributes,
+            [In] int flags
         );
 
         [DllImport("ntdll.dll")]
         public static extern int NtReleaseKeyedEvent(
-            [In] IntPtr KeyedEventHandle,
-            [In] IntPtr KeyValue,
-            [In] bool Alertable,
-            [In] [Optional] IntPtr Timeout
+            [In] IntPtr keyedEventHandle,
+            [In] IntPtr keyValue,
+            [In] bool alertable,
+            [In] [Optional] IntPtr timeout
         );
 
         [DllImport("ntdll.dll")]
         public static extern int NtWaitForKeyedEvent(
-            [In] IntPtr KeyedEventHandle,
-            [In] IntPtr KeyValue,
-            [In] bool Alertable,
-            [In] [Optional] IntPtr Timeout
+            [In] IntPtr keyedEventHandle,
+            [In] IntPtr keyValue,
+            [In] bool alertable,
+            [In] [Optional] IntPtr timeout
         );
     }
 #endif

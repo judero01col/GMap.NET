@@ -20,25 +20,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("7652CC72-5C92-40F5-B572-B8FEAA728F6D");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "ArcGIS_Topo_US_2D_Map";
+            get;
+        } = new Guid("7652CC72-5C92-40F5-B572-B8FEAA728F6D");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "ArcGIS_Topo_US_2D_Map";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

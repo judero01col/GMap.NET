@@ -20,38 +20,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("4BF8819A-635D-4A94-8DC7-94C0E0F04BFD");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "NearHybridMap";
+            get;
+        } = new Guid("4BF8819A-635D-4A94-8DC7-94C0E0F04BFD");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "NearHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {NearSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {NearSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

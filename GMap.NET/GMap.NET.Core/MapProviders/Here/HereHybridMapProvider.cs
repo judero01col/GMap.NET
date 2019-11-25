@@ -20,25 +20,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("B85A8FD7-40F4-40EE-9B45-491AA45D86C1");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "HereHybridMap";
+            get;
+        } = new Guid("B85A8FD7-40F4-40EE-9B45-491AA45D86C1");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "HereHybridMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

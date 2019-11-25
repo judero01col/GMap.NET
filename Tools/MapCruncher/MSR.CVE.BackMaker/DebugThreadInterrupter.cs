@@ -7,24 +7,19 @@ namespace MSR.CVE.BackMaker
     {
         private class ThreadRec
         {
-            private Thread _thread;
-
             public Thread thread
             {
-                get
-                {
-                    return _thread;
-                }
+                get;
             }
 
             public ThreadRec(Thread thread)
             {
-                _thread = thread;
+                this.thread = thread;
             }
 
             public override string ToString()
             {
-                return string.Format("{0} {1}", _thread.ManagedThreadId, _thread.Name);
+                return string.Format("{0} {1}", thread.ManagedThreadId, thread.Name);
             }
         }
 

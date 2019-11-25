@@ -13,7 +13,6 @@ namespace MSR.CVE.BackMaker
         private const string zoomAttr = "zoom";
         private const string styleAttr = "style";
         private LatLonZoom _llz;
-        private string _style;
         private bool valid;
         private PositionUpdateIfc updateIfc;
 
@@ -27,10 +26,8 @@ namespace MSR.CVE.BackMaker
 
         public string style
         {
-            get
-            {
-                return _style;
-            }
+            get;
+            private set;
         }
 
         public MapPosition(PositionUpdateIfc updateIfc)
@@ -41,7 +38,7 @@ namespace MSR.CVE.BackMaker
         public MapPosition(LatLonZoom llz, string style, PositionUpdateIfc updateIfc)
         {
             _llz = llz;
-            _style = style;
+            this.style = style;
             valid = true;
             this.updateIfc = updateIfc;
         }
@@ -49,7 +46,7 @@ namespace MSR.CVE.BackMaker
         public MapPosition(MapPosition prototype, PositionUpdateIfc updateIfc)
         {
             _llz = prototype._llz;
-            _style = prototype._style;
+            style = prototype.style;
             valid = prototype.valid;
             this.updateIfc = updateIfc;
         }
@@ -83,7 +80,7 @@ namespace MSR.CVE.BackMaker
         public void setPosition(LatLonZoom llz, string style)
         {
             _llz = llz;
-            _style = style;
+            this.style = style;
             setBase();
         }
 
@@ -109,7 +106,7 @@ namespace MSR.CVE.BackMaker
 
         public void setStyle(string style)
         {
-            _style = style;
+            this.style = style;
             setBase();
         }
 
@@ -120,7 +117,7 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return _llz.GetHashCode() ^ _style.GetHashCode();
+            return _llz.GetHashCode() ^ style.GetHashCode();
         }
 
         public static string GetXMLTag(MashupXMLSchemaVersion version)

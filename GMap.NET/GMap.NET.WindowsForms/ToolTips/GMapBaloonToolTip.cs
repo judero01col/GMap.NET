@@ -91,7 +91,7 @@ namespace GMap.NET.WindowsForms.ToolTips
         protected GMapBaloonToolTip(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Radius = Extensions.GetStruct<float>(info, "Radius", 10f);
+            Radius = Extensions.GetStruct(info, "Radius", 10f);
         }
 
         #endregion

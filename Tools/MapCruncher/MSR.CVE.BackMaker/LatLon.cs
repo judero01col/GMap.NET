@@ -10,29 +10,21 @@ namespace MSR.CVE.BackMaker
         private const string LatLonTag = "LatLon";
         private const string lonAttr = "lon";
         private const string latAttr = "lat";
-        private double _lat;
-        private double _lon;
 
         public double lat
         {
-            get
-            {
-                return _lat;
-            }
+            get;
         }
 
         public double lon
         {
-            get
-            {
-                return _lon;
-            }
+            get;
         }
 
         public LatLon(double lat, double lon)
         {
-            _lat = lat;
-            _lon = lon;
+            this.lat = lat;
+            this.lon = lon;
         }
 
         public static implicit operator PointD(LatLon p)
@@ -58,17 +50,17 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return _lat.GetHashCode() ^ _lon.GetHashCode();
+            return lat.GetHashCode() ^ lon.GetHashCode();
         }
 
         public static bool operator ==(LatLon ll1, LatLon ll2)
         {
-            return ll1._lat == ll2._lat && ll1._lon == ll2._lon;
+            return ll1.lat == ll2.lat && ll1.lon == ll2.lon;
         }
 
         public static bool operator !=(LatLon ll1, LatLon ll2)
         {
-            return ll1._lat != ll2._lat || ll1._lon != ll2._lon;
+            return ll1.lat != ll2.lat || ll1.lon != ll2.lon;
         }
 
         public override string ToString()
@@ -101,8 +93,8 @@ namespace MSR.CVE.BackMaker
         public LatLon(MashupParseContext context, CoordinateSystemIfc coordSys)
         {
             XMLTagReader xMLTagReader = context.NewTagReader("LatLon");
-            _lat = coordSys.GetLatRange().Parse(context, "lat");
-            _lon = coordSys.GetLonRange().Parse(context, "lon");
+            lat = coordSys.GetLatRange().Parse(context, "lat");
+            lon = coordSys.GetLonRange().Parse(context, "lon");
             while (xMLTagReader.FindNextStartTag())
             {
             }

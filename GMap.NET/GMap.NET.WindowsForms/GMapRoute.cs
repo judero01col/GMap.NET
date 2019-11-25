@@ -246,7 +246,7 @@ namespace GMap.NET.WindowsForms
         protected GMapRoute(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             //this.Stroke = Extensions.GetValue<Pen>(info, "Stroke", new Pen(Color.FromArgb(144, Color.MidnightBlue)));
-            IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
+            IsVisible = Extensions.GetStruct(info, "Visible", true);
             deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
         }
 

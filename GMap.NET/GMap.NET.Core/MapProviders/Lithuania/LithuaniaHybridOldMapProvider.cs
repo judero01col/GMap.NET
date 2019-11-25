@@ -20,41 +20,31 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("35C5C685-E868-4AC7-97BE-10A9A37A81B5");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "LithuaniaHybridMapOld";
+            get;
+        } = new Guid("35C5C685-E868-4AC7-97BE-10A9A37A81B5");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "LithuaniaHybridMapOld";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[]
+                    _overlays = new GMapProvider[]
                     {
                         LithuaniaOrtoFotoOldMapProvider.Instance, LithuaniaHybridMapProvider.Instance
                     };
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

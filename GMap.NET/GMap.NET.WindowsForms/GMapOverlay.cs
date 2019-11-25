@@ -428,9 +428,9 @@ namespace GMap.NET.WindowsForms
             Id = info.GetString("Id");
             IsVisibile = info.GetBoolean("IsVisible");
 
-            deserializedMarkerArray = Extensions.GetValue<GMapMarker[]>(info, "Markers", new GMapMarker[0]);
-            deserializedRouteArray = Extensions.GetValue<GMapRoute[]>(info, "Routes", new GMapRoute[0]);
-            deserializedPolygonArray = Extensions.GetValue<GMapPolygon[]>(info, "Polygons", new GMapPolygon[0]);
+            deserializedMarkerArray = Extensions.GetValue(info, "Markers", new GMapMarker[0]);
+            deserializedRouteArray = Extensions.GetValue(info, "Routes", new GMapRoute[0]);
+            deserializedPolygonArray = Extensions.GetValue(info, "Polygons", new GMapPolygon[0]);
 
             CreateEvents();
         }

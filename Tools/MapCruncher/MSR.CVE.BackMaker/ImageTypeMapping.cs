@@ -4,44 +4,31 @@ namespace MSR.CVE.BackMaker
 {
     public class ImageTypeMapping
     {
-        private string _extension;
-        private string _mimeType;
-        private ImageFormat _imageFormat;
-
         public string extension
         {
-            get
-            {
-                return _extension;
-            }
+            get;
         }
 
         public string mimeType
         {
-            get
-            {
-                return _mimeType;
-            }
+            get;
         }
 
         public ImageFormat imageFormat
         {
-            get
-            {
-                return _imageFormat;
-            }
+            get;
         }
 
         public ImageTypeMapping(string extension, string mimeType, ImageFormat imageFormat)
         {
-            _extension = extension;
-            _mimeType = mimeType;
-            _imageFormat = imageFormat;
+            this.extension = extension;
+            this.mimeType = mimeType;
+            this.imageFormat = imageFormat;
         }
 
         public bool ImageFormatEquals(ImageFormat otherFormat)
         {
-            return _imageFormat != null && otherFormat != null && _imageFormat.Guid == otherFormat.Guid;
+            return imageFormat != null && otherFormat != null && imageFormat.Guid == otherFormat.Guid;
         }
     }
 }

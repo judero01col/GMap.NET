@@ -21,38 +21,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("BDBAA939-6597-4D87-8F4F-261C49E35F56");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "OpenCycleLandscapeMap";
+            get;
+        } = new Guid("BDBAA939-6597-4D87-8F4F-261C49E35F56");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "OpenCycleLandscapeMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

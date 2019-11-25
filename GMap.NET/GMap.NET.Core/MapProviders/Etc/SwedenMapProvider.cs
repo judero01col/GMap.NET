@@ -39,18 +39,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
@@ -80,25 +80,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("40890A96-6E82-4FA7-90A3-73D66B974F63");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "SwedenMap";
+            get;
+        } = new Guid("40890A96-6E82-4FA7-90A3-73D66B974F63");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "SwedenMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

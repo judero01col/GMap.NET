@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -527,13 +527,13 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_Password;
+                return _password;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_Password = value;
+                _password = value;
             }
         }
 
@@ -541,23 +541,10 @@ namespace Org.Mentalis.Network.ProxySocket
         ///     Gets or sets the bytes to use when sending a connect request to the proxy server.
         /// </summary>
         /// <value>The array of bytes to use when sending a connect request to the proxy server.</value>
-        private byte[] HandShake
-        {
-            get
-            {
-                return m_HandShake;
-            }
-            set
-            {
-                m_HandShake = value;
-            }
-        }
+        private byte[] HandShake{get;set; }
 
         // private variables
         /// <summary>Holds the value of the Password property.</summary>
-        private string m_Password;
-
-        /// <summary>Holds the value of the HandShake property.</summary>
-        private byte[] m_HandShake;
+        private string _password;
     }
 }

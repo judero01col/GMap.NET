@@ -11,73 +11,73 @@ namespace GMap.NET.Internals
 {
     internal class TileHttpHost
     {
-        volatile bool listen;
-        TcpListener server;
-        int port;
+        volatile bool _listen;
+        TcpListener _server;
+        int _port;
 
-        readonly byte[] responseHeaderBytes;
+        readonly byte[] _responseHeaderBytes;
 
         public TileHttpHost()
         {
             string response = "HTTP/1.0 200 OK\r\nContent-Type: image\r\nConnection: close\r\n\r\n";
-            responseHeaderBytes = Encoding.ASCII.GetBytes(response);
+            _responseHeaderBytes = Encoding.ASCII.GetBytes(response);
         }
 
         public void Stop()
         {
-            if (listen)
+            if (_listen)
             {
-                listen = false;
-                if (server != null)
+                _listen = false;
+                if (_server != null)
                 {
-                    server.Stop();
+                    _server.Stop();
                 }
             }
         }
 
         public void Start(int port)
         {
-            if (server == null)
+            if (_server == null)
             {
-                this.port = port;
-                server = new TcpListener(IPAddress.Any, port);
+                this._port = port;
+                _server = new TcpListener(IPAddress.Any, port);
             }
             else
             {
-                if (this.port != port)
+                if (this._port != port)
                 {
                     Stop();
-                    this.port = port;
-                    server = null;
-                    server = new TcpListener(IPAddress.Any, port);
+                    this._port = port;
+                    _server = null;
+                    _server = new TcpListener(IPAddress.Any, port);
                 }
                 else
                 {
-                    if (listen)
+                    if (_listen)
                     {
                         return;
                     }
                 }
             }
 
-            server.Start();
-            listen = true;
+            _server.Start();
+            _listen = true;
 
             var t = new Thread(() =>
             {
-                Debug.WriteLine("TileHttpHost: " + server.LocalEndpoint);
+                Debug.WriteLine("TileHttpHost: " + _server.LocalEndpoint);
 
-                while (listen)
+                while (_listen)
                 {
                     try
                     {
-                        if (!server.Pending())
+                        if (!_server.Pending())
                         {
                             Thread.Sleep(111);
                         }
                         else
                         {
-                            ThreadPool.QueueUserWorkItem(ProcessRequest, server.AcceptTcpClient());
+                            ThreadPool.QueueUserWorkItem(ProcessRequest, _server.AcceptTcpClient());
                         }
                     }
                     catch (Exception ex)
@@ -133,7 +133,7 @@ namespace GMap.NET.Internals
                                             {
                                                 using (img)
                                                 {
-                                                    s.Write(responseHeaderBytes, 0, responseHeaderBytes.Length);
+                                                    s.Write(_responseHeaderBytes, 0, _responseHeaderBytes.Length);
                                                     img.Data.WriteTo(s);
                                                 }
                                             }

@@ -51,7 +51,7 @@ namespace GMap.NET.WindowsForms
         internal ColorMatrix ColorMatrix;
 #endif
 
-        static readonly bool Win7OrLater = Stuff.IsRunningOnWin7orLater();
+        static readonly bool Win7OrLater = Stuff.IsRunningOnWin7OrLater();
 
         public override PureImage FromStream(Stream stream)
         {

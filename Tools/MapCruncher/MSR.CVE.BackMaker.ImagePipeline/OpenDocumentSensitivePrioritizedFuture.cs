@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
@@ -9,17 +9,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         private IFuture future;
         private IFuture openDocumentFuture;
         private bool realizing;
-        private int _identity;
         private static int nextIdentity;
         private static object nextIdentityMutex = new object();
         private AsyncRef activeAsyncRef;
 
         public int identity
         {
-            get
-            {
-                return _identity;
-            }
+            get;
         }
 
         public OpenDocumentSensitivePrioritizedFuture(OpenDocumentSensitivePrioritizer prioritizer, IFuture future,
@@ -32,7 +28,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(obj = nextIdentityMutex);
             try
             {
-                _identity = nextIdentity;
+                identity = nextIdentity;
                 nextIdentity++;
             }
             finally

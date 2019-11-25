@@ -19,27 +19,18 @@ namespace MSR.CVE.BackMaker
             private const string FileExistsAttr = "FileExists";
             private const string FileLengthAttr = "FileLength";
             private const string IndirectManifestBlockIdAttr = "IndirectManifestBlockId";
-            private ManifestBlock _block;
-            private string _path;
             private bool _fileExists;
             private long _fileLength;
-            private int _indirectManifestBlockId;
             private static ManifestRecord _tailRecord;
 
             public ManifestBlock block
             {
-                get
-                {
-                    return _block;
-                }
+                get;
             }
 
             public string path
             {
-                get
-                {
-                    return _path;
-                }
+                get;
             }
 
             public bool fileExists
@@ -70,10 +61,7 @@ namespace MSR.CVE.BackMaker
 
             public int indirectManifestBlockId
             {
-                get
-                {
-                    return _indirectManifestBlockId;
-                }
+                get;
             }
 
             public static ManifestRecord TailRecord
@@ -100,11 +88,11 @@ namespace MSR.CVE.BackMaker
             public ManifestRecord(ManifestBlock block, string path, bool fileExists, long fileLength,
                 int indirectManifestBlockId)
             {
-                _block = block;
-                _path = path;
+                this.block = block;
+                this.path = path;
                 _fileExists = fileExists;
                 _fileLength = fileLength;
-                _indirectManifestBlockId = indirectManifestBlockId;
+                this.indirectManifestBlockId = indirectManifestBlockId;
                 D.Assert(block == null || path != null);
             }
 
@@ -121,12 +109,12 @@ namespace MSR.CVE.BackMaker
 
             public ManifestRecord(MashupParseContext context, ManifestBlock block)
             {
-                _block = block;
+                this.block = block;
                 XMLTagReader xMLTagReader = context.NewTagReader("ManifestRecord");
-                _path = context.GetRequiredAttribute("Path");
+                path = context.GetRequiredAttribute("Path");
                 _fileExists = context.GetRequiredAttributeBoolean("FileExists");
                 _fileLength = context.GetRequiredAttributeLong("FileLength");
-                _indirectManifestBlockId = context.GetRequiredAttributeInt("IndirectManifestBlockId");
+                indirectManifestBlockId = context.GetRequiredAttributeInt("IndirectManifestBlockId");
                 xMLTagReader.SkipAllSubTags();
             }
 
@@ -226,17 +214,13 @@ namespace MSR.CVE.BackMaker
             private const string ManifestsDir = "manifests";
             private const string ManifestBlockTag = "ManifestBlock";
             private List<ManifestRecord> recordList = new List<ManifestRecord>();
-            private ManifestSuperBlock _superBlock;
             public int blockId;
             private bool dirty;
             private TellManifestDirty tellManifestDirty;
 
             public ManifestSuperBlock superBlock
             {
-                get
-                {
-                    return _superBlock;
-                }
+                get;
             }
 
             public int Count
@@ -279,9 +263,9 @@ namespace MSR.CVE.BackMaker
                     xmlTextWriter.Formatting = Formatting.Indented;
                     xmlTextWriter.WriteStartDocument(true);
                     xmlTextWriter.WriteStartElement("ManifestBlock");
-                    if (_superBlock != null)
+                    if (superBlock != null)
                     {
-                        _superBlock.WriteXML(xmlTextWriter);
+                        superBlock.WriteXML(xmlTextWriter);
                     }
 
                     foreach (ManifestRecord current in this)
@@ -321,7 +305,7 @@ namespace MSR.CVE.BackMaker
                                     {
                                         if (xMLTagReader.TagIs(ManifestSuperBlock.GetXmlTag()))
                                         {
-                                            _superBlock = new ManifestSuperBlock(mashupParseContext,
+                                            superBlock = new ManifestSuperBlock(mashupParseContext,
                                                 new TellManifestDirty(SetDirty));
                                         }
                                     }
@@ -339,9 +323,9 @@ namespace MSR.CVE.BackMaker
                 }
                 finally
                 {
-                    if (blockId == 0 && _superBlock == null)
+                    if (blockId == 0 && superBlock == null)
                     {
-                        _superBlock = new ManifestSuperBlock(1, new TellManifestDirty(SetDirty));
+                        superBlock = new ManifestSuperBlock(1, new TellManifestDirty(SetDirty));
                     }
                 }
             }
@@ -395,7 +379,7 @@ namespace MSR.CVE.BackMaker
                     }
 
                     subBlocks[i].recordList = recordList.GetRange(index, num4 - index)
-                        .ConvertAll<ManifestRecord>(converter);
+                        .ConvertAll(converter);
                     ManifestRecord item = recordList[index].ReplaceIndirect(subBlocks[i].blockId);
                     list.Add(item);
                     subBlocks[i].SetDirty();

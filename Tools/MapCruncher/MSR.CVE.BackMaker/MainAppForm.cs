@@ -605,11 +605,11 @@ namespace MSR.CVE.BackMaker
                 Converter<PositionAssociation, PositionAssociationView> converter = (PositionAssociation pa) =>
                     new PositionAssociationView(pa, PositionAssociationView.WhichPosition.global);
                 veViewerControl.setPinList(displayedRegistration.model.GetAssociationList()
-                    .ConvertAll<PositionAssociationView>(converter));
+                    .ConvertAll(converter));
                 Converter<PositionAssociation, PositionAssociationView> converter2 = (PositionAssociation pa) =>
                     new PositionAssociationView(pa, PositionAssociationView.WhichPosition.source);
                 var pinList = displayedRegistration.model.GetAssociationList()
-                    .ConvertAll<PositionAssociationView>(converter2);
+                    .ConvertAll(converter2);
                 smViewerControl.setPinList(pinList);
             }
             else
@@ -1015,7 +1015,7 @@ namespace MSR.CVE.BackMaker
         {
             var openFileDialog = new OpenFileDialog();
             string arg = string.Join(";",
-                Array.ConvertAll<string, string>(mapTileSourceFactory.GetKnownFileTypes(),
+                Array.ConvertAll(mapTileSourceFactory.GetKnownFileTypes(),
                     (string ext) => "*" + ext));
             string filter = string.Format("Supported Sources ({0})|{0}" + BuildConfig.theConfig.allFilesOption, arg);
             openFileDialog.Filter = filter;
@@ -1270,7 +1270,7 @@ namespace MSR.CVE.BackMaker
                     pinList = new RegistrationDefinition(displayedRegistration.model, new DirtyEvent())
                     {
                         isLocked = false
-                    }.GetAssociationList().ConvertAll<PositionAssociationView>(converter);
+                    }.GetAssociationList().ConvertAll(converter);
                 }
                 else
                 {

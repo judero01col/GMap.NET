@@ -22,38 +22,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("45742F8D-B552-4CAF-89AE-F20951BBDB2B");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "MapBender, WMS demo";
+            get;
+        } = new Guid("45742F8D-B552-4CAF-89AE-F20951BBDB2B");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "MapBender, WMS demo";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

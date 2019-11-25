@@ -23,15 +23,10 @@ namespace GMap.NET.Projections
             }
         }
 
-        GSize tileSize = new GSize(256, 256);
-
         public override GSize TileSize
         {
-            get
-            {
-                return tileSize;
-            }
-        }
+            get;
+        } = new GSize(256, 256);
 
         public override double Axis
         {
@@ -64,14 +59,10 @@ namespace GMap.NET.Projections
                        Math.Pow(Math.Tan(MathPiDiv4 + Math.Asin(k * Math.Sin(rLat)) / 2), k);
             double z1 = Math.Pow(2, 23 - zoom);
 
-            double DX = (20037508.342789 + a * rLon) * 53.5865938 / z1;
-            double DY = (20037508.342789 - a * Math.Log(z)) * 53.5865938 / z1;
+            double dx = (20037508.342789 + a * rLon) * 53.5865938 / z1;
+            double dy = (20037508.342789 - a * Math.Log(z)) * 53.5865938 / z1;
 
-            GPoint ret = GPoint.Empty;
-            ret.X = (long)DX;
-            ret.Y = (long)DY;
-
-            return ret;
+            return new GPoint((long)dx, (long)dy);
         }
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)

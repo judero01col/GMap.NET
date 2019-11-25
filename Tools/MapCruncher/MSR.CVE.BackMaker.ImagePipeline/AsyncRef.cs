@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using MSR.CVE.BackMaker.MCDebug;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
@@ -10,7 +10,6 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public const int INTEREST_LEVEL_RENDER_ACTIVE_PAINT_EPSILON = 524296;
         public const int INTEREST_LEVEL_BOUNDS = 524290;
         public const int INTEREST_LEVEL_DOCUMENT = 524292;
-        private AsyncRecord resource;
         private int localInterest;
         private string debugAnnotation;
         private bool debugDisposed;
@@ -22,7 +21,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return resource.present;
+                return asyncRecord.present;
             }
         }
 
@@ -30,21 +29,18 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             get
             {
-                return resource.future;
+                return asyncRecord.future;
             }
         }
 
         internal AsyncRecord asyncRecord
         {
-            get
-            {
-                return resource;
-            }
+            get;
         }
 
         public AsyncRef(AsyncRecord resource, string debugAnnotation)
         {
-            this.resource = resource;
+            this.asyncRecord = resource;
             this.debugAnnotation = debugAnnotation;
             DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation, -1).crement(1);
             resource.AddRef();
@@ -54,14 +50,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         {
             D.Assert(!debugDisposed);
             SetInterest(0);
-            resource.DropRef();
+            asyncRecord.DropRef();
             DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation, -1).crement(-1);
             debugDisposed = true;
         }
 
         public Present Duplicate(string refCredit)
         {
-            return new AsyncRef(resource, refCredit);
+            return new AsyncRef(asyncRecord, refCredit);
         }
 
         public void SetInterest(int newInterest)
@@ -72,13 +68,13 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             DiagnosticUI.theDiagnostics.fetchResourceCounter("asyncRef-" + debugAnnotation + "-withInterest", -1)
                 .crement(num2 - num);
             int crement = newInterest - localInterest;
-            resource.ChangePriority(crement);
+            asyncRecord.ChangePriority(crement);
             localInterest = newInterest;
         }
 
         public void AddCallback(AsyncRecord.CompleteCallback callback)
         {
-            resource.AddCallback(callback);
+            asyncRecord.AddCallback(callback);
         }
 
         public override string ToString()

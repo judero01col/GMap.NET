@@ -1,22 +1,17 @@
-using System;
+﻿using System;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class SourceDocument : Present, IDisposable
     {
-        private LocalDocumentDescriptor _localDocument;
-
         public LocalDocumentDescriptor localDocument
         {
-            get
-            {
-                return _localDocument;
-            }
+            get;
         }
 
         public SourceDocument(LocalDocumentDescriptor localDocument)
         {
-            _localDocument = localDocument;
+            this.localDocument = localDocument;
         }
 
         public Present Duplicate(string refCredit)

@@ -21,38 +21,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("95E05027-F846-4429-AB7A-9445ABEEFA2A");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "OpenStreetMapQuestHybrid";
+            get;
+        } = new Guid("95E05027-F846-4429-AB7A-9445ABEEFA2A");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "OpenStreetMapQuestHybrid";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {OpenStreetMapQuestSatelliteProvider.Instance, this};
+                    _overlays = new GMapProvider[] {OpenStreetMapQuestSatelliteProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

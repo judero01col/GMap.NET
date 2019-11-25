@@ -37,18 +37,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
@@ -78,25 +78,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("6A1AF99A-84C6-4EF6-91A5-77B9D03257C2");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "CzechOldMap";
+            get;
+        } = new Guid("6A1AF99A-84C6-4EF6-91A5-77B9D03257C2");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "CzechOldMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -20,25 +20,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("3C12C212-A79F-42D0-9A1B-22740E1103E8");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "BingOSMap";
+            get;
+        } = new Guid("3C12C212-A79F-42D0-9A1B-22740E1103E8");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "BingOSMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -55,10 +45,10 @@ namespace GMap.NET.MapProviders
             {
                 //UrlFormat[OrdnanceSurvey]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&productSet=mmOS
 
-                UrlDynamicFormat = GetTileUrl("OrdnanceSurvey");
-                if (!string.IsNullOrEmpty(UrlDynamicFormat))
+                _urlDynamicFormat = GetTileUrl("OrdnanceSurvey");
+                if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    UrlDynamicFormat = UrlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}");
+                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}");
                 }
             }
         }
@@ -69,9 +59,9 @@ namespace GMap.NET.MapProviders
         {
             string key = TileXYToQuadKey(pos.X, pos.Y, zoom);
 
-            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(UrlDynamicFormat))
+            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(_urlDynamicFormat))
             {
-                return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key);
+                return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key);
             }
 
             return string.Format(UrlFormat,
@@ -82,7 +72,7 @@ namespace GMap.NET.MapProviders
                 ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
         }
 
-        string UrlDynamicFormat = string.Empty;
+        string _urlDynamicFormat = string.Empty;
 
         // http://ecn.t1.tiles.virtualearth.net/tiles/r12030003131321231.jpeg?g=875&mkt=en-us&n=z&productSet=mmOS
 

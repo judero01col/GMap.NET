@@ -47,7 +47,7 @@ namespace MSR.CVE.BackMaker
                     new PointD(pointD.x - num * 0.707106781186547, pointD.y - num * 0.707106781186547),
                     new PointD(pointD.x + num * 0.707106781186547, pointD.y - num * 0.707106781186547)
                 };
-                PointD[] array2 = Array.ConvertAll<PointD, PointD>(array,
+                PointD[] array2 = Array.ConvertAll(array,
                     delegate(PointD p1)
                     {
                         PointD pointD2 = new PointD();

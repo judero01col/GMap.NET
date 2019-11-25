@@ -9,7 +9,6 @@ namespace MSR.CVE.BackMaker
         private const string LatLonZoomTag = "LatLonZoom";
         private const string zoomAttr = "zoom";
         private LatLon _latlon;
-        private int _zoom;
 
         public LatLon latlon
         {
@@ -21,10 +20,7 @@ namespace MSR.CVE.BackMaker
 
         public int zoom
         {
-            get
-            {
-                return _zoom;
-            }
+            get;
         }
 
         public double lat
@@ -46,13 +42,13 @@ namespace MSR.CVE.BackMaker
         public LatLonZoom(double lat, double lon, int zoom)
         {
             _latlon = new LatLon(lat, lon);
-            _zoom = zoom;
+            this.zoom = zoom;
         }
 
         public LatLonZoom(LatLon latlon, int zoom)
         {
             _latlon = latlon;
-            _zoom = zoom;
+            this.zoom = zoom;
         }
 
         public override bool Equals(object o)
@@ -68,22 +64,22 @@ namespace MSR.CVE.BackMaker
 
         public override int GetHashCode()
         {
-            return _latlon.GetHashCode() ^ _zoom.GetHashCode();
+            return _latlon.GetHashCode() ^ zoom.GetHashCode();
         }
 
         public static bool operator ==(LatLonZoom llz1, LatLonZoom llz2)
         {
-            return llz1._latlon == llz2._latlon && llz1._zoom == llz2._zoom;
+            return llz1._latlon == llz2._latlon && llz1.zoom == llz2.zoom;
         }
 
         public static bool operator !=(LatLonZoom llz1, LatLonZoom llz2)
         {
-            return llz1._latlon != llz2._latlon || llz1._zoom != llz2._zoom;
+            return llz1._latlon != llz2._latlon || llz1.zoom != llz2.zoom;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}Z", _latlon, _zoom);
+            return string.Format("{0} {1}Z", _latlon, zoom);
         }
 
         public static string GetXMLTag()
@@ -94,7 +90,7 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(XmlWriter writer)
         {
             writer.WriteStartElement("LatLonZoom");
-            writer.WriteAttributeString("zoom", _zoom.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("zoom", zoom.ToString(CultureInfo.InvariantCulture));
             _latlon.WriteXML(writer);
             writer.WriteEndElement();
         }
@@ -102,7 +98,7 @@ namespace MSR.CVE.BackMaker
         public void WriteXMLToAttributes(XmlWriter writer)
         {
             _latlon.WriteXMLToAttributes(writer);
-            writer.WriteAttributeString("zoom", _zoom.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString("zoom", zoom.ToString(CultureInfo.InvariantCulture));
         }
 
         public LatLonZoom(MashupParseContext context, CoordinateSystemIfc coordSys)
@@ -117,7 +113,7 @@ namespace MSR.CVE.BackMaker
 
                 try
                 {
-                    _zoom = coordSys.GetZoomRange()
+                    zoom = coordSys.GetZoomRange()
                         .ParseAllowUndefinedZoom(context, "zoom", context.reader.GetAttribute("zoom"));
                 }
                 catch (InvalidMashupFile invalidMashupFile)

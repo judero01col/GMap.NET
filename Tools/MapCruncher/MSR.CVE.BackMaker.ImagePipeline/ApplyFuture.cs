@@ -16,7 +16,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public override Present Realize(string refCredit)
         {
             Present[] paramList =
-                Array.ConvertAll<IFuture, Present>(futureParams, (IFuture f) => f.Realize(refCredit));
+                Array.ConvertAll(futureParams, (IFuture f) => f.Realize(refCredit));
             return verb.Evaluate(paramList);
         }
 

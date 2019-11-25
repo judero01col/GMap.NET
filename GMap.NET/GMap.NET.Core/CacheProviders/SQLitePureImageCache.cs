@@ -123,14 +123,14 @@ namespace GMap.NET.CacheProviders
 #endif
 
         string _cache;
-        string _gtileCache;
         string _dir;
         string _db;
         bool _created;
 
         public string GtileCache
         {
-            get { return _gtileCache; }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -143,9 +143,9 @@ namespace GMap.NET.CacheProviders
             {
                 _cache = value;
 
-                _gtileCache = Path.Combine(_cache, "TileDBv5") + Path.DirectorySeparatorChar;
+                GtileCache = Path.Combine(_cache, "TileDBv5") + Path.DirectorySeparatorChar;
 
-                _dir = _gtileCache + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
+                _dir = GtileCache + GMapProvider.LanguageStr + Path.DirectorySeparatorChar;
 
                 // precreate dir
                 if (!Directory.Exists(_dir))
@@ -719,7 +719,7 @@ namespace GMap.NET.CacheProviders
 
         #region PureImageCache Members
 
-        int preAllocationPing;
+        int _preAllocationPing;
 
         bool PureImageCache.PutImageToCache(byte[] tile, int type, GPoint pos, int zoom)
         {
@@ -779,7 +779,7 @@ namespace GMap.NET.CacheProviders
                         cn.Close();
                     }
 
-                    if (Interlocked.Increment(ref preAllocationPing) % 22 == 0)
+                    if (Interlocked.Increment(ref _preAllocationPing) % 22 == 0)
                     {
                         CheckPreAllocation();
                     }

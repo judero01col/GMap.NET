@@ -206,7 +206,7 @@ namespace GMap.NET
 
             if (Shuffle)
             {
-                Stuff.Shuffle<GPoint>(_list);
+                Stuff.Shuffle(_list);
             }
 
             lock (this)

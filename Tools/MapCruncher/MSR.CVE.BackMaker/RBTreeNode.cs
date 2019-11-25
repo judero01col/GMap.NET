@@ -13,20 +13,13 @@ namespace MSR.CVE.BackMaker
         private RedBlackTree<T> tree;
         private RBTreeNode<T> Left;
         private RBTreeNode<T> Right;
-        private T value;
         private RBTreeNode<T> Parent;
         private COLOR Color = COLOR.RED;
 
         public T Data
         {
-            get
-            {
-                return value;
-            }
-            set
-            {
-                this.value = value;
-            }
+            get;
+            set;
         }
 
         public RBTreeNode(RedBlackTree<T> tree) : this(tree, default(T))
@@ -36,7 +29,7 @@ namespace MSR.CVE.BackMaker
         private RBTreeNode(RedBlackTree<T> tree, T value)
         {
             this.tree = tree;
-            this.value = value;
+            this.Data = value;
             Left = null;
             Right = null;
             Color = COLOR.RED;
@@ -376,7 +369,7 @@ namespace MSR.CVE.BackMaker
 
             while (rBTreeNode != tree.NIL)
             {
-                if (tree.comparer.Compare(newValue, rBTreeNode.value) <= 0)
+                if (tree.comparer.Compare(newValue, rBTreeNode.Data) <= 0)
                 {
                     if (rBTreeNode.Left == tree.NIL)
                     {
@@ -396,7 +389,7 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            if (tree.comparer.Compare(newValue, rBTreeNode.value) <= 0)
+            if (tree.comparer.Compare(newValue, rBTreeNode.Data) <= 0)
             {
                 RBTreeNode<T> rBTreeNode2 = new RBTreeNode<T>(tree, newValue);
                 rBTreeNode2.Color = COLOR.RED;
@@ -561,7 +554,7 @@ namespace MSR.CVE.BackMaker
                     Console.Write("   ");
                 }
 
-                Console.WriteLine(value + "-" + Convert.ToString(Color));
+                Console.WriteLine(Data + "-" + Convert.ToString(Color));
                 Left.Print(depth + 1, Tab);
             }
         }

@@ -192,66 +192,37 @@ namespace Demo.WindowsForms
     {
         #region Private Fields
 
-        private IPEndPoint localEndPoint;
-        private IPEndPoint remoteEndPoint;
-        private TcpState state;
-        private int processId;
-
         #endregion
 
         #region Constructors
 
         public TcpRow(IpHelper.TcpRow tcpRow)
         {
-            state = tcpRow.state;
-            processId = tcpRow.owningPid;
+            State = tcpRow.state;
+            ProcessId = tcpRow.owningPid;
 
             int localPort = (tcpRow.localPort1 << 8) + (tcpRow.localPort2) + (tcpRow.localPort3 << 24) +
                             (tcpRow.localPort4 << 16);
             long localAddress = tcpRow.localAddr;
-            localEndPoint = new IPEndPoint(localAddress, localPort);
+            LocalEndPoint = new IPEndPoint(localAddress, localPort);
 
             int remotePort = (tcpRow.remotePort1 << 8) + (tcpRow.remotePort2) + (tcpRow.remotePort3 << 24) +
                              (tcpRow.remotePort4 << 16);
             long remoteAddress = tcpRow.remoteAddr;
-            remoteEndPoint = new IPEndPoint(remoteAddress, remotePort);
+            RemoteEndPoint = new IPEndPoint(remoteAddress, remotePort);
         }
 
         #endregion
 
         #region Public Properties
 
-        public IPEndPoint LocalEndPoint
-        {
-            get
-            {
-                return localEndPoint;
-            }
-        }
+        public IPEndPoint LocalEndPoint { get; }
 
-        public IPEndPoint RemoteEndPoint
-        {
-            get
-            {
-                return remoteEndPoint;
-            }
-        }
+        public IPEndPoint RemoteEndPoint { get; }
 
-        public TcpState State
-        {
-            get
-            {
-                return state;
-            }
-        }
+        public TcpState State { get; }
 
-        public int ProcessId
-        {
-            get
-            {
-                return processId;
-            }
-        }
+        public int ProcessId { get; }
 
         #endregion
     }

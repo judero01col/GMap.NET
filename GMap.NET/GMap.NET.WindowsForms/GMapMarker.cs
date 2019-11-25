@@ -306,16 +306,16 @@ namespace GMap.NET.WindowsForms
         /// <param name="context">The context.</param>
         protected GMapMarker(SerializationInfo info, StreamingContext context)
         {
-            Position = Extensions.GetStruct<PointLatLng>(info, "Position", PointLatLng.Empty);
+            Position = Extensions.GetStruct(info, "Position", PointLatLng.Empty);
             Tag = Extensions.GetValue<object>(info, "Tag", null);
-            Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
-            _area = Extensions.GetStruct<Rectangle>(info, "Area", Rectangle.Empty);
+            Offset = Extensions.GetStruct(info, "Offset", Point.Empty);
+            _area = Extensions.GetStruct(info, "Area", Rectangle.Empty);
 
             ToolTip = Extensions.GetValue<GMapToolTip>(info, "ToolTip", null);
             if (ToolTip != null) ToolTip.Marker = this;
 
             ToolTipMode =
-                Extensions.GetStruct<MarkerTooltipMode>(info, "ToolTipMode", MarkerTooltipMode.OnMouseOver);
+                Extensions.GetStruct(info, "ToolTipMode", MarkerTooltipMode.OnMouseOver);
             ToolTipText = info.GetString("ToolTipText");
             IsVisible = info.GetBoolean("Visible");
             DisableRegionCheck = info.GetBoolean("DisableregionCheck");

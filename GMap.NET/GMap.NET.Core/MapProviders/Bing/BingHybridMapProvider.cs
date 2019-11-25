@@ -20,25 +20,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("94E2FCB4-CAAC-45EA-A1F9-8147C4B14970");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "BingHybridMap";
+            get;
+        } = new Guid("94E2FCB4-CAAC-45EA-A1F9-8147C4B14970");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "BingHybridMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -55,10 +45,10 @@ namespace GMap.NET.MapProviders
             {
                 //UrlFormat[AerialWithLabels]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/h{quadkey}.jpeg?g=3179&mkt={culture}
 
-                UrlDynamicFormat = GetTileUrl("AerialWithLabels");
-                if (!string.IsNullOrEmpty(UrlDynamicFormat))
+                _urlDynamicFormat = GetTileUrl("AerialWithLabels");
+                if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    UrlDynamicFormat = UrlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
+                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
                         .Replace("{culture}", "{2}");
                 }
             }
@@ -70,9 +60,9 @@ namespace GMap.NET.MapProviders
         {
             string key = TileXYToQuadKey(pos.X, pos.Y, zoom);
 
-            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(UrlDynamicFormat))
+            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(_urlDynamicFormat))
             {
-                return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key, language);
+                return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key, language);
             }
 
             return string.Format(UrlFormat,
@@ -83,7 +73,7 @@ namespace GMap.NET.MapProviders
                 ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
         }
 
-        string UrlDynamicFormat = string.Empty;
+        string _urlDynamicFormat = string.Empty;
 
         // http://ecn.dynamic.t3.tiles.virtualearth.net/comp/CompositionHandler/12030012020203?mkt=en-us&it=A,G,L&n=z
 

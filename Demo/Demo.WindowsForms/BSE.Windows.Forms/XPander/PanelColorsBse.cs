@@ -32,8 +32,7 @@ namespace BSE.Windows.Forms
 		/// Initialize a new instance of the PanelColorsBse class.
         /// </summary>
         public PanelColorsBse()
-			: base()
-		{
+        {
 		}
         /// <summary>
 		/// Initialize a new instance of the PanelColorsBse class.

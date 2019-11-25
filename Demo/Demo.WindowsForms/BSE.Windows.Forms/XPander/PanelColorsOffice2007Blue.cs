@@ -1,15 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace BSE.Windows.Forms
 {
     /// <summary>
     /// Provide Office 2007 Blue Theme colors
     /// </summary>
-    /// <copyright>Copyright � 2006-2008 Uwe Eichkorn
+    /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
     /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
     /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
     /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -29,8 +28,7 @@ namespace BSE.Windows.Forms
         /// Initialize a new instance of the Office2007Colors class.
         /// </summary>
         public PanelColorsOffice2007Blue()
-			: base()
-		{
+        {
 		}
         /// <summary>
         /// Initialize a new instance of the Office2007Colors class.

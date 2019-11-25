@@ -19,15 +19,10 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        Guid id = new Guid("2920B1AF-6D57-4895-9A21-D5837CBF1049");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
+            get;
+        } = new Guid("2920B1AF-6D57-4895-9A21-D5837CBF1049");
 
         public override string Name
         {
@@ -45,18 +40,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

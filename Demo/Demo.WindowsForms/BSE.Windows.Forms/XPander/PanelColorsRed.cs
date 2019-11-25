@@ -1,8 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace BSE.Windows.Forms
 {
@@ -16,7 +14,7 @@ namespace BSE.Windows.Forms
     ///// PURPOSE. IT CAN BE DISTRIBUTED FREE OF CHARGE AS LONG AS THIS HEADER 
     ///// REMAINS UNCHANGED.
     ///// </remarks>
-    ///// <copyright>Copyright � 2006-2008 Uwe Eichkorn</copyright>
+    ///// <copyright>Copyright © 2006-2008 Uwe Eichkorn</copyright>
     //public class PanelColorsRed : PanelColors
     //{
     //    #region FieldsPrivate

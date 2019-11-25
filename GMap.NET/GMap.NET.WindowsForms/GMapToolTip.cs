@@ -145,8 +145,8 @@ namespace GMap.NET.WindowsForms
         /// <param name="context">The context.</param>
         protected GMapToolTip(SerializationInfo info, StreamingContext context)
         {
-            Offset = Extensions.GetStruct<Point>(info, "Offset", Point.Empty);
-            TextPadding = Extensions.GetStruct<Size>(info, "TextPadding", new Size(10, 10));
+            Offset = Extensions.GetStruct(info, "Offset", Point.Empty);
+            TextPadding = Extensions.GetStruct(info, "TextPadding", new Size(10, 10));
         }
 
         /// <summary>

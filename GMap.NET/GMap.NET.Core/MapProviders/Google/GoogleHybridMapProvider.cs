@@ -22,38 +22,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("B076C255-6D12-4466-AAE0-4A73D20A7E6A");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "GoogleHybridMap";
+            get;
+        } = new Guid("B076C255-6D12-4466-AAE0-4A73D20A7E6A");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "GoogleHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {GoogleSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {GoogleSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

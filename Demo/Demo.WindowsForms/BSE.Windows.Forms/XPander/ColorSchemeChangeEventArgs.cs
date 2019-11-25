@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +7,7 @@ namespace BSE.Windows.Forms
     /// <summary>
     /// Provides data for the ColorSchemeChange event.
     /// </summary>
-    /// <copyright>Copyright � 2006-2008 Uwe Eichkorn
+    /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
     /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
     /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
     /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -18,18 +18,15 @@ namespace BSE.Windows.Forms
     {
         #region FieldsPrivate
 
-        private ColorScheme m_eColorSchema;
-
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the color schema which is used for the panel.
         /// </summary>
-        public ColorScheme ColorSchema
-        {
-            get { return m_eColorSchema; }
-        }
+        public ColorScheme ColorSchema { get; }
+
         #endregion
 
         #region MethodsPublic
@@ -39,7 +36,7 @@ namespace BSE.Windows.Forms
         /// <param name="eColorSchema">The color schema which is used for the panel.</param>
         public ColorSchemeChangeEventArgs(ColorScheme eColorSchema)
         {
-            m_eColorSchema = eColorSchema;
+            ColorSchema = eColorSchema;
         }
 
         #endregion

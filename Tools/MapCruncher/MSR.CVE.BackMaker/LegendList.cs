@@ -55,7 +55,7 @@ namespace MSR.CVE.BackMaker
             Legend legend = new Legend(_sourceMap, dirtyEvent, parentBoundsChangedEvent);
             string displayName = legend.displayName;
             int num = 1;
-            List<string> list = this.list.ConvertAll<string>((Legend l) => l.displayName);
+            List<string> list = this.list.ConvertAll((Legend l) => l.displayName);
             while (list.Contains(legend.displayName))
             {
                 num++;

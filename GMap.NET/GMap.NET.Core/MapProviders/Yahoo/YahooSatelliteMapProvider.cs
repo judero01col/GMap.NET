@@ -22,25 +22,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("55D71878-913F-4320-B5B6-B4167A3F148F");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "YahooSatelliteMap";
+            get;
+        } = new Guid("55D71878-913F-4320-B5B6-B4167A3F148F");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "YahooSatelliteMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

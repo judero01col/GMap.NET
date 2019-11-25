@@ -267,17 +267,17 @@ namespace GMap.NET
         /// <summary>
         ///     Half of PI
         /// </summary>
-        protected static readonly double HALF_PI = PI * 0.5;
+        protected static readonly double HalfPi = PI * 0.5;
 
         /// <summary>
         ///     PI * 2
         /// </summary>
-        protected static readonly double TWO_PI = PI * 2.0;
+        protected static readonly double TwoPi = PI * 2.0;
 
         /// <summary>
         ///     EPSLoN
         /// </summary>
-        protected static readonly double EPSLoN = 1.0e-10;
+        protected static readonly double Epsilon = 1.0e-10;
 
         /// <summary>
         ///     MAX_VAL
@@ -323,21 +323,21 @@ namespace GMap.NET
                 if (Abs(x) <= PI)
                     break;
                 else if ((long)Abs(x / PI) < 2)
-                    x = x - Sign(x) * TWO_PI;
-                else if ((long)Abs(x / TWO_PI) < MaxLong)
+                    x = x - Sign(x) * TwoPi;
+                else if ((long)Abs(x / TwoPi) < MaxLong)
                 {
-                    x = x - (long)(x / TWO_PI) * TWO_PI;
+                    x = x - (long)(x / TwoPi) * TwoPi;
                 }
-                else if ((long)Abs(x / (MaxLong * TWO_PI)) < MaxLong)
+                else if ((long)Abs(x / (MaxLong * TwoPi)) < MaxLong)
                 {
-                    x = x - (long)(x / (MaxLong * TWO_PI)) * (TWO_PI * MaxLong);
+                    x = x - (long)(x / (MaxLong * TwoPi)) * (TwoPi * MaxLong);
                 }
-                else if ((long)Abs(x / (DblLong * TWO_PI)) < MaxLong)
+                else if ((long)Abs(x / (DblLong * TwoPi)) < MaxLong)
                 {
-                    x = x - (long)(x / (DblLong * TWO_PI)) * (TWO_PI * DblLong);
+                    x = x - (long)(x / (DblLong * TwoPi)) * (TwoPi * DblLong);
                 }
                 else
-                    x = x - Sign(x) * TWO_PI;
+                    x = x - Sign(x) * TwoPi;
 
                 count++;
                 if (count > MaxVal)
@@ -362,22 +362,22 @@ namespace GMap.NET
         /// </summary>
         /// <param name="x">represents the eccentricity squared</param>
         /// <returns></returns>
-        protected static double e0fn(double x)
+        protected static double E0Fn(double x)
         {
             return 1.0 - 0.25 * x * (1.0 + x / 16.0 * (3.0 + 1.25 * x));
         }
 
-        protected static double e1fn(double x)
+        protected static double E1Fn(double x)
         {
             return 0.375 * x * (1.0 + 0.25 * x * (1.0 + 0.46875 * x));
         }
 
-        protected static double e2fn(double x)
+        protected static double E2Fn(double x)
         {
             return 0.05859375 * x * x * (1.0 + 0.75 * x);
         }
 
-        protected static double e3fn(double x)
+        protected static double E3Fn(double x)
         {
             return x * x * x * (35.0 / 3072.0);
         }
@@ -386,7 +386,7 @@ namespace GMap.NET
         ///     computes the value of M which is the distance along a meridian
         ///     from the Equator to latitude phi.
         /// </summary>
-        protected static double mlfn(double e0, double e1, double e2, double e3, double phi)
+        protected static double Mlfn(double e0, double e1, double e2, double e3, double phi)
         {
             return e0 * phi - e1 * Sin(2.0 * phi) + e2 * Sin(4.0 * phi) - e3 * Sin(6.0 * phi);
         }
@@ -473,36 +473,36 @@ namespace GMap.NET
             lat = PI / 180 * lat;
             lng = PI / 180 * lng;
 
-            double B = Axis * (1.0 - Flattening);
-            double ee = 1.0 - B / Axis * (B / Axis);
-            double N = Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat));
+            double b = Axis * (1.0 - Flattening);
+            double ee = 1.0 - b / Axis * (b / Axis);
+            double n = Axis / Sqrt(1.0 - ee * Sin(lat) * Sin(lat));
 
-            x = (N + height) * Cos(lat) * Cos(lng);
-            y = (N + height) * Cos(lat) * Sin(lng);
-            z = (N * (B / Axis) * (B / Axis) + height) * Sin(lat);
+            x = (n + height) * Cos(lat) * Cos(lng);
+            y = (n + height) * Cos(lat) * Sin(lng);
+            z = (n * (b / Axis) * (b / Axis) + height) * Sin(lat);
         }
 
         /// <summary>
         ///     Conversion from cartesian earth-sentered coordinates to geodetic coordinates in the given datum
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <param name="Z"></param>
-        /// <param name="Lat"></param>
-        /// <param name="Lon"></param>
-        public void FromCartesianTGeodetic(double X, double Y, double Z, out double Lat, out double Lng)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        public void FromCartesianTGeodetic(double x, double y, double z, out double lat, out double lng)
         {
-            double E = Flattening * (2.0 - Flattening);
-            Lng = Atan2(Y, X);
+            double e = Flattening * (2.0 - Flattening);
+            lng = Atan2(y, x);
 
-            double P = Sqrt(X * X + Y * Y);
-            double Theta = Atan2(Z, P * (1.0 - Flattening));
-            double st = Sin(Theta);
-            double ct = Cos(Theta);
-            Lat = Atan2(Z + E / (1.0 - Flattening) * Axis * st * st * st, P - E * Axis * ct * ct * ct);
+            double p = Sqrt(x * x + y * y);
+            double theta = Atan2(z, p * (1.0 - Flattening));
+            double st = Sin(theta);
+            double ct = Cos(theta);
+            lat = Atan2(z + e / (1.0 - Flattening) * Axis * st * st * st, p - e * Axis * ct * ct * ct);
 
-            Lat /= PI / 180;
-            Lng /= PI / 180;
+            lat /= PI / 180;
+            lng /= PI / 180;
         }
 
         public static List<PointLatLng> PolylineDecode(string encodedPath)

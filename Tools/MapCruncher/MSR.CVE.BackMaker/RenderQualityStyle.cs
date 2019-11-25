@@ -5,9 +5,6 @@ namespace MSR.CVE.BackMaker
     public class RenderQualityStyle
     {
         private string _styleName;
-        private InterpolationMode _invokeImageInterpolationMode;
-        private InterpolationMode _warpInterpolationMode;
-        private double _hackyWarperAntialiasFactor;
 
         public static RenderQualityStyle highQuality = new RenderQualityStyle("highQuality",
             InterpolationMode.HighQualityBicubic,
@@ -28,35 +25,26 @@ namespace MSR.CVE.BackMaker
 
         public InterpolationMode invokeImageInterpolationMode
         {
-            get
-            {
-                return _invokeImageInterpolationMode;
-            }
+            get;
         }
 
         public InterpolationMode warpInterpolationMode
         {
-            get
-            {
-                return _warpInterpolationMode;
-            }
+            get;
         }
 
         public double hackyWarperAntialiasFactor
         {
-            get
-            {
-                return _hackyWarperAntialiasFactor;
-            }
+            get;
         }
 
         private RenderQualityStyle(string _styleName, InterpolationMode invokeImageInterpolationMode,
             InterpolationMode warpInterpolationMode, double hackyWarperAntialiasFactor)
         {
             this._styleName = _styleName;
-            _invokeImageInterpolationMode = invokeImageInterpolationMode;
-            _warpInterpolationMode = warpInterpolationMode;
-            _hackyWarperAntialiasFactor = hackyWarperAntialiasFactor;
+            this.invokeImageInterpolationMode = invokeImageInterpolationMode;
+            this.warpInterpolationMode = warpInterpolationMode;
+            this.hackyWarperAntialiasFactor = hackyWarperAntialiasFactor;
         }
     }
 }

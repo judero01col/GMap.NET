@@ -5,15 +5,11 @@ namespace MSR.CVE.BackMaker
 {
     public class LayerView : IMapView, ICurrentView
     {
-        private Layer _layer;
         private MapPosition lockedView;
 
         public Layer layer
         {
-            get
-            {
-                return _layer;
-            }
+            get;
         }
 
         public object GetViewedObject()
@@ -23,7 +19,7 @@ namespace MSR.CVE.BackMaker
 
         public LayerView(Layer layer, MapPosition lockedView)
         {
-            _layer = layer;
+            this.layer = layer;
             this.lockedView = lockedView;
         }
 
@@ -34,7 +30,7 @@ namespace MSR.CVE.BackMaker
 
         public LayerView(Layer layer, MashupParseContext context)
         {
-            _layer = layer;
+            this.layer = layer;
             bool flag = false;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
             while (xMLTagReader.FindNextStartTag())

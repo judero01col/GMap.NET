@@ -23,38 +23,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("B8A2A78D-1C49-45D0-8F03-9B95C83116B7");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "GoogleChinaHybridMap";
+            get;
+        } = new Guid("B8A2A78D-1C49-45D0-8F03-9B95C83116B7");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "GoogleChinaHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {GoogleChinaSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {GoogleChinaSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

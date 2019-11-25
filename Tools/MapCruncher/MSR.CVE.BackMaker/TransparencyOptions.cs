@@ -22,7 +22,6 @@ namespace MSR.CVE.BackMaker
         public static RangeInt FuzzRange = new RangeInt(0, 255);
         public static RangeInt HaloSizeRange = new RangeInt(0, 5);
         private DirtyEvent dirtyEvent;
-        private List<TransparencyColor> _colorList;
         private bool _enabled;
         private bool _inverted;
         private bool _useDocumentTransparency;
@@ -31,10 +30,8 @@ namespace MSR.CVE.BackMaker
 
         public List<TransparencyColor> colorList
         {
-            get
-            {
-                return _colorList;
-            }
+            get;
+            private set;
         }
 
         public bool useDocumentTransparency
@@ -56,7 +53,7 @@ namespace MSR.CVE.BackMaker
         private void Initialize(DirtyEvent dirty)
         {
             dirtyEvent = dirty;
-            _colorList = new List<TransparencyColor>();
+            colorList = new List<TransparencyColor>();
             _enabled = true;
             _inverted = false;
             _useDocumentTransparency = true;
@@ -68,8 +65,8 @@ namespace MSR.CVE.BackMaker
             _enabled = prototype._enabled;
             _inverted = prototype._inverted;
             _useDocumentTransparency = prototype._useDocumentTransparency;
-            _colorList = new List<TransparencyColor>();
-            _colorList.AddRange(prototype._colorList);
+            colorList = new List<TransparencyColor>();
+            colorList.AddRange(prototype.colorList);
             _fadeOptions = new FadeOptions(prototype._fadeOptions);
         }
 
@@ -81,31 +78,31 @@ namespace MSR.CVE.BackMaker
         public TransparencyColor AddColor(Pixel color)
         {
             TransparencyColor transparencyColor = new TransparencyColor(color, 2, 0);
-            _colorList.Add(transparencyColor);
+            colorList.Add(transparencyColor);
             SetDirty();
             return transparencyColor;
         }
 
         public void RemoveColor(TransparencyColor tc)
         {
-            _colorList.Remove(tc);
+            colorList.Remove(tc);
             SetDirty();
         }
 
         public void SetFuzz(TransparencyColor tc, int newValue)
         {
-            if (_colorList.Contains(tc) && tc.fuzz != newValue)
+            if (colorList.Contains(tc) && tc.fuzz != newValue)
             {
-                _colorList[_colorList.IndexOf(tc)] = new TransparencyColor(tc.color, newValue, tc.halo);
+                colorList[colorList.IndexOf(tc)] = new TransparencyColor(tc.color, newValue, tc.halo);
                 SetDirty();
             }
         }
 
         public void SetHalo(TransparencyColor tc, int newValue)
         {
-            if (_colorList.Contains(tc) && tc.halo != newValue)
+            if (colorList.Contains(tc) && tc.halo != newValue)
             {
-                _colorList[_colorList.IndexOf(tc)] = new TransparencyColor(tc.color, tc.fuzz, newValue);
+                colorList[colorList.IndexOf(tc)] = new TransparencyColor(tc.color, tc.fuzz, newValue);
                 SetDirty();
             }
         }
@@ -184,7 +181,7 @@ namespace MSR.CVE.BackMaker
             if (_enabled)
             {
                 hash.Accumulate(_inverted);
-                foreach (TransparencyColor current in _colorList)
+                foreach (TransparencyColor current in colorList)
                 {
                     current.AccumulateRobustHash(hash);
                 }
@@ -205,7 +202,7 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs(TransparencyColor.GetXMLTag()))
                 {
-                    _colorList.Add(new TransparencyColor(context));
+                    colorList.Add(new TransparencyColor(context));
                 }
                 else
                 {
@@ -229,7 +226,7 @@ namespace MSR.CVE.BackMaker
                 _useDocumentTransparency.ToString(CultureInfo.InvariantCulture));
             writer.WriteAttributeString("Enabled", _enabled.ToString(CultureInfo.InvariantCulture));
             writer.WriteAttributeString("Inverted", _inverted.ToString(CultureInfo.InvariantCulture));
-            foreach (TransparencyColor current in _colorList)
+            foreach (TransparencyColor current in colorList)
             {
                 current.WriteXML(writer);
             }

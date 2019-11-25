@@ -84,19 +84,7 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-        GMapOverlay overlay;
-
-        public GMapOverlay Overlay
-        {
-            get
-            {
-                return overlay;
-            }
-            internal set
-            {
-                overlay = value;
-            }
-        }
+        public GMapOverlay Overlay { get; set; }
 
 #if !PocketPC
         /// <summary>
@@ -301,7 +289,7 @@ namespace GMap.NET.WindowsForms
             : base(info, context)
         {
             deserializedLocalPoints = Extensions.GetValue<GPoint[]>(info, "LocalPoints");
-            IsVisible = Extensions.GetStruct<bool>(info, "Visible", true);
+            IsVisible = Extensions.GetStruct(info, "Visible", true);
         }
 
         #endregion

@@ -6,64 +6,35 @@ namespace MSR.CVE.BackMaker
 {
     public class RectangleD
     {
-        private double _x;
-        private double _y;
-        private double _width;
-        private double _height;
-
         public double X
         {
-            get
-            {
-                return _x;
-            }
-            set
-            {
-                _x = value;
-            }
+            get;
+            set;
         }
 
         public double Y
         {
-            get
-            {
-                return _y;
-            }
-            set
-            {
-                _y = value;
-            }
+            get;
+            set;
         }
 
         public double Width
         {
-            get
-            {
-                return _width;
-            }
-            set
-            {
-                _width = value;
-            }
+            get;
+            set;
         }
 
         public double Height
         {
-            get
-            {
-                return _height;
-            }
-            set
-            {
-                _height = value;
-            }
+            get;
+            set;
         }
 
         public double Left
         {
             get
             {
-                return _x;
+                return X;
             }
         }
 
@@ -71,7 +42,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return _x + _width;
+                return X + Width;
             }
         }
 
@@ -79,7 +50,7 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return _y;
+                return Y;
             }
         }
 
@@ -87,16 +58,16 @@ namespace MSR.CVE.BackMaker
         {
             get
             {
-                return _y + _height;
+                return Y + Height;
             }
         }
 
         public RectangleD(double x, double y, double width, double height)
         {
-            _x = x;
-            _y = y;
-            _width = width;
-            _height = height;
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
         }
 
         public RectangleF ToRectangleF()
@@ -125,7 +96,7 @@ namespace MSR.CVE.BackMaker
         public override string ToString()
         {
             return string.Format("RectangleD(x{0}, y{1}, w{2}, h{3})",
-                new object[] {_x, _y, _width, _height});
+                new object[] {X, Y, Width, Height});
         }
 
         public RectangleD Intersect(RectangleD r1)

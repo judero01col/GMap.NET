@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace BSE.Windows.Forms
 {

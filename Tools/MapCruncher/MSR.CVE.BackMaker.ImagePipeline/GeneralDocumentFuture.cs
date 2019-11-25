@@ -1,27 +1,22 @@
-namespace MSR.CVE.BackMaker.ImagePipeline
+﻿namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class GeneralDocumentFuture
     {
-        private IDocumentFuture _documentFuture;
-
         public IDocumentFuture documentFuture
         {
-            get
-            {
-                return _documentFuture;
-            }
+            get;
         }
 
         public void WriteXML(MashupWriteContext context, string pathBase)
         {
             context.writer.WriteStartElement(GetXMLTag());
-            _documentFuture.WriteXML(context, pathBase);
+            documentFuture.WriteXML(context, pathBase);
             context.writer.WriteEndElement();
         }
 
         public GeneralDocumentFuture(IDocumentFuture documentFuture)
         {
-            _documentFuture = documentFuture;
+            this.documentFuture = documentFuture;
         }
 
         public GeneralDocumentFuture(MashupParseContext context, string pathBase)
@@ -31,28 +26,28 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             {
                 if (xMLTagReader.TagIs(FutureDocumentFromFilesystem.GetXMLTag()))
                 {
-                    if (_documentFuture != null)
+                    if (documentFuture != null)
                     {
                         throw new InvalidMashupFile(context, "Too many specs in " + GetXMLTag());
                     }
 
-                    _documentFuture = new FutureDocumentFromFilesystem(context, pathBase);
+                    documentFuture = new FutureDocumentFromFilesystem(context, pathBase);
                 }
                 else
                 {
                     if (xMLTagReader.TagIs(FutureDocumentFromUri.GetXMLTag()))
                     {
-                        if (_documentFuture != null)
+                        if (documentFuture != null)
                         {
                             throw new InvalidMashupFile(context, "Too many specs in " + GetXMLTag());
                         }
 
-                        _documentFuture = new FutureDocumentFromUri(context);
+                        documentFuture = new FutureDocumentFromUri(context);
                     }
                 }
             }
 
-            if (_documentFuture == null)
+            if (documentFuture == null)
             {
                 throw new InvalidMashupFile(context, "No spec in " + GetXMLTag());
             }

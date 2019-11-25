@@ -4,35 +4,30 @@ namespace MSR.CVE.BackMaker
 {
     public class NonredundantRenderComplaint : Exception
     {
-        private string _message;
-
         public string message
         {
-            get
-            {
-                return _message;
-            }
+            get;
         }
 
         public NonredundantRenderComplaint(string message)
         {
-            _message = message;
+            this.message = message;
         }
 
         public override int GetHashCode()
         {
-            return _message.GetHashCode();
+            return message.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
             return obj is NonredundantRenderComplaint &&
-                   _message.Equals(((NonredundantRenderComplaint)obj)._message);
+                   message.Equals(((NonredundantRenderComplaint)obj).message);
         }
 
         public override string ToString()
         {
-            return _message;
+            return message;
         }
     }
 }

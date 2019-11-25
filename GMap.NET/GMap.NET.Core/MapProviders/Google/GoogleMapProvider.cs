@@ -70,18 +70,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
@@ -93,11 +93,11 @@ namespace GMap.NET.MapProviders
         #endregion
 
         public bool TryCorrectVersion = true;
-        static bool init;
+        static bool _init;
 
         public override void OnInitialized()
         {
-            if (!init && TryCorrectVersion)
+            if (!_init && TryCorrectVersion)
             {
                 string url =
                     string.Format(
@@ -221,7 +221,7 @@ namespace GMap.NET.MapProviders
                         #endregion
                     }
 
-                    init = true; // try it only once
+                    _init = true; // try it only once
                 }
                 catch (Exception ex)
                 {
@@ -288,7 +288,7 @@ namespace GMap.NET.MapProviders
         MapRoute GetRoute(string url)
         {
             MapRoute ret = null;
-            StrucRute RouteResult = null;
+            StrucRute routeResult = null;
 
             try
             {
@@ -303,10 +303,10 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(route))
                     {
-                        RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
+                        routeResult = JsonConvert.DeserializeObject<StrucRute>(route);
 
-                        if (GMaps.Instance.UseRouteCache && RouteResult != null &&
-                            RouteResult.status == RouteStatusCode.OK)
+                        if (GMaps.Instance.UseRouteCache && routeResult != null &&
+                            routeResult.status == RouteStatusCode.OK)
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
                         }
@@ -314,39 +314,39 @@ namespace GMap.NET.MapProviders
                 }
                 else
                 {
-                    RouteResult = JsonConvert.DeserializeObject<StrucRute>(route);
+                    routeResult = JsonConvert.DeserializeObject<StrucRute>(route);
                 }
 
-                if (RouteResult != null)
+                if (routeResult != null)
                 {
-                    if (RouteResult.error == null && RouteResult.routes != null && RouteResult.routes.Count > 0)
+                    if (routeResult.error == null && routeResult.routes != null && routeResult.routes.Count > 0)
                     {
-                        ret = new MapRoute(RouteResult.routes[0].summary);
+                        ret = new MapRoute(routeResult.routes[0].summary);
                     }
                     else
                     {
                         ret = new MapRoute("Route");
                     }
 
-                    if (RouteResult.error == null)
+                    if (routeResult.error == null)
                     {
-                        ret.Status = RouteResult.status;
+                        ret.Status = routeResult.status;
 
-                        if (RouteResult.routes != null && RouteResult.routes.Count > 0)
+                        if (routeResult.routes != null && routeResult.routes.Count > 0)
                         {
-                            if (RouteResult.routes.Count > 0)
+                            if (routeResult.routes.Count > 0)
                             {
-                                if (RouteResult.routes[0].overview_polyline != null &&
-                                    RouteResult.routes[0].overview_polyline.points != null)
+                                if (routeResult.routes[0].overview_polyline != null &&
+                                    routeResult.routes[0].overview_polyline.points != null)
                                 {
                                     var points = new List<PointLatLng>();
                                     PureProjection.PolylineDecode(points,
-                                        RouteResult.routes[0].overview_polyline.points);
+                                        routeResult.routes[0].overview_polyline.points);
 
                                     ret.Points.Clear();
                                     ret.Points.AddRange(points);
 
-                                    ret.Duration = RouteResult.routes[0].legs[0].duration.text;
+                                    ret.Duration = routeResult.routes[0].legs[0].duration.text;
                                     //ret.DistanceRoute = Math.Round((RouteResult.routes[0].legs[0].distance.value / 1000.0), 1);
                                 }
                             }
@@ -354,12 +354,12 @@ namespace GMap.NET.MapProviders
                     }
                     else
                     {
-                        ret.ErrorCode = RouteResult.error.code;
-                        ret.ErrorMessage = RouteResult.error.message;
+                        ret.ErrorCode = routeResult.error.code;
+                        ret.ErrorMessage = routeResult.error.message;
 
                         RouteStatusCode code;
 
-                        if (Enum.TryParse(RouteResult.error.status, false, out code))
+                        if (Enum.TryParse(routeResult.error.status, false, out code))
                             ret.Status = code;
                     }
                 }
@@ -496,29 +496,29 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(geo))
                 {
-                    var GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(geo);
+                    var geoResult = JsonConvert.DeserializeObject<StrucGeocode>(geo);
 
-                    if (GeoResult != null)
+                    if (geoResult != null)
                     {
-                        status = GeoResult.status;
+                        status = geoResult.status;
 
-                        if (GeoResult.status == GeoCoderStatusCode.OK)
+                        if (geoResult.status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
                                 Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
 
                             pointList = new List<PointLatLng>();
 
-                            if (GeoResult.results != null && GeoResult.results.Count > 0)
+                            if (geoResult.results != null && geoResult.results.Count > 0)
                             {
-                                for (int i = 0; i < GeoResult.results.Count; i++)
-                                    pointList.Add(new PointLatLng(GeoResult.results[i].geometry.location.lat,
-                                        GeoResult.results[i].geometry.location.lng));
+                                for (int i = 0; i < geoResult.results.Count; i++)
+                                    pointList.Add(new PointLatLng(geoResult.results[i].geometry.location.lat,
+                                        geoResult.results[i].geometry.location.lng));
                             }
                         }
                         else
                         {
-                            Debug.WriteLine("GetLatLngFromGeocoderUrl: " + GeoResult.status);
+                            Debug.WriteLine("GetLatLngFromGeocoderUrl: " + geoResult.status);
                         }
                     }
                 }
@@ -569,118 +569,118 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(reverse))
                 {
-                    var GeoResult = JsonConvert.DeserializeObject<StrucGeocode>(reverse);
+                    var geoResult = JsonConvert.DeserializeObject<StrucGeocode>(reverse);
 
-                    if (GeoResult != null)
+                    if (geoResult != null)
                     {
-                        status = GeoResult.status;
+                        status = geoResult.status;
 
-                        if (GeoResult.status == GeoCoderStatusCode.OK)
+                        if (geoResult.status == GeoCoderStatusCode.OK)
                         {
                             if (cache && GMaps.Instance.UseGeocoderCache)
                                 Cache.Instance.SaveContent(url, CacheType.GeocoderCache, reverse);
 
                             placemarkList = new List<Placemark>();
 
-                            if (GeoResult.results != null && GeoResult.results.Count > 0)
+                            if (geoResult.results != null && geoResult.results.Count > 0)
                             {
                                 Debug.WriteLine("---------------------");
 
-                                for (int i = 0; i < GeoResult.results.Count; i++)
+                                for (int i = 0; i < geoResult.results.Count; i++)
                                 {
-                                    var ret = new Placemark(GeoResult.results[i].formatted_address);
+                                    var ret = new Placemark(geoResult.results[i].formatted_address);
 
-                                    Debug.WriteLine("formatted_address: [" + GeoResult.results[i].formatted_address +
+                                    Debug.WriteLine("formatted_address: [" + geoResult.results[i].formatted_address +
                                                     "]");
 
-                                    if (GeoResult.results[i].types != null)
+                                    if (geoResult.results[i].types != null)
                                     {
-                                        Debug.WriteLine("type: " + GeoResult.results[i].types);
+                                        Debug.WriteLine("type: " + geoResult.results[i].types);
                                     }
 
-                                    if (GeoResult.results[i].address_components != null &&
-                                        GeoResult.results[i].address_components.Count > 0)
+                                    if (geoResult.results[i].address_components != null &&
+                                        geoResult.results[i].address_components.Count > 0)
                                     {
-                                        for (int j = 0; j < GeoResult.results[i].address_components.Count; j++)
+                                        for (int j = 0; j < geoResult.results[i].address_components.Count; j++)
                                         {
-                                            if (GeoResult.results[i].address_components[j].types != null &&
-                                                GeoResult.results[i].address_components[j].types.Count > 0)
+                                            if (geoResult.results[i].address_components[j].types != null &&
+                                                geoResult.results[i].address_components[j].types.Count > 0)
                                             {
                                                 Debug.Write(
-                                                    "Type: [" + GeoResult.results[i].address_components[j].types[0] +
+                                                    "Type: [" + geoResult.results[i].address_components[j].types[0] +
                                                     "], ");
                                                 Debug.WriteLine(
                                                     "long_name: [" +
-                                                    GeoResult.results[i].address_components[j].long_name + "]");
+                                                    geoResult.results[i].address_components[j].long_name + "]");
 
-                                                switch (GeoResult.results[i].address_components[j].types[0])
+                                                switch (geoResult.results[i].address_components[j].types[0])
                                                 {
                                                     case "street_number":
                                                     {
-                                                        ret.StreetNumber = GeoResult.results[i].address_components[j]
+                                                        ret.StreetNumber = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
 
                                                     case "street_address":
                                                     {
-                                                        ret.StreetAddress = GeoResult.results[i].address_components[j]
+                                                        ret.StreetAddress = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
 
                                                     case "route":
                                                     {
-                                                        ret.ThoroughfareName = GeoResult.results[i]
+                                                        ret.ThoroughfareName = geoResult.results[i]
                                                             .address_components[j].long_name;
                                                     }
                                                         break;
 
                                                     case "postal_code":
                                                     {
-                                                        ret.PostalCodeNumber = GeoResult.results[i]
+                                                        ret.PostalCodeNumber = geoResult.results[i]
                                                             .address_components[j].long_name;
                                                     }
                                                         break;
 
                                                     case "country":
                                                     {
-                                                        ret.CountryName = GeoResult.results[i].address_components[j]
+                                                        ret.CountryName = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
 
                                                     case "locality":
                                                     {
-                                                        ret.LocalityName = GeoResult.results[i].address_components[j]
+                                                        ret.LocalityName = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
 
                                                     case "administrative_area_level_2":
                                                     {
-                                                        ret.DistrictName = GeoResult.results[i].address_components[j]
+                                                        ret.DistrictName = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
 
                                                     case "administrative_area_level_1":
                                                     {
-                                                        ret.AdministrativeAreaName = GeoResult.results[i]
+                                                        ret.AdministrativeAreaName = geoResult.results[i]
                                                             .address_components[j].long_name;
                                                     }
                                                         break;
 
                                                     case "administrative_area_level_3":
                                                     {
-                                                        ret.SubAdministrativeAreaName = GeoResult.results[i]
+                                                        ret.SubAdministrativeAreaName = geoResult.results[i]
                                                             .address_components[j].long_name;
                                                     }
                                                         break;
 
                                                     case "neighborhood":
                                                     {
-                                                        ret.Neighborhood = GeoResult.results[i].address_components[j]
+                                                        ret.Neighborhood = geoResult.results[i].address_components[j]
                                                             .long_name;
                                                     }
                                                         break;
@@ -698,7 +698,7 @@ namespace GMap.NET.MapProviders
                     }
                     else
                     {
-                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + GeoResult.status);
+                        Debug.WriteLine("GetPlacemarkFromReverseGeocoderUrl: " + geoResult.status);
                     }
                 }
             }
@@ -959,126 +959,126 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(kml))
                 {
-                    var DirectionResult = JsonConvert.DeserializeObject<StrucDirection>(kml);
+                    var directionResult = JsonConvert.DeserializeObject<StrucDirection>(kml);
 
-                    if (DirectionResult != null)
+                    if (directionResult != null)
                     {
                         if (GMaps.Instance.UseDirectionsCache && cache)
                         {
                             Cache.Instance.SaveContent(url, CacheType.DirectionsCache, kml);
                         }
 
-                        ret = DirectionResult.status;
+                        ret = directionResult.status;
 
                         if (ret == DirectionsStatusCode.OK)
                         {
                             direction = new GDirections();
 
-                            if (DirectionResult.routes != null && DirectionResult.routes.Count > 0)
+                            if (directionResult.routes != null && directionResult.routes.Count > 0)
                             {
-                                direction.Summary = DirectionResult.routes[0].summary;
+                                direction.Summary = directionResult.routes[0].summary;
                                 Debug.WriteLine("summary: " + direction.Summary);
 
-                                if (DirectionResult.routes[0].copyrights != null)
+                                if (directionResult.routes[0].copyrights != null)
                                 {
-                                    direction.Copyrights = DirectionResult.routes[0].copyrights;
+                                    direction.Copyrights = directionResult.routes[0].copyrights;
                                     Debug.WriteLine("copyrights: " + direction.Copyrights);
                                 }
 
-                                if (DirectionResult.routes[0].overview_polyline != null &&
-                                    DirectionResult.routes[0].overview_polyline.points != null)
+                                if (directionResult.routes[0].overview_polyline != null &&
+                                    directionResult.routes[0].overview_polyline.points != null)
                                 {
                                     direction.Route = new List<PointLatLng>();
                                     PureProjection.PolylineDecode(direction.Route,
-                                        DirectionResult.routes[0].overview_polyline.points);
+                                        directionResult.routes[0].overview_polyline.points);
                                 }
 
-                                if (DirectionResult.routes[0].legs != null && DirectionResult.routes[0].legs.Count > 0)
+                                if (directionResult.routes[0].legs != null && directionResult.routes[0].legs.Count > 0)
                                 {
-                                    direction.Duration = DirectionResult.routes[0].legs[0].duration.text;
+                                    direction.Duration = directionResult.routes[0].legs[0].duration.text;
                                     Debug.WriteLine("duration: " + direction.Duration);
 
-                                    direction.DurationValue = (uint)DirectionResult.routes[0].legs[0].duration.value;
+                                    direction.DurationValue = (uint)directionResult.routes[0].legs[0].duration.value;
                                     Debug.WriteLine("value: " + direction.DurationValue);
 
-                                    if (DirectionResult.routes[0].legs[0].distance != null)
+                                    if (directionResult.routes[0].legs[0].distance != null)
                                     {
-                                        direction.Distance = DirectionResult.routes[0].legs[0].distance.text;
+                                        direction.Distance = directionResult.routes[0].legs[0].distance.text;
                                         Debug.WriteLine("distance: " + direction.Distance);
 
                                         direction.DistanceValue =
-                                            (uint)DirectionResult.routes[0].legs[0].distance.value;
+                                            (uint)directionResult.routes[0].legs[0].distance.value;
                                         Debug.WriteLine("value: " + direction.DistanceValue);
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].start_location != null)
+                                    if (directionResult.routes[0].legs[0].start_location != null)
                                     {
                                         direction.StartLocation.Lat =
-                                            DirectionResult.routes[0].legs[0].start_location.lat;
+                                            directionResult.routes[0].legs[0].start_location.lat;
                                         direction.StartLocation.Lng =
-                                            DirectionResult.routes[0].legs[0].start_location.lng;
+                                            directionResult.routes[0].legs[0].start_location.lng;
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].end_location != null)
+                                    if (directionResult.routes[0].legs[0].end_location != null)
                                     {
-                                        direction.EndLocation.Lat = DirectionResult.routes[0].legs[0].end_location.lat;
-                                        direction.EndLocation.Lng = DirectionResult.routes[0].legs[0].end_location.lng;
+                                        direction.EndLocation.Lat = directionResult.routes[0].legs[0].end_location.lat;
+                                        direction.EndLocation.Lng = directionResult.routes[0].legs[0].end_location.lng;
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].start_address != null)
+                                    if (directionResult.routes[0].legs[0].start_address != null)
                                     {
-                                        direction.StartAddress = DirectionResult.routes[0].legs[0].start_address;
+                                        direction.StartAddress = directionResult.routes[0].legs[0].start_address;
                                         Debug.WriteLine("start_address: " + direction.StartAddress);
                                     }
 
-                                    if (DirectionResult.routes[0].legs[0].end_address != null)
+                                    if (directionResult.routes[0].legs[0].end_address != null)
                                     {
-                                        direction.EndAddress = DirectionResult.routes[0].legs[0].end_address;
+                                        direction.EndAddress = directionResult.routes[0].legs[0].end_address;
                                         Debug.WriteLine("end_address: " + direction.EndAddress);
                                     }
 
                                     direction.Steps = new List<GDirectionStep>();
 
-                                    for (int i = 0; i < DirectionResult.routes[0].legs[0].steps.Count; i++)
+                                    for (int i = 0; i < directionResult.routes[0].legs[0].steps.Count; i++)
                                     {
                                         var step = new GDirectionStep();
                                         Debug.WriteLine("----------------------");
 
-                                        step.TravelMode = DirectionResult.routes[0].legs[0].steps[i].travel_mode;
+                                        step.TravelMode = directionResult.routes[0].legs[0].steps[i].travel_mode;
                                         Debug.WriteLine("travel_mode: " + step.TravelMode);
 
-                                        step.Duration = DirectionResult.routes[0].legs[0].steps[i].duration.text;
+                                        step.Duration = directionResult.routes[0].legs[0].steps[i].duration.text;
                                         Debug.WriteLine("duration: " + step.Duration);
 
-                                        step.Distance = DirectionResult.routes[0].legs[0].steps[i].distance.text;
+                                        step.Distance = directionResult.routes[0].legs[0].steps[i].distance.text;
                                         Debug.WriteLine("distance: " + step.Distance);
 
                                         step.HtmlInstructions =
-                                            DirectionResult.routes[0].legs[0].steps[i].html_instructions;
+                                            directionResult.routes[0].legs[0].steps[i].html_instructions;
                                         Debug.WriteLine("html_instructions: " + step.HtmlInstructions);
 
-                                        if (DirectionResult.routes[0].legs[0].steps[i].start_location != null)
+                                        if (directionResult.routes[0].legs[0].steps[i].start_location != null)
                                         {
-                                            step.StartLocation.Lat = DirectionResult.routes[0].legs[0].steps[i]
+                                            step.StartLocation.Lat = directionResult.routes[0].legs[0].steps[i]
                                                 .start_location.lat;
-                                            step.StartLocation.Lng = DirectionResult.routes[0].legs[0].steps[i]
+                                            step.StartLocation.Lng = directionResult.routes[0].legs[0].steps[i]
                                                 .start_location.lng;
                                         }
 
-                                        if (DirectionResult.routes[0].legs[0].steps[i].end_location != null)
+                                        if (directionResult.routes[0].legs[0].steps[i].end_location != null)
                                         {
-                                            step.EndLocation.Lat = DirectionResult.routes[0].legs[0].steps[i]
+                                            step.EndLocation.Lat = directionResult.routes[0].legs[0].steps[i]
                                                 .end_location.lat;
-                                            step.EndLocation.Lng = DirectionResult.routes[0].legs[0].steps[i]
+                                            step.EndLocation.Lng = directionResult.routes[0].legs[0].steps[i]
                                                 .end_location.lng;
                                         }
 
-                                        if (DirectionResult.routes[0].legs[0].steps[i].polyline != null &&
-                                            DirectionResult.routes[0].legs[0].steps[i].polyline.points != null)
+                                        if (directionResult.routes[0].legs[0].steps[i].polyline != null &&
+                                            directionResult.routes[0].legs[0].steps[i].polyline.points != null)
                                         {
                                             step.Points = new List<PointLatLng>();
                                             PureProjection.PolylineDecode(step.Points,
-                                                DirectionResult.routes[0].legs[0].steps[i].polyline.points);
+                                                directionResult.routes[0].legs[0].steps[i].polyline.points);
                                         }
 
                                         direction.Steps.Add(step);
@@ -1149,7 +1149,7 @@ namespace GMap.NET.MapProviders
         MapRoute GetRoadsRoute(string url)
         {
             MapRoute ret = null;
-            StrucRoads RoadsResult = null;
+            StrucRoads roadsResult = null;
 
             try
             {
@@ -1164,10 +1164,10 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(route))
                     {
-                        RoadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+                        roadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
 
-                        if (GMaps.Instance.UseRouteCache && RoadsResult != null && RoadsResult.error == null &&
-                            RoadsResult.snappedPoints != null && RoadsResult.snappedPoints.Count > 0)
+                        if (GMaps.Instance.UseRouteCache && roadsResult != null && roadsResult.error == null &&
+                            roadsResult.snappedPoints != null && roadsResult.snappedPoints.Count > 0)
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
                         }
@@ -1175,23 +1175,23 @@ namespace GMap.NET.MapProviders
                 }
                 else
                 {
-                    RoadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
+                    roadsResult = JsonConvert.DeserializeObject<StrucRoads>(route);
                 }
 
                 // parse values
-                if (RoadsResult != null)
+                if (roadsResult != null)
                 {
                     ret = new MapRoute("Route");
 
-                    ret.WarningMessage = RoadsResult.warningMessage;
+                    ret.WarningMessage = roadsResult.warningMessage;
 
-                    if (RoadsResult.error == null)
+                    if (roadsResult.error == null)
                     {
-                        if (RoadsResult.snappedPoints != null && RoadsResult.snappedPoints.Count > 0)
+                        if (roadsResult.snappedPoints != null && roadsResult.snappedPoints.Count > 0)
                         {
                             ret.Points.Clear();
 
-                            foreach (var item in RoadsResult.snappedPoints)
+                            foreach (var item in roadsResult.snappedPoints)
                             {
                                 ret.Points.Add(new PointLatLng(item.location.latitude, item.location.longitude));
                             }
@@ -1201,12 +1201,12 @@ namespace GMap.NET.MapProviders
                     }
                     else
                     {
-                        ret.ErrorCode = RoadsResult.error.code;
-                        ret.ErrorMessage = RoadsResult.error.message;
+                        ret.ErrorCode = roadsResult.error.code;
+                        ret.ErrorMessage = roadsResult.error.message;
 
                         RouteStatusCode code;
 
-                        if (Enum.TryParse(RoadsResult.error.status, false, out code))
+                        if (Enum.TryParse(roadsResult.error.status, false, out code))
                             ret.Status = code;
                     }
                 }
@@ -1242,12 +1242,10 @@ namespace GMap.NET.MapProviders
         {
             privateKey = privateKey.Replace("-", "+").Replace("_", "/");
             _privateKeyBytes = Convert.FromBase64String(privateKey);
-            _clientId = clientId;
+            ClientId = clientId;
         }
 
         private byte[] _privateKeyBytes;
-
-        private string _clientId = string.Empty;
 
         /// <summary>
         ///     Your client ID. To access the special features of the Google Maps API for Work
@@ -1257,16 +1255,14 @@ namespace GMap.NET.MapProviders
         /// </summary>
         public string ClientId
         {
-            get
-            {
-                return _clientId;
-            }
-        }
+            get;
+            private set;
+        } = string.Empty;
 
         string GetSignedUri(Uri uri)
         {
             var builder = new UriBuilder(uri);
-            builder.Query = builder.Query.Substring(1) + "&client=" + _clientId;
+            builder.Query = builder.Query.Substring(1) + "&client=" + ClientId;
             uri = builder.Uri;
             string signature = GetSignature(uri);
 
@@ -1309,25 +1305,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("D7287DA0-A7FF-405F-8166-B6BAF26D066C");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "GoogleMap";
+            get;
+        } = new Guid("D7287DA0-A7FF-405F-8166-B6BAF26D066C");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "GoogleMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

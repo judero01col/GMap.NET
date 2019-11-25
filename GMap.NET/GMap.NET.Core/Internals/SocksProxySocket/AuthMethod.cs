@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -76,13 +76,13 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
         {
             get
             {
-                return m_Server;
+                return _server;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_Server = value;
+                _server = value;
             }
         }
 
@@ -90,45 +90,20 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
         ///     Gets or sets a byt array that can be used to store data.
         /// </summary>
         /// <value>A byte array to store data.</value>
-        protected byte[] Buffer
-        {
-            get
-            {
-                return m_Buffer;
-            }
-            set
-            {
-                m_Buffer = value;
-            }
-        }
+        protected byte[] Buffer { get; set; }
 
         /// <summary>
         ///     Gets or sets the number of bytes that have been received from the remote proxy server.
         /// </summary>
         /// <value>An integer that holds the number of bytes that have been received from the remote proxy server.</value>
-        protected int Received
-        {
-            get
-            {
-                return m_Received;
-            }
-            set
-            {
-                m_Received = value;
-            }
-        }
+        protected int Received { get; set; }
 
         // private variables
-        /// <summary>Holds the value of the Buffer property.</summary>
-        private byte[] m_Buffer;
 
         /// <summary>Holds the value of the Server property.</summary>
-        private Socket m_Server;
+        private Socket _server;
 
         /// <summary>Holds the address of the method to call when the proxy has authenticated the client.</summary>
         protected HandShakeComplete CallBack;
-
-        /// <summary>Holds the value of the Received property.</summary>
-        private int m_Received;
     }
 }

@@ -10,6 +10,7 @@ namespace GMap.NET.WindowsForms.Markers
    using GMap.NET.WindowsMobile.Properties;
 #endif
 
+    // ReSharper disable InconsistentNaming
     public enum GMarkerGoogleType
     {
         none = 0,
@@ -51,6 +52,7 @@ namespace GMap.NET.WindowsForms.Markers
         black_small,
         white_small,
     }
+    // ReSharper restore InconsistentNaming
 
 #if !PocketPC
     [Serializable]
@@ -72,10 +74,10 @@ namespace GMap.NET.WindowsForms.Markers
 
         Bitmap _bitmapShadow;
 
-        static Bitmap arrowshadow;
-        static Bitmap msmarker_shadow;
-        static Bitmap shadow_small;
-        static Bitmap pushpin_shadow;
+        static Bitmap _arrowShadow;
+        static Bitmap _msmarkerShadow;
+        static Bitmap _shadowSmall;
+        static Bitmap _pushpinShadow;
 
         public readonly GMarkerGoogleType Type;
 
@@ -101,12 +103,12 @@ namespace GMap.NET.WindowsForms.Markers
                 {
                     Offset = new Point(-11, -Size.Height);
 
-                    if (arrowshadow == null)
+                    if (_arrowShadow == null)
                     {
-                        arrowshadow = Properties.Resources.arrowshadow;
+                        _arrowShadow = Properties.Resources.arrowshadow;
                     }
 
-                    _bitmapShadow = arrowshadow;
+                    _bitmapShadow = _arrowShadow;
                 }
                     break;
 
@@ -129,12 +131,12 @@ namespace GMap.NET.WindowsForms.Markers
                 {
                     Offset = new Point(-Size.Width / 2 + 1, -Size.Height + 1);
 
-                    if (msmarker_shadow == null)
+                    if (_msmarkerShadow == null)
                     {
-                        msmarker_shadow = Properties.Resources.msmarker_shadow;
+                        _msmarkerShadow = Properties.Resources.msmarker_shadow;
                     }
 
-                    _bitmapShadow = msmarker_shadow;
+                    _bitmapShadow = _msmarkerShadow;
                 }
                     break;
 
@@ -151,12 +153,12 @@ namespace GMap.NET.WindowsForms.Markers
                 {
                     Offset = new Point(-Size.Width / 2, -Size.Height + 1);
 
-                    if (shadow_small == null)
+                    if (_shadowSmall == null)
                     {
-                        shadow_small = Properties.Resources.shadow_small;
+                        _shadowSmall = Properties.Resources.shadow_small;
                     }
 
-                    _bitmapShadow = shadow_small;
+                    _bitmapShadow = _shadowSmall;
                 }
                     break;
 
@@ -165,12 +167,12 @@ namespace GMap.NET.WindowsForms.Markers
                 case GMarkerGoogleType.red_big_stop:
                 {
                     Offset = new Point(-Size.Width / 2, -Size.Height + 1);
-                    if (msmarker_shadow == null)
+                    if (_msmarkerShadow == null)
                     {
-                        msmarker_shadow = Properties.Resources.msmarker_shadow;
+                        _msmarkerShadow = Properties.Resources.msmarker_shadow;
                     }
 
-                    _bitmapShadow = msmarker_shadow;
+                    _bitmapShadow = _msmarkerShadow;
                 }
                     break;
 
@@ -184,12 +186,12 @@ namespace GMap.NET.WindowsForms.Markers
                 {
                     Offset = new Point(-9, -Size.Height + 1);
 
-                    if (pushpin_shadow == null)
+                    if (_pushpinShadow == null)
                     {
-                        pushpin_shadow = Properties.Resources.pushpin_shadow;
+                        _pushpinShadow = Properties.Resources.pushpin_shadow;
                     }
 
-                    _bitmapShadow = pushpin_shadow;
+                    _bitmapShadow = _pushpinShadow;
                 }
                     break;
             }
@@ -278,7 +280,7 @@ namespace GMap.NET.WindowsForms.Markers
         protected GMarkerGoogle(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Type = Extensions.GetStruct<GMarkerGoogleType>(info, "type", GMarkerGoogleType.none);
+            Type = Extensions.GetStruct(info, "type", GMarkerGoogleType.none);
             //this.Bearing = Extensions.GetStruct<float>(info, "Bearing", null);
         }
 

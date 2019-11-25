@@ -5,8 +5,6 @@ namespace MSR.CVE.BackMaker
 {
     public class LegendView : IMapView, ICurrentView
     {
-        private Legend _legend;
-        private bool _showingPreview;
         private LatLonZoom sourceMapView;
         private MapPosition referenceMapView;
         private static string previewAttr = "ShowingPreview";
@@ -15,18 +13,12 @@ namespace MSR.CVE.BackMaker
 
         public Legend legend
         {
-            get
-            {
-                return _legend;
-            }
+            get;
         }
 
         public bool showingPreview
         {
-            get
-            {
-                return _showingPreview;
-            }
+            get;
         }
 
         public object GetViewedObject()
@@ -36,18 +28,18 @@ namespace MSR.CVE.BackMaker
 
         public LegendView(Legend legend, bool showingPreview, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
-            _legend = legend;
-            _showingPreview = showingPreview;
+            this.legend = legend;
+            this.showingPreview = showingPreview;
             this.sourceMapView = sourceMapView;
             this.referenceMapView = referenceMapView;
         }
 
         public LegendView(Legend legend, MashupParseContext context)
         {
-            _legend = legend;
+            this.legend = legend;
             object obj = null;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
-            _showingPreview = context.GetRequiredAttributeBoolean(previewAttr);
+            showingPreview = context.GetRequiredAttributeBoolean(previewAttr);
             while (xMLTagReader.FindNextStartTag())
             {
                 if (xMLTagReader.TagIs(sourceMapViewTag))
@@ -93,7 +85,7 @@ namespace MSR.CVE.BackMaker
         public void WriteXML(MashupWriteContext wc)
         {
             wc.writer.WriteStartElement(GetXMLTag());
-            wc.writer.WriteAttributeString(previewAttr, _showingPreview.ToString(CultureInfo.InvariantCulture));
+            wc.writer.WriteAttributeString(previewAttr, showingPreview.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteStartElement(sourceMapViewTag);
             sourceMapView.WriteXML(wc.writer);
             wc.writer.WriteEndElement();

@@ -44,7 +44,6 @@ namespace BSE.Windows.Forms
         private Image _imageClosePanel;
         private CustomPanelColors _customColors;
         private Image _imgHoverBackground;
-        private System.Windows.Forms.Splitter _associatedSplitter;
 
         #endregion
 
@@ -57,17 +56,7 @@ namespace BSE.Windows.Forms
         /// <value>The associated <see cref="Splitter" /></value>
         [Description("The associated Splitter.")]
         [Category("Behavior")]
-        public virtual System.Windows.Forms.Splitter AssociatedSplitter
-        {
-            get
-            {
-                return _associatedSplitter;
-            }
-            set
-            {
-                _associatedSplitter = value;
-            }
-        }
+        public virtual System.Windows.Forms.Splitter AssociatedSplitter { get; set; }
 
         /// <summary>
         ///     Gets the custom colors which are used for the panel.
@@ -844,22 +833,6 @@ namespace BSE.Windows.Forms
         #endregion
 
         #region MethodsPublic
-
-        /// <summary>
-        ///     Initializes a new instance of the PanelDesigner class.
-        /// </summary>
-        public PanelDesigner()
-        {
-        }
-
-        /// <summary>
-        ///     Initializes the designer with the specified component.
-        /// </summary>
-        /// <param name="component"></param>
-        public override void Initialize(IComponent component)
-        {
-            base.Initialize(component);
-        }
 
         /// <summary>
         ///     Gets the design-time action lists supported by the component associated with the designer.

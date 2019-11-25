@@ -24,15 +24,10 @@ namespace GMap.NET.Projections
             }
         }
 
-        GSize tileSize = new GSize(512, 512);
-
         public override GSize TileSize
         {
-            get
-            {
-                return tileSize;
-            }
-        }
+            get;
+        } = new GSize(512, 512);
 
         public override double Axis
         {

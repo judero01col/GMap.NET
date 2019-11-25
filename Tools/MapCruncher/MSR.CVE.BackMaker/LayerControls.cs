@@ -13,7 +13,6 @@ namespace MSR.CVE.BackMaker
 
         private IContainer components;
         private GroupBox groupBox1;
-        private TreeView _layerTreeView;
         private Label getStartedLabel1;
         private Label getStartedLabel2;
         private GroupBox gettingStartedLabel;
@@ -34,10 +33,8 @@ namespace MSR.CVE.BackMaker
 
         public TreeView layerTreeView
         {
-            get
-            {
-                return _layerTreeView;
-            }
+            get;
+            private set;
         }
 
         protected override void Dispose(bool disposing)
@@ -56,12 +53,12 @@ namespace MSR.CVE.BackMaker
             gettingStartedLabel = new GroupBox();
             getStartedLabel1 = new Label();
             getStartedLabel2 = new Label();
-            _layerTreeView = new TreeView();
+            layerTreeView = new TreeView();
             groupBox1.SuspendLayout();
             gettingStartedLabel.SuspendLayout();
             SuspendLayout();
             groupBox1.Controls.Add(gettingStartedLabel);
-            groupBox1.Controls.Add(_layerTreeView);
+            groupBox1.Controls.Add(layerTreeView);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Location = new Point(0, 0);
             groupBox1.Name = "groupBox1";
@@ -102,14 +99,14 @@ namespace MSR.CVE.BackMaker
             getStartedLabel2.TabIndex = 2;
             getStartedLabel2.Text = "File | Add Source Map";
             getStartedLabel2.TextAlign = ContentAlignment.MiddleCenter;
-            _layerTreeView.AllowDrop = true;
-            _layerTreeView.Dock = DockStyle.Fill;
-            _layerTreeView.HideSelection = false;
-            _layerTreeView.LabelEdit = true;
-            _layerTreeView.Location = new Point(3, 16);
-            _layerTreeView.Name = "_layerTreeView";
-            _layerTreeView.Size = new Size(215, 218);
-            _layerTreeView.TabIndex = 0;
+            layerTreeView.AllowDrop = true;
+            layerTreeView.Dock = DockStyle.Fill;
+            layerTreeView.HideSelection = false;
+            layerTreeView.LabelEdit = true;
+            layerTreeView.Location = new Point(3, 16);
+            layerTreeView.Name = "layerTreeView";
+            layerTreeView.Size = new Size(215, 218);
+            layerTreeView.TabIndex = 0;
             AutoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);

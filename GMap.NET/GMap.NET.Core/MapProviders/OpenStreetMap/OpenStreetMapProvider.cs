@@ -151,12 +151,12 @@ namespace GMap.NET.MapProviders
                         {
                             if (coordinate != string.Empty)
                             {
-                                var XY = coordinate.Split(',');
+                                var xy = coordinate.Split(',');
 
-                                if (XY.Length == 2)
+                                if (xy.Length == 2)
                                 {
-                                    double lat = double.Parse(XY[1], CultureInfo.InvariantCulture);
-                                    double lng = double.Parse(XY[0], CultureInfo.InvariantCulture);
+                                    double lat = double.Parse(xy[1], CultureInfo.InvariantCulture);
+                                    double lng = double.Parse(xy[0], CultureInfo.InvariantCulture);
                                     ret.Points.Add(new PointLatLng(lat, lng));
                                 }
                             }
@@ -556,38 +556,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("0521335C-92EC-47A8-98A5-6FD333DDA9C0");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "OpenStreetMap";
+            get;
+        } = new Guid("0521335C-92EC-47A8-98A5-6FD333DDA9C0");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "OpenStreetMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

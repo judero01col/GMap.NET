@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using MSR.CVE.BackMaker.MCDebug;
 
@@ -6,7 +6,6 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 {
     public class ImageRefCounted
     {
-        private GDIBigLockedImage _image;
         internal int refCreditCounter;
 
         private static ResourceCounter imageResourceCounter =
@@ -18,10 +17,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public GDIBigLockedImage image
         {
-            get
-            {
-                return _image;
-            }
+            get;
+            private set;
         }
 
         private List<string> referenceHistory
@@ -39,14 +36,14 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public ImageRefCounted(GDIBigLockedImage image)
         {
-            _image = image;
+            this.image = image;
             imageResourceCounter.crement(1);
         }
 
         private void Dispose()
         {
-            _image.Dispose();
-            _image = null;
+            image.Dispose();
+            image = null;
             imageResourceCounter.crement(-1);
         }
 

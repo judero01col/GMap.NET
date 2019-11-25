@@ -9,25 +9,22 @@ namespace GMap.NET
     {
         public static readonly SizeLatLng Empty;
 
-        private double _heightLat;
-        private double _widthLng;
-
         public SizeLatLng(SizeLatLng size)
         {
-            _widthLng = size._widthLng;
-            _heightLat = size._heightLat;
+            WidthLng = size.WidthLng;
+            HeightLat = size.HeightLat;
         }
 
         public SizeLatLng(PointLatLng pt)
         {
-            _heightLat = pt.Lat;
-            _widthLng = pt.Lng;
+            HeightLat = pt.Lat;
+            WidthLng = pt.Lng;
         }
 
         public SizeLatLng(double heightLat, double widthLng)
         {
-            _heightLat = heightLat;
-            _widthLng = widthLng;
+            HeightLat = heightLat;
+            WidthLng = widthLng;
         }
 
         public static SizeLatLng operator +(SizeLatLng sz1, SizeLatLng sz2)
@@ -59,32 +56,20 @@ namespace GMap.NET
         {
             get
             {
-                return _widthLng == 0d && _heightLat == 0d;
+                return WidthLng == 0d && HeightLat == 0d;
             }
         }
 
         public double WidthLng
         {
-            get
-            {
-                return _widthLng;
-            }
-            set
-            {
-                _widthLng = value;
-            }
+            get;
+            set;
         }
 
         public double HeightLat
         {
-            get
-            {
-                return _heightLat;
-            }
-            set
-            {
-                _heightLat = value;
-            }
+            get;
+            set;
         }
 
         public static SizeLatLng Add(SizeLatLng sz1, SizeLatLng sz2)
@@ -126,8 +111,8 @@ namespace GMap.NET
 
         public override string ToString()
         {
-            return "{WidthLng=" + _widthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" +
-                   _heightLat.ToString(CultureInfo.CurrentCulture) + "}";
+            return "{WidthLng=" + WidthLng.ToString(CultureInfo.CurrentCulture) + ", HeightLng=" +
+                   HeightLat.ToString(CultureInfo.CurrentCulture) + "}";
         }
 
         static SizeLatLng()

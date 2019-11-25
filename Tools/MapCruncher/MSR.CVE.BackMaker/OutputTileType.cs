@@ -4,7 +4,6 @@ namespace MSR.CVE.BackMaker
 {
     public class OutputTileType
     {
-        private string _extn;
         private ImageFormat _imageFormat;
         public static OutputTileType PNG = new OutputTileType("png", ImageFormat.Png);
         public static OutputTileType JPG = new OutputTileType("jpg", ImageFormat.Jpeg);
@@ -12,10 +11,7 @@ namespace MSR.CVE.BackMaker
 
         public string extn
         {
-            get
-            {
-                return _extn;
-            }
+            get;
         }
 
         public ImageFormat imageFormat
@@ -29,7 +25,7 @@ namespace MSR.CVE.BackMaker
 
         private OutputTileType(string extn, ImageFormat imageFormat)
         {
-            _extn = extn;
+            this.extn = extn;
             _imageFormat = imageFormat;
         }
 

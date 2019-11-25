@@ -11,28 +11,20 @@ namespace MSR.CVE.BackMaker
         public const string llzZoomAttr = "zoom";
         public const string mapPositionTag = "MapPosition";
         public const string mpStyleAttr = "style";
-        private string _versionNumberString;
-        private static List<MashupXMLSchemaVersion> _AcceptedVersions;
 
         public string versionNumberString
         {
-            get
-            {
-                return _versionNumberString;
-            }
+            get;
         }
 
         public static List<MashupXMLSchemaVersion> AcceptedVersions
         {
-            get
-            {
-                return _AcceptedVersions;
-            }
+            get;
         }
 
         protected MashupXMLSchemaVersion(string versionNumberString)
         {
-            _versionNumberString = versionNumberString;
+            this.versionNumberString = versionNumberString;
         }
 
         public void WriteXMLAttribute(XmlTextWriter writer)
@@ -44,7 +36,7 @@ namespace MSR.CVE.BackMaker
         {
             string versionString = reader.GetAttribute("Version");
             MashupXMLSchemaVersion mashupXMLSchemaVersion =
-                AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi._versionNumberString == versionString);
+                AcceptedVersions.Find((MashupXMLSchemaVersion vi) => vi.versionNumberString == versionString);
             if (mashupXMLSchemaVersion == null)
             {
                 throw new InvalidMashupFile(reader, string.Format("Unknown mashup file version {0}", versionString));
@@ -55,14 +47,14 @@ namespace MSR.CVE.BackMaker
 
         static MashupXMLSchemaVersion()
         {
-            _AcceptedVersions = new List<MashupXMLSchemaVersion>();
-            _AcceptedVersions.Add(CurrentSchema.schema);
-            _AcceptedVersions.Add(NoTagIdentities.schema);
-            _AcceptedVersions.Add(ViewsNotAsWellPreservedSchema.schema);
-            _AcceptedVersions.Add(SingleMaxZoomForEntireMashupSchema.schema);
-            _AcceptedVersions.Add(SourceMapInfoAsCharDataSchema.schema);
-            _AcceptedVersions.Add(InlineSourceMapInfoSchema.schema);
-            _AcceptedVersions.Add(MonolithicMapPositionsSchema.schema);
+            AcceptedVersions = new List<MashupXMLSchemaVersion>();
+            AcceptedVersions.Add(CurrentSchema.schema);
+            AcceptedVersions.Add(NoTagIdentities.schema);
+            AcceptedVersions.Add(ViewsNotAsWellPreservedSchema.schema);
+            AcceptedVersions.Add(SingleMaxZoomForEntireMashupSchema.schema);
+            AcceptedVersions.Add(SourceMapInfoAsCharDataSchema.schema);
+            AcceptedVersions.Add(InlineSourceMapInfoSchema.schema);
+            AcceptedVersions.Add(MonolithicMapPositionsSchema.schema);
         }
     }
 }

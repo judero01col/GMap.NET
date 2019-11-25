@@ -6,7 +6,6 @@ using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Drawing2D;
-using System.Data;
 using System.Windows.Forms;    
 using Demo.WindowsForms.Properties;
 
@@ -70,7 +69,6 @@ namespace BSE.Windows.Forms
       private PanelStyle _ePanelStyle;
       private ColorScheme _eColorScheme;
       private XPanderPanelCollection _xpanderPanels;
-      private PanelColors _panelColors;
 
       #endregion
 
@@ -127,20 +125,12 @@ namespace BSE.Windows.Forms
             }
          }
       }
+
       /// <summary>
       /// Gets or sets the Panelcolors table.
       /// </summary>
-      public PanelColors PanelColors
-      {
-         get
-         {
-            return _panelColors;
-         }
-         set
-         {
-            _panelColors = value;
-         }
-      }
+      public PanelColors PanelColors { get; set; }
+
       /// <summary>
       /// Specifies the colorscheme of the xpanderpanels in the xpanderpanellist
       /// </summary>

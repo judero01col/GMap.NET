@@ -17,17 +17,16 @@ namespace BSE.Windows.Forms
     public class HoverStateChangeEventArgs : EventArgs
     {
         #region FieldsPrivate
-        private HoverState m_hoverState;
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the HoverState.
         /// </summary>
-        public HoverState HoverState
-        {
-            get { return m_hoverState; }
-        }
+        public HoverState HoverState { get; }
+
         #endregion
 
         #region MethodsPublic
@@ -37,7 +36,7 @@ namespace BSE.Windows.Forms
         /// <param name="hoverState">The <see cref="HoverState"/> values.</param>
         public HoverStateChangeEventArgs(HoverState hoverState)
         {
-            m_hoverState = hoverState;
+            HoverState = hoverState;
         }
         #endregion
     }

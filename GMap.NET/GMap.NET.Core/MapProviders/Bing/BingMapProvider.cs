@@ -143,18 +143,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
@@ -174,11 +174,11 @@ namespace GMap.NET.MapProviders
         /// </summary>
         public bool TryGetDefaultKey = true;
 
-        static bool init;
+        static bool _init;
 
         public override void OnInitialized()
         {
-            if (!init)
+            if (!_init)
             {
                 try
                 {
@@ -305,7 +305,7 @@ namespace GMap.NET.MapProviders
                         #endregion
                     }
 
-                    init = true; // try it only once
+                    _init = true; // try it only once
                 }
                 catch (Exception ex)
                 {
@@ -646,16 +646,16 @@ namespace GMap.NET.MapProviders
             return MakeGeocoderUrl(parameters);
         }
 
-        bool AddFieldIfNotEmpty(ref string Input, string FieldName, string Value)
+        bool AddFieldIfNotEmpty(ref string input, string fieldName, string value)
         {
-            if (!string.IsNullOrEmpty(Value))
+            if (!string.IsNullOrEmpty(value))
             {
-                if (string.IsNullOrEmpty(Input))
-                    Input = string.Empty;
+                if (string.IsNullOrEmpty(input))
+                    input = string.Empty;
                 else
-                    Input = Input + "&";
+                    input = input + "&";
 
-                Input = Input + FieldName + "=" + Value;
+                input = input + fieldName + "=" + value;
 
                 return true;
             }
@@ -802,25 +802,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("D0CEB371-F10A-4E12-A2C1-DF617D6674A8");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "BingMap";
+            get;
+        } = new Guid("D0CEB371-F10A-4E12-A2C1-DF617D6674A8");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "BingMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {
@@ -837,10 +827,10 @@ namespace GMap.NET.MapProviders
             {
                 //UrlFormat[Road]: http://ecn.{subdomain}.tiles.virtualearth.net/tiles/r{quadkey}.jpeg?g=3179&mkt={culture}&shading=hill
 
-                UrlDynamicFormat = GetTileUrl("Road");
-                if (!string.IsNullOrEmpty(UrlDynamicFormat))
+                _urlDynamicFormat = GetTileUrl("Road");
+                if (!string.IsNullOrEmpty(_urlDynamicFormat))
                 {
-                    UrlDynamicFormat = UrlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
+                    _urlDynamicFormat = _urlDynamicFormat.Replace("{subdomain}", "t{0}").Replace("{quadkey}", "{1}")
                         .Replace("{culture}", "{2}");
                 }
             }
@@ -852,9 +842,9 @@ namespace GMap.NET.MapProviders
         {
             string key = TileXYToQuadKey(pos.X, pos.Y, zoom);
 
-            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(UrlDynamicFormat))
+            if (!DisableDynamicTileUrlFormat && !string.IsNullOrEmpty(_urlDynamicFormat))
             {
-                return string.Format(UrlDynamicFormat, GetServerNum(pos, 4), key, language);
+                return string.Format(_urlDynamicFormat, GetServerNum(pos, 4), key, language);
             }
 
             return string.Format(UrlFormat,
@@ -865,7 +855,7 @@ namespace GMap.NET.MapProviders
                 ForceSessionIdOnTileAccess ? "&key=" + SessionId : string.Empty);
         }
 
-        string UrlDynamicFormat = string.Empty;
+        string _urlDynamicFormat = string.Empty;
 
         // http://ecn.t0.tiles.virtualearth.net/tiles/r120030?g=875&mkt=en-us&lbl=l1&stl=h&shading=hill&n=z
 

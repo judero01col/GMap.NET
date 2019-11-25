@@ -13,12 +13,10 @@ namespace MSR.CVE.BackMaker
         private const string NewLayerName = "New Layer";
         private const string LastLayerViewPositionTag_compat = "LastLayerViewPosition";
         private List<SourceMap> sourceMaps = new List<SourceMap>();
-        private RenderClip _renderClip = new RenderClip();
         private bool _expanded = true;
         private string _displayName;
         private DirtyEvent dirtyEvent;
         private LayerView _lastView;
-        private string _simulateTransparencyWithVEBackingLayer;
 
         public ICurrentView lastView
         {
@@ -55,19 +53,13 @@ namespace MSR.CVE.BackMaker
 
         public string simulateTransparencyWithVEBackingLayer
         {
-            get
-            {
-                return _simulateTransparencyWithVEBackingLayer;
-            }
+            get;
         }
 
         public RenderClip renderClip
         {
-            get
-            {
-                return _renderClip;
-            }
-        }
+            get;
+        } = new RenderClip();
 
         public SourceMap First
         {
@@ -123,7 +115,7 @@ namespace MSR.CVE.BackMaker
                 string attribute2 = context.reader.GetAttribute("SimulateTransparencyWithVEBackingLayer");
                 if (attribute2 != null)
                 {
-                    _simulateTransparencyWithVEBackingLayer = attribute2;
+                    simulateTransparencyWithVEBackingLayer = attribute2;
                 }
 
                 while (xMLTagReader.FindNextStartTag())
@@ -166,7 +158,7 @@ namespace MSR.CVE.BackMaker
                             {
                                 if (xMLTagReader.TagIs(RenderClip.GetXMLTag()))
                                 {
-                                    _renderClip = new RenderClip(context);
+                                    renderClip = new RenderClip(context);
                                 }
                             }
                         }
@@ -185,7 +177,7 @@ namespace MSR.CVE.BackMaker
             wc.writer.WriteAttributeString("DisplayName", _displayName);
             wc.writer.WriteAttributeString("Expanded", _expanded.ToString(CultureInfo.InvariantCulture));
             wc.writer.WriteAttributeString("SimulateTransparencyWithVEBackingLayer",
-                _simulateTransparencyWithVEBackingLayer);
+                simulateTransparencyWithVEBackingLayer);
             wc.WriteIdentityAttr(this);
             foreach (SourceMap current in this)
             {
@@ -197,7 +189,7 @@ namespace MSR.CVE.BackMaker
                 _lastView.WriteXML(wc.writer);
             }
 
-            _renderClip.WriteXML(wc);
+            renderClip.WriteXML(wc);
             wc.writer.WriteEndElement();
         }
 

@@ -16,25 +16,19 @@ namespace MSR.CVE.BackMaker
         public DirtyEvent readyToLockEvent = new DirtyEvent();
         private string fileName;
         private RenderOptions renderOptions;
-        private LayerList _layerList;
-        private ICurrentView _lastView;
         private static string LastViewTag = "LastView";
         private static string LastView_TargetIdAttr = "TargetId";
 
         public ICurrentView lastView
         {
-            get
-            {
-                return _lastView;
-            }
+            get;
+            private set;
         }
 
         public LayerList layerList
         {
-            get
-            {
-                return _layerList;
-            }
+            get;
+            private set;
         }
 
         public void SetDirty()
@@ -45,7 +39,7 @@ namespace MSR.CVE.BackMaker
         public Mashup()
         {
             dirtyEvent.Add(SetDirtyFlag);
-            _layerList = new LayerList(dirtyEvent);
+            layerList = new LayerList(dirtyEvent);
             renderOptions = new RenderOptions(dirtyEvent);
         }
 
@@ -168,7 +162,7 @@ namespace MSR.CVE.BackMaker
             writer.WriteStartElement("MapGrinderMashupFile");
             CurrentSchema.schema.WriteXMLAttribute(writer);
             renderOptions.WriteXML(writer);
-            _layerList.WriteXML(wc);
+            layerList.WriteXML(wc);
             WriteXML_LastView(wc);
             writer.WriteEndElement();
             writer.Close();
@@ -195,7 +189,7 @@ namespace MSR.CVE.BackMaker
             {
                 if (context.version != MonolithicMapPositionsSchema.schema && xMLTagReader.TagIs(LayerList.GetXMLTag()))
                 {
-                    _layerList = new LayerList(context,
+                    layerList = new LayerList(context,
                         GetFilenameContext,
                         dirtyEvent,
                         readyToLockEvent);
@@ -205,7 +199,7 @@ namespace MSR.CVE.BackMaker
                     if (context.version == MonolithicMapPositionsSchema.schema &&
                         xMLTagReader.TagIs(SourceMap.GetXMLTag()))
                     {
-                        if (_layerList != null && _layerList.Count > 0)
+                        if (layerList != null && layerList.Count > 0)
                         {
                             throw new InvalidMashupFile(context,
                                 string.Format("Multiple SourceMaps in Version {0} file.",
@@ -216,9 +210,9 @@ namespace MSR.CVE.BackMaker
                             GetFilenameContext,
                             dirtyEvent,
                             readyToLockEvent);
-                        _layerList = new LayerList(dirtyEvent);
-                        _layerList.AddNewLayer();
-                        _layerList.First.Add(sourceMap);
+                        layerList = new LayerList(dirtyEvent);
+                        layerList.AddNewLayer();
+                        layerList.First.Add(sourceMap);
                     }
                     else
                     {
@@ -241,13 +235,13 @@ namespace MSR.CVE.BackMaker
                 }
             }
 
-            _lastView = new NoView();
+            lastView = new NoView();
             if (text != null)
             {
                 object obj = context.FetchObjectByIdentity(text);
                 if (obj != null && obj is LastViewIfc)
                 {
-                    _lastView = ((LastViewIfc)obj).lastView;
+                    lastView = ((LastViewIfc)obj).lastView;
                 }
             }
 
@@ -264,7 +258,7 @@ namespace MSR.CVE.BackMaker
             if (singleMaxZoomForEntireMashupCompatibilityBlob != null)
             {
                 D.Assert(context.version == SingleMaxZoomForEntireMashupSchema.schema);
-                foreach (Layer current in _layerList)
+                foreach (Layer current in layerList)
                 {
                     foreach (SourceMap current2 in current)
                     {
@@ -412,12 +406,12 @@ namespace MSR.CVE.BackMaker
 
         public void SetLastView(ICurrentView lastView)
         {
-            _lastView = lastView;
+            this.lastView = lastView;
         }
 
         internal void AutoSelectMaxZooms(MapTileSourceFactory mapTileSourceFactory)
         {
-            _layerList.AutoSelectMaxZooms(mapTileSourceFactory);
+            layerList.AutoSelectMaxZooms(mapTileSourceFactory);
         }
 
         internal Mashup Duplicate()

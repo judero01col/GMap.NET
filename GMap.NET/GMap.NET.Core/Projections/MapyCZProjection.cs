@@ -19,7 +19,7 @@ namespace GMap.NET.Projections
 
         #region -- Common --
 
-        static int getLCM(int zone)
+        static int GetLCM(int zone)
         {
             if (zone < 1 || zone > 60)
             {
@@ -31,7 +31,7 @@ namespace GMap.NET.Projections
             }
         }
 
-        static double roundoff(double xx, double yy)
+        static double Roundoff(double xx, double yy)
         {
             double x = xx;
             double y = yy;
@@ -48,12 +48,12 @@ namespace GMap.NET.Projections
 
         public long[] WGSToPP(double la, double lo)
         {
-            var utmEE = wgsToUTM(DegreesToRadians(la), DegreesToRadians(lo), 33);
-            var pp = utmEEToPP(utmEE[0], utmEE[1]);
+            var utmEE = WGSToUTM(DegreesToRadians(la), DegreesToRadians(lo), 33);
+            var pp = UTMEEToPP(utmEE[0], utmEE[1]);
             return pp;
         }
 
-        static long[] utmEEToPP(double east, double north)
+        static long[] UTMEEToPP(double east, double north)
         {
             double x = (Round(east) - -3700000.0) * Pow(2, 5);
             double y = (Round(north) - 1300000.0) * Pow(2, 5);
@@ -61,7 +61,7 @@ namespace GMap.NET.Projections
             return new[] {(long)x, (long)y};
         }
 
-        double[] wgsToUTM(double la, double lo, int zone)
+        double[] WGSToUTM(double la, double lo, int zone)
         {
             double latrad = la;
             double lonrad = lo;
@@ -77,7 +77,7 @@ namespace GMap.NET.Projections
             double ei2 = (a * a - b * b) / (b * b);
             double ei = Sqrt(ei2);
             double n = (a - b) / (a + b);
-            double G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) * (PI / 180.0);
+            double g = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) * (PI / 180.0);
             double w = londdd - (zone * 6 - 183);
             w = DegreesToRadians(w);
             double t = Tan(latrad);
@@ -86,11 +86,11 @@ namespace GMap.NET.Projections
             double psi = nu / rho;
             double coslat = Cos(latrad);
             double sinlat = Sin(latrad);
-            double A0 = 1 - e2 / 4.0 - 3 * e2 * e2 / 64.0 - 5 * Pow(e2, 3) / 256.0;
-            double A2 = 3 / 8.0 * (e2 + e2 * e2 / 4.0 + 15 * Pow(e2, 3) / 128.0);
-            double A4 = 15 / 256.0 * (e2 * e2 + 3 * Pow(e2, 3) / 4.0);
-            double A6 = 35 * Pow(e2, 3) / 3072.0;
-            double m = a * (A0 * latrad - A2 * Sin(2 * latrad) + A4 * Sin(4 * latrad) - A6 * Sin(6 * latrad));
+            double a0 = 1 - e2 / 4.0 - 3 * e2 * e2 / 64.0 - 5 * Pow(e2, 3) / 256.0;
+            double a2 = 3 / 8.0 * (e2 + e2 * e2 / 4.0 + 15 * Pow(e2, 3) / 128.0);
+            double a4 = 15 / 256.0 * (e2 * e2 + 3 * Pow(e2, 3) / 4.0);
+            double a6 = 35 * Pow(e2, 3) / 3072.0;
+            double m = a * (a0 * latrad - a2 * Sin(2 * latrad) + a4 * Sin(4 * latrad) - a6 * Sin(6 * latrad));
             double eterm1 = w * w / 6.0 * coslat * coslat * (psi - t * t);
             double eterm2 = Pow(w, 4) / 120.0 * Pow(coslat, 4) *
                          (4 * Pow(psi, 3) * (1.0 - 6 * t * t) + psi * psi * (1.0 + 8 * t * t) - psi * 2 * t * t +
@@ -98,7 +98,7 @@ namespace GMap.NET.Projections
             double eterm3 = Pow(w, 6) / 5040.0 * Pow(coslat, 6) * (61.0 - 479 * t * t + 179 * Pow(t, 4) - Pow(t, 6));
             double dE = k * nu * w * coslat * (1.0 + eterm1 + eterm2 + eterm3);
             double east = 500000.0 + dE / UNITS;
-            east = roundoff(east, UTMSIZE);
+            east = Roundoff(east, UTMSIZE);
             double nterm1 = w * w / 2.0 * nu * sinlat * coslat;
             double nterm2 = Pow(w, 4) / 24.0 * nu * sinlat * Pow(coslat, 3) * (4 * psi * psi + psi - t * t);
             double nterm3 = Pow(w, 6) / 720.0 * nu * sinlat * Pow(coslat, 5) *
@@ -108,7 +108,7 @@ namespace GMap.NET.Projections
                          (1385.0 - 3111 * t * t + 543 * Pow(t, 4) - Pow(t, 6));
             double dN = k * (m + nterm1 + nterm2 + nterm3 + nterm4);
             double north = 0.0 + dN / UNITS;
-            north = roundoff(north, UTMSIZE);
+            north = Roundoff(north, UTMSIZE);
 
             return new[] {east, north, zone};
         }
@@ -119,22 +119,22 @@ namespace GMap.NET.Projections
 
         public double[] PPToWGS(double x, double y)
         {
-            var utmEE = ppToUTMEE(x, y);
-            var ret = utmToWGS(utmEE[0], utmEE[1], 33);
+            var utmEE = PPToUTMEE(x, y);
+            var ret = UTMToWGS(utmEE[0], utmEE[1], 33);
             return ret;
         }
 
-        double[] ppToUTMEE(double x, double y)
+        double[] PPToUTMEE(double x, double y)
         {
             double north = y * Pow(2, -5) + 1300000.0;
             double east = x * Pow(2, -5) + -3700000.0;
-            east = roundoff(east, UTMSIZE);
-            north = roundoff(north, UTMSIZE);
+            east = Roundoff(east, UTMSIZE);
+            north = Roundoff(north, UTMSIZE);
 
             return new[] {east, north};
         }
 
-        double[] utmToWGS(double eastIn, double northIn, int zone)
+        double[] UTMToWGS(double eastIn, double northIn, int zone)
         {
             float k = 0.9996f;
             double a = Axis;
@@ -145,11 +145,11 @@ namespace GMap.NET.Projections
             double ei2 = (a * a - b * b) / (b * b);
             double ei = Sqrt(ei2);
             double n = (a - b) / (a + b);
-            double G = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255 / 64.0 * Pow(n, 4)) * (PI / 180.0);
+            double g = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255 / 64.0 * Pow(n, 4)) * (PI / 180.0);
             double north = (northIn - 0) * UNITS;
             double east = (eastIn - 500000.0) * UNITS;
             double m = north / k;
-            double sigma = m * PI / (180.0 * G);
+            double sigma = m * PI / (180.0 * g);
             double footlat = sigma + (3 * n / 2.0 - 27 * Pow(n, 3) / 32.0) * Sin(2 * sigma) +
                           (21 * n * n / 16.0 - 55 * Pow(n, 4) / 32.0) * Sin(4 * sigma) +
                           151 * Pow(n, 3) / 96.0 * Sin(6 * sigma) + 1097 * Pow(n, 4) / 512.0 * Sin(8 * sigma);
@@ -177,7 +177,7 @@ namespace GMap.NET.Projections
                                                         24 * Pow(t, 4));
             double loterm4 = Pow(x, 7) / 5040.0 * seclat * (61.0 + 662 * t * t + 1320 * Pow(t, 4) + 720 * Pow(t, 6));
             double w = loterm1 - loterm2 + loterm3 - loterm4;
-            double longrad = DegreesToRadians(getLCM(zone)) + w;
+            double longrad = DegreesToRadians(GetLCM(zone)) + w;
             double lon = RadiansToDegrees(longrad);
 
             return new[] {lat, lon, latrad, longrad};

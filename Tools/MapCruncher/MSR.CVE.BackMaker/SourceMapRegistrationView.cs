@@ -6,8 +6,6 @@ namespace MSR.CVE.BackMaker
 {
     public class SourceMapRegistrationView : IMapView, ICurrentView
     {
-        private SourceMap _sourceMap;
-        private bool _locked;
         private LatLonZoom sourceMapView;
         private MapPosition referenceMapView;
         private static string lockedAttribute = "locked";
@@ -16,18 +14,12 @@ namespace MSR.CVE.BackMaker
 
         public SourceMap sourceMap
         {
-            get
-            {
-                return _sourceMap;
-            }
+            get;
         }
 
         public bool locked
         {
-            get
-            {
-                return _locked;
-            }
+            get;
         }
 
         public object GetViewedObject()
@@ -37,16 +29,16 @@ namespace MSR.CVE.BackMaker
 
         public SourceMapRegistrationView(SourceMap sourceMap, MapPosition lockedMapView)
         {
-            _sourceMap = sourceMap;
-            _locked = true;
+            this.sourceMap = sourceMap;
+            locked = true;
             referenceMapView = new MapPosition(lockedMapView, null);
             sourceMapView = lockedMapView.llz;
         }
 
         public SourceMapRegistrationView(SourceMap sourceMap, LatLonZoom sourceMapView, MapPosition referenceMapView)
         {
-            _sourceMap = sourceMap;
-            _locked = false;
+            this.sourceMap = sourceMap;
+            locked = false;
             this.sourceMapView = sourceMapView;
             this.referenceMapView = new MapPosition(referenceMapView, null);
         }
@@ -58,9 +50,9 @@ namespace MSR.CVE.BackMaker
 
         public SourceMapRegistrationView(SourceMap sourceMap, MashupParseContext context)
         {
-            _sourceMap = sourceMap;
+            this.sourceMap = sourceMap;
             XMLTagReader xMLTagReader = context.NewTagReader(GetXMLTag());
-            _locked = context.GetRequiredAttributeBoolean(lockedAttribute);
+            locked = context.GetRequiredAttributeBoolean(lockedAttribute);
             bool flag = false;
             while (xMLTagReader.FindNextStartTag())
             {
@@ -98,7 +90,7 @@ namespace MSR.CVE.BackMaker
                 throw new InvalidMashupFile(context, "No " + referenceMapViewTag + " tag in LayerView.");
             }
 
-            if (flag == _locked)
+            if (flag == locked)
             {
                 throw new InvalidMashupFile(context, "locked flag disagrees with " + sourceMapViewTag + " element.");
             }

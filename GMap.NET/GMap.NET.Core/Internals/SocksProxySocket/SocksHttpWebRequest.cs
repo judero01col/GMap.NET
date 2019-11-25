@@ -17,7 +17,6 @@ namespace GMap.NET.Internals
     {
         #region Member Variables
 
-        private readonly Uri _requestUri;
         private WebHeaderCollection _requestHeaders;
         private string _method;
         private SocksHttpWebResponse _response;
@@ -25,7 +24,7 @@ namespace GMap.NET.Internals
         private byte[] _requestContentBuffer;
 
         // darn MS for making everything internal (yeah, I'm talking about you, System.net.KnownHttpVerb)
-        static readonly StringCollection validHttpVerbs =
+        static readonly StringCollection ValidHttpVerbs =
             new StringCollection
             {
                 "GET",
@@ -43,7 +42,7 @@ namespace GMap.NET.Internals
 
         private SocksHttpWebRequest(Uri requestUri)
         {
-            _requestUri = requestUri;
+            RequestUri = requestUri;
         }
 
         #endregion
@@ -74,10 +73,7 @@ namespace GMap.NET.Internals
 
         public override Uri RequestUri
         {
-            get
-            {
-                return _requestUri;
-            }
+            get;
         }
 
         public override IWebProxy Proxy
@@ -123,7 +119,7 @@ namespace GMap.NET.Internals
             }
             set
             {
-                if (validHttpVerbs.Contains(value))
+                if (ValidHttpVerbs.Contains(value))
                 {
                     _method = value;
                 }
@@ -236,26 +232,26 @@ namespace GMap.NET.Internals
             MemoryStream data = null;
             string header = string.Empty;
 
-            using (var _socksConnection =
+            using (var socksConnection =
                 new ProxySocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 var proxyUri = Proxy.GetProxy(RequestUri);
                 var ipAddress = GetProxyIpAddress(proxyUri);
-                _socksConnection.ProxyEndPoint = new IPEndPoint(ipAddress, proxyUri.Port);
-                _socksConnection.ProxyType = ProxyTypes.Socks5;
+                socksConnection.ProxyEndPoint = new IPEndPoint(ipAddress, proxyUri.Port);
+                socksConnection.ProxyType = ProxyTypes.Socks5;
 
                 // open connection
-                _socksConnection.Connect(RequestUri.Host, 80);
+                socksConnection.Connect(RequestUri.Host, 80);
 
                 // send an HTTP request
-                _socksConnection.Send(Encoding.UTF8.GetBytes(RequestMessage));
+                socksConnection.Send(Encoding.UTF8.GetBytes(RequestMessage));
 
                 // read the HTTP reply
                 var buffer = new byte[1024 * 4];
                 int bytesReceived;
                 bool headerDone = false;
 
-                while ((bytesReceived = _socksConnection.Receive(buffer)) > 0)
+                while ((bytesReceived = socksConnection.Receive(buffer)) > 0)
                 {
                     if (!headerDone)
                     {

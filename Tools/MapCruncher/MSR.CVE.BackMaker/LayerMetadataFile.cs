@@ -9,21 +9,17 @@ namespace MSR.CVE.BackMaker
     {
         private const string filename = "LayerMetadata.xml";
         private RenderOutputMethod renderOutputMethod;
-        private EncodableHash _encodableHash;
         private static string LayerMetadataTag = "LayerMetadata";
 
         public EncodableHash encodableHash
         {
-            get
-            {
-                return _encodableHash;
-            }
+            get;
         }
 
         public LayerMetadataFile(RenderOutputMethod renderOutputMethod, EncodableHash encodableHash)
         {
             this.renderOutputMethod = renderOutputMethod;
-            _encodableHash = encodableHash;
+            this.encodableHash = encodableHash;
         }
 
         public static LayerMetadataFile Read(RenderOutputMethod outputMethod)
@@ -66,12 +62,12 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs("StrongHash"))
                 {
-                    context.AssertUnique(_encodableHash);
-                    _encodableHash = new EncodableHash(context);
+                    context.AssertUnique(encodableHash);
+                    encodableHash = new EncodableHash(context);
                 }
             }
 
-            context.AssertPresent(_encodableHash, "StrongHash");
+            context.AssertPresent(encodableHash, "StrongHash");
         }
 
         public void Write()
@@ -90,7 +86,7 @@ namespace MSR.CVE.BackMaker
         private void WriteXML(XmlTextWriter writer)
         {
             writer.WriteStartElement(LayerMetadataTag);
-            _encodableHash.WriteXML(writer);
+            encodableHash.WriteXML(writer);
             writer.WriteEndElement();
         }
     }

@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -100,13 +100,13 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_Server;
+                return _server;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_Server = value;
+                _server = value;
             }
         }
 
@@ -119,13 +119,11 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_Username;
+                return _username;
             }
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException();
-                m_Username = value;
+                _username = value ?? throw new ArgumentNullException();
             }
         }
 
@@ -133,65 +131,26 @@ namespace Org.Mentalis.Network.ProxySocket
         ///     Gets or sets the return value of the BeginConnect call.
         /// </summary>
         /// <value>An IAsyncProxyResult object that is the return value of the BeginConnect call.</value>
-        protected IAsyncProxyResult AsyncResult
-        {
-            get
-            {
-                return m_AsyncResult;
-            }
-            set
-            {
-                m_AsyncResult = value;
-            }
-        }
+        protected IAsyncProxyResult AsyncResult { get; set; }
 
         /// <summary>
         ///     Gets or sets a byte buffer.
         /// </summary>
         /// <value>An array of bytes.</value>
-        protected byte[] Buffer
-        {
-            get
-            {
-                return m_Buffer;
-            }
-            set
-            {
-                m_Buffer = value;
-            }
-        }
+        protected byte[] Buffer { get; set; }
 
         /// <summary>
         ///     Gets or sets the number of bytes that have been received from the remote proxy server.
         /// </summary>
         /// <value>An integer that holds the number of bytes that have been received from the remote proxy server.</value>
-        protected int Received
-        {
-            get
-            {
-                return m_Received;
-            }
-            set
-            {
-                m_Received = value;
-            }
-        }
+        protected int Received { get; set; }
 
         // private variables
         /// <summary>Holds the value of the Server property.</summary>
-        private Socket m_Server;
+        private Socket _server;
 
         /// <summary>Holds the value of the Username property.</summary>
-        private string m_Username;
-
-        /// <summary>Holds the value of the AsyncResult property.</summary>
-        private IAsyncProxyResult m_AsyncResult;
-
-        /// <summary>Holds the value of the Buffer property.</summary>
-        private byte[] m_Buffer;
-
-        /// <summary>Holds the value of the Received property.</summary>
-        private int m_Received;
+        private string _username;
 
         /// <summary>Holds the address of the method to call when the SOCKS protocol has been completed.</summary>
         protected HandShakeComplete ProtocolComplete;

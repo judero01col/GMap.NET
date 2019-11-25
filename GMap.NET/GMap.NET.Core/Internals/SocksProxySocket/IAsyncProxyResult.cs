@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -43,19 +43,19 @@ namespace Org.Mentalis.Network.ProxySocket
         /// <param name="stateObject">An object that contains state information for this request.</param>
         internal void Init(object stateObject)
         {
-            m_StateObject = stateObject;
-            m_Completed = false;
-            if (m_WaitHandle != null)
-                m_WaitHandle.Reset();
+            _stateObject = stateObject;
+            Completed = false;
+            if (_waitHandle != null)
+                _waitHandle.Reset();
         }
 
         /// <summary>Initializes the internal variables of this object</summary>
         internal void Reset()
         {
-            m_StateObject = null;
-            m_Completed = true;
-            if (m_WaitHandle != null)
-                m_WaitHandle.Set();
+            _stateObject = null;
+            Completed = true;
+            if (_waitHandle != null)
+                _waitHandle.Set();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_Completed;
+                return Completed;
             }
         }
 
@@ -92,7 +92,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_StateObject;
+                return _stateObject;
             }
         }
 
@@ -111,20 +111,20 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                if (m_WaitHandle == null)
-                    m_WaitHandle = new ManualResetEvent(false);
-                return m_WaitHandle;
+                if (_waitHandle == null)
+                    _waitHandle = new ManualResetEvent(false);
+                return _waitHandle;
             }
         }
 
         // private variables
         /// <summary>Used internally to represent the state of the asynchronous request</summary>
-        internal bool m_Completed = true;
+        internal bool Completed = true;
 
         /// <summary>Holds the value of the StateObject property.</summary>
-        private object m_StateObject;
+        private object _stateObject;
 
         /// <summary>Holds the value of the WaitHandle property.</summary>
-        private ManualResetEvent m_WaitHandle;
+        private ManualResetEvent _waitHandle;
     }
 }

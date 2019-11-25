@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -164,13 +164,13 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
         {
             get
             {
-                return m_Username;
+                return _username;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_Username = value;
+                _username = value;
             }
         }
 
@@ -183,21 +183,21 @@ namespace Org.Mentalis.Network.ProxySocket.Authentication
         {
             get
             {
-                return m_Password;
+                return _password;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_Password = value;
+                _password = value;
             }
         }
 
         // private variables
         /// <summary>Holds the value of the Username property.</summary>
-        private string m_Username;
+        private string _username;
 
         /// <summary>Holds the value of the Password property.</summary>
-        private string m_Password;
+        private string _password;
     }
 }

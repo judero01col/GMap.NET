@@ -22,7 +22,7 @@ namespace GMap.NET.MapProviders
             Instance = new SpainMapProvider();
         }
 
-        readonly string[] levels =
+        readonly string[] _levels =
         {
             "0", "1", "2", "3", "4", "MTNSIGPAC", "MTN2000", "MTN2000", "MTN2000", "MTN2000", "MTN2000", "MTN200",
             "MTN200", "MTN200", "MTN25", "MTN25", "ORTOFOTOS", "ORTOFOTOS", "ORTOFOTOS", "ORTOFOTOS"
@@ -30,38 +30,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("7B70ABB0-1265-4D34-9442-F0788F4F689F");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "SpainMap";
+            get;
+        } = new Guid("7B70ABB0-1265-4D34-9442-F0788F4F689F");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "SpainMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this};
+                    _overlays = new GMapProvider[] {this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
@@ -84,7 +74,7 @@ namespace GMap.NET.MapProviders
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            return string.Format(UrlFormat, levels[zoom], zoom, pos.X, (2 << (zoom - 1)) - pos.Y - 1);
+            return string.Format(UrlFormat, _levels[zoom], zoom, pos.X, (2 << (zoom - 1)) - pos.Y - 1);
         }
 
         static readonly string UrlFormat = "http://sigpac.mapa.es/kmlserver/raster/{0}@3785/{1}.{2}.{3}.img";

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Globalization;
@@ -16,7 +15,7 @@ using System.Net.NetworkInformation;
 
 #if !MONO
 #if SQLite
-using System.Data.SQLite;
+
 #endif
 #else
    using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;

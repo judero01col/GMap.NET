@@ -246,13 +246,13 @@ namespace Demo.WindowsForms
 
                     try
                     {
-                        var overlay = DeepClone<GMapOverlay>(Objects);
+                        var overlay = DeepClone(Objects);
                         Debug.WriteLine("ISerializable status for markers: OK");
 
-                        var overlay2 = DeepClone<GMapOverlay>(Polygons);
+                        var overlay2 = DeepClone(Polygons);
                         Debug.WriteLine("ISerializable status for polygons: OK");
 
-                        var overlay3 = DeepClone<GMapOverlay>(Routes);
+                        var overlay3 = DeepClone(Routes);
                         Debug.WriteLine("ISerializable status for routes: OK");
                     }
                     catch (Exception ex)

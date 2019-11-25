@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 
 namespace MSR.CVE.BackMaker.ImagePipeline
@@ -8,9 +8,6 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public delegate void CompleteCallback(AsyncRef asyncRef);
 
         private AsyncScheduler scheduler;
-        private IFuture _cacheKeyToEvict;
-        private IFuture _future;
-        private Present _present;
         private AsyncState asyncState;
         private int queuePriority;
         private CompleteCallback callbackEvent;
@@ -21,34 +18,26 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public IFuture cacheKeyToEvict
         {
-            get
-            {
-                return _cacheKeyToEvict;
-            }
+            get;
         }
 
         public IFuture future
         {
-            get
-            {
-                return _future;
-            }
+            get;
         }
 
         public Present present
         {
-            get
-            {
-                return _present;
-            }
+            get;
+            private set;
         }
 
         public AsyncRecord(AsyncScheduler scheduler, IFuture cacheKeyToEvict, IFuture future)
         {
-            _cacheKeyToEvict = cacheKeyToEvict;
-            _future = future;
+            this.cacheKeyToEvict = cacheKeyToEvict;
+            this.future = future;
             this.scheduler = scheduler;
-            _present = null;
+            present = null;
             asyncState = AsyncState.Prequeued;
             queuePriority = 0;
             qtpRef = new AsyncRef(this, "qRef");
@@ -79,7 +68,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
         public void Dispose()
         {
             D.Sayf(10, "Disposed({0})", new object[] {this});
-            _present.Dispose();
+            present.Dispose();
         }
 
         public void ChangePriority(int crement)
@@ -165,11 +154,11 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         internal void DoWork()
         {
-            D.Assert(_present == null);
+            D.Assert(present == null);
             Present presentValue;
             try
             {
-                presentValue = _future.Realize("AsyncRecord.DoWork");
+                presentValue = future.Realize("AsyncRecord.DoWork");
             }
             catch (Exception ex)
             {
@@ -190,8 +179,8 @@ namespace MSR.CVE.BackMaker.ImagePipeline
             Monitor.Enter(this);
             try
             {
-                D.Assert(_present == null);
-                _present = presentValue;
+                D.Assert(present == null);
+                present = presentValue;
                 notificationRef = new AsyncRef(this, "callback");
                 qtpRef = null;
             }
@@ -213,7 +202,7 @@ namespace MSR.CVE.BackMaker.ImagePipeline
 
         public override string ToString()
         {
-            return "AsyncRecord:" + RobustHashTools.DebugString(_future);
+            return "AsyncRecord:" + RobustHashTools.DebugString(future);
         }
 
         internal void ProcessSynchronously()

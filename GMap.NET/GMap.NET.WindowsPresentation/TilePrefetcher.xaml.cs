@@ -40,13 +40,13 @@ namespace GMap.NET.WindowsPresentation
             _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
         }
 
-        readonly AutoResetEvent done = new AutoResetEvent(true);
+        readonly AutoResetEvent _done = new AutoResetEvent(true);
 
         void OnTileCacheComplete()
         {
             if (IsVisible)
             {
-                done.Set();
+                _done.Set();
 
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                     new Action(() =>
@@ -60,7 +60,7 @@ namespace GMap.NET.WindowsPresentation
         {
             if (IsVisible)
             {
-                done.Reset();
+                _done.Reset();
 
                 Dispatcher.Invoke(DispatcherPriority.Normal,
                     new Action(() =>
@@ -104,7 +104,7 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
-        volatile bool stopped;
+        volatile bool _stopped;
 
         public void Stop()
         {
@@ -112,7 +112,7 @@ namespace GMap.NET.WindowsPresentation
             GMaps.Instance.OnTileCacheStart -= OnTileCacheStart;
             GMaps.Instance.OnTileCacheProgress -= OnTileCacheProgress;
 
-            done.Set();
+            _done.Set();
 
             if (_worker.IsBusy)
             {
@@ -121,9 +121,9 @@ namespace GMap.NET.WindowsPresentation
 
             GMaps.Instance.CancelTileCaching();
 
-            stopped = true;
+            _stopped = true;
 
-            done.Close();
+            _done.Close();
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -195,7 +195,7 @@ namespace GMap.NET.WindowsPresentation
             int countOk = 0;
             int retry = 0;
 
-            Stuff.Shuffle<GPoint>(_list);
+            Stuff.Shuffle(_list);
 
             for (int i = 0; i < _all; i++)
             {
@@ -231,9 +231,9 @@ namespace GMap.NET.WindowsPresentation
 
             e.Result = countOk;
 
-            if (!stopped)
+            if (!_stopped)
             {
-                done.WaitOne();
+                _done.WaitOne();
             }
         }
 

@@ -13,7 +13,7 @@ namespace GMap.NET.Internals
         {
         }
 
-        readonly Queue<RawTile> Queue = new Queue<RawTile>();
+        readonly Queue<RawTile> _queue = new Queue<RawTile>();
 
         /// <summary>
         ///     the amount of tiles in MB to keep in memmory, default: 22MB, if each ~100Kb it's ~222 tiles
@@ -24,7 +24,7 @@ namespace GMap.NET.Internals
       public int MemoryCacheCapacity = 3;
 #endif
 
-        long memoryCacheSize;
+        long _memoryCacheSize;
 
         /// <summary>
         ///     current memmory cache size in MB
@@ -33,16 +33,16 @@ namespace GMap.NET.Internals
         {
             get
             {
-                return memoryCacheSize / 1048576.0;
+                return _memoryCacheSize / 1048576.0;
             }
         }
 
         public new void Add(RawTile key, byte[] value)
         {
-            Queue.Enqueue(key);
+            _queue.Enqueue(key);
             base.Add(key, value);
 
-            memoryCacheSize += value.Length;
+            _memoryCacheSize += value.Length;
         }
 
         // do not allow directly removal of elements
@@ -52,24 +52,24 @@ namespace GMap.NET.Internals
 
         public new void Clear()
         {
-            Queue.Clear();
+            _queue.Clear();
             base.Clear();
-            memoryCacheSize = 0;
+            _memoryCacheSize = 0;
         }
 
         internal void RemoveMemoryOverload()
         {
             while (MemoryCacheSize > MemoryCacheCapacity)
             {
-                if (Keys.Count > 0 && Queue.Count > 0)
+                if (Keys.Count > 0 && _queue.Count > 0)
                 {
-                    var first = Queue.Dequeue();
+                    var first = _queue.Dequeue();
                     try
                     {
                         var m = base[first];
                         {
                             base.Remove(first);
-                            memoryCacheSize -= m.Length;
+                            _memoryCacheSize -= m.Length;
                         }
                     }
                     catch (Exception ex)

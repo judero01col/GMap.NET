@@ -5,7 +5,6 @@ namespace MSR.CVE.BackMaker
     public class FoxitLibManager
     {
         private static FoxitLibManager _theInstance;
-        private FoxitLibWorker _foxitLib = new FoxitLibWorker();
         public Exception loadException = new Exception("unknown exception");
 
         public static FoxitLibManager theInstance
@@ -23,10 +22,7 @@ namespace MSR.CVE.BackMaker
 
         public FoxitLibWorker foxitLib
         {
-            get
-            {
-                return _foxitLib;
-            }
-        }
+            get;
+        } = new FoxitLibWorker();
     }
 }

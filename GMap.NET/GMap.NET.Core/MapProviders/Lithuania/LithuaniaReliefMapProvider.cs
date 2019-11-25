@@ -21,25 +21,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("85F89205-1062-4F10-B536-90CD8B2F1B7D");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "LithuaniaReliefMap";
+            get;
+        } = new Guid("85F89205-1062-4F10-B536-90CD8B2F1B7D");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "LithuaniaReliefMap";
 
         public override PureProjection Projection
         {

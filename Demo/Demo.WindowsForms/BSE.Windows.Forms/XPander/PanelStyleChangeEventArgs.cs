@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +7,7 @@ namespace BSE.Windows.Forms
     /// <summary>
     /// Provides data for the PanelStyleChange event.
     /// </summary>
-    /// <copyright>Copyright � 2006-2008 Uwe Eichkorn
+    /// <copyright>Copyright © 2006-2008 Uwe Eichkorn
     /// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
     /// KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
     /// IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
@@ -18,18 +18,14 @@ namespace BSE.Windows.Forms
     {
         #region FieldsPrivate
 
-        private PanelStyle m_ePanelStyle;
-
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the style of the panel.
         /// </summary>
-        public PanelStyle PanelStyle
-        {
-            get { return m_ePanelStyle; }
-        }
+        public PanelStyle PanelStyle { get; }
 
         #endregion
 
@@ -40,7 +36,7 @@ namespace BSE.Windows.Forms
         /// <param name="ePanelStyle">the style of the panel.</param>
         public PanelStyleChangeEventArgs(PanelStyle ePanelStyle)
         {
-            m_ePanelStyle = ePanelStyle;
+            PanelStyle = ePanelStyle;
         }
 
         #endregion

@@ -9,7 +9,6 @@ namespace MSR.CVE.BackMaker
         private RenderToOptions _renderToOptions;
         private bool _publishSourceData = true;
         private bool _permitComposition = true;
-        private OutputTileType _outputTileType = OutputTileType.JPG;
         public DirtyEvent dirtyEvent;
         private static string RenderOptionsTag = "RenderOptions";
         private static string PublishSourceDataTag = "PublishSourceData";
@@ -67,11 +66,8 @@ namespace MSR.CVE.BackMaker
 
         public OutputTileType outputTileType
         {
-            get
-            {
-                return _outputTileType;
-            }
-        }
+            get;
+        } = OutputTileType.JPG;
 
         public RenderOptions(DirtyEvent parentDirtyEvent)
         {
@@ -96,7 +92,7 @@ namespace MSR.CVE.BackMaker
                 permitComposition.ToString(CultureInfo.InvariantCulture));
             writer.WriteEndElement();
             writer.WriteStartElement(OutputTileTypeTag);
-            writer.WriteAttributeString(OutputTileTypeAttr, _outputTileType.extn);
+            writer.WriteAttributeString(OutputTileTypeAttr, outputTileType.extn);
             writer.WriteEndElement();
             renderToOptions.WriteXML(writer);
             writer.WriteEndElement();
@@ -158,7 +154,7 @@ namespace MSR.CVE.BackMaker
                                 if (xMLTagReader.TagIs(OutputTileTypeTag))
                                 {
                                     XMLTagReader xMLTagReader3 = context.NewTagReader(OutputTileTypeTag);
-                                    _outputTileType =
+                                    outputTileType =
                                         OutputTileType.Parse(context.reader.GetAttribute(OutputTileTypeAttr));
                                     xMLTagReader3.SkipAllSubTags();
                                 }

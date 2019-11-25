@@ -1,5 +1,5 @@
-/*
-    Copyright � 2002, The KPD-Team
+﻿/*
+    Copyright © 2002, The KPD-Team
     All rights reserved.
     http://www.mentalis.org/
 
@@ -192,7 +192,7 @@ namespace Org.Mentalis.Network.ProxySocket
             }
             else
             {
-                CallBack = callback;
+                _callBack = callback;
                 if (ProxyType == ProxyTypes.Socks4)
                 {
                     AsyncResult = new Socks4Handler(this, ProxyUser).BeginNegotiate((IPEndPoint)remoteEP,
@@ -230,7 +230,7 @@ namespace Org.Mentalis.Network.ProxySocket
                 throw new ArgumentNullException();
             if (port <= 0 || port > 65535)
                 throw new ArgumentException();
-            CallBack = callback;
+            _callBack = callback;
             if (ProtocolType != ProtocolType.Tcp || ProxyType == ProxyTypes.None || ProxyEndPoint == null)
             {
                 RemotePort = port;
@@ -348,57 +348,27 @@ namespace Org.Mentalis.Network.ProxySocket
                 Close();
             ToThrow = error;
             AsyncResult.Reset();
-            if (CallBack != null)
-                CallBack(AsyncResult);
+            if (_callBack != null)
+                _callBack(AsyncResult);
         }
 
         /// <summary>
         ///     Gets or sets the EndPoint of the proxy server.
         /// </summary>
         /// <value>An IPEndPoint object that holds the IP address and the port of the proxy server.</value>
-        public IPEndPoint ProxyEndPoint
-        {
-            get
-            {
-                return m_ProxyEndPoint;
-            }
-            set
-            {
-                m_ProxyEndPoint = value;
-            }
-        }
+        public IPEndPoint ProxyEndPoint { get; set; }
 
         /// <summary>
         ///     Gets or sets the type of proxy server to use.
         /// </summary>
         /// <value>One of the ProxyTypes values.</value>
-        public ProxyTypes ProxyType
-        {
-            get
-            {
-                return m_ProxyType;
-            }
-            set
-            {
-                m_ProxyType = value;
-            }
-        }
+        public ProxyTypes ProxyType { get; set; } = ProxyTypes.None;
 
         /// <summary>
         ///     Gets or sets a user-defined object.
         /// </summary>
         /// <value>The user-defined object.</value>
-        private object State
-        {
-            get
-            {
-                return m_State;
-            }
-            set
-            {
-                m_State = value;
-            }
-        }
+        private object State { get; set; }
 
         /// <summary>
         ///     Gets or sets the username to use when authenticating with the proxy.
@@ -409,13 +379,13 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_ProxyUser;
+                return _proxyUser;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_ProxyUser = value;
+                _proxyUser = value;
             }
         }
 
@@ -428,13 +398,13 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             get
             {
-                return m_ProxyPass;
+                return _proxyPass;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
-                m_ProxyPass = value;
+                _proxyPass = value;
             }
         }
 
@@ -442,76 +412,29 @@ namespace Org.Mentalis.Network.ProxySocket
         ///     Gets or sets the asynchronous result object.
         /// </summary>
         /// <value>An instance of the IAsyncProxyResult class.</value>
-        private IAsyncProxyResult AsyncResult
-        {
-            get
-            {
-                return m_AsyncResult;
-            }
-            set
-            {
-                m_AsyncResult = value;
-            }
-        }
+        private IAsyncProxyResult AsyncResult { get; set; }
 
         /// <summary>
         ///     Gets or sets the exception to throw when the EndConnect method is called.
         /// </summary>
         /// <value>An instance of the Exception class (or subclasses of Exception).</value>
-        private Exception ToThrow
-        {
-            get
-            {
-                return m_ToThrow;
-            }
-            set
-            {
-                m_ToThrow = value;
-            }
-        }
+        private Exception ToThrow { get; set; }
 
         /// <summary>
         ///     Gets or sets the remote port the user wants to connect to.
         /// </summary>
         /// <value>An integer that specifies the port the user wants to connect to.</value>
-        private int RemotePort
-        {
-            get
-            {
-                return m_RemotePort;
-            }
-            set
-            {
-                m_RemotePort = value;
-            }
-        }
+        private int RemotePort { get; set; }
 
         // private variables
-        /// <summary>Holds the value of the State property.</summary>
-        private object m_State;
-
-        /// <summary>Holds the value of the ProxyEndPoint property.</summary>
-        private IPEndPoint m_ProxyEndPoint;
-
-        /// <summary>Holds the value of the ProxyType property.</summary>
-        private ProxyTypes m_ProxyType = ProxyTypes.None;
 
         /// <summary>Holds the value of the ProxyUser property.</summary>
-        private string m_ProxyUser;
+        private string _proxyUser;
 
         /// <summary>Holds the value of the ProxyPass property.</summary>
-        private string m_ProxyPass;
+        private string _proxyPass;
 
         /// <summary>Holds a pointer to the method that should be called when the Socket is connected to the remote device.</summary>
-        private AsyncCallback CallBack;
-
-        /// <summary>Holds the value of the AsyncResult property.</summary>
-        private IAsyncProxyResult m_AsyncResult;
-
-        /// <summary>Holds the value of the ToThrow property.</summary>
-        private Exception m_ToThrow;
-
-        /// <summary>Holds the value of the RemotePort property.</summary>
-        private int m_RemotePort;
+        private AsyncCallback _callBack;
     }
 }

@@ -37,18 +37,18 @@ namespace GMap.NET.Internals
             internal static extern void ReleaseSRWLockShared(ref IntPtr srw);
         }
 
-        IntPtr LockSRW = IntPtr.Zero;
+        IntPtr _lockSRW = IntPtr.Zero;
 
         public FastReaderWriterLock()
         {
             if (UseNativeSRWLock)
             {
-                NativeMethods.InitializeSRWLock(out LockSRW);
+                NativeMethods.InitializeSRWLock(out _lockSRW);
             }
             else
             {
 #if UseFastResourceLock
-                pLock = new FastResourceLock();
+                _pLock = new FastResourceLock();
 #endif
             }
         }
@@ -61,14 +61,14 @@ namespace GMap.NET.Internals
 
         void Dispose(bool disposing)
         {
-            if (pLock != null)
+            if (_pLock != null)
             {
-                pLock.Dispose();
-                pLock = null;
+                _pLock.Dispose();
+                _pLock = null;
             }
         }
 
-        FastResourceLock pLock;
+        FastResourceLock _pLock;
 #endif
 
         static readonly bool
@@ -88,13 +88,13 @@ namespace GMap.NET.Internals
 #if !MONO && !PocketPC
             if (UseNativeSRWLock)
             {
-                NativeMethods.AcquireSRWLockShared(ref LockSRW);
+                NativeMethods.AcquireSRWLockShared(ref _lockSRW);
             }
             else
 #endif
             {
 #if UseFastResourceLock
-                pLock.AcquireShared();
+                _pLock.AcquireShared();
 #else
             Thread.BeginCriticalRegion();
 
@@ -124,13 +124,13 @@ namespace GMap.NET.Internals
 #if !MONO && !PocketPC
             if (UseNativeSRWLock)
             {
-                NativeMethods.ReleaseSRWLockShared(ref LockSRW);
+                NativeMethods.ReleaseSRWLockShared(ref _lockSRW);
             }
             else
 #endif
             {
 #if UseFastResourceLock
-                pLock.ReleaseShared();
+                _pLock.ReleaseShared();
 #else
             Interlocked.Decrement(ref readCount);
             Thread.EndCriticalRegion();
@@ -145,13 +145,13 @@ namespace GMap.NET.Internals
 #if !MONO && !PocketPC
                 if (UseNativeSRWLock)
                 {
-                    NativeMethods.AcquireSRWLockExclusive(ref LockSRW);
+                    NativeMethods.AcquireSRWLockExclusive(ref _lockSRW);
                 }
                 else
 #endif
                 {
 #if UseFastResourceLock
-                    pLock.AcquireExclusive();
+                    _pLock.AcquireExclusive();
 #else
                     Thread.BeginCriticalRegion();
 
@@ -177,13 +177,13 @@ namespace GMap.NET.Internals
 #if !MONO && !PocketPC
                 if (UseNativeSRWLock)
                 {
-                    NativeMethods.ReleaseSRWLockExclusive(ref LockSRW);
+                    NativeMethods.ReleaseSRWLockExclusive(ref _lockSRW);
                 }
                 else
 #endif
                 {
 #if UseFastResourceLock
-                    pLock.ReleaseExclusive();
+                    _pLock.ReleaseExclusive();
 #else
                     Interlocked.Exchange(ref busy, 0);
                     Thread.EndCriticalRegion();

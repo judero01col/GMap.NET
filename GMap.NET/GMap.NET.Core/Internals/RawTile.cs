@@ -11,11 +11,11 @@ namespace GMap.NET.Internals
         public GPoint Pos;
         public int Zoom;
 
-        public RawTile(int Type, GPoint Pos, int Zoom)
+        public RawTile(int type, GPoint pos, int zoom)
         {
-            this.Type = Type;
-            this.Pos = Pos;
-            this.Zoom = Zoom;
+            this.Type = type;
+            this.Pos = pos;
+            this.Zoom = zoom;
         }
 
         public override string ToString()

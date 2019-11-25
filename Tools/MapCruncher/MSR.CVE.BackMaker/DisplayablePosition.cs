@@ -1,4 +1,4 @@
-using System.Xml;
+﻿using System.Xml;
 using MSR.CVE.BackMaker.ImagePipeline;
 
 namespace MSR.CVE.BackMaker
@@ -14,7 +14,6 @@ namespace MSR.CVE.BackMaker
         private const int NumErrorMarkers = 2;
         private LatLonZoom _pinPosition;
         private ErrorPosition[] _errorPositions = new ErrorPosition[2];
-        private bool _invertError;
 
         public LatLonZoom pinPosition
         {
@@ -26,14 +25,8 @@ namespace MSR.CVE.BackMaker
 
         public bool invertError
         {
-            get
-            {
-                return _invertError;
-            }
-            set
-            {
-                _invertError = value;
-            }
+            get;
+            set;
         }
 
         public DisplayablePosition(LatLonZoom position)

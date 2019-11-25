@@ -12,45 +12,27 @@ namespace MSR.CVE.BackMaker
         private const string AccessKeyIdTag = "AccessKeyId";
         private const string SecretAccessKeyTag = "SecretAccessKeyTag";
         private const string ValueAttr = "Value";
-        private string _fileName;
-        private string _accessKeyId;
-        private string _secretAccessKey;
 
         public string fileName
         {
-            get
-            {
-                return _fileName;
-            }
+            get;
         }
 
         public string accessKeyId
         {
-            get
-            {
-                return _accessKeyId;
-            }
-            set
-            {
-                _accessKeyId = value;
-            }
+            get;
+            set;
         }
 
         public string secretAccessKey
         {
-            get
-            {
-                return _secretAccessKey;
-            }
-            set
-            {
-                _secretAccessKey = value;
-            }
+            get;
+            set;
         }
 
         public S3Credentials(string fileName, bool createIfFileAbsent)
         {
-            _fileName = fileName;
+            this.fileName = fileName;
             Stream input;
             try
             {
@@ -60,8 +42,8 @@ namespace MSR.CVE.BackMaker
             {
                 if (createIfFileAbsent)
                 {
-                    _accessKeyId = "";
-                    _secretAccessKey = "";
+                    accessKeyId = "";
+                    secretAccessKey = "";
                     return;
                 }
 
@@ -101,31 +83,31 @@ namespace MSR.CVE.BackMaker
             {
                 if (xMLTagReader.TagIs("AccessKeyId"))
                 {
-                    context.AssertUnique(_accessKeyId);
+                    context.AssertUnique(accessKeyId);
                     XMLTagReader xMLTagReader2 = context.NewTagReader("AccessKeyId");
-                    _accessKeyId = context.reader.GetAttribute("Value");
+                    accessKeyId = context.reader.GetAttribute("Value");
                     xMLTagReader2.SkipAllSubTags();
                 }
                 else
                 {
                     if (xMLTagReader.TagIs("SecretAccessKeyTag"))
                     {
-                        context.AssertUnique(_secretAccessKey);
+                        context.AssertUnique(secretAccessKey);
                         XMLTagReader xMLTagReader3 = context.NewTagReader("SecretAccessKeyTag");
-                        _secretAccessKey = context.reader.GetAttribute("Value");
+                        secretAccessKey = context.reader.GetAttribute("Value");
                         xMLTagReader3.SkipAllSubTags();
                     }
                 }
             }
 
-            context.AssertPresent(_accessKeyId, "AccessKeyId");
-            context.AssertPresent(_secretAccessKey, "SecretAccessKeyTag");
+            context.AssertPresent(accessKeyId, "AccessKeyId");
+            context.AssertPresent(secretAccessKey, "SecretAccessKeyTag");
         }
 
         public void WriteXML()
         {
-            D.Assert(_fileName != null);
-            WriteXML(_fileName);
+            D.Assert(fileName != null);
+            WriteXML(fileName);
         }
 
         private void WriteXML(string saveName)
@@ -146,10 +128,10 @@ namespace MSR.CVE.BackMaker
             writer.WriteStartElement("S3Credentials");
             writer.WriteAttributeString("Version", "1.0");
             writer.WriteStartElement("AccessKeyId");
-            writer.WriteAttributeString("Value", _accessKeyId);
+            writer.WriteAttributeString("Value", accessKeyId);
             writer.WriteEndElement();
             writer.WriteStartElement("SecretAccessKeyTag");
-            writer.WriteAttributeString("Value", _secretAccessKey);
+            writer.WriteAttributeString("Value", secretAccessKey);
             writer.WriteEndElement();
             writer.WriteEndElement();
             writer.Close();

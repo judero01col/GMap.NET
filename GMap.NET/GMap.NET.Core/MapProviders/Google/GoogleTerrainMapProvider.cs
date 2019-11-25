@@ -22,25 +22,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("A42EDF2E-63C5-4967-9DBF-4EFB3AF7BC11");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "GoogleTerrainMap";
+            get;
+        } = new Guid("A42EDF2E-63C5-4967-9DBF-4EFB3AF7BC11");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "GoogleTerrainMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

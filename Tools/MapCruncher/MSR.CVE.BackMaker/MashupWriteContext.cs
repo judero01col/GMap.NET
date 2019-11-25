@@ -5,21 +5,17 @@ namespace MSR.CVE.BackMaker
 {
     public class MashupWriteContext
     {
-        private XmlTextWriter _writer;
         private Dictionary<object, string> identityMap = new Dictionary<object, string>();
         private int nextId;
 
         public XmlTextWriter writer
         {
-            get
-            {
-                return _writer;
-            }
+            get;
         }
 
         public MashupWriteContext(XmlTextWriter writer)
         {
-            _writer = writer;
+            this.writer = writer;
         }
 
         public void WriteIdentityAttr(object target)

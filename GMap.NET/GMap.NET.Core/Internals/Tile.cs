@@ -11,20 +11,19 @@ namespace GMap.NET.Internals
     {
         public static readonly Tile Empty = new Tile();
 
-        GPoint pos;
-        int zoom;
-        PureImage[] overlays;
-        long OverlaysCount;
+        GPoint _pos;
+        PureImage[] _overlays;
+        long _overlaysCount;
 
         public readonly bool NotEmpty;
 
         public Tile(int zoom, GPoint pos)
         {
             NotEmpty = true;
-            this.zoom = zoom;
-            this.pos = pos;
-            overlays = null;
-            OverlaysCount = 0;
+            this.Zoom = zoom;
+            this._pos = pos;
+            _overlays = null;
+            _overlaysCount = 0;
         }
 
         public IEnumerable<PureImage> Overlays
@@ -34,22 +33,22 @@ namespace GMap.NET.Internals
 #if PocketPC
                 for (long i = 0, size = OverlaysCount; i < size; i++)
 #else
-                for (long i = 0, size = Interlocked.Read(ref OverlaysCount); i < size; i++)
+                for (long i = 0, size = Interlocked.Read(ref _overlaysCount); i < size; i++)
 #endif
                 {
-                    yield return overlays[i];
+                    yield return _overlays[i];
                 }
             }
         }
 
         internal void AddOverlay(PureImage i)
         {
-            if (overlays == null)
+            if (_overlays == null)
             {
-                overlays = new PureImage[4];
+                _overlays = new PureImage[4];
             }
 #if !PocketPC
-            overlays[Interlocked.Increment(ref OverlaysCount) - 1] = i;
+            _overlays[Interlocked.Increment(ref _overlaysCount) - 1] = i;
 #else
             overlays[++OverlaysCount - 1] = i;
 #endif
@@ -62,32 +61,26 @@ namespace GMap.NET.Internals
 #if PocketPC
                 return OverlaysCount > 0;
 #else
-                return Interlocked.Read(ref OverlaysCount) > 0;
+                return Interlocked.Read(ref _overlaysCount) > 0;
 #endif
             }
         }
 
         public int Zoom
         {
-            get
-            {
-                return zoom;
-            }
-            private set
-            {
-                zoom = value;
-            }
+            get;
+            private set;
         }
 
         public GPoint Pos
         {
             get
             {
-                return pos;
+                return _pos;
             }
             private set
             {
-                pos = value;
+                _pos = value;
             }
         }
 
@@ -95,25 +88,25 @@ namespace GMap.NET.Internals
 
         public void Dispose()
         {
-            if (overlays != null)
+            if (_overlays != null)
             {
 #if PocketPC
                 for (long i = OverlaysCount - 1; i >= 0; i--)
 
 #else
-                for (long i = Interlocked.Read(ref OverlaysCount) - 1; i >= 0; i--)
+                for (long i = Interlocked.Read(ref _overlaysCount) - 1; i >= 0; i--)
 #endif
                 {
 #if !PocketPC
-                    Interlocked.Decrement(ref OverlaysCount);
+                    Interlocked.Decrement(ref _overlaysCount);
 #else
                     OverlaysCount--;
 #endif
-                    overlays[i].Dispose();
-                    overlays[i] = null;
+                    _overlays[i].Dispose();
+                    _overlays[i] = null;
                 }
 
-                overlays = null;
+                _overlays = null;
             }
         }
 
@@ -121,7 +114,7 @@ namespace GMap.NET.Internals
 
         public static bool operator ==(Tile m1, Tile m2)
         {
-            return m1.pos == m2.pos && m1.zoom == m2.zoom;
+            return m1._pos == m2._pos && m1.Zoom == m2.Zoom;
         }
 
         public static bool operator !=(Tile m1, Tile m2)
@@ -140,7 +133,7 @@ namespace GMap.NET.Internals
 
         public override int GetHashCode()
         {
-            return zoom ^ pos.GetHashCode();
+            return Zoom ^ _pos.GetHashCode();
         }
     }
 }

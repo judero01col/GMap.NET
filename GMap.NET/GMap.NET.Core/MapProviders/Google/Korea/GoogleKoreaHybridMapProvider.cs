@@ -22,38 +22,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("41A91842-04BC-442B-9AC8-042156238A5B");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "GoogleKoreaHybridMap";
+            get;
+        } = new Guid("41A91842-04BC-442B-9AC8-042156238A5B");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "GoogleKoreaHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {GoogleKoreaSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {GoogleKoreaSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

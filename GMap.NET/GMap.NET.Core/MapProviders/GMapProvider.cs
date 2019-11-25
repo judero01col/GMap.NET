@@ -17,7 +17,7 @@ namespace GMap.NET.MapProviders
     {
         static GMapProviders()
         {
-            list = new List<GMapProvider>();
+            List = new List<GMapProvider>();
 
             var type = typeof(GMapProviders);
 
@@ -26,20 +26,20 @@ namespace GMap.NET.MapProviders
                 var v = p.GetValue(null) as GMapProvider; // static classes cannot be instanced, so use null...
                 if (v != null)
                 {
-                    list.Add(v);
+                    List.Add(v);
                 }
             }
 
             Hash = new Dictionary<Guid, GMapProvider>();
 
-            foreach (var p in list)
+            foreach (var p in List)
             {
                 Hash.Add(p.Id, p);
             }
 
             DbHash = new Dictionary<int, GMapProvider>();
 
-            foreach (var p in list)
+            foreach (var p in List)
             {
                 DbHash.Add(p.DbId, p);
             }
@@ -212,17 +212,12 @@ namespace GMap.NET.MapProviders
 
         public static readonly CustomMapProvider CustomMap = CustomMapProvider.Instance;
 
-        static List<GMapProvider> list;
-
         /// <summary>
         ///     get all instances of the supported providers
         /// </summary>
         public static List<GMapProvider> List
         {
-            get
-            {
-                return list;
-            }
+            get;
         }
 
         static Dictionary<Guid, GMapProvider> Hash;
@@ -241,11 +236,11 @@ namespace GMap.NET.MapProviders
 
         static Dictionary<int, GMapProvider> DbHash;
 
-        public static GMapProvider TryGetProvider(int DbId)
+        public static GMapProvider TryGetProvider(int dbId)
         {
             GMapProvider ret;
 
-            if (DbHash.TryGetValue(DbId, out ret))
+            if (DbHash.TryGetValue(dbId, out ret))
             {
                 return ret;
             }
@@ -253,11 +248,11 @@ namespace GMap.NET.MapProviders
             return null;
         }
 
-        public static GMapProvider TryGetProvider(string ProviderName)
+        public static GMapProvider TryGetProvider(string providerName)
         {
-            if (list.Exists(x => x.Name == ProviderName))
+            if (List.Exists(x => x.Name == providerName))
             {
-                return list.Find(x => x.Name == ProviderName);
+                return List.Find(x => x.Name == providerName);
             }
             else
             {
@@ -315,9 +310,9 @@ namespace GMap.NET.MapProviders
 
         protected GMapProvider()
         {
-            using (var HashProvider = new SHA1CryptoServiceProvider())
+            using (var hashProvider = new SHA1CryptoServiceProvider())
             {
-                DbId = Math.Abs(BitConverter.ToInt32(HashProvider.ComputeHash(Id.ToByteArray()), 0));
+                DbId = Math.Abs(BitConverter.ToInt32(hashProvider.ComputeHash(Id.ToByteArray()), 0));
             }
 
             if (MapProviders.Exists(p => p.Id == Id || p.DbId == DbId))
@@ -333,21 +328,13 @@ namespace GMap.NET.MapProviders
             WebProxy = EmptyWebProxy.Instance;
         }
 
-        bool isInitialized;
-
         /// <summary>
         ///     was provider initialized
         /// </summary>
         public bool IsInitialized
         {
-            get
-            {
-                return isInitialized;
-            }
-            internal set
-            {
-                isInitialized = value;
-            }
+            get;
+            internal set;
         }
 
         /// <summary>
@@ -399,9 +386,9 @@ namespace GMap.NET.MapProviders
         /// </summary>
         public static string UserAgent = string.Format(
             "Mozilla/5.0 (Windows NT {1}.0; {2}rv:{0}.0) Gecko/20100101 Firefox/{0}.0",
-            Stuff.random.Next(DateTime.Today.Year - 1969 - 5, DateTime.Today.Year - 1969),
-            Stuff.random.Next(0, 10) % 2 == 0 ? 10 : 6,
-            Stuff.random.Next(0, 10) % 2 == 1 ? string.Empty : "WOW64; ");
+            Stuff.Random.Next(DateTime.Today.Year - 1969 - 5, DateTime.Today.Year - 1969),
+            Stuff.Random.Next(0, 10) % 2 == 0 ? 10 : 6,
+            Stuff.Random.Next(0, 10) % 2 == 1 ? string.Empty : "WOW64; ");
 
         /// <summary>
         ///     timeout for provider connections
@@ -428,17 +415,13 @@ namespace GMap.NET.MapProviders
         /// </summary>
         public bool InvertedAxisY = false;
 
-        static string languageStr = "en";
-
         public static string LanguageStr
         {
-            get
-            {
-                return languageStr;
-            }
-        }
+            get;
+            private set;
+        } = "en";
 
-        static LanguageType language = LanguageType.English;
+        static LanguageType _language = LanguageType.English;
 
         /// <summary>
         ///     map language
@@ -447,12 +430,12 @@ namespace GMap.NET.MapProviders
         {
             get
             {
-                return language;
+                return _language;
             }
             set
             {
-                language = value;
-                languageStr = Stuff.EnumToString(Language);
+                _language = value;
+                LanguageStr = Stuff.EnumToString(Language);
             }
         }
 
@@ -475,7 +458,7 @@ namespace GMap.NET.MapProviders
             return response.ContentType.Contains(responseContentType);
         }
 
-        string Authorization = string.Empty;
+        string _authorization = string.Empty;
 
         /// <summary>
         ///     http://blog.kowalczyk.info/article/at3/Forcing-basic-http-authentication-for-HttpWebReq.html
@@ -484,7 +467,7 @@ namespace GMap.NET.MapProviders
         /// <param name="userPassword"></param>
         public void ForceBasicHttpAuthentication(string userName, string userPassword)
         {
-            Authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + userPassword));
+            _authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + userPassword));
         }
 
         protected PureImage GetTileImageUsingHttp(string url)
@@ -507,9 +490,9 @@ namespace GMap.NET.MapProviders
                 request.Credentials = Credential;
             }
 
-            if (!string.IsNullOrEmpty(Authorization))
+            if (!string.IsNullOrEmpty(_authorization))
             {
-                request.Headers.Set("Authorization", Authorization);
+                request.Headers.Set("Authorization", _authorization);
             }
 
             if (request is HttpWebRequest)
@@ -603,9 +586,9 @@ namespace GMap.NET.MapProviders
             }
 
 
-            if (!string.IsNullOrEmpty(Authorization))
+            if (!string.IsNullOrEmpty(_authorization))
             {
-                request.Headers.Set("Authorization", Authorization);
+                request.Headers.Set("Authorization", _authorization);
             }
 
             if (request is HttpWebRequest)
@@ -740,23 +723,18 @@ namespace GMap.NET.MapProviders
             }
         }
 
-        readonly string name = "None";
-
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "None";
 
-        readonly MercatorProjection projection = MercatorProjection.Instance;
+        readonly MercatorProjection _projection = MercatorProjection.Instance;
 
         public override PureProjection Projection
         {
             get
             {
-                return projection;
+                return _projection;
             }
         }
 
@@ -780,18 +758,10 @@ namespace GMap.NET.MapProviders
     {
         public static readonly EmptyWebProxy Instance = new EmptyWebProxy();
 
-        private ICredentials m_credentials;
-
         public ICredentials Credentials
         {
-            get
-            {
-                return m_credentials;
-            }
-            set
-            {
-                m_credentials = value;
-            }
+            get;
+            set;
         }
 
         public Uri GetProxy(Uri uri)

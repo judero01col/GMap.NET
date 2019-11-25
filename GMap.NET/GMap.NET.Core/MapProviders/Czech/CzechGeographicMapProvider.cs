@@ -20,25 +20,15 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("50EC9FCC-E4D7-4F53-8700-2D1DB73A1D48");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "CzechGeographicMap";
+            get;
+        } = new Guid("50EC9FCC-E4D7-4F53-8700-2D1DB73A1D48");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "CzechGeographicMap";
 
         public override PureImage GetTileImage(GPoint pos, int zoom)
         {

@@ -1,20 +1,13 @@
-namespace MSR.CVE.BackMaker
+﻿namespace MSR.CVE.BackMaker
 {
     internal abstract class Cfg<T> : ParseableCfg
     {
-        private string _name;
         public T value;
 
         public string name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            get;
+            set;
         }
 
         public Cfg(string name, T defaultValue)

@@ -21,38 +21,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("CD44C19D-5EED-4623-B367-FB39FDC55B8F");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "CzechHistoryMap";
+            get;
+        } = new Guid("CD44C19D-5EED-4623-B367-FB39FDC55B8F");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "CzechHistoryMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {this, CzechHybridMapProvider.Instance};
+                    _overlays = new GMapProvider[] {this, CzechHybridMapProvider.Instance};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 

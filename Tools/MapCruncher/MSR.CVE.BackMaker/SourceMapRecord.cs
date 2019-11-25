@@ -146,7 +146,7 @@ namespace MSR.CVE.BackMaker
             }
 
             ThumbnailRecord[] array = thumbnailRecords.ToArray();
-            Array.Sort<ThumbnailRecord>(array,
+            Array.Sort(array,
                 (ThumbnailRecord r0, ThumbnailRecord r1) =>
                     Math.Abs(Math.Max(r0.size.Width, r0.size.Height) - 200) -
                     Math.Abs(Math.Max(r1.size.Width, r1.size.Height) - 200));

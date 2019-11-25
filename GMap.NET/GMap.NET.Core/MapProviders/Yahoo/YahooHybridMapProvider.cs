@@ -22,38 +22,28 @@ namespace GMap.NET.MapProviders
 
         #region GMapProvider Members
 
-        readonly Guid id = new Guid("A084E0DB-F9A6-45C1-BC2F-791E1F4E958E");
-
         public override Guid Id
         {
-            get
-            {
-                return id;
-            }
-        }
-
-        readonly string name = "YahooHybridMap";
+            get;
+        } = new Guid("A084E0DB-F9A6-45C1-BC2F-791E1F4E958E");
 
         public override string Name
         {
-            get
-            {
-                return name;
-            }
-        }
+            get;
+        } = "YahooHybridMap";
 
-        GMapProvider[] overlays;
+        GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
         {
             get
             {
-                if (overlays == null)
+                if (_overlays == null)
                 {
-                    overlays = new GMapProvider[] {YahooSatelliteMapProvider.Instance, this};
+                    _overlays = new GMapProvider[] {YahooSatelliteMapProvider.Instance, this};
                 }
 
-                return overlays;
+                return _overlays;
             }
         }
 
