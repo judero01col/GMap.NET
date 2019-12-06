@@ -67,7 +67,7 @@ namespace GMap.NET.Projections
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)
         {
-            GSize s = GetTileMatrixSizePixel(zoom);
+            var s = GetTileMatrixSizePixel(zoom);
 
             double mapSizeX = s.Width;
             double mapSizeY = s.Height;
@@ -84,7 +84,7 @@ namespace GMap.NET.Projections
             double g = Math.PI / 2 - 2 * Math.Atan(1 / Math.Exp(mercY / a));
             double z = g + c1 * Math.Sin(2 * g) + c2 * Math.Sin(4 * g) + c3 * Math.Sin(6 * g) + c4 * Math.Sin(8 * g);
 
-            PointLatLng ret = PointLatLng.Empty;
+            var ret = PointLatLng.Empty;
             ret.Lat = z * RAD_DEG;
             ret.Lng = mercX / a * RAD_DEG;
 

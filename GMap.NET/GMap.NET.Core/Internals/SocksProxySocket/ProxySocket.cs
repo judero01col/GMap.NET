@@ -310,7 +310,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             try
             {
-                IPHostEntry dns = Dns.EndGetHostEntry(asyncResult);
+                var dns = Dns.EndGetHostEntry(asyncResult);
                 base.BeginConnect(new IPEndPoint(dns.AddressList[0], RemotePort),
                     OnConnect,
                     State);

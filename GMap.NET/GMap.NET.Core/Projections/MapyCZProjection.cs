@@ -77,7 +77,8 @@ namespace GMap.NET.Projections
             double ei2 = (a * a - b * b) / (b * b);
             double ei = Sqrt(ei2);
             double n = (a - b) / (a + b);
-            double g = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) * (PI / 180.0);
+            double g = a * (1.0 - n) * (1.0 - n * n) * (1.0 + 9 / 4.0 * n * n + 255.0 / 64.0 * Pow(n, 4)) *
+                       (PI / 180.0);
             double w = londdd - (zone * 6 - 183);
             w = DegreesToRadians(w);
             double t = Tan(latrad);
@@ -93,8 +94,8 @@ namespace GMap.NET.Projections
             double m = a * (a0 * latrad - a2 * Sin(2 * latrad) + a4 * Sin(4 * latrad) - a6 * Sin(6 * latrad));
             double eterm1 = w * w / 6.0 * coslat * coslat * (psi - t * t);
             double eterm2 = Pow(w, 4) / 120.0 * Pow(coslat, 4) *
-                         (4 * Pow(psi, 3) * (1.0 - 6 * t * t) + psi * psi * (1.0 + 8 * t * t) - psi * 2 * t * t +
-                          Pow(t, 4));
+                            (4 * Pow(psi, 3) * (1.0 - 6 * t * t) + psi * psi * (1.0 + 8 * t * t) - psi * 2 * t * t +
+                             Pow(t, 4));
             double eterm3 = Pow(w, 6) / 5040.0 * Pow(coslat, 6) * (61.0 - 479 * t * t + 179 * Pow(t, 4) - Pow(t, 6));
             double dE = k * nu * w * coslat * (1.0 + eterm1 + eterm2 + eterm3);
             double east = 500000.0 + dE / UNITS;
@@ -102,10 +103,10 @@ namespace GMap.NET.Projections
             double nterm1 = w * w / 2.0 * nu * sinlat * coslat;
             double nterm2 = Pow(w, 4) / 24.0 * nu * sinlat * Pow(coslat, 3) * (4 * psi * psi + psi - t * t);
             double nterm3 = Pow(w, 6) / 720.0 * nu * sinlat * Pow(coslat, 5) *
-                         (8 * Pow(psi, 4) * (11.0 - 24 * t * t) - 28 * Pow(psi, 3) * (1.0 - 6 * t * t) +
-                          psi * psi * (1.0 - 32 * t * t) - psi * 2 * t * t + Pow(t, 4));
+                            (8 * Pow(psi, 4) * (11.0 - 24 * t * t) - 28 * Pow(psi, 3) * (1.0 - 6 * t * t) +
+                             psi * psi * (1.0 - 32 * t * t) - psi * 2 * t * t + Pow(t, 4));
             double nterm4 = Pow(w, 8) / 40320.0 * nu * sinlat * Pow(coslat, 7) *
-                         (1385.0 - 3111 * t * t + 543 * Pow(t, 4) - Pow(t, 6));
+                            (1385.0 - 3111 * t * t + 543 * Pow(t, 4) - Pow(t, 6));
             double dN = k * (m + nterm1 + nterm2 + nterm3 + nterm4);
             double north = 0.0 + dN / UNITS;
             north = Roundoff(north, UTMSIZE);
@@ -151,8 +152,8 @@ namespace GMap.NET.Projections
             double m = north / k;
             double sigma = m * PI / (180.0 * g);
             double footlat = sigma + (3 * n / 2.0 - 27 * Pow(n, 3) / 32.0) * Sin(2 * sigma) +
-                          (21 * n * n / 16.0 - 55 * Pow(n, 4) / 32.0) * Sin(4 * sigma) +
-                          151 * Pow(n, 3) / 96.0 * Sin(6 * sigma) + 1097 * Pow(n, 4) / 512.0 * Sin(8 * sigma);
+                             (21 * n * n / 16.0 - 55 * Pow(n, 4) / 32.0) * Sin(4 * sigma) +
+                             151 * Pow(n, 3) / 96.0 * Sin(6 * sigma) + 1097 * Pow(n, 4) / 512.0 * Sin(8 * sigma);
             double rho = a * (1.0 - e2) / Pow(1.0 - e2 * Sin(footlat) * Sin(footlat), 3 / 2.0);
             double nu = a / Sqrt(1.0 - e2 * Sin(footlat) * Sin(footlat));
             double psi = nu / rho;
@@ -160,21 +161,21 @@ namespace GMap.NET.Projections
             double x = east / (k * nu);
             double laterm1 = t / (k * rho) * (east * x / 2.0);
             double laterm2 = t / (k * rho) * (east * Pow(x, 3) / 24.0) *
-                          (-4 * psi * psi + 9 * psi * (1 - t * t) + 12 * t * t);
+                             (-4 * psi * psi + 9 * psi * (1 - t * t) + 12 * t * t);
             double laterm3 = t / (k * rho) * (east * Pow(x, 5) / 720.0) *
-                          (8 * Pow(psi, 4) * (11 - 24 * t * t) - 12 * Pow(psi, 3) * (21.0 - 71 * t * t) +
-                           15 * psi * psi * (15.0 - 98 * t * t + 15 * Pow(t, 4)) +
-                           180 * psi * (5 * t * t - 3 * Pow(t, 4)) + 360 * Pow(t, 4));
+                             (8 * Pow(psi, 4) * (11 - 24 * t * t) - 12 * Pow(psi, 3) * (21.0 - 71 * t * t) +
+                              15 * psi * psi * (15.0 - 98 * t * t + 15 * Pow(t, 4)) +
+                              180 * psi * (5 * t * t - 3 * Pow(t, 4)) + 360 * Pow(t, 4));
             double laterm4 = t / (k * rho) * (east * Pow(x, 7) / 40320.0) *
-                          (1385.0 + 3633 * t * t + 4095 * Pow(t, 4) + 1575 * Pow(t, 6));
+                             (1385.0 + 3633 * t * t + 4095 * Pow(t, 4) + 1575 * Pow(t, 6));
             double latrad = footlat - laterm1 + laterm2 - laterm3 + laterm4;
             double lat = RadiansToDegrees(latrad);
             double seclat = 1 / Cos(footlat);
             double loterm1 = x * seclat;
             double loterm2 = Pow(x, 3) / 6.0 * seclat * (psi + 2 * t * t);
             double loterm3 = Pow(x, 5) / 120.0 * seclat * (-4 * Pow(psi, 3) * (1 - 6 * t * t) +
-                                                        psi * psi * (9 - 68 * t * t) + 72 * psi * t * t +
-                                                        24 * Pow(t, 4));
+                                                           psi * psi * (9 - 68 * t * t) + 72 * psi * t * t +
+                                                           24 * Pow(t, 4));
             double loterm4 = Pow(x, 7) / 5040.0 * seclat * (61.0 + 662 * t * t + 1320 * Pow(t, 4) + 720 * Pow(t, 6));
             double w = loterm1 - loterm2 + loterm3 - loterm4;
             double longrad = DegreesToRadians(GetLCM(zone)) + w;

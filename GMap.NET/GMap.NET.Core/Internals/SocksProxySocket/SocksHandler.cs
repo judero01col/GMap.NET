@@ -63,7 +63,7 @@ namespace Org.Mentalis.Network.ProxySocket
         /// <returns>An array of two bytes that represents the specified port.</returns>
         protected byte[] PortToBytes(int port)
         {
-            byte[] ret = new byte[2];
+            var ret = new byte[2];
             ret[0] = (byte)(port / 256);
             ret[1] = (byte)(port % 256);
             return ret;
@@ -81,7 +81,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             if (count <= 0)
                 throw new ArgumentException();
-            byte[] buffer = new byte[count];
+            var buffer = new byte[count];
             int received = 0;
             while (received != count)
             {

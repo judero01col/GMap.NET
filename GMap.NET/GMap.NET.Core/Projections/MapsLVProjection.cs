@@ -250,7 +250,7 @@ namespace GMap.NET.Projections
 
             if (lonlat.Length < 3)
                 return new[] {x / MetersPerUnit, y / MetersPerUnit};
-            
+
             return new[] {x / MetersPerUnit, y / MetersPerUnit, lonlat[2]};
         }
 

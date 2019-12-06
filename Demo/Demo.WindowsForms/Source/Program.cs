@@ -13,7 +13,7 @@ namespace Demo.WindowsForms
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
@@ -26,7 +26,6 @@ namespace Demo.WindowsForms
 
     public class Dummy
     {
-
     }
 
     class IpInfo
@@ -86,9 +85,9 @@ namespace Demo.WindowsForms
 
     class TraceRoute
     {
-        readonly static string Data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        readonly static byte[] DataBuffer;
-        readonly static int timeout = 8888;
+        static readonly string Data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        static readonly byte[] DataBuffer;
+        static readonly int timeout = 8888;
 
         static TraceRoute()
         {
@@ -104,13 +103,13 @@ namespace Demo.WindowsForms
 
         private static List<PingReply> GetTraceRoute(string hostNameOrAddress, int ttl)
         {
-            List<PingReply> result = new List<PingReply>();
+            var result = new List<PingReply>();
 
-            using (Ping pinger = new Ping())
+            using (var pinger = new Ping())
             {
-                PingOptions pingerOptions = new PingOptions(ttl, true);
+                var pingerOptions = new PingOptions(ttl, true);
 
-                PingReply reply = pinger.Send(hostNameOrAddress, timeout, DataBuffer, pingerOptions);
+                var reply = pinger.Send(hostNameOrAddress, timeout, DataBuffer, pingerOptions);
 
                 //Debug.WriteLine("GetTraceRoute[" + hostNameOrAddress + "]: " + reply.RoundtripTime + "ms " + reply.Address + " -> " + reply.Status);
 
@@ -201,12 +200,12 @@ namespace Demo.WindowsForms
             State = tcpRow.state;
             ProcessId = tcpRow.owningPid;
 
-            int localPort = (tcpRow.localPort1 << 8) + (tcpRow.localPort2) + (tcpRow.localPort3 << 24) +
+            int localPort = (tcpRow.localPort1 << 8) + tcpRow.localPort2 + (tcpRow.localPort3 << 24) +
                             (tcpRow.localPort4 << 16);
             long localAddress = tcpRow.localAddr;
             LocalEndPoint = new IPEndPoint(localAddress, localPort);
 
-            int remotePort = (tcpRow.remotePort1 << 8) + (tcpRow.remotePort2) + (tcpRow.remotePort3 << 24) +
+            int remotePort = (tcpRow.remotePort1 << 8) + tcpRow.remotePort2 + (tcpRow.remotePort3 << 24) +
                              (tcpRow.remotePort4 << 16);
             long remoteAddress = tcpRow.remoteAddr;
             RemoteEndPoint = new IPEndPoint(remoteAddress, remotePort);
@@ -237,7 +236,7 @@ namespace Demo.WindowsForms
         {
             TcpRows.Clear();
 
-            IntPtr tcpTable = IntPtr.Zero;
+            var tcpTable = IntPtr.Zero;
             int tcpTableLength = 0;
 
             if (IpHelper.GetExtendedTcpTable(tcpTable,
@@ -257,10 +256,10 @@ namespace Demo.WindowsForms
                             IpHelper.TcpTableType.OwnerPidConnections,
                             0) == 0)
                     {
-                        IpHelper.TcpTable table =
+                        var table =
                             (IpHelper.TcpTable)Marshal.PtrToStructure(tcpTable, typeof(IpHelper.TcpTable));
 
-                        IntPtr rowPtr = (IntPtr)((long)tcpTable + Marshal.SizeOf(table.Length));
+                        var rowPtr = (IntPtr)((long)tcpTable + Marshal.SizeOf(table.Length));
                         for (int i = 0; i < table.Length; ++i)
                         {
                             TcpRows.Add(
@@ -287,7 +286,7 @@ namespace Demo.WindowsForms
     #region P/Invoke IP Helper API
 
     /// <summary>
-    /// <see cref="http://msdn2.microsoft.com/en-us/library/aa366073.aspx"/>
+    ///     <see cref="http://msdn2.microsoft.com/en-us/library/aa366073.aspx" />
     /// </summary>
     public static class IpHelper
     {
@@ -301,7 +300,7 @@ namespace Demo.WindowsForms
         #region Public Methods
 
         /// <summary>
-        /// <see cref="http://msdn2.microsoft.com/en-us/library/aa365928.aspx"/>
+        ///     <see cref="http://msdn2.microsoft.com/en-us/library/aa365928.aspx" />
         /// </summary>
         [DllImport(DllName, SetLastError = true)]
         public static extern uint GetExtendedTcpTable(IntPtr tcpTable, ref int tcpTableLength, bool sort, int ipVersion,
@@ -312,7 +311,7 @@ namespace Demo.WindowsForms
         #region Public Enums
 
         /// <summary>
-        /// <see cref="http://msdn2.microsoft.com/en-us/library/aa366386.aspx"/>
+        ///     <see cref="http://msdn2.microsoft.com/en-us/library/aa366386.aspx" />
         /// </summary>
         public enum TcpTableType
         {
@@ -332,7 +331,7 @@ namespace Demo.WindowsForms
         #region Public Structs
 
         /// <summary>
-        /// <see cref="http://msdn2.microsoft.com/en-us/library/aa366921.aspx"/>
+        ///     <see cref="http://msdn2.microsoft.com/en-us/library/aa366921.aspx" />
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct TcpTable
@@ -342,7 +341,7 @@ namespace Demo.WindowsForms
         }
 
         /// <summary>
-        /// <see cref="http://msdn2.microsoft.com/en-us/library/aa366913.aspx"/>
+        ///     <see cref="http://msdn2.microsoft.com/en-us/library/aa366913.aspx" />
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct TcpRow

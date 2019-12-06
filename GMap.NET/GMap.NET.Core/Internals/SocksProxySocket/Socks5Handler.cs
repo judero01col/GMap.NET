@@ -541,7 +541,7 @@ namespace Org.Mentalis.Network.ProxySocket
         ///     Gets or sets the bytes to use when sending a connect request to the proxy server.
         /// </summary>
         /// <value>The array of bytes to use when sending a connect request to the proxy server.</value>
-        private byte[] HandShake{get;set; }
+        private byte[] HandShake { get; set; }
 
         // private variables
         /// <summary>Holds the value of the Password property.</summary>
