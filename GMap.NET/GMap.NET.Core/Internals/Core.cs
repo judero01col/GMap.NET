@@ -11,12 +11,6 @@ using GMap.NET.Projections;
 using System.Collections.Concurrent;
 #endif
 
-#if PocketPC
-using OpenNETCF.ComponentModel;
-using OpenNETCF.Threading;
-using Thread = OpenNETCF.Threading.Thread2;
-#endif
-
 namespace GMap.NET.Internals
 {
     /// <summary>
@@ -66,11 +60,7 @@ namespace GMap.NET.Internals
         public readonly Stack<LoadTask> TileLoadQueue = new Stack<LoadTask>();
 #endif
 
-#if !PocketPC
         static readonly int GThreadPoolSize = 4;
-#else
-        static readonly int GThreadPoolSize = 2;
-#endif
 
         DateTime _lastTileLoadStart = DateTime.Now;
         DateTime _lastTileLoadEnd = DateTime.Now;
@@ -126,8 +116,8 @@ namespace GMap.NET.Internals
                     {
                         CancelAsyncTasks();
 
-                        Matrix.ClearLevelsBelove(_zoom - LevelsKeepInMemmory);
-                        Matrix.ClearLevelsAbove(_zoom + LevelsKeepInMemmory);
+                        Matrix.ClearLevelsBelove(_zoom - LevelsKeepInMemory);
+                        Matrix.ClearLevelsAbove(_zoom + LevelsKeepInMemory);
 
                         lock (FailedLoads)
                         {
@@ -312,20 +302,12 @@ namespace GMap.NET.Internals
         /// <summary>
         ///     retry count to get tile
         /// </summary>
-#if !PocketPC
         public int RetryLoadTile = 0;
-#else
-      public int RetryLoadTile = 1;
-#endif
 
         /// <summary>
-        ///     how many levels of tiles are staying decompresed in memory
+        ///     how many levels of tiles are staying decompressed in memory
         /// </summary>
-#if !PocketPC
-        public int LevelsKeepInMemmory = 5;
-#else
-      public int LevelsKeepInMemmory = 1;
-#endif
+        public int LevelsKeepInMemory = 5;
 
         /// <summary>
         ///     map render mode
@@ -475,14 +457,9 @@ namespace GMap.NET.Internals
 
             if (IsRotated)
             {
-#if !PocketPC
                 int diag = (int)Math.Round(
                     Math.Sqrt(Width * Width + Height * Height) / Provider.Projection.TileSize.Width,
                     MidpointRounding.AwayFromZero);
-#else
-            int diag =
- (int) Math.Round(Math.Sqrt(Width * Width + Height * Height) / Provider.Projection.TileSize.Width);
-#endif
                 _sizeOfMapArea.Width = 1 + diag / 2;
                 _sizeOfMapArea.Height = 1 + diag / 2;
             }
@@ -876,12 +853,8 @@ namespace GMap.NET.Internals
             LoadTask? task = null;
             bool stop = false;
 
-#if !PocketPC
             var ct = Thread.CurrentThread;
             string ctid = "Thread[" + ct.ManagedThreadId + "]";
-#else
-            int ctid = 0;
-#endif
             while (!stop && IsStarted)
             {
                 task = null;
@@ -922,7 +895,6 @@ namespace GMap.NET.Internals
                 }
             }
 
-#if !PocketPC
             Monitor.Enter(TileLoadQueue);
             try
             {
@@ -936,7 +908,6 @@ namespace GMap.NET.Internals
             {
                 Monitor.Exit(TileLoadQueue);
             }
-#endif
         }
 #endif
 
@@ -1395,38 +1366,6 @@ namespace GMap.NET.Internals
                 finally
                 {
                     Monitor.Exit(TileLoadQueue);
-                }
-
-                lock (_gThreadPool)
-                {
-#if PocketPC
-                Debug.WriteLine("waiting until loaders are stopped...");
-                while(GThreadPool.Count > 0)
-                {
-                    var t = GThreadPool[0];
-
-                    if (t.State != ThreadState.Stopped)
-                    {
-                        var tr = t.Join(1111);
-
-                        Debug.WriteLine(t.Name + ", " + t.State);
-
-                        if (!tr)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            GThreadPool.Remove(t);
-                        }
-                    }
-                    else
-                    {
-                        GThreadPool.Remove(t);
-                    }
-                }
-                Thread.Sleep(1111);
-#endif
                 }
 #endif
 

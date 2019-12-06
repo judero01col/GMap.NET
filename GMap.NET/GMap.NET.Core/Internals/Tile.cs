@@ -30,11 +30,7 @@ namespace GMap.NET.Internals
         {
             get
             {
-#if PocketPC
-                for (long i = 0, size = OverlaysCount; i < size; i++)
-#else
                 for (long i = 0, size = Interlocked.Read(ref _overlaysCount); i < size; i++)
-#endif
                 {
                     yield return _overlays[i];
                 }
@@ -47,22 +43,15 @@ namespace GMap.NET.Internals
             {
                 _overlays = new PureImage[4];
             }
-#if !PocketPC
+
             _overlays[Interlocked.Increment(ref _overlaysCount) - 1] = i;
-#else
-            overlays[++OverlaysCount - 1] = i;
-#endif
         }
 
         internal bool HasAnyOverlays
         {
             get
             {
-#if PocketPC
-                return OverlaysCount > 0;
-#else
                 return Interlocked.Read(ref _overlaysCount) > 0;
-#endif
             }
         }
 
@@ -90,18 +79,9 @@ namespace GMap.NET.Internals
         {
             if (_overlays != null)
             {
-#if PocketPC
-                for (long i = OverlaysCount - 1; i >= 0; i--)
-
-#else
                 for (long i = Interlocked.Read(ref _overlaysCount) - 1; i >= 0; i--)
-#endif
                 {
-#if !PocketPC
                     Interlocked.Decrement(ref _overlaysCount);
-#else
-                    OverlaysCount--;
-#endif
                     _overlays[i].Dispose();
                     _overlays[i] = null;
                 }

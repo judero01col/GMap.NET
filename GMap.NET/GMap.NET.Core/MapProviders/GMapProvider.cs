@@ -393,11 +393,8 @@ namespace GMap.NET.MapProviders
         /// <summary>
         ///     timeout for provider connections
         /// </summary>
-#if !PocketPC
         public static int TimeoutMs = 5 * 1000;
-#else
-      public static int TimeoutMs = 44 * 1000;
-#endif
+
         /// <summary>
         ///     Time to live of cache, in hours. Default: 240 (10 days).
         /// </summary>
@@ -474,11 +471,7 @@ namespace GMap.NET.MapProviders
         {
             PureImage ret = null;
 
-#if !PocketPC
             var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
-#else
-            WebRequest request = WebRequest.Create(url);
-#endif
             if (WebProxy != null)
             {
                 request.Proxy = WebProxy;
@@ -504,7 +497,6 @@ namespace GMap.NET.MapProviders
                 r.Referer = RefererUrl;
                 r.Timeout = TimeoutMs;
             }
-#if !PocketPC
             else if (request is SocksHttpWebRequest)
             {
                 var r = request as SocksHttpWebRequest;
@@ -524,7 +516,7 @@ namespace GMap.NET.MapProviders
                     r.Headers.Add("Referer", RefererUrl);
                 }
             }
-#endif
+
             using (var response = request.GetResponse())
             {
                 if (CheckTileImageHttpResponse(response))
@@ -555,9 +547,7 @@ namespace GMap.NET.MapProviders
                 {
                     Debug.WriteLine("CheckTileImageHttpResponse[false]: " + url);
                 }
-#if PocketPC
-                request.Abort();
-#endif
+
                 response.Close();
             }
 
@@ -568,11 +558,7 @@ namespace GMap.NET.MapProviders
         {
             string ret = string.Empty;
 
-#if !PocketPC
             var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
-#else
-            WebRequest request = WebRequest.Create(url);
-#endif
 
             if (WebProxy != null)
             {
@@ -600,7 +586,6 @@ namespace GMap.NET.MapProviders
                 r.Referer = RefererUrl;
                 r.Timeout = TimeoutMs;
             }
-#if !PocketPC
             else if (request is SocksHttpWebRequest)
             {
                 var r = request as SocksHttpWebRequest;
@@ -620,7 +605,7 @@ namespace GMap.NET.MapProviders
                     r.Headers.Add("Referer", RefererUrl);
                 }
             }
-#endif
+
             WebResponse response;
 
             try
@@ -645,16 +630,13 @@ namespace GMap.NET.MapProviders
                         ret = read.ReadToEnd();
                     }
                 }
-#if PocketPC
-                request.Abort();
-#endif
+
                 response.Close();
             }
 
             return ret;
         }
 
-#if !PocketPC
         /// <summary>
         ///     use at your own risk, storing tiles in files is slow and hard on the file system
         /// </summary>
@@ -664,7 +646,7 @@ namespace GMap.NET.MapProviders
         {
             return GetTileImageFromArray(File.ReadAllBytes(fileName));
         }
-#endif
+
         protected virtual PureImage GetTileImageFromArray(byte[] data)
         {
             return TileImageProxy.FromArray(data);

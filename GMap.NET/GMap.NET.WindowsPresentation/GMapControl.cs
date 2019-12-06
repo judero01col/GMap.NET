@@ -542,10 +542,10 @@ namespace GMap.NET.WindowsPresentation
         ///     how many levels of tiles are staying decompresed in memory
         /// </summary>
         [Browsable(false)]
-        public int LevelsKeepInMemmory
+        public int LevelsKeepInMemory
         {
-            get { return _core.LevelsKeepInMemmory; }
-            set { _core.LevelsKeepInMemmory = value; }
+            get { return _core.LevelsKeepInMemory; }
+            set { _core.LevelsKeepInMemory = value; }
         }
 
         /// <summary>
@@ -753,9 +753,7 @@ namespace GMap.NET.WindowsPresentation
         static GMapControl()
         {
             GMapImageProxy.Enable();
-#if !PocketPC
             GMaps.Instance.SQLitePing();
-#endif
         }
 
         void InvalidatorEngage(object sender, ProgressChangedEventArgs e)
@@ -1084,7 +1082,7 @@ namespace GMap.NET.WindowsPresentation
                             var parentTile = Tile.Empty;
                             long ix = 0;
 
-                            while (!parentTile.NotEmpty && zoomOffset < _core.Zoom && zoomOffset <= LevelsKeepInMemmory)
+                            while (!parentTile.NotEmpty && zoomOffset < _core.Zoom && zoomOffset <= LevelsKeepInMemory)
                             {
                                 ix = (long)Math.Pow(2, zoomOffset);
                                 parentTile = _core.Matrix.GetTileWithNoLock(_core.Zoom - zoomOffset++,

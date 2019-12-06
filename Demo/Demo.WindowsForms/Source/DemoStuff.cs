@@ -8,10 +8,7 @@ using System.Net;
 using System.Text;
 using GMap.NET;
 using GMap.NET.MapProviders;
-#if !PocketPC
 using System.Net.NetworkInformation;
-
-#endif
 
 #if !MONO
 #if SQLite
@@ -62,7 +59,6 @@ namespace Demo.WindowsForms
         //public const string GoogleMapsApiKey = "AIzaSyCoz0fVRmn6L-zZuLXnIXtRcGLKf2PHI5Q"; // this key is not working
         public const string GoogleMapsApiKey = "AIzaSyAmO6pIPTz0Lt8lmYZEIAaixitKjq-4WlB"; // from Demo.Geocoding project
 
-#if !PocketPC
         public static bool PingNetwork(string hostNameOrAddress)
         {
             bool pingStatus;
@@ -85,7 +81,6 @@ namespace Demo.WindowsForms
 
             return pingStatus;
         }
-#endif
 
         /// <summary>
         ///     gets routes from gpsd log file
@@ -240,11 +235,7 @@ namespace Demo.WindowsForms
                 url += "&nr=" + line;
             }
 
-#if !PocketPC
             url += "&app=GMap.NET.Desktop";
-#else
-         url += "&app=GMap.NET.WindowsMobile";
-#endif
 
             string xml;
             {
@@ -265,9 +256,7 @@ namespace Demo.WindowsForms
                             xml = read.ReadToEnd();
                         }
                     }
-#if PocketPC
-               request.Abort();
-#endif
+
                     response.Close();
                 }
             }
@@ -404,7 +393,6 @@ namespace Demo.WindowsForms
 
         static string _sessionId = string.Empty;
 
-#if !PocketPC
         public static void GetFlightRadarData(List<FlightRadarData> ret, RectLatLng bounds)
         {
             ret.Clear();
@@ -525,14 +513,10 @@ namespace Demo.WindowsForms
                     }
                 }
 
-#if PocketPC
-            request.Abort();
-#endif
                 response.Close();
             }
 
             return ret;
         }
-#endif
     }
 }

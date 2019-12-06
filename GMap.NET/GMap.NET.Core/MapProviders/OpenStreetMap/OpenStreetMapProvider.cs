@@ -385,14 +385,8 @@ namespace GMap.NET.MapProviders
                                     var nn = n.Attributes["place_rank"];
 
                                     int rank;
-#if !PocketPC
                                     if (nn != null && int.TryParse(nn.Value, out rank))
                                     {
-#else
-                                    if(nn != null && !string.IsNullOrEmpty(nn.Value))
-                                    {
-                                        rank = int.Parse(nn.Value, NumberStyles.Integer, CultureInfo.InvariantCulture);
-#endif
                                         if (rank < MinExpectedRank)
                                             continue;
                                     }

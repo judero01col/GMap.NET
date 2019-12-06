@@ -25,7 +25,6 @@ namespace GMap.NET.CacheProviders
     /// </summary>
     public class SQLitePureImageCache : PureImageCache
     {
-#if !PocketPC
 #if !MONO
         static SQLitePureImageCache()
         {
@@ -120,7 +119,6 @@ namespace GMap.NET.CacheProviders
             }
         }
 #endif
-#endif
 
         string _cache;
         string _dir;
@@ -192,11 +190,7 @@ namespace GMap.NET.CacheProviders
                 RebuildFinnalSelect();
 
                 // attach all databases from main cache location
-#if !PocketPC
                 var dbs = Directory.GetFiles(_dir, "*.gmdb", SearchOption.AllDirectories);
-#else
-            var dbs = Directory.GetFiles(dir, "*.gmdb");
-#endif
                 foreach (string d in dbs)
                 {
                     if (d != _db)
@@ -221,7 +215,7 @@ namespace GMap.NET.CacheProviders
                     {
                         dbf.Seek(16, SeekOrigin.Begin);
 
-#if (!PocketPC && !MONO)
+#if !MONO
                         dbf.Lock(16, 2);
                         dbf.Read(pageSizeBytes, 0, 2);
                         dbf.Unlock(16, 2);
@@ -232,9 +226,9 @@ namespace GMap.NET.CacheProviders
                         dbf.Read(freePagesBytes, 0, 4);
                         dbf.Unlock(36, 4);
 #else
-                  dbf.Read(pageSizeBytes, 0, 2);
-                  dbf.Seek(36, SeekOrigin.Begin);
-                  dbf.Read(freePagesBytes, 0, 4);
+                        dbf.Read(pageSizeBytes, 0, 2);
+                        dbf.Seek(36, SeekOrigin.Begin);
+                        dbf.Read(freePagesBytes, 0, 4);
 #endif
 
                         dbf.Close();
@@ -252,13 +246,8 @@ namespace GMap.NET.CacheProviders
 
                 double freeMB = pageSize * freePages / (1024.0 * 1024.0);
 
-#if !PocketPC
                 int addSizeMB = 32;
                 int waitUntilMB = 4;
-#else
-                int addSizeMB = 4; // reduce due to test in emulator
-                int waitUntilMB = 2;
-#endif
 
                 Debug.WriteLine("FreePageSpace in cache: " + freeMB + "MB | " + freePages + " pages");
 
@@ -301,11 +290,7 @@ namespace GMap.NET.CacheProviders
                                 using (DbCommand cmd = cn.CreateCommand())
                                 {
                                     cmd.Transaction = tr;
-#if !PocketPC
                                     cmd.CommandText = Properties.Resources.CreateTileDb;
-#else
-                           cmd.CommandText = GMap.NET.WindowsMobile.Properties.Resources.CreateTileDb;
-#endif
                                     cmd.ExecuteNonQuery();
                                 }
 

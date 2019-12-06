@@ -12,10 +12,6 @@ using Newtonsoft.Json;
 
 namespace GMap.NET.MapProviders
 {
-#if PocketPC
-    using OpenNETCF.Security.Cryptography;
-#endif
-
     public abstract class GoogleMapProviderBase : GMapProvider, RoutingProvider, GeocodingProvider, DirectionsProvider,
         RoadsProvider
     {

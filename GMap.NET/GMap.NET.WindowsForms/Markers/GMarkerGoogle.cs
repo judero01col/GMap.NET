@@ -5,11 +5,6 @@ using System.Runtime.Serialization;
 
 namespace GMap.NET.WindowsForms.Markers
 {
-#if !PocketPC
-#else
-   using GMap.NET.WindowsMobile.Properties;
-#endif
-
     // ReSharper disable InconsistentNaming
     public enum GMarkerGoogleType
     {
@@ -54,12 +49,8 @@ namespace GMap.NET.WindowsForms.Markers
     }
     // ReSharper restore InconsistentNaming
 
-#if !PocketPC
     [Serializable]
     public class GMarkerGoogle : GMapMarker, ISerializable, IDeserializationCallback
-#else
-   public class GMarkerGoogle : GMapMarker
-#endif
     {
         private Bitmap _bitmap;
 
@@ -226,7 +217,6 @@ namespace GMap.NET.WindowsForms.Markers
 
         public override void OnRender(Graphics g)
         {
-#if !PocketPC
             lock (Bitmap)
             {
                 if (_bitmapShadow != null)
@@ -242,13 +232,6 @@ namespace GMap.NET.WindowsForms.Markers
             }
 
             //g.DrawString(LocalPosition.ToString(), SystemFonts.DefaultFont, Brushes.Red, LocalPosition);
-#else
-         if(BitmapShadow != null)
-         {
-            DrawImageUnscaled(g, BitmapShadow, LocalPosition.X, LocalPosition.Y);
-         }
-         DrawImageUnscaled(g, Bitmap, LocalPosition.X, LocalPosition.Y);
-#endif
         }
 
         public override void Dispose()
@@ -264,8 +247,6 @@ namespace GMap.NET.WindowsForms.Markers
 
             base.Dispose();
         }
-
-#if !PocketPC
 
         #region ISerializable Members
 
@@ -297,7 +278,5 @@ namespace GMap.NET.WindowsForms.Markers
         }
 
         #endregion
-
-#endif
     }
 }

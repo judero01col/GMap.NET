@@ -44,7 +44,6 @@ namespace GMap.NET.Internals
         {
             string appDataLocation = GetApplicationDataFolderPath();
 
-#if !PocketPC
             // http://greatmaps.codeplex.com/discussions/403151
             // by default Network Service don't have disk write access
             if (string.IsNullOrEmpty(appDataLocation))
@@ -57,7 +56,6 @@ namespace GMap.NET.Internals
                 GMaps.Instance.UseUrlCache = false;
             }
             else
-#endif
             {
                 Location = appDataLocation;
             }
@@ -65,7 +63,6 @@ namespace GMap.NET.Internals
 
         public static string GetApplicationDataFolderPath()
         {
-#if !PocketPC
             bool isSystem = false;
             try
             {
@@ -93,9 +90,6 @@ namespace GMap.NET.Internals
             {
                 path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             }
-#else
-         path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
-#endif
 
             if (!string.IsNullOrEmpty(path))
             {
@@ -171,19 +165,7 @@ namespace GMap.NET.Internals
          ImageCache = new MsSQLCePureImageCache();
 #endif
 
-#if PocketPC
-         // use sd card if exist for cache
-         string sd = Native.GetRemovableStorageDirectory();
-         if(!string.IsNullOrEmpty(sd))
-         {
-            CacheLocation = sd + Path.DirectorySeparatorChar +  "GMap.NET" + Path.DirectorySeparatorChar;
-         }
-         else
-#endif
             {
-#if PocketPC
-            CacheLocation = CacheLocator.Location;
-#else
                 string newCache = CacheLocator.Location;
 
                 string oldCache = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
@@ -215,7 +197,6 @@ namespace GMap.NET.Internals
                 {
                     CacheLocation = newCache;
                 }
-#endif
             }
         }
 

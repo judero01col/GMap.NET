@@ -160,7 +160,7 @@ namespace Demo.WindowsForms
             this.MainMap.EmptyTileColor = System.Drawing.Color.Navy;
             this.MainMap.GrayScaleMode = false;
             this.MainMap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.MainMap.LevelsKeepInMemmory = 5;
+            this.MainMap.LevelsKeepInMemory = 5;
             this.MainMap.Location = new System.Drawing.Point(0, 0);
             this.MainMap.MarkersEnabled = true;
             this.MainMap.MaxZoom = 17;

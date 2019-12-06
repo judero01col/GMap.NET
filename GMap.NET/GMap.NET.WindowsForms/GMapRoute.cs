@@ -11,11 +11,7 @@ namespace GMap.NET.WindowsForms
     ///     GMap.NET route
     /// </summary>
     [Serializable]
-#if !PocketPC
     public class GMapRoute : MapRoute, ISerializable, IDeserializationCallback, IDisposable
-#else
-    public class GMapRoute : MapRoute, IDisposable
-#endif
     {
         GMapOverlay _overlay;
 
@@ -59,9 +55,7 @@ namespace GMap.NET.WindowsForms
                             if (Overlay.Control.IsMouseOverRoute)
                             {
                                 Overlay.Control.IsMouseOverRoute = false;
-#if !PocketPC
                                 Overlay.Control.RestoreCursorOnLeave();
-#endif
                             }
                         }
 
@@ -98,7 +92,6 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-#if !PocketPC
         /// <summary>
         ///     Indicates whether the specified point is contained within this System.Drawing.Drawing2D.GraphicsPath
         /// </summary>
@@ -144,11 +137,9 @@ namespace GMap.NET.WindowsForms
                 }
             }
         }
-#endif
 
         public virtual void OnRender(Graphics g)
         {
-#if !PocketPC
             if (IsVisible)
             {
                 if (_graphicsPath != null)
@@ -156,29 +147,9 @@ namespace GMap.NET.WindowsForms
                     g.DrawPath(Stroke, _graphicsPath);
                 }
             }
-#else
-            if (IsVisible)
-            {
-                Point[] pnts = new Point[LocalPoints.Count];
-                for (int i = 0; i < LocalPoints.Count; i++)
-                {
-                    Point p2 = new Point((int)LocalPoints[i].X, (int)LocalPoints[i].Y);
-                    pnts[pnts.Length - 1 - i] = p2;
-                }
-
-                if (pnts.Length > 1)
-                {
-                    g.DrawLines(Stroke, pnts);
-                }
-            }
-#endif
         }
 
-#if !PocketPC
         public static readonly Pen DefaultStroke = new Pen(Color.FromArgb(144, Color.MidnightBlue));
-#else
-        public static readonly Pen DefaultStroke = new Pen(Color.MidnightBlue);
-#endif
 
         /// <summary>
         ///     specifies how the outline is painted
@@ -189,9 +160,7 @@ namespace GMap.NET.WindowsForms
 
         static GMapRoute()
         {
-#if !PocketPC
             DefaultStroke.LineJoin = LineJoin.Round;
-#endif
             DefaultStroke.Width = 5;
         }
 
@@ -210,8 +179,6 @@ namespace GMap.NET.WindowsForms
         {
         }
 
-
-#if !PocketPC
 
         #region ISerializable Members
 
@@ -272,8 +239,6 @@ namespace GMap.NET.WindowsForms
 
         #endregion
 
-#endif
-
         #region IDisposable Members
 
         bool _disposed;
@@ -286,13 +251,12 @@ namespace GMap.NET.WindowsForms
 
                 LocalPoints.Clear();
 
-#if !PocketPC
                 if (_graphicsPath != null)
                 {
                     _graphicsPath.Dispose();
                     _graphicsPath = null;
                 }
-#endif
+
                 Clear();
             }
         }

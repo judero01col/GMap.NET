@@ -13,12 +13,6 @@ using GMap.NET.CacheProviders;
 using GMap.NET.Internals;
 using GMap.NET.MapProviders;
 
-#if PocketPC
-using OpenNETCF.ComponentModel;
-using OpenNETCF.Threading;
-using Thread = OpenNETCF.Threading.Thread2;
-#endif
-
 namespace GMap.NET
 {
     /// <summary>
@@ -144,7 +138,6 @@ namespace GMap.NET
 
         internal readonly AutoResetEvent WaitForCache = new AutoResetEvent(false);
 
-#if !PocketPC
         static GMaps()
         {
             if (GMapProvider.TileImageProxy == null)
@@ -212,7 +205,6 @@ namespace GMap.NET
                 }
             }
         }
-#endif
 
         public GMaps()
         {
@@ -229,7 +221,6 @@ namespace GMap.NET
             ServicePointManager.DefaultConnectionLimit = 5;
         }
 
-#if !PocketPC
         /// <summary>
         ///     triggers dynamic sqlite loading,
         ///     call this before you use sqlite for other reasons than caching maps
@@ -242,11 +233,8 @@ namespace GMap.NET
 #endif
 #endif
         }
-#endif
 
         #region -- Stuff --
-
-#if !PocketPC
 
         /// <summary>
         ///     exports current map cache to GMDB file
@@ -326,8 +314,6 @@ namespace GMap.NET
         }
 #endif
 
-#endif
-
         /// <summary>
         ///     enqueueens tile to cache
         /// </summary>
@@ -346,12 +332,8 @@ namespace GMap.NET
                     {
                         WaitForCache.Set();
                     }
-#if PocketPC
-               else if(CacheEngine == null || CacheEngine.State == ThreadState.Stopped || CacheEngine.State == ThreadState.Unstarted)
-#else
                     else if (_cacheEngine == null || _cacheEngine.ThreadState == System.Threading.ThreadState.Stopped ||
                              _cacheEngine.ThreadState == System.Threading.ThreadState.Unstarted)
-#endif
                     {
                         _cacheEngine = null;
                         _cacheEngine = new Thread(CacheEngineLoop);
@@ -517,11 +499,7 @@ namespace GMap.NET
 
                             if (!_boostCacheEngine)
                             {
-#if PocketPC
-                        Thread.Sleep(3333);
-#else
                                 Thread.Sleep(333);
-#endif
                             }
                         }
                         else
@@ -549,12 +527,10 @@ namespace GMap.NET
                         }
                     }
                 }
-#if !PocketPC
                 catch (AbandonedMutexException)
                 {
                     break;
                 }
-#endif
                 catch (Exception ex)
                 {
                     Debug.WriteLine("CacheEngineLoop: " + ex.ToString());
@@ -711,15 +687,7 @@ namespace GMap.NET
 
                 sessions.Clear();
 
-#if !PocketPC
                 File.WriteAllText(gpxFile, SerializeGPX(gpx), Encoding.UTF8);
-#else
-            using(StreamWriter w = File.CreateText(gpxFile))
-            {
-               w.Write(SerializeGPX(gpx));
-               w.Close();
-            }
-#endif
             }
             catch (Exception ex)
             {
@@ -855,7 +823,6 @@ namespace GMap.NET
 
         private readonly Exception _noDataException = new Exception("No data in local tile cache...");
 
-#if !PocketPC
         private TileHttpHost _host;
 
         /// <summary>
@@ -883,6 +850,5 @@ namespace GMap.NET
                 _host.Stop();
             }
         }
-#endif
     }
 }

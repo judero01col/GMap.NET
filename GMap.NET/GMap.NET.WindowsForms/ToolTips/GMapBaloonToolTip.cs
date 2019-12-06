@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 
 namespace GMap.NET.WindowsForms.ToolTips
 {
-#if !PocketPC
     /// <summary>
     ///     GMap.NET marker
     /// </summary>
@@ -20,10 +19,8 @@ namespace GMap.NET.WindowsForms.ToolTips
         {
             DefaultStroke.Width = 3;
 
-#if !PocketPC
             DefaultStroke.LineJoin = LineJoin.Round;
             DefaultStroke.StartCap = LineCap.RoundAnchor;
-#endif
         }
 
         public GMapBaloonToolTip(GMapMarker marker)
@@ -72,11 +69,7 @@ namespace GMap.NET.WindowsForms.ToolTips
                 g.DrawPath(Stroke, objGp);
             }
 
-#if !PocketPC
             g.DrawString(Marker.ToolTipText, Font, Foreground, rect, Format);
-#else
-         g.DrawString(ToolTipText, ToolTipFont, TooltipForeground, rect, ToolTipFormat);
-#endif
         }
 
         #region ISerializable Members
@@ -96,5 +89,4 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         #endregion
     }
-#endif
 }

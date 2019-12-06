@@ -9,11 +9,8 @@ namespace GMap.NET.WindowsForms
     ///     GMap.NET overlay
     /// </summary>
     [Serializable]
-#if !PocketPC
+
     public class GMapOverlay : ISerializable, IDeserializationCallback, IDisposable
-#else
-   public class GMapOverlay: IDisposable
-#endif
     {
         bool _isVisibile = true;
 
@@ -58,9 +55,8 @@ namespace GMap.NET.WindowsForms
                             {
                                 Control.IsMouseOverRoute = false;
                             }
-#if !PocketPC
+
                             Control.RestoreCursorOnLeave();
-#endif
 
                             if (!Control.HoldInvalidation)
                             {
@@ -189,9 +185,7 @@ namespace GMap.NET.WindowsForms
                     if (Control.IsMouseOverPolygon)
                     {
                         Control.IsMouseOverPolygon = false;
-#if !PocketPC
                         Control.RestoreCursorOnLeave();
-#endif
                     }
                 }
 
@@ -226,9 +220,7 @@ namespace GMap.NET.WindowsForms
                     if (Control.IsMouseOverRoute)
                     {
                         Control.IsMouseOverRoute = false;
-#if !PocketPC
                         Control.RestoreCursorOnLeave();
-#endif
                     }
                 }
 
@@ -263,9 +255,7 @@ namespace GMap.NET.WindowsForms
                     if (Control.IsMouseOverMarker)
                     {
                         Control.IsMouseOverMarker = false;
-#if !PocketPC
                         Control.RestoreCursorOnLeave();
-#endif
                     }
                 }
 
@@ -380,8 +370,6 @@ namespace GMap.NET.WindowsForms
             }
         }
 
-#if !PocketPC
-
         #region ISerializable Members
 
         /// <summary>
@@ -471,8 +459,6 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
-
-#endif
 
         #region IDisposable Members
 
