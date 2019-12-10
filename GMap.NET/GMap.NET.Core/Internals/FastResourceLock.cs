@@ -31,7 +31,7 @@ using System.Threading;
 
 namespace GMap.NET.Internals
 {
-#if !MONO && !PocketPC
+#if !MONO
     /// <summary>
     ///     Provides a fast resource (reader-writer) lock.
     /// </summary>

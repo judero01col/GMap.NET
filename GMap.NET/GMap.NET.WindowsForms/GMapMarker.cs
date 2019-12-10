@@ -10,20 +10,8 @@ namespace GMap.NET.WindowsForms
     ///     GMap.NET marker
     /// </summary>
     [Serializable]
-#if !PocketPC
     public abstract class GMapMarker : ISerializable, IDisposable
-#else
-   public class GMapMarker: IDisposable
-#endif
     {
-#if PocketPC
-      static readonly System.Drawing.Imaging.ImageAttributes attr = new System.Drawing.Imaging.ImageAttributes();
-
-      static GMapMarker()
-      {
-         attr.SetColorKey(Color.White, Color.White);
-      }
-#endif
         GMapOverlay _overlay;
 
         public GMapOverlay Overlay
@@ -169,11 +157,7 @@ namespace GMap.NET.WindowsForms
             {
                 if (ToolTip == null && !string.IsNullOrEmpty(value))
                 {
-#if !PocketPC
                     ToolTip = new GMapRoundedToolTip(this);
-#else
-               ToolTip = new GMapToolTip(this);
-#endif
                 }
 
                 _toolTipText = value;
@@ -208,9 +192,7 @@ namespace GMap.NET.WindowsForms
                             if (Overlay.Control.IsMouseOverMarker)
                             {
                                 Overlay.Control.IsMouseOverMarker = false;
-#if !PocketPC
                                 Overlay.Control.RestoreCursorOnLeave();
-#endif
                             }
                         }
 
@@ -261,15 +243,6 @@ namespace GMap.NET.WindowsForms
         {
             //
         }
-
-#if PocketPC
-      protected void DrawImageUnscaled(Graphics g, Bitmap inBmp, int x, int y)
-      {
-         g.DrawImage(inBmp, new Rectangle(x, y, inBmp.Width, inBmp.Height), 0, 0, inBmp.Width, inBmp.Height, GraphicsUnit.Pixel, attr);
-      }
-#endif
-
-#if !PocketPC
 
         #region ISerializable Members
 
@@ -323,8 +296,6 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
-
-#endif
 
         #region IDisposable Members
 

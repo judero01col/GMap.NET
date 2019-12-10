@@ -100,23 +100,7 @@ namespace GMap.NET.Internals
 
         public static void RemoveInvalidPathSymbols(ref string url)
         {
-#if !PocketPC
             var ilg = Path.GetInvalidFileNameChars();
-#else
-            char[] ilg = new char[41];
-            for(int i = 0; i < 32; i++)
-               ilg[i] = (char) i;
-
-            ilg[32] = '"';
-            ilg[33] = '<';
-            ilg[34] = '>';
-            ilg[35] = '|';
-            ilg[36] = '?';
-            ilg[37] = ':';
-            ilg[38] = '/';
-            ilg[39] = '\\';
-            ilg[39] = '*';
-#endif
             foreach (char c in ilg)
             {
                 url = url.Replace(c, '_');
@@ -221,37 +205,4 @@ namespace GMap.NET.Internals
 
         #endregion
     }
-
-#if PocketPC
-   static class Monitor
-   {
-      static readonly OpenNETCF.Threading.Monitor2 wait = new OpenNETCF.Threading.Monitor2();
-
-      public static void Enter(Stack<LoadTask> tileLoadQueue)
-      {
-         wait.Enter();
-      }
-
-      public static void Exit(Stack<LoadTask> tileLoadQueue)
-      {
-         wait.Exit();
-      }
-
-      public static void Wait(Stack<LoadTask> tileLoadQueue)
-      {
-         wait.Wait();
-      }
-
-      public static bool Wait(Stack<LoadTask> tileLoadQueue, int WaitForTileLoadThreadTimeout, bool p)
-      {
-         wait.Wait();
-         return true;
-      }
-
-      internal static void PulseAll(Stack<LoadTask> tileLoadQueue)
-      {
-         wait.PulseAll();
-      }
-   }
-#endif
 }

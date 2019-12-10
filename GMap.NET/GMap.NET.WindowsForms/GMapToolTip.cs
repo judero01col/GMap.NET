@@ -9,11 +9,7 @@ namespace GMap.NET.WindowsForms
     ///     GMap.NET marker
     /// </summary>
     [Serializable]
-#if !PocketPC
     public class GMapToolTip : ISerializable, IDisposable
-#else
-   public class GMapToolTip: IDisposable
-#endif
     {
         GMapMarker _marker;
 
@@ -38,37 +34,25 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         [NonSerialized] public readonly StringFormat Format = DefaultFormat;
 
-#if !PocketPC
         public static readonly Font DefaultFont =
             new Font(FontFamily.GenericSansSerif, 11, FontStyle.Regular, GraphicsUnit.Pixel);
 
         public static readonly Font TitleFont =
             new Font(FontFamily.GenericSansSerif, 11, FontStyle.Bold, GraphicsUnit.Pixel);
-#else
-      public static readonly Font DefaultFont = new Font(FontFamily.GenericSansSerif, 6, FontStyle.Bold);
-#endif
 
         /// <summary>
         ///     font
         /// </summary>
         [NonSerialized] public Font Font = DefaultFont;
 
-#if !PocketPC
         public static readonly Pen DefaultStroke = new Pen(Color.FromArgb(140, Color.Black));
-#else
-      public static readonly Pen DefaultStroke = new Pen(Color.MidnightBlue);
-#endif
 
         /// <summary>
         ///     specifies how the outline is painted
         /// </summary>
         [NonSerialized] public Pen Stroke = DefaultStroke;
 
-#if !PocketPC
         public static readonly Brush DefaultFill = new SolidBrush(Color.FromArgb(222, Color.White));
-#else
-      public static readonly Brush DefaultFill = new System.Drawing.SolidBrush(Color.AliceBlue);
-#endif
 
         /// <summary>
         ///     background color
@@ -91,14 +75,10 @@ namespace GMap.NET.WindowsForms
         {
             DefaultStroke.Width = 1;
 
-#if !PocketPC
             DefaultStroke.LineJoin = LineJoin.Round;
             DefaultStroke.StartCap = LineCap.RoundAnchor;
-#endif
 
-#if !PocketPC
             DefaultFormat.LineAlignment = StringAlignment.Near;
-#endif
             DefaultFormat.Alignment = StringAlignment.Near;
         }
 
@@ -125,16 +105,11 @@ namespace GMap.NET.WindowsForms
             g.FillRectangle(Fill, rect);
             //g.DrawRectangle(Stroke, rect);
 
-#if PocketPC
-         rect.Offset(0, (rect.Height - st.Height) / 2);
-#endif
             DrawRoundRectangle(g, Stroke, rect.X, rect.Y, rect.Width, rect.Height, 8);
             //g.DrawString(Marker.ToolTipText, Font, Foreground, rectText, Format);
             WriteString(g, Marker.ToolTipText, rectText);
             g.Flush();
         }
-
-#if !PocketPC
 
         #region ISerializable Members
 
@@ -168,8 +143,6 @@ namespace GMap.NET.WindowsForms
         }
 
         #endregion
-
-#endif
 
         #region IDisposable Members
 

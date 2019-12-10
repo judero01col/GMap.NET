@@ -36,7 +36,7 @@
            this.mapControl.CanDragMap = true;
            this.mapControl.Dock = System.Windows.Forms.DockStyle.Fill;
            this.mapControl.GrayScaleMode = false;
-           this.mapControl.LevelsKeepInMemmory = 5;
+           this.mapControl.LevelsKeepInMemory = 5;
            this.mapControl.Location = new System.Drawing.Point(0, 0);
            this.mapControl.Margin = new System.Windows.Forms.Padding(5);
            this.mapControl.MarkersEnabled = true;

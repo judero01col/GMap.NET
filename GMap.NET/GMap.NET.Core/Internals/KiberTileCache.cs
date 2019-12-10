@@ -16,18 +16,14 @@ namespace GMap.NET.Internals
         readonly Queue<RawTile> _queue = new Queue<RawTile>();
 
         /// <summary>
-        ///     the amount of tiles in MB to keep in memmory, default: 22MB, if each ~100Kb it's ~222 tiles
+        ///     the amount of tiles in MB to keep in memory, default: 22MB, if each ~100Kb it's ~222 tiles
         /// </summary>
-#if !PocketPC
         public int MemoryCacheCapacity = 22;
-#else
-      public int MemoryCacheCapacity = 3;
-#endif
 
         long _memoryCacheSize;
 
         /// <summary>
-        ///     current memmory cache size in MB
+        ///     current memory cache size in MB
         /// </summary>
         public double MemoryCacheSize
         {

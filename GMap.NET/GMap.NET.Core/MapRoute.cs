@@ -10,11 +10,7 @@ namespace GMap.NET
     ///     represents route of map
     /// </summary>
     [Serializable]
-#if !PocketPC
     public class MapRoute : ISerializable, IDeserializationCallback
-#else
-   public class MapRoute
-#endif
     {
         /// <summary>
         ///     points of route
@@ -201,8 +197,6 @@ namespace GMap.NET
             Name = null;
         }
 
-#if !PocketPC
-
         #region ISerializable Members
 
         // Temp store for de-serialization.
@@ -259,7 +253,5 @@ namespace GMap.NET
         }
 
         #endregion
-
-#endif
     }
 }

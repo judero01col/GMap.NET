@@ -11,11 +11,7 @@ namespace GMap.NET.WindowsForms
     ///     GMap.NET polygon
     /// </summary>
     [Serializable]
-#if !PocketPC
     public class GMapPolygon : MapRoute, ISerializable, IDeserializationCallback, IDisposable
-#else
-   public class GMapPolygon : MapRoute, IDisposable
-#endif
     {
         private bool _visible = true;
 
@@ -45,9 +41,7 @@ namespace GMap.NET.WindowsForms
                             if (Overlay.Control.IsMouseOverPolygon)
                             {
                                 Overlay.Control.IsMouseOverPolygon = false;
-#if !PocketPC
                                 Overlay.Control.RestoreCursorOnLeave();
-#endif
                             }
                         }
 
@@ -86,7 +80,6 @@ namespace GMap.NET.WindowsForms
 
         public GMapOverlay Overlay { get; set; }
 
-#if !PocketPC
         /// <summary>
         ///     Indicates whether the specified point is contained within this System.Drawing.Drawing2D.GraphicsPath
         /// </summary>
@@ -133,12 +126,9 @@ namespace GMap.NET.WindowsForms
                 }
             }
         }
-#endif
-
 
         public virtual void OnRender(Graphics g)
         {
-#if !PocketPC
             if (IsVisible)
             {
                 if (IsVisible)
@@ -150,25 +140,6 @@ namespace GMap.NET.WindowsForms
                     }
                 }
             }
-#else
-         {
-            if(IsVisible)
-            {
-               Point[] pnts = new Point[LocalPoints.Count];
-               for(int i = 0; i < LocalPoints.Count; i++)
-               {
-                  Point p2 = new Point((int)LocalPoints[i].X, (int)LocalPoints[i].Y);
-                  pnts[pnts.Length - 1 - i] = p2;
-               }
-
-               if(pnts.Length > 1)
-               {
-                  g.FillPolygon(Fill, pnts);
-                  g.DrawPolygon(Stroke, pnts);
-               }
-            }
-         }
-#endif
         }
 
         //public double Area
@@ -179,22 +150,14 @@ namespace GMap.NET.WindowsForms
         //   }
         //}
 
-#if !PocketPC
         public static readonly Pen DefaultStroke = new Pen(Color.FromArgb(155, Color.MidnightBlue));
-#else
-      public static readonly Pen DefaultStroke = new Pen(Color.MidnightBlue);
-#endif
 
         /// <summary>
         ///     specifies how the outline is painted
         /// </summary>
         [NonSerialized] public Pen Stroke = DefaultStroke;
 
-#if !PocketPC
         public static readonly Brush DefaultFill = new SolidBrush(Color.FromArgb(155, Color.AliceBlue));
-#else
-      public static readonly Brush DefaultFill = new System.Drawing.SolidBrush(Color.AliceBlue);
-#endif
 
         /// <summary>
         ///     background color
@@ -205,9 +168,7 @@ namespace GMap.NET.WindowsForms
 
         static GMapPolygon()
         {
-#if !PocketPC
             DefaultStroke.LineJoin = LineJoin.Round;
-#endif
             DefaultStroke.Width = 5;
         }
 
@@ -252,8 +213,6 @@ namespace GMap.NET.WindowsForms
 
             return result;
         }
-
-#if !PocketPC
 
         #region ISerializable Members
 
@@ -314,8 +273,6 @@ namespace GMap.NET.WindowsForms
 
         #endregion
 
-#endif
-
         #region IDisposable Members
 
         bool _disposed;
@@ -328,13 +285,12 @@ namespace GMap.NET.WindowsForms
 
                 LocalPoints.Clear();
 
-#if !PocketPC
                 if (_graphicsPath != null)
                 {
                     _graphicsPath.Dispose();
                     _graphicsPath = null;
                 }
-#endif
+
                 Clear();
             }
         }

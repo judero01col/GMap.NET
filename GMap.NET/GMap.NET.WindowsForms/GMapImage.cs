@@ -47,9 +47,7 @@ namespace GMap.NET.WindowsForms
 
         public static readonly GMapImageProxy Instance = new GMapImageProxy();
 
-#if !PocketPC
         internal ColorMatrix ColorMatrix;
-#endif
 
         static readonly bool Win7OrLater = Stuff.IsRunningOnWin7OrLater();
 
@@ -57,15 +55,11 @@ namespace GMap.NET.WindowsForms
         {
             try
             {
-#if !PocketPC
                 var m = Image.FromStream(stream, true, !Win7OrLater);
                 if (m != null)
                 {
                     return new GMapImage {Img = ColorMatrix != null ? ApplyColorMatrix(m, ColorMatrix) : m};
                 }
-#else
-                return new GMapImage {Img = new Bitmap(stream)};
-#endif
             }
             catch (Exception ex)
             {
@@ -109,7 +103,6 @@ namespace GMap.NET.WindowsForms
             return ok;
         }
 
-#if !PocketPC
         Bitmap ApplyColorMatrix(Image original, ColorMatrix matrix)
         {
             // create a blank bitmap the same size as original
@@ -138,6 +131,5 @@ namespace GMap.NET.WindowsForms
 
             return newBitmap;
         }
-#endif
     }
 }

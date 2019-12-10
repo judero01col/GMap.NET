@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 
 namespace GMap.NET.WindowsForms.ToolTips
 {
-#if !PocketPC
     /// <summary>
     ///     GMap.NET marker
     /// </summary>
@@ -22,7 +21,7 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         public void DrawRoundRectangle(Graphics g, Pen pen, float h, float v, float width, float height, float radius)
         {
-            using (GraphicsPath gp = new GraphicsPath())
+            using (var gp = new GraphicsPath())
             {
                 gp.AddLine(h + radius, v, h + width - radius * 2, v);
                 gp.AddArc(h + width - radius * 2, v, radius * 2, radius * 2, 270, 90);
@@ -42,9 +41,9 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         public override void OnRender(Graphics g)
         {
-            Size st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
+            var st = g.MeasureString(Marker.ToolTipText, Font).ToSize();
 
-            Rectangle rect = new Rectangle(Marker.ToolTipPosition.X,
+            var rect = new Rectangle(Marker.ToolTipPosition.X,
                 Marker.ToolTipPosition.Y - st.Height,
                 st.Width + TextPadding.Width * 2,
                 st.Height + TextPadding.Height);
@@ -58,16 +57,12 @@ namespace GMap.NET.WindowsForms.ToolTips
 
             DrawRoundRectangle(g, Stroke, rect.X, rect.Y, rect.Width, rect.Height, Radius);
 
-#if !PocketPC
             if (Format.Alignment == StringAlignment.Near)
             {
                 rect.Offset(TextPadding.Width, 0);
             }
 
             g.DrawString(Marker.ToolTipText, Font, Foreground, rect, Format);
-#else
-         g.DrawString(ToolTipText, ToolTipFont, TooltipForeground, rect, ToolTipFormat);
-#endif
         }
 
 
@@ -88,5 +83,4 @@ namespace GMap.NET.WindowsForms.ToolTips
 
         #endregion
     }
-#endif
 }
