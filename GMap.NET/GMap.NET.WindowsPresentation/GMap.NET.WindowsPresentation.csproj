@@ -11,9 +11,7 @@
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <Prefer32Bit>false</Prefer32Bit>
     <PackageId>GMap.NET.WinPresentation</PackageId>
-    <PackageReleaseNotes>Project converted to .NET Core 3.0 (Contributed by @zgabi)
-- Adding an additional check if any Mouse button is being pressed on OnMouseMove event on GMapControl before calling BeginDrag
-code formatting. (Contributed by @zgabi)
+    <PackageReleaseNotes>- Pocket PC support removed (Contributed by @zgabi)
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
