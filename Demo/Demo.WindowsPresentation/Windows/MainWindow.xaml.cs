@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -64,13 +64,13 @@ namespace Demo.WindowsPresentation
             MainMap.MapProvider = GMapProviders.OpenStreetMap;
             MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
 
-            // 20200313 (jokubokla): Demo of the new Sweden Map with Mercator instead of SWEREF99
-            MainMap.MapProvider = GMapProviders.SwedenMapAlternative;
-            MainMap.Position = new PointLatLng(58.406298501604, 15.5825614929199); // Linköping
-            MainMap.MinZoom = 1;
-            MainMap.MaxZoom = 15;
-            MainMap.Zoom = 11;
-            TextBoxGeo.Text = "Linköping";
+            //// 20200313 (jokubokla): Demo of the new Sweden Map with Mercator instead of SWEREF99
+            //MainMap.MapProvider = GMapProviders.SwedenMapAlternative;
+            //MainMap.Position = new PointLatLng(58.406298501604, 15.5825614929199); // Linköping
+            //MainMap.MinZoom = 1;
+            //MainMap.MaxZoom = 15;
+            //MainMap.Zoom = 11;
+            //TextBoxGeo.Text = "Linköping";
 
             //MainMap.ScaleMode = ScaleModes.Dynamic;
 
