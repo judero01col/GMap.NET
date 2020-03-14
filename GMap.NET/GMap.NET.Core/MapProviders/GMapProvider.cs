@@ -208,6 +208,8 @@ namespace GMap.NET.MapProviders
             ArcGIS_DarbAE_Q2_2011_NAVTQ_Eng_V5_MapProvider.Instance;
 
         public static readonly SwedenMapProvider SwedenMap = SwedenMapProvider.Instance;
+        public static readonly SwedenMapProviderAlt SwedenMapAlternative = SwedenMapProviderAlt.Instance;
+
         public static readonly UMPMapProvider UMPMap = UMPMapProvider.Instance;
 
         public static readonly CustomMapProvider CustomMap = CustomMapProvider.Instance;
