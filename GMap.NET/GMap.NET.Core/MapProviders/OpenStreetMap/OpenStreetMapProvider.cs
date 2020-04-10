@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 using System.Xml;
 using GMap.NET.Internals;
 using GMap.NET.Projections;
@@ -560,6 +561,8 @@ namespace GMap.NET.MapProviders
             get;
         } = "OpenStreetMap";
 
+        public string YoursClientName { get; set; }
+
         GMapProvider[] _overlays;
 
         public override GMapProvider[] Overlays
@@ -580,6 +583,16 @@ namespace GMap.NET.MapProviders
             string url = MakeTileImageUrl(pos, zoom, string.Empty);
 
             return GetTileImageUsingHttp(url);
+        }
+
+        protected override void InitializeWebRequest(WebRequest request)
+        {
+            base.InitializeWebRequest(request);
+
+            if (!string.IsNullOrEmpty(YoursClientName))
+            {
+                request.Headers.Add("X-Yours-client", YoursClientName);
+            }
         }
 
         #endregion
