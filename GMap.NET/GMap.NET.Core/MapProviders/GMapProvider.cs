@@ -469,6 +469,8 @@ namespace GMap.NET.MapProviders
             _authorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(userName + ":" + userPassword));
         }
 
+        protected virtual void InitializeWebRequest(WebRequest request) { }
+
         protected PureImage GetTileImageUsingHttp(string url)
         {
             PureImage ret = null;
@@ -518,6 +520,8 @@ namespace GMap.NET.MapProviders
                     r.Headers.Add("Referer", RefererUrl);
                 }
             }
+
+            InitializeWebRequest(request);
 
             using (var response = request.GetResponse())
             {
@@ -607,6 +611,8 @@ namespace GMap.NET.MapProviders
                     r.Headers.Add("Referer", RefererUrl);
                 }
             }
+
+            InitializeWebRequest(request);
 
             WebResponse response;
 
