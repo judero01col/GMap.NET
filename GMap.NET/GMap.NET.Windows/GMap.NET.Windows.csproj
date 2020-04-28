@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <PackageId>GMap.NET.Windows</PackageId>
+    <Product>GMap.NET.Windows</Product>
+    <AssemblyTitle>GMap.NET.Windows</AssemblyTitle>
+
+    <NoBuild>true</NoBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
+
+    <OutputType>Library</OutputType>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
+
+    <PackageReleaseNotes>
+      Library migrated to .Net Core and published in new individual packages
+
+      - GMap.NET.Core
+      - GMap.NET.WinForms
+      - GMap.NET.WinPresentation
+
+      History Release Notes
+      https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+    </PackageReleaseNotes>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>..\..\Build\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>..\..\Build\Release\</OutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="GMap.NET.WinForms" Version="$(PackageVersion)" />
+    <PackageReference Include="GMap.NET.WinPresentation" Version="$(PackageVersion)" />
+    <None Include="reame.txt" Pack="true" PackagePath="lib\reame.txt"/>
+  </ItemGroup>
+
+</Project>

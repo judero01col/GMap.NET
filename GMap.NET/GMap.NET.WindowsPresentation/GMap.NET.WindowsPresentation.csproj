@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <AssemblyTitle>GMap.NET.WindowsPresentation</AssemblyTitle>
-    <Description>GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control. Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
+    <PackageId>GMap.NET.WinPresentation</PackageId>    
     <Product>GMap.NET.WindowsPresentation</Product>
+    <AssemblyTitle>GMap.NET.WindowsPresentation</AssemblyTitle>
+    
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <OutputType>Library</OutputType>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
     <Prefer32Bit>false</Prefer32Bit>
-    <PackageId>GMap.NET.WinPresentation</PackageId>
+    
     <PackageReleaseNotes>- Pocket PC support removed (Contributed by @zgabi)
 
 History Release Notes
