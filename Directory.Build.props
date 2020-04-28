@@ -20,7 +20,7 @@
     <Description>GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control. Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
     <PackageReleaseNotes>
       GMap.NET.Core
-      - Lantmateriet Map: Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
+      - New Lantmateriet Map Provider (SwedenMapAlternative) : Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
 
       GMap.NET.WinForms
       - Pocket PC support removed (Contributed by @zgabi)
