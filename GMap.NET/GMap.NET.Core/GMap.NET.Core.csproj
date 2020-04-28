@@ -3,29 +3,18 @@
   <PropertyGroup>
     <PackageId>GMap.NET.Core</PackageId>
     <Product>GMap.NET.Core</Product>
-    <AssemblyTitle>GMap.NET.Core</AssemblyTitle>    
-    
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
-    <OutputType>Library</OutputType>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
-    <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
-    <Prefer32Bit>false</Prefer32Bit>
-    <PackageReleaseNotes>
-      - New Lantmateriet Map Provider (SwedenMapAlternative) : Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
-      - Support sending X-Yours-Client header via OSMProvider (Contributed by @shrayasr)
-
-      History Release Notes
-      https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
+    <AssemblyTitle>GMap.NET.Core</AssemblyTitle>
     <RootNamespace>GMap.NET</RootNamespace>
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
-  </PropertyGroup>
+    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>    
+    <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
+    
+    <PackageReleaseNotes>
+- New Lantmateriet Map Provider (SwedenMapAlternative) : Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
+- Support sending X-Yours-Client header via OSMProvider (Contributed by @shrayasr)
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>..\..\Build\Release\</OutputPath>
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>

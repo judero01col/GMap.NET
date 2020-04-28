@@ -7,23 +7,12 @@
     
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <OutputType>Library</OutputType>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
-    <Prefer32Bit>false</Prefer32Bit>
     
-    <PackageReleaseNotes>- Pocket PC support removed (Contributed by @zgabi)
+    <PackageReleaseNotes>
+- Pocket PC support removed (Contributed by @zgabi)
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>..\..\Build\Release\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

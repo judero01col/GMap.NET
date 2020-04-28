@@ -6,33 +6,20 @@
     <Product>GMap.NET.Windows</Product>
     <AssemblyTitle>GMap.NET.Windows</AssemblyTitle>
 
-    <NoBuild>true</NoBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
 
-    <OutputType>Library</OutputType>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
-
     <PackageReleaseNotes>
-      Library migrated to .Net Core and published in new individual packages
+Library migrated to .Net Core and published in new individual packages
 
-      - GMap.NET.Core
-      - GMap.NET.WinForms
-      - GMap.NET.WinPresentation
+- GMap.NET.Core
+- GMap.NET.WinForms
+- GMap.NET.WinPresentation
 
-      History Release Notes
-      https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
     </PackageReleaseNotes>
 
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>..\..\Build\Release\</OutputPath>
   </PropertyGroup>
   
   <ItemGroup>
