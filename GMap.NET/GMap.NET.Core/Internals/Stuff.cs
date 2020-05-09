@@ -136,7 +136,7 @@ namespace GMap.NET.Internals
                     }
                     finally
                     {
-                        // Clear the TripleDes and Hashprovider services of any sensitive information
+                        // Clear the TripleDes and Hash provider services of any sensitive information
                         tdesAlgorithm.Clear();
                         hashProvider.Clear();
                     }

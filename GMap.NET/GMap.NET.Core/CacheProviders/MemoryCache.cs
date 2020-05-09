@@ -11,7 +11,7 @@ namespace GMap.NET.CacheProviders
         private FastReaderWriterLock _kiberCacheLock = new FastReaderWriterLock();
 
         /// <summary>
-        ///     the amount of tiles in MB to keep in memmory, default: 22MB, if each ~100Kb it's ~222 tiles
+        ///     the amount of tiles in MB to keep in memory, default: 22MB, if each ~100Kb it's ~222 tiles
         /// </summary>
         public int Capacity
         {
@@ -42,7 +42,7 @@ namespace GMap.NET.CacheProviders
         }
 
         /// <summary>
-        ///     current memmory cache size in MB
+        ///     current memory cache size in MB
         /// </summary>
         public double Size
         {

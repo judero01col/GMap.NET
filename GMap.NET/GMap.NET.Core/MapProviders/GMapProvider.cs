@@ -301,7 +301,7 @@ namespace GMap.NET.MapProviders
         }
 
         /// <summary>
-        ///     gets tile image using implmented provider
+        ///     gets tile image using implemented provider
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="zoom"></param>
@@ -319,7 +319,7 @@ namespace GMap.NET.MapProviders
 
             if (MapProviders.Exists(p => p.Id == Id || p.DbId == DbId))
             {
-                throw new Exception("such provider id already exsists, try regenerate your provider guid...");
+                throw new Exception("such provider id already exists, try regenerate your provider guid...");
             }
 
             MapProviders.Add(this);
@@ -376,6 +376,11 @@ namespace GMap.NET.MapProviders
         ///     Connect trough a SOCKS 4/5 proxy server
         /// </summary>
         public static bool IsSocksProxy = false;
+
+        /// <summary>
+        ///     The web request factory
+        /// </summary>
+        public static Func<GMapProvider, string, WebRequest> WebRequestFactory = null;
 
         /// <summary>
         ///     NetworkCredential for tile http access
@@ -475,7 +480,9 @@ namespace GMap.NET.MapProviders
         {
             PureImage ret = null;
 
-            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
+            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : 
+                WebRequestFactory != null ? WebRequestFactory(this, url) : WebRequest.Create(url);
+
             if (WebProxy != null)
             {
                 request.Proxy = WebProxy;
@@ -564,7 +571,8 @@ namespace GMap.NET.MapProviders
         {
             string ret = string.Empty;
 
-            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : WebRequest.Create(url);
+            var request = IsSocksProxy ? SocksHttpWebRequest.Create(url) : 
+                WebRequestFactory != null ? WebRequestFactory(this, url) : WebRequest.Create(url);
 
             if (WebProxy != null)
             {

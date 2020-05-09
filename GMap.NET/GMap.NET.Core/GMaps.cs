@@ -26,7 +26,7 @@ namespace GMap.NET
         public AccessMode Mode = AccessMode.ServerAndCache;
 
         /// <summary>
-        ///     is map ussing cache for routing
+        ///     is map using cache for routing
         /// </summary>
         public bool UseRouteCache = true;
 
@@ -46,7 +46,7 @@ namespace GMap.NET
         public bool UsePlacemarkCache = true;
 
         /// <summary>
-        ///     is map ussing cache for other url
+        ///     is map using cache for other url
         /// </summary>
         public bool UseUrlCache = true;
 
@@ -706,6 +706,7 @@ namespace GMap.NET
         /// <param name="provider"></param>
         /// <param name="pos"></param>
         /// <param name="zoom"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
         public PureImage GetImageFrom(GMapProvider provider, GPoint pos, int zoom, out Exception result)
         {
@@ -716,7 +717,7 @@ namespace GMap.NET
             {
                 var rtile = new RawTile(provider.DbId, pos, zoom);
 
-                // let't check memmory first
+                // let't check memory first
                 if (UseMemoryCache)
                 {
                     var m = MemoryCache.GetTileFromMemoryCache(rtile);

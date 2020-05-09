@@ -63,7 +63,7 @@ namespace Demo.WindowsForms
                 //GMapProvider.WebProxy = WebRequest.DefaultWebProxy;
                 //                          
 
-                // set cache mode only if no internet avaible
+                // set cache mode only if no internet available
                 if (!Stuff.PingNetwork("pingtest.com"))
                 {
                     MainMap.Manager.Mode = AccessMode.CacheOnly;
