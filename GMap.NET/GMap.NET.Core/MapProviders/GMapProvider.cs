@@ -499,32 +499,29 @@ namespace GMap.NET.MapProviders
                 request.Headers.Set("Authorization", _authorization);
             }
 
-            if (request is HttpWebRequest)
+            if (request is HttpWebRequest r)
             {
-                var r = request as HttpWebRequest;
                 r.UserAgent = UserAgent;
                 r.ReadWriteTimeout = TimeoutMs * 6;
                 r.Accept = requestAccept;
                 r.Referer = RefererUrl;
                 r.Timeout = TimeoutMs;
             }
-            else if (request is SocksHttpWebRequest)
+            else
             {
-                var r = request as SocksHttpWebRequest;
-
                 if (!string.IsNullOrEmpty(UserAgent))
                 {
-                    r.Headers.Add("User-Agent", UserAgent);
+                    request.Headers.Add("User-Agent", UserAgent);
                 }
 
                 if (!string.IsNullOrEmpty(requestAccept))
                 {
-                    r.Headers.Add("Accept", requestAccept);
+                    request.Headers.Add("Accept", requestAccept);
                 }
 
                 if (!string.IsNullOrEmpty(RefererUrl))
                 {
-                    r.Headers.Add("Referer", RefererUrl);
+                    request.Headers.Add("Referer", RefererUrl);
                 }
             }
 
@@ -591,32 +588,29 @@ namespace GMap.NET.MapProviders
                 request.Headers.Set("Authorization", _authorization);
             }
 
-            if (request is HttpWebRequest)
+            if (request is HttpWebRequest r)
             {
-                var r = request as HttpWebRequest;
                 r.UserAgent = UserAgent;
                 r.ReadWriteTimeout = TimeoutMs * 6;
                 r.Accept = requestAccept;
                 r.Referer = RefererUrl;
                 r.Timeout = TimeoutMs;
             }
-            else if (request is SocksHttpWebRequest)
+            else
             {
-                var r = request as SocksHttpWebRequest;
-
                 if (!string.IsNullOrEmpty(UserAgent))
                 {
-                    r.Headers.Add("User-Agent", UserAgent);
+                    request.Headers.Add("User-Agent", UserAgent);
                 }
 
                 if (!string.IsNullOrEmpty(requestAccept))
                 {
-                    r.Headers.Add("Accept", requestAccept);
+                    request.Headers.Add("Accept", requestAccept);
                 }
 
                 if (!string.IsNullOrEmpty(RefererUrl))
                 {
-                    r.Headers.Add("Referer", RefererUrl);
+                    request.Headers.Add("Referer", RefererUrl);
                 }
             }
 
