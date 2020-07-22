@@ -18,7 +18,7 @@ namespace GMap.NET
     /// <summary>
     ///     maps manager
     /// </summary>
-    public class GMaps : Singleton<GMaps>
+    public class GMaps
     {
         /// <summary>
         ///     tile access mode
@@ -206,18 +206,10 @@ namespace GMap.NET
             }
         }
 
-        public GMaps()
+        public static GMaps Instance { get; } = new GMaps();
+
+        private GMaps()
         {
-            #region singleton check
-
-            if (Instance != null)
-            {
-                throw new Exception(
-                    "You have tried to create a new singleton class where you should have instanced it. Replace your \"new class()\" with \"class.Instance\"");
-            }
-
-            #endregion
-
             ServicePointManager.DefaultConnectionLimit = 5;
         }
 
