@@ -1976,7 +1976,7 @@ namespace GMap.NET.WindowsForms
                 {
                     var o = Overlays[i];
 
-                    if (o != null && o.IsVisibile)
+                    if (o != null && o.IsVisibile && o.IsHitTestVisible)
                     {
                         foreach (var m in o.Markers)
                         {
@@ -2060,7 +2060,7 @@ namespace GMap.NET.WindowsForms
                 {
                     var o = Overlays[i];
 
-                    if (o != null && o.IsVisibile)
+                    if (o != null && o.IsVisibile && o.IsHitTestVisible)
                     {
                         foreach (var m in o.Markers)
                         {
@@ -2245,7 +2245,7 @@ namespace GMap.NET.WindowsForms
                     for (int i = Overlays.Count - 1; i >= 0; i--)
                     {
                         var o = Overlays[i];
-                        if (o != null && o.IsVisibile)
+                        if (o != null && o.IsVisibile && o.IsHitTestVisible)
                         {
                             foreach (var m in o.Markers)
                             {
