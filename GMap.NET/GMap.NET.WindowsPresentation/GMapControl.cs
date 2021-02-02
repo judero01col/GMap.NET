@@ -1737,15 +1737,15 @@ namespace GMap.NET.WindowsPresentation
                 {
                     if (MouseWheelZoomType == MouseWheelZoomType.MousePositionAndCenter)
                     {
-                        _core._position = FromLocalToLatLng((int)p.X, (int)p.Y);
+                        Position = FromLocalToLatLng((int)p.X, (int)p.Y);
                     }
                     else if (MouseWheelZoomType == MouseWheelZoomType.ViewCenter)
                     {
-                        _core._position = FromLocalToLatLng((int)ActualWidth / 2, (int)ActualHeight / 2);
+                        Position = FromLocalToLatLng((int)ActualWidth / 2, (int)ActualHeight / 2);
                     }
                     else if (MouseWheelZoomType == MouseWheelZoomType.MousePositionWithoutCenter)
                     {
-                        _core._position = FromLocalToLatLng((int)p.X, (int)p.Y);
+                        Position = FromLocalToLatLng((int)p.X, (int)p.Y);
                     }
 
                     _core.MouseLastZoom.X = (int)p.X;
