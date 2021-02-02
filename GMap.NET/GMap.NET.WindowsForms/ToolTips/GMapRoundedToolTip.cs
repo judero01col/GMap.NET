@@ -49,10 +49,28 @@ namespace GMap.NET.WindowsForms.ToolTips
                 st.Height + TextPadding.Height);
             rect.Offset(Offset.X, Offset.Y);
 
+            var lineOffset = 0;
+            if (!g.VisibleClipBounds.Contains(rect))
+            {
+                var clippingOffset = new Point();
+                if (rect.Right > g.VisibleClipBounds.Right)
+                {
+                    clippingOffset.X = -((rect.Left - Marker.LocalPosition.X) / 2 + rect.Width);
+                    lineOffset = -(rect.Width - (int)Radius);
+                }
+
+                if (rect.Top < g.VisibleClipBounds.Top)
+                {
+                    clippingOffset.Y = ((rect.Bottom - Marker.LocalPosition.Y) + (rect.Height * 2));
+                }
+
+                rect.Offset(clippingOffset);
+            }
+
             g.DrawLine(Stroke,
                 Marker.ToolTipPosition.X,
                 Marker.ToolTipPosition.Y,
-                rect.X + Radius / 2,
+                (rect.X - lineOffset) + Radius / 2,
                 rect.Y + rect.Height - Radius / 2);
 
             DrawRoundRectangle(g, Stroke, rect.X, rect.Y, rect.Width, rect.Height, Radius);
