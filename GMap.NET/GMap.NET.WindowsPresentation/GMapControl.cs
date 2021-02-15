@@ -2523,7 +2523,7 @@ namespace GMap.NET.WindowsPresentation
             _core.ReloadMap();
         }
 
-#if !NET40
+#if !NET46
         public Task ReloadMapAsync()
         {
             return _core.ReloadMapAsync();

@@ -11,7 +11,7 @@
 
     <OutputType>Library</OutputType>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)sn.snk</AssemblyOriginatorKeyFile>
     <Prefer32Bit>false</Prefer32Bit>
 
     <Title>GMap.NET - Maps For Windows</Title>
