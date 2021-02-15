@@ -392,10 +392,8 @@ namespace GMap.NET.MapProviders
         ///     It's pseudo-randomized to avoid blockages...
         /// </summary>
         public static string UserAgent = string.Format(
-            "Mozilla/5.0 (Windows NT {1}.0; {2}rv:{0}.0) Gecko/20100101 Firefox/{0}.0",
-            Stuff.Random.Next(DateTime.Today.Year - 1969 - 5, DateTime.Today.Year - 1969),
-            Stuff.Random.Next(0, 10) % 2 == 0 ? 10 : 6,
-            Stuff.Random.Next(0, 10) % 2 == 1 ? string.Empty : "WOW64; ");
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:{0}.0) Gecko/20100101 Firefox/{0}.0",
+            Stuff.Random.Next((DateTime.Today.Year - 2012) * 10 - 10, (DateTime.Today.Year - 2012) * 10));
 
         /// <summary>
         ///     timeout for provider connections
@@ -504,7 +502,11 @@ namespace GMap.NET.MapProviders
                 r.UserAgent = UserAgent;
                 r.ReadWriteTimeout = TimeoutMs * 6;
                 r.Accept = requestAccept;
-                r.Referer = RefererUrl;
+                if (!string.IsNullOrEmpty(RefererUrl))
+                {
+                    r.Referer = RefererUrl;
+                }
+
                 r.Timeout = TimeoutMs;
             }
             else
