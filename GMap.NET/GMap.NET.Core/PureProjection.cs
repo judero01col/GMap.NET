@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 using static System.Math;
 
 namespace GMap.NET
@@ -218,7 +219,7 @@ namespace GMap.NET
         /// </summary>
         public List<GPoint> GetAreaTileList(RectLatLng rect, int zoom, int padding)
         {
-            var ret = new List<GPoint>();
+            var set = new HashSet<GPoint>();
 
             var topLeft = FromPixelToTileXY(FromLatLngToPixel(rect.LocationTopLeft, zoom));
             var rightBottom = FromPixelToTileXY(FromLatLngToPixel(rect.LocationRightBottom, zoom));
@@ -228,14 +229,18 @@ namespace GMap.NET
                 for (long y = topLeft.Y - padding; y <= rightBottom.Y + padding; y++)
                 {
                     var p = new GPoint(x, y);
-                    if (!ret.Contains(p) && p.X >= 0 && p.Y >= 0)
+                    if (!set.Contains(p) && p.X >= 0 && p.Y >= 0)
+                    {
+                        set.Add(p);
+                    }
+                    /*if (!ret.Contains(p) && p.X >= 0 && p.Y >= 0)
                     {
                         ret.Add(p);
-                    }
+                    }*/
                 }
             }
 
-            return ret;
+            return set.ToList();
         }
 
         /// <summary>
