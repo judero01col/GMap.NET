@@ -370,7 +370,7 @@ namespace GMap.NET.ObjectModel
         // Fields
         protected Collection<T> _inner;
 
-        protected object m_lock = new object();
+        protected object _lock = new object();
 
         private SimpleMonitor _monitor;
         private const string CountString = "Count";
@@ -397,7 +397,7 @@ namespace GMap.NET.ObjectModel
         {
             get
             {
-                lock (m_lock)
+                lock (_lock)
                     return _inner.Count;
             }
         }
@@ -451,7 +451,7 @@ namespace GMap.NET.ObjectModel
         {
             get
             {
-                lock (m_lock)
+                lock (_lock)
                     return _inner[index];
             }
             set
@@ -462,7 +462,7 @@ namespace GMap.NET.ObjectModel
 
         protected void ClearItems()
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 _inner.Clear();
@@ -476,7 +476,7 @@ namespace GMap.NET.ObjectModel
         {
             if (collection != null)
             {
-                lock (m_lock)
+                lock (_lock)
                 {
                     using (IEnumerator<T> enumerator = collection.GetEnumerator())
                     {
@@ -491,7 +491,7 @@ namespace GMap.NET.ObjectModel
 
         protected void AddItem(T item)
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 _inner.Add(item);
@@ -502,7 +502,7 @@ namespace GMap.NET.ObjectModel
         }
         protected void InsertItem(int index, T item)
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 _inner.Insert(index, item);
@@ -519,7 +519,7 @@ namespace GMap.NET.ObjectModel
 
         protected virtual void MoveItem(int oldIndex, int newIndex)
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 T item = _inner[oldIndex];
@@ -531,7 +531,7 @@ namespace GMap.NET.ObjectModel
         }
         protected void RemoveItem(int index)
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 T item = _inner[index];
@@ -544,7 +544,7 @@ namespace GMap.NET.ObjectModel
 
         protected void SetItem(int index, T item)
         {
-            lock (m_lock)
+            lock (_lock)
             {
                 CheckReentrancy();
                 T oldItem = _inner[index];
@@ -612,13 +612,13 @@ namespace GMap.NET.ObjectModel
 
         public bool Contains(T item)
         {
-            lock (m_lock)
+            lock (_lock)
                 return _inner.Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            lock (m_lock)
+            lock (_lock)
                 _inner.CopyTo(array, arrayIndex);
         }
 
@@ -634,8 +634,8 @@ namespace GMap.NET.ObjectModel
         {
             // instead of returning an usafe enumerator,
             // we wrap it into our thread-safe class
-            lock (m_lock)
-                return new ThreadSafeEnumerator<T>(_inner.GetEnumerator(), m_lock);
+            lock (_lock)
+                return new ThreadSafeEnumerator<T>(_inner.GetEnumerator(), _lock);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

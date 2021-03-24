@@ -79,6 +79,7 @@ namespace GMap.NET
         /// </summary>
         /// <param name="p"></param>
         /// <param name="zoom"></param>
+        /// <param name="useCache"></param>
         /// <returns></returns>
         public GPoint FromLatLngToPixel(PointLatLng p, int zoom, bool useCache)
         {
@@ -117,6 +118,7 @@ namespace GMap.NET
         /// </summary>
         /// <param name="p"></param>
         /// <param name="zoom"></param>
+        /// <param name="useCache"></param>
         /// <returns></returns>
         public PointLatLng FromPixelToLatLng(GPoint p, int zoom, bool useCache)
         {
@@ -219,28 +221,25 @@ namespace GMap.NET
         /// </summary>
         public List<GPoint> GetAreaTileList(RectLatLng rect, int zoom, int padding)
         {
-            var set = new HashSet<GPoint>();
-
             var topLeft = FromPixelToTileXY(FromLatLngToPixel(rect.LocationTopLeft, zoom));
             var rightBottom = FromPixelToTileXY(FromLatLngToPixel(rect.LocationRightBottom, zoom));
 
-            for (long x = topLeft.X - padding; x <= rightBottom.X + padding; x++)
+            long x = Max(0, topLeft.X - padding);
+            long toX = rightBottom.X + padding;
+            long y0 = Max(0, topLeft.Y - padding);
+            long toY = rightBottom.Y + padding;
+            
+            var list = new List<GPoint>((int)((toX - x + 1) * (toY - y0 + 1)));
+
+            for (; x <= toX; x++)
             {
-                for (long y = topLeft.Y - padding; y <= rightBottom.Y + padding; y++)
+                for (long y = y0; y <= toY; y++)
                 {
-                    var p = new GPoint(x, y);
-                    if (!set.Contains(p) && p.X >= 0 && p.Y >= 0)
-                    {
-                        set.Add(p);
-                    }
-                    /*if (!ret.Contains(p) && p.X >= 0 && p.Y >= 0)
-                    {
-                        ret.Add(p);
-                    }*/
+                    list.Add(new GPoint(x, y));
                 }
             }
 
-            return set.ToList();
+            return list;
         }
 
         /// <summary>

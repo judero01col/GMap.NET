@@ -11,16 +11,17 @@ namespace GMap.NET.ObjectModel
     {
         // this is the (thread-unsafe)
         // enumerator of the underlying collection
-        private readonly IEnumerator<T> m_Inner;
+        private readonly IEnumerator<T> _inner;
+
         // this is the object we shall lock on. 
-        private readonly object m_Lock;
+        private readonly object _lock;
 
         public ThreadSafeEnumerator(IEnumerator<T> inner, object @lock)
         {
-            m_Inner = inner;
-            m_Lock = @lock;
+            _inner = inner;
+            _lock = @lock;
             // entering lock in constructor
-            Monitor.Enter(m_Lock);
+            Monitor.Enter(_lock);
         }
 
         #region Implementation of IDisposable
@@ -29,7 +30,7 @@ namespace GMap.NET.ObjectModel
         {
             // .. and exiting lock on Dispose()
             // This will be called when foreach loop finishes
-            Monitor.Exit(m_Lock);
+            Monitor.Exit(_lock);
         }
 
         #endregion
@@ -42,17 +43,17 @@ namespace GMap.NET.ObjectModel
 
         public bool MoveNext()
         {
-            return m_Inner.MoveNext();
+            return _inner.MoveNext();
         }
 
         public void Reset()
         {
-            m_Inner.Reset();
+            _inner.Reset();
         }
 
         public T Current
         {
-            get { return m_Inner.Current; }
+            get { return _inner.Current; }
         }
 
         object IEnumerator.Current
