@@ -465,11 +465,9 @@ namespace GMap.NET.WindowsPresentation
             new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
 
         /// <summary>
-        ///     ///
-        ///     <summary>
-        ///         pen for empty tile background
-        ///     </summary>
-        public Brush EmptytileBrush = Brushes.Navy;
+        ///     pen for empty tile background
+        /// </summary>
+        public Brush EmptyTileBrush = Brushes.Navy;
 
         /// <summary>
         ///     text on empty tiles
@@ -1136,7 +1134,7 @@ namespace GMap.NET.WindowsPresentation
 
                                 if (_core.FailedLoads.ContainsKey(lt))
                                 {
-                                    g.DrawRectangle(EmptytileBrush,
+                                    g.DrawRectangle(EmptyTileBrush,
                                         EmptyTileBorders,
                                         new Rect(_core.TileRect.X,
                                             _core.TileRect.Y,

@@ -24,7 +24,6 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         ///     creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
-        /// <param name="pl"></param>
         /// <returns></returns>
         public virtual Path CreatePath(List<Point> localPath, bool addBlurEffect)
         {

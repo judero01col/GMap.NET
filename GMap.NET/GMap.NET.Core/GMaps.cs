@@ -400,8 +400,6 @@ namespace GMap.NET
         /// <summary>
         ///     live for cache ;}
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void CacheEngineLoop()
         {
             Debug.WriteLine("CacheEngine: start");
@@ -835,7 +833,6 @@ namespace GMap.NET
         /// <summary>
         ///     turns off tile host
         /// </summary>
-        /// <param name="port"></param>
         public void DisableTileHost()
         {
             if (_host != null)

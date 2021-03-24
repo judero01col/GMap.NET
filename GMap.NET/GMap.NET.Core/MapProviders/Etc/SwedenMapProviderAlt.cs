@@ -1,15 +1,15 @@
-﻿///--------------------------------------------------------------------------------------------
-/// 20200313 (jokubokla): The Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006)
-///
-/// This project contains the Lantmäteriet SWEREF99 Map for quite some time. Recently I found 
-/// out (by using QGIS and the GetCapabilities function of WMTS) that the Lantmäteriet map 
-/// is available also in a Pseudo Mercator Projection (EPSG:3857). 
-/// 
-/// This is very convenient if one uses this project to generate offline Maps, e.g. in 
-/// the .mbtiles SQLite database format. Android Apps like LOCUS or ORUX only understand
-/// Mercator to my knowledge. With this Provider, Android maps from Lantmäteriet can be 
-/// created for those Apps as well.
-///--------------------------------------------------------------------------------------------
+﻿//--------------------------------------------------------------------------------------------
+// 20200313 (jokubokla): The Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006)
+//
+// This project contains the Lantmäteriet SWEREF99 Map for quite some time. Recently I found 
+// out (by using QGIS and the GetCapabilities function of WMTS) that the Lantmäteriet map 
+// is available also in a Pseudo Mercator Projection (EPSG:3857). 
+// 
+// This is very convenient if one uses this project to generate offline Maps, e.g. in 
+// the .mbtiles SQLite database format. Android Apps like LOCUS or ORUX only understand
+// Mercator to my knowledge. With this Provider, Android maps from Lantmäteriet can be 
+// created for those Apps as well.
+//--------------------------------------------------------------------------------------------
 
 namespace GMap.NET.MapProviders
 {

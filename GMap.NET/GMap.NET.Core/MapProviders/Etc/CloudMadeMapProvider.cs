@@ -314,6 +314,7 @@ namespace GMap.NET.MapProviders
         /// <param name="direction"></param>
         /// <param name="start"></param>
         /// <param name="wayPoints"></param>
+        /// <param name="end"></param>
         /// <param name="avoidHighways"></param>
         /// <param name="avoidTolls"></param>
         /// <param name="walkingMode"></param>
@@ -333,6 +334,7 @@ namespace GMap.NET.MapProviders
         /// <param name="direction"></param>
         /// <param name="start"></param>
         /// <param name="wayPoints"></param>
+        /// <param name="end"></param>
         /// <param name="avoidHighways"></param>
         /// <param name="avoidTolls"></param>
         /// <param name="walkingMode"></param>

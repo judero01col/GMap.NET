@@ -35,7 +35,7 @@ namespace Demo.WindowsForms
       /// <summary>
       /// any custom drawing here
       /// </summary>
-      /// <param name="drawingContext"></param>
+      /// <param name="g"></param>
       protected override void OnPaintOverlays(Graphics g)
       {
          base.OnPaintOverlays(g);

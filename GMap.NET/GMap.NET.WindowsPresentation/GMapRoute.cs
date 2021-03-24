@@ -35,12 +35,11 @@ namespace GMap.NET.WindowsPresentation
         /// <summary>
         ///     creates path from list of points, for performance set addBlurEffect to false
         /// </summary>
-        /// <param name="pl"></param>
         /// <returns></returns>
         public virtual Path CreatePath(List<Point> localPath, bool addBlurEffect)
         {
             // Create a StreamGeometry to use to specify myPath.
-            StreamGeometry geometry = new StreamGeometry();
+            var geometry = new StreamGeometry();
 
             using (StreamGeometryContext ctx = geometry.Open())
             {

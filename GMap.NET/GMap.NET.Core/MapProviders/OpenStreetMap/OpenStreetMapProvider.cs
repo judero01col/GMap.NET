@@ -131,7 +131,7 @@ namespace GMap.NET.MapProviders
                     var xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
                     xmlnsManager.AddNamespace("sm", "http://earth.google.com/kml/2.0");
 
-                    ///Folder/Placemark/LineString/coordinates
+                    // /Folder/Placemark/LineString/coordinates
                     var coordNode = xmldoc.SelectSingleNode(
                         "/sm:kml/sm:Document/sm:Folder/sm:Placemark/sm:LineString/sm:coordinates",
                         xmlnsManager);

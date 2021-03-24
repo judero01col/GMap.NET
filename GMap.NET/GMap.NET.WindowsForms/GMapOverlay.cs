@@ -70,10 +70,8 @@ namespace GMap.NET.WindowsForms
 
         bool _isHitTestVisible = true;
 
-        /// overlay Id	        ///
         /// <summary>
-        /// </summary>
-        /// /// HitTest visibility for entire overlay
+        ///     HitTest visibility for entire overlay
         /// </summary>
         public bool IsHitTestVisible
         {
