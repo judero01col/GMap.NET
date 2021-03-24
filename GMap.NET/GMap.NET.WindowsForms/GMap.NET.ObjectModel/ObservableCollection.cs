@@ -102,7 +102,7 @@ namespace GMap.NET.ObjectModel
             }
             else
             {
-                InitializeAddOrRemove(action, new[] {changedItem}, -1);
+                InitializeAddOrRemove(action, new[] { changedItem }, -1);
             }
         }
 
@@ -195,7 +195,7 @@ namespace GMap.NET.ObjectModel
             }
             else
             {
-                InitializeAddOrRemove(action, new[] {changedItem}, index);
+                InitializeAddOrRemove(action, new[] { changedItem }, index);
             }
         }
 
@@ -208,7 +208,7 @@ namespace GMap.NET.ObjectModel
                 throw new ArgumentException("WrongActionForCtor", "action");
             }
 
-            InitializeMoveOrReplace(action, new[] {newItem}, new[] {oldItem}, -1, -1);
+            InitializeMoveOrReplace(action, new[] { newItem }, new[] { oldItem }, -1, -1);
         }
 
         public NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction action, IList newItems, IList oldItems,
@@ -267,7 +267,7 @@ namespace GMap.NET.ObjectModel
                 throw new ArgumentException("IndexCannotBeNegative", "index");
             }
 
-            object[] newItems = new[] {changedItem};
+            object[] newItems = new[] { changedItem };
             InitializeMoveOrReplace(action, newItems, newItems, index, oldIndex);
         }
 
@@ -281,7 +281,7 @@ namespace GMap.NET.ObjectModel
                 throw new ArgumentException("WrongActionForCtor", "action");
             }
 
-            InitializeMoveOrReplace(action, new[] {newItem}, new[] {oldItem}, index, index);
+            InitializeMoveOrReplace(action, new[] { newItem }, new[] { oldItem }, index, index);
         }
 
         private void InitializeAdd(NotifyCollectionChangedAction action, IList newItems, int newStartingIndex)
@@ -365,9 +365,13 @@ namespace GMap.NET.ObjectModel
     }
 
     [Serializable]
-    public class ObservableCollection<T> : Collection<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableCollection<T> : ICollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         // Fields
+        protected Collection<T> _inner;
+
+        protected object m_lock = new object();
+
         private SimpleMonitor _monitor;
         private const string CountString = "Count";
         private const string IndexerName = "Item[]";
@@ -389,10 +393,23 @@ namespace GMap.NET.ObjectModel
             }
         }
 
+        public int Count
+        {
+            get
+            {
+                lock (m_lock)
+                    return _inner.Count;
+            }
+        }
+
+        public bool IsReadOnly => false;
+
+
         // Methods
         public ObservableCollection()
         {
             _monitor = new SimpleMonitor();
+            _inner = new Collection<T>();
         }
 
         public ObservableCollection(IEnumerable<T> collection)
@@ -402,14 +419,16 @@ namespace GMap.NET.ObjectModel
             {
                 throw new ArgumentNullException("collection");
             }
+            _inner = new Collection<T>();
 
             CopyFrom(collection);
         }
 
         public ObservableCollection(List<T> list)
-            : base(list != null ? new List<T>(list.Count) : list)
         {
             _monitor = new SimpleMonitor();
+            _inner = new Collection<T>(list != null ? new List<T>(list.Count) : list);
+
             CopyFrom(list);
         }
 
@@ -428,37 +447,69 @@ namespace GMap.NET.ObjectModel
             }
         }
 
-        protected override void ClearItems()
+        public T this[int index]
         {
-            CheckReentrancy();
-            base.ClearItems();
-            OnPropertyChanged(CountString);
-            OnPropertyChanged(IndexerName);
-            OnCollectionReset();
+            get
+            {
+                lock (m_lock)
+                    return _inner[index];
+            }
+            set
+            {
+                SetItem(index, value);
+            }
+        }
+
+        protected void ClearItems()
+        {
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                _inner.Clear();
+                OnPropertyChanged(CountString);
+                OnPropertyChanged(IndexerName);
+                OnCollectionReset();
+            }
         }
 
         private void CopyFrom(IEnumerable<T> collection)
         {
-            IList<T> items = Items;
-            if (collection != null && items != null)
+            if (collection != null)
             {
-                using (IEnumerator<T> enumerator = collection.GetEnumerator())
+                lock (m_lock)
                 {
-                    while (enumerator.MoveNext())
+                    using (IEnumerator<T> enumerator = collection.GetEnumerator())
                     {
-                        items.Add(enumerator.Current);
+                        while (enumerator.MoveNext())
+                        {
+                            AddItem(enumerator.Current);
+                        }
                     }
                 }
             }
         }
 
-        protected override void InsertItem(int index, T item)
+        protected void AddItem(T item)
         {
-            CheckReentrancy();
-            base.InsertItem(index, item);
-            OnPropertyChanged(CountString);
-            OnPropertyChanged(IndexerName);
-            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                _inner.Add(item);
+                OnPropertyChanged(CountString);
+                OnPropertyChanged(IndexerName);
+                OnCollectionChanged(NotifyCollectionChangedAction.Add, item, _inner.Count - 1);
+            }
+        }
+        protected void InsertItem(int index, T item)
+        {
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                _inner.Insert(index, item);
+                OnPropertyChanged(CountString);
+                OnPropertyChanged(IndexerName);
+                OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
+            }
         }
 
         public void Move(int oldIndex, int newIndex)
@@ -468,12 +519,39 @@ namespace GMap.NET.ObjectModel
 
         protected virtual void MoveItem(int oldIndex, int newIndex)
         {
-            CheckReentrancy();
-            T item = base[oldIndex];
-            base.RemoveItem(oldIndex);
-            base.InsertItem(newIndex, item);
-            OnPropertyChanged(IndexerName);
-            OnCollectionChanged(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex);
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                T item = _inner[oldIndex];
+                _inner.RemoveAt(oldIndex);
+                _inner.Insert(newIndex, item);
+                OnPropertyChanged(IndexerName);
+                OnCollectionChanged(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex);
+            }
+        }
+        protected void RemoveItem(int index)
+        {
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                T item = _inner[index];
+                _inner.RemoveAt(index);
+                OnPropertyChanged(CountString);
+                OnPropertyChanged(IndexerName);
+                OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+            }
+        }
+
+        protected void SetItem(int index, T item)
+        {
+            lock (m_lock)
+            {
+                CheckReentrancy();
+                T oldItem = _inner[index];
+                _inner[index] = item;
+                OnPropertyChanged(IndexerName);
+                OnCollectionChanged(NotifyCollectionChangedAction.Replace, oldItem, item, index);
+            }
         }
 
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
@@ -521,23 +599,48 @@ namespace GMap.NET.ObjectModel
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected override void RemoveItem(int index)
+
+        public void Add(T item)
         {
-            CheckReentrancy();
-            T item = base[index];
-            base.RemoveItem(index);
-            OnPropertyChanged(CountString);
-            OnPropertyChanged(IndexerName);
-            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
+            AddItem(item);
         }
 
-        protected override void SetItem(int index, T item)
+        public void Clear()
         {
-            CheckReentrancy();
-            T oldItem = base[index];
-            base.SetItem(index, item);
-            OnPropertyChanged(IndexerName);
-            OnCollectionChanged(NotifyCollectionChangedAction.Replace, oldItem, item, index);
+            ClearItems();
+        }
+
+        public bool Contains(T item)
+        {
+            lock (m_lock)
+                return _inner.Contains(item);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            lock (m_lock)
+                _inner.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(T item)
+        {
+            RemoveItem(_inner.IndexOf(item));
+            return true;
+        }
+
+        public void RemoveAt(int index) => RemoveItem(index);
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            // instead of returning an usafe enumerator,
+            // we wrap it into our thread-safe class
+            lock (m_lock)
+                return new ThreadSafeEnumerator<T>(_inner.GetEnumerator(), m_lock);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         // Nested Types
