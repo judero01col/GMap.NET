@@ -1630,7 +1630,7 @@ namespace GMap.NET.Avalonia
 
             if (_renderHelperLine)
             {
-                var p = Mouse.GetPosition(this);
+                var p = new MouseDevice().GetPosition(this);
 
                 drawingContext.DrawLine(HelperLinePen, new Point(p.X, 0), new Point(p.X, Height));
                 drawingContext.DrawLine(HelperLinePen, new Point(0, p.Y), new Point(Width, p.Y));
@@ -1684,7 +1684,7 @@ namespace GMap.NET.Avalonia
 
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
-                _renderHelperLine = !(e.IsUp && (e.Key == Key.LeftShift || e.SystemKey == Key.LeftAlt));
+                _renderHelperLine = !(e.Key == Key.LeftShift || e.KeyModifiers == KeyModifiers.Alt);
                 if (!_renderHelperLine)
                 {
                     InvalidateVisual();
@@ -1698,7 +1698,8 @@ namespace GMap.NET.Avalonia
 
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
-                _renderHelperLine = e.IsDown && (e.Key == Key.LeftShift || e.SystemKey == Key.LeftAlt);
+                
+                _renderHelperLine = e.Key == Key.LeftShift || e.KeyModifiers == KeyModifiers.Alt;
                 if (_renderHelperLine)
                 {
                     InvalidateVisual();
@@ -1769,7 +1770,7 @@ namespace GMap.NET.Avalonia
                 // set mouse position to map center
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
-                    var ps = PointToScreen(new Point(Width / 2, Height / 2));
+                    var ps = this.PointToScreen(new Point(Width / 2, Height / 2));
                     Stuff.SetCursorPos((int)ps.X, (int)ps.Y);
                 }
 
