@@ -749,8 +749,8 @@ namespace GMap.NET.Avalonia
                 SizeChanged += GMapControl_SizeChanged;
 
                 // by default its internal property, feel free to use your own
-                if (ItemsSource == null)
-                    ItemsSource = Markers;
+                if (Items == null)
+                    Items = Markers;
 
                 _core.Zoom = (int)(double)ZoomProperty.DefaultMetadata.DefaultValue;
             }
@@ -1005,11 +1005,10 @@ namespace GMap.NET.Avalonia
             {
                 if (MapScaleTransform != null)
                 {
-                    //TODO: Find solution for Transform in Avalonia
-                    //var tp = MapScaleTransform.Transform(new Point(_core.RenderOffset.X,
-                    //    _core.RenderOffset.Y));
-                    //MapOverlayTranslateTransform.X = tp.X;
-                    //MapOverlayTranslateTransform.Y = tp.Y;
+                    var tp = MapScaleTransform.Transform(
+                        new Point(_core.RenderOffset.X, _core.RenderOffset.Y));
+                    MapOverlayTranslateTransform.X = tp.X;
+                    MapOverlayTranslateTransform.Y = tp.Y;
 
                     // map is scaled already
                     MapTranslateTransform.X = _core.RenderOffset.X;
@@ -1083,10 +1082,10 @@ namespace GMap.NET.Avalonia
                                                 _core.TileRect.Width * img.Ix + 0.6,
                                                 _core.TileRect.Height * img.Ix + 0.6);
 
-                                        g.PushClip(geometry.Rect);
-                                        g.DrawImage(img.Img, parentImgRect);
-                                        //TODO: no solution for avalonia
-                                        //g.Pop();
+                                        using (g.PushClip(geometry.Rect))
+                                        {
+                                            g.DrawImage(img.Img, parentImgRect);
+                                        }
                                         geometry = null;
                                     }
                                 }
@@ -1131,10 +1130,11 @@ namespace GMap.NET.Avalonia
                                             if (!found)
                                                 found = true;
 
-                                            g.PushClip(geometry.Rect);
-                                            g.DrawImage(img.Img, parentImgRect);
-                                            g.DrawRectangle(SelectedAreaFill, null, geometry.Bounds);
-                                            //g.Pop();
+                                            using (g.PushClip(geometry.Rect))
+                                            {
+                                                g.DrawImage(img.Img, parentImgRect);
+                                                g.DrawRectangle(SelectedAreaFill, null, geometry.Bounds);
+                                            }
                                         }
                                     }
                                 }
@@ -1543,31 +1543,35 @@ namespace GMap.NET.Avalonia
 
             if (IsRotated)
             {
-                using var _ = drawingContext.PushPostTransform(_rotationMatrix.Value);
-                if (MapScaleTransform != null)
+                using (drawingContext.PushPostTransform(_rotationMatrix.Value))
                 {
-                    using (drawingContext.PushPostTransform(MapScaleTransform.Value))
-                    using (drawingContext.PushPostTransform(MapTranslateTransform.Value))
+                    if (MapScaleTransform != null)
+                    {
+                        using (drawingContext.PushPostTransform(MapScaleTransform.Value))
+                        using (drawingContext.PushPostTransform(MapTranslateTransform.Value))
+                            DrawMap(drawingContext);
+                    }
+                    else
+                    {
+                        using var _ = drawingContext.PushPostTransform(MapTranslateTransform.Value);
                         DrawMap(drawingContext);
-                }
-                else
-                {
-                    using var _ = drawingContext.PushPostTransform(MapTranslateTransform.Value);
-                    DrawMap(drawingContext);
+                    }
                 }
             }
             else
             {
                 if (MapScaleTransform != null)
                 {
-                    using var _ = drawingContext.PushPostTransform(MapScaleTransform.Value);
-                    using var _ = drawingContext.PushPostTransform(MapTranslateTransform.Value);
-                    DrawMap(drawingContext);
+                    using (drawingContext.PushPostTransform(MapScaleTransform.Value))
+                    using (drawingContext.PushPostTransform(MapTranslateTransform.Value))
+                    {
+                        DrawMap(drawingContext);
 
 #if DEBUG
-                    drawingContext.DrawLine(_virtualCenterCrossPen, new Point(-20, 0), new Point(20, 0));
-                    drawingContext.DrawLine(_virtualCenterCrossPen, new Point(0, -20), new Point(0, 20));
+                        drawingContext.DrawLine(_virtualCenterCrossPen, new Point(-20, 0), new Point(20, 0));
+                        drawingContext.DrawLine(_virtualCenterCrossPen, new Point(0, -20), new Point(0, 20));
 #endif
+                    }
                 }
                 else
                 {
@@ -1705,11 +1709,9 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     Reverses MouseWheel zooming direction
         /// </summary>
-        public static readonly DependencyProperty InvertedMouseWheelZoomingProperty = DependencyProperty.Register(
-            "InvertedMouseWheelZooming",
-            typeof(bool),
-            typeof(GMapControl),
-            new PropertyMetadata(false));
+        public static readonly StyledProperty<bool> InvertedMouseWheelZoomingProperty =
+          AvaloniaProperty.Register<GMapControl, bool>(
+              nameof(InvertedMouseWheelZooming));
 
         public bool InvertedMouseWheelZooming
         {
@@ -1720,11 +1722,9 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     Lets you zoom by MouseWheel even when pointer is in area of marker
         /// </summary>
-        public static readonly DependencyProperty IgnoreMarkerOnMouseWheelProperty = DependencyProperty.Register(
-            "IgnoreMarkerOnMouseWheel",
-            typeof(bool),
-            typeof(GMapControl),
-            new PropertyMetadata(false));
+        public static readonly StyledProperty<bool> IgnoreMarkerOnMouseWheelProperty =
+          AvaloniaProperty.Register<GMapControl, bool>(
+              nameof(IgnoreMarkerOnMouseWheel));
 
         public bool IgnoreMarkerOnMouseWheel
         {
@@ -1742,7 +1742,7 @@ namespace GMap.NET.Avalonia
 
                 if (MapScaleTransform != null)
                 {
-                    p = MapScaleTransform.Inverse.Transform(p);
+                    p = MapScaleTransform.Inverse().Transform(p);
                 }
 
                 p = ApplyRotationInversion(p.X, p.Y);
@@ -1769,8 +1769,7 @@ namespace GMap.NET.Avalonia
                 // set mouse position to map center
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
-                    var ps =
-                        PointToScreen(new Point(Width / 2, Height / 2));
+                    var ps = PointToScreen(new Point(Width / 2, Height / 2));
                     Stuff.SetCursorPos((int)ps.X, (int)ps.Y);
                 }
 
@@ -1815,8 +1814,7 @@ namespace GMap.NET.Avalonia
 
                 if (MapScaleTransform != null)
                 {
-                    //p = MapScaleTransform.Inverse.Transform(p);
-                    //p = MapScaleTransform.Value.Invert.Transform(p);
+                    p = MapScaleTransform.Inverse().Transform(p);
                 }
 
                 p = ApplyRotationInversion(p.X, p.Y);
@@ -1920,7 +1918,7 @@ namespace GMap.NET.Avalonia
 
                 if (MapScaleTransform != null)
                 {
-                    p = MapScaleTransform.Inverse.Transform(p);
+                    p = MapScaleTransform.Inverse().Transform(p);
                 }
 
                 p = ApplyRotationInversion(p.X, p.Y);
@@ -1958,7 +1956,7 @@ namespace GMap.NET.Avalonia
 
                     if (MapScaleTransform != null)
                     {
-                        p = MapScaleTransform.Inverse.Transform(p);
+                        p = MapScaleTransform.Inverse().Transform(p);
                     }
 
                     p = ApplyRotationInversion(p.X, p.Y);
@@ -2606,7 +2604,7 @@ namespace GMap.NET.Avalonia
         {
             if (MapScaleTransform != null)
             {
-                var tp = MapScaleTransform.Inverse.Transform(new Point(x, y));
+                var tp = MapScaleTransform.Inverse().Transform(new Point(x, y));
                 x = (int)tp.X;
                 y = (int)tp.Y;
             }
