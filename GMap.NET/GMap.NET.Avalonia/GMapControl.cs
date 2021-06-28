@@ -30,6 +30,9 @@ namespace GMap.NET.Avalonia
     /// </summary>
     public partial class GMapControl : ItemsControl, Interface, IDisposable
     {
+        private const double MinimumHorizontalDragDistance = 3;
+        private const double MinimumVerticalDragDistance = 3;
+
         #region DependencyProperties and related stuff
 
         /// <summary>
@@ -38,7 +41,7 @@ namespace GMap.NET.Avalonia
         [Browsable(false)]
         public GMapProvider MapProvider
         {
-            get { return GetValue(MapProviderProperty) as GMapProvider; }
+            get { return GetValue(MapProviderProperty); }
             set { SetValue(MapProviderProperty, value); }
         }
 
@@ -443,6 +446,8 @@ namespace GMap.NET.Avalonia
         private ScaleModes _scaleMode = ScaleModes.Integer;
 
         #endregion
+
+        readonly MouseDevice _mouse = new MouseDevice();
 
         readonly Core _core = new Core();
 
@@ -1630,7 +1635,7 @@ namespace GMap.NET.Avalonia
 
             if (_renderHelperLine)
             {
-                var p = new MouseDevice().GetPosition(this);
+                var p = _mouse.GetPosition(this);
 
                 drawingContext.DrawLine(HelperLinePen, new Point(p.X, 0), new Point(p.X, Height));
                 drawingContext.DrawLine(HelperLinePen, new Point(0, p.Y), new Point(Width, p.Y));
@@ -1716,7 +1721,7 @@ namespace GMap.NET.Avalonia
 
         public bool InvertedMouseWheelZooming
         {
-            get { return (bool)GetValue(InvertedMouseWheelZoomingProperty); }
+            get { return GetValue(InvertedMouseWheelZoomingProperty); }
             set { SetValue(InvertedMouseWheelZoomingProperty, value); }
         }
 
@@ -1729,15 +1734,15 @@ namespace GMap.NET.Avalonia
 
         public bool IgnoreMarkerOnMouseWheel
         {
-            get { return (bool)GetValue(IgnoreMarkerOnMouseWheelProperty); }
+            get { return GetValue(IgnoreMarkerOnMouseWheelProperty); }
             set { SetValue(IgnoreMarkerOnMouseWheelProperty, value); }
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
-            base.OnMouseWheel(e);
+            base.OnPointerWheelChanged(e);
 
-            if (MouseWheelZoomEnabled && (IsMouseDirectlyOver || IgnoreMarkerOnMouseWheel) && !_core.IsDragging)
+            if (MouseWheelZoomEnabled && (/*IsMouseDirectlyOver ||*/ IgnoreMarkerOnMouseWheel) && !_core.IsDragging)
             {
                 var p = e.GetPosition(this);
 
@@ -1776,7 +1781,7 @@ namespace GMap.NET.Avalonia
 
                 _core.MouseWheelZooming = true;
 
-                if (e.Delta > 0)
+                if (e.Delta.Length > 0)
                 {
                     if (!InvertedMouseWheelZooming)
                     {
@@ -1858,8 +1863,7 @@ namespace GMap.NET.Avalonia
                     IsDragging = false;
                     Debug.WriteLine("IsDragging = " + IsDragging);
                     Cursor = _cursorBefore;
-                    //Mouse.Capture(null);
-                    //TODO: find solution in Avalonia
+                    _mouse.Capture(null);
                 }
 
                 _core.EndDrag();
@@ -1925,11 +1929,11 @@ namespace GMap.NET.Avalonia
                 p = ApplyRotationInversion(p.X, p.Y);
 
                 // cursor has moved beyond drag tolerance
-                if (e.LeftButton == MouseButtonState.Pressed && DragButton == MouseButton.Left ||
-                    e.RightButton == MouseButtonState.Pressed && DragButton == MouseButton.Right)
+                var button = e.GetCurrentPoint(this).Properties.PointerUpdateKind;
+                if (button == PointerUpdateKind.LeftButtonPressed)
                 {
-                    if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
-                        Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
+                    if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= MinimumHorizontalDragDistance ||
+                        Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= MinimumVerticalDragDistance)
                     {
                         _core.BeginDrag(_core.MouseDown);
                     }
@@ -1943,8 +1947,8 @@ namespace GMap.NET.Avalonia
                     IsDragging = true;
                     Debug.WriteLine("IsDragging = " + IsDragging);
                     _cursorBefore = Cursor;
-                    Cursor = Cursors.SizeAll;
-                    Mouse.Capture(this);
+                    Cursor = new Cursor(StandardCursorType.SizeAll);
+                    _mouse.Capture(this);
                 }
 
                 if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
@@ -1982,8 +1986,9 @@ namespace GMap.NET.Avalonia
             }
             else
             {
+                
                 if (_isSelected && !_selectionStart.IsEmpty &&
-                    (Keyboard.Modifiers == ModifierKeys.Shift || Keyboard.Modifiers == ModifierKeys.Alt ||
+                    (e.KeyModifiers == KeyModifiers.Shift || e.KeyModifiers == KeyModifiers.Alt ||
                      DisableAltForSelection))
                 {
                     var p = e.GetPosition(this);
