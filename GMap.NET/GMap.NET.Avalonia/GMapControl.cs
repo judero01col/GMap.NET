@@ -12,6 +12,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Shapes;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
@@ -277,7 +278,7 @@ namespace GMap.NET.Avalonia
         private static void ZoomPropertyChanged(GMapControl mapControl, double value, double oldValue,
             ZoomMode zoomMode)
         {
-            if (mapControl != null && mapControl.MapProvider.Projection != null)
+            if (mapControl != null && mapControl.MapProvider?.Projection != null)
             {
                 Debug.WriteLine("Zoom: " + oldValue + " -> " + value);
 
@@ -542,7 +543,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     map dragg button
         /// </summary>
-        [Category("GMap.NET")] public PointerUpdateKind DragButton = PointerUpdateKind.RightButtonPressed;
+        [Category("GMap.NET")] public PointerUpdateKind DragButton = PointerUpdateKind.LeftButtonPressed;
 
         /// <summary>
         ///     use circle for selection
@@ -697,30 +698,20 @@ namespace GMap.NET.Avalonia
 
                 #endregion
 
-                if (_dataTemplateInstance == null)
+                _dataTemplateInstance ??= new DataTemplate()
                 {
-                    _dataTemplateInstance = new DataTemplate(typeof(GMapMarker));
+                    Content = new ContentPresenter
                     {
-                        var fef = new FrameworkElementFactory(typeof(ContentPresenter));
-                        fef.SetBinding(ContentPresenter.ContentProperty, new Binding("Shape"));
-                        _dataTemplateInstance.VisualTree = fef;
+                        Content = new Binding("Shape")
                     }
-                }
+                };
 
                 ItemTemplate = _dataTemplateInstance;
 
-                if (_itemsPanelTemplateInstance == null)
+                _itemsPanelTemplateInstance ??= new ItemsPanelTemplate
                 {
-                    var factoryPanel = new FrameworkElementFactory(typeof(Canvas));
-                    {
-                        factoryPanel.SetValue(Panel.IsItemsHostProperty, true);
-
-                        _itemsPanelTemplateInstance = new ItemsPanelTemplate();
-                        {
-                            _itemsPanelTemplateInstance.VisualTree = factoryPanel;
-                        }
-                    }
-                }
+                    Content = new Canvas()
+                };
 
                 ItemsPanel = _itemsPanelTemplateInstance;
 
@@ -734,14 +725,19 @@ namespace GMap.NET.Avalonia
                     }
                 }
 
-                ItemContainerStyle = _styleInstance;
+                if (!Styles.Contains(_styleInstance))
+                {
+                    Styles.Add(_styleInstance);
+                }
 
                 #endregion
 
                 Markers = new ObservableCollection<GMapMarker>();
 
                 ClipToBounds = true;
-                SnapsToDevicePixels = true;
+
+                //TODO: Check if exists in Avalonia
+                //SnapsToDevicePixels = true;
 
                 _core.SystemType = "WindowsPresentation";
 
@@ -749,15 +745,16 @@ namespace GMap.NET.Avalonia
 
                 _core.OnMapZoomChanged += ForceUpdateOverlays;
                 _core.OnCurrentPositionChanged += CoreOnCurrentPositionChanged;
-                Loaded += GMapControl_Loaded;
-                Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
-                SizeChanged += GMapControl_SizeChanged;
+                //Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
+                //SizeChanged += GMapControl_SizeChanged;
 
                 // by default its internal property, feel free to use your own
                 if (Items == null)
                     Items = Markers;
 
-                _core.Zoom = (int)(double)ZoomProperty.DefaultMetadata.DefaultValue;
+                //TODO: find default value here
+                //_core.Zoom = (int)(double)ZoomProperty.DefaultMetadata.DefaultValue;
+                _core.Zoom = 10;
             }
         }
 
@@ -912,16 +909,9 @@ namespace GMap.NET.Avalonia
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void OnMeasureInvalidated()
+        protected override Size MeasureOverride(Size availableSize)
         {
-            //TODO: Check if can be used instead of resize
-            base.OnMeasureInvalidated();
-            var constraint = this.DesiredSize;
-
-            // 50px outside control
-            //region = new GRect(-50, -50, (int)constraint.Width + 100, (int)constraint.Height + 100);
-
-            _core.OnMapSizeChanged((int)constraint.Width, (int)constraint.Height);
+            _core.OnMapSizeChanged((int)availableSize.Width, (int)availableSize.Height);
 
             if (_core.IsStarted)
             {
@@ -932,11 +922,9 @@ namespace GMap.NET.Avalonia
 
                 ForceUpdateOverlays();
             }
-        }
-        //void GMapControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        //{
 
-        //}
+            return base.MeasureOverride(availableSize);
+        }
 
         void ForceUpdateOverlays()
         {
