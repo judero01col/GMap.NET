@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Generators;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Shapes;
 using Avalonia.Data;
@@ -48,7 +49,7 @@ namespace GMap.NET.Avalonia
 
         public Point MapPoint
         {
-            get { return (Point)GetValue(MapPointProperty); }
+            get { return GetValue(MapPointProperty); }
             set { SetValue(MapPointProperty, value); }
         }
 
@@ -66,8 +67,7 @@ namespace GMap.NET.Avalonia
         private static void OnMapPointPropertyChanged(IAvaloniaObject source, bool e)
         {
             if (e) return;
-            var gmap = source as GMapControl;
-            if (gmap == null) return;
+            if (source is not GMapControl gmap) return;
             gmap.Position = new PointLatLng(gmap.MapPoint.X, gmap.MapPoint.Y);
         }
 
@@ -121,7 +121,7 @@ namespace GMap.NET.Avalonia
         [Category("GMap.NET")]
         public double Zoom
         {
-            get { return (double)GetValue(ZoomProperty); }
+            get { return GetValue(ZoomProperty); }
             set { SetValue(ZoomProperty, value); }
         }
 
@@ -131,7 +131,7 @@ namespace GMap.NET.Avalonia
         [Category("GMap.NET")]
         public double ZoomX
         {
-            get { return (double)GetValue(ZoomXProperty); }
+            get { return GetValue(ZoomXProperty); }
             set { SetValue(ZoomXProperty, value); }
         }
 
@@ -141,14 +141,14 @@ namespace GMap.NET.Avalonia
         [Category("GMap.NET")]
         public double ZoomY
         {
-            get { return (double)GetValue(ZoomYProperty); }
+            get { return GetValue(ZoomYProperty); }
             set { SetValue(ZoomYProperty, value); }
         }
 
         [Category("GMap.NET")]
         public PointLatLng CenterPosition
         {
-            get { return (PointLatLng)GetValue(CenterPositionProperty); }
+            get { return GetValue(CenterPositionProperty); }
             set { SetValue(CenterPositionProperty, value); }
         }
 
@@ -183,17 +183,15 @@ namespace GMap.NET.Avalonia
         [Description("Enable pinch map zoom")]
         public bool MultiTouchEnabled
         {
-            get { return (bool)GetValue(MultiTouchEnabledProperty); }
+            get { return GetValue(MultiTouchEnabledProperty); }
             set { SetValue(MultiTouchEnabledProperty, value); }
         }
 
         private static double OnCoerceZoom(IAvaloniaObject o, double value)
         {
-            var map = o as GMapControl;
-
-            if (map != null)
+            if (o is GMapControl map)
             {
-                double result = (double)value;
+                var result = value;
 
                 if (result > map.MaxZoom)
                     result = map.MaxZoom;
@@ -217,12 +215,11 @@ namespace GMap.NET.Avalonia
         private static void CenterPositionPropertyChanged(IAvaloniaObject obj, bool e)
         {
             if (e) return;
-            var gmapControl = obj as GMapControl;
 
-            if (gmapControl != null)
-            {
-                gmapControl.Position = gmapControl.CenterPosition;
-            }
+            if (obj is not GMapControl gmapControl)
+                return;
+                
+            gmapControl.Position = gmapControl.CenterPosition;
         }
 
         private static void MapProviderPropertyChanged(IAvaloniaObject d, bool e)
@@ -246,7 +243,7 @@ namespace GMap.NET.Avalonia
                     viewarea = map.ViewArea;
                 }
 
-                map._core.Provider = map.MapProvider as GMapProvider;
+                map._core.Provider = map.MapProvider;
 
                 map._copyright = null;
 
@@ -284,7 +281,7 @@ namespace GMap.NET.Avalonia
 
                 double remainder = value % 1;
 
-                if (mapControl.ScaleMode != ScaleModes.Integer && remainder != 0 && mapControl.Width > 0)
+                if (mapControl.ScaleMode != ScaleModes.Integer && remainder != 0 && mapControl.Bounds.Width > 0)
                 {
                     bool scaleDown;
 
@@ -383,40 +380,6 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        ///// <summary>
-        /////     Zooms the property changed.
-        ///// </summary>
-        ///// <param name="d">The d.</param>
-        ///// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
-        //private static void ZoomPropertyChanged(IAvaloniaObject d, bool e)
-        //{
-        //    if (e) return;
-        //    var map = (GMapControl)d;
-        //    ZoomPropertyChanged(map, (double)e.NewValue, (double)e.OldValue, ZoomMode.XY);
-        //}
-
-        ///// <summary>
-        /////     Zooms the x property changed.
-        ///// </summary>
-        ///// <param name="d">The d.</param>
-        ///// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
-        //private static void ZoomXPropertyChanged(IAvaloniaObject d, bool e)
-        //{
-        //    if (e) return;
-        //    ZoomPropertyChanged((GMapControl)d, (double)e.NewValue, (double)e.OldValue, ZoomMode.X);
-        //}
-
-        ///// <summary>
-        /////     Zooms the y property changed.
-        ///// </summary>
-        ///// <param name="d">The d.</param>
-        ///// <param name="e">The <see cref="DependencyPropertyChangedEventArgs" /> instance containing the event data.</param>
-        //private static void ZoomYPropertyChanged(IAvaloniaObject d, bool e)
-        //{
-        //    if (e) return;
-        //    ZoomPropertyChanged((GMapControl)d, (double)e.NewValue, (double)e.OldValue, ZoomMode.Y);
-        //}
-
         /// <summary>
         ///     Handles the <see cref="E:MultiTouchEnabledChanged" /> event.
         /// </summary>
@@ -438,7 +401,7 @@ namespace GMap.NET.Avalonia
         [Obsolete("Touch Enabled is deprecated, please use MultiTouchEnabled")]
         public bool TouchEnabled
         {
-            get { return (bool)GetValue(TouchEnabledProperty); }
+            get { return GetValue(TouchEnabledProperty); }
             set { SetValue(TouchEnabledProperty, value); }
         }
 
@@ -710,7 +673,7 @@ namespace GMap.NET.Avalonia
 
                 _itemsPanelTemplateInstance ??= new ItemsPanelTemplate
                 {
-                    Content = new Canvas()
+                    Content = _mapCanvas = new Canvas()
                 };
 
                 ItemsPanel = _itemsPanelTemplateInstance;
@@ -907,8 +870,6 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     recalculates size
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected override Size MeasureOverride(Size availableSize)
         {
             _core.OnMapSizeChanged((int)availableSize.Width, (int)availableSize.Height);
@@ -1239,7 +1200,7 @@ namespace GMap.NET.Avalonia
                 margin.Bottom - margin.Top);
 
             // Get the size of canvas
-            var size = new Size(obj.Width, obj.Height);
+            var size = new Size(obj.Bounds.Width, obj.Bounds.Height);
 
             // force control to Update
             obj.Measure(size);
@@ -1413,22 +1374,21 @@ namespace GMap.NET.Avalonia
         }
 
         readonly RotateTransform _rotationMatrix = new RotateTransform();
-        RotateTransform _rotationMatrixInvert = new RotateTransform();
+        MatrixTransform _rotationMatrixInvert = new MatrixTransform();
 
         /// <summary>
         ///     updates rotation matrix
         /// </summary>
         void UpdateRotationMatrix()
         {
-            var center = new Point(Width / 2.0, Height / 2.0);
+            var center = new Point(Bounds.Width / 2.0, Bounds.Height / 2.0);
 
             _rotationMatrix.Angle = -Bearing;
             //TODO: Avalonia not support Center X, Y
             //_rotationMatrix.CenterY = center.Y;
             //_rotationMatrix.CenterX = center.X;
 
-            _rotationMatrixInvert.Angle = -Bearing;
-            _rotationMatrixInvert.Value.Invert();
+            _rotationMatrixInvert = _rotationMatrix.Inverse();
         }
 
         /// <summary>
@@ -1473,7 +1433,7 @@ namespace GMap.NET.Avalonia
 
                     if (resize)
                     {
-                        _core.OnMapSizeChanged((int)Width, (int)Height);
+                        _core.OnMapSizeChanged((int)Bounds.Width, (int)Bounds.Height);
                     }
 
                     if (_core.IsStarted)
@@ -1531,22 +1491,22 @@ namespace GMap.NET.Avalonia
         {
             if (!_core.IsStarted)
                 return;
-
-            drawingContext.DrawRectangle(EmptyMapBackground, null, new Rect(this.DesiredSize));
+            
+            drawingContext.DrawRectangle(EmptyMapBackground, null, Bounds);
 
             if (IsRotated)
             {
-                using (drawingContext.PushPostTransform(_rotationMatrix.Value))
+                using (drawingContext.PushPreTransform(_rotationMatrix.Value))
                 {
                     if (MapScaleTransform != null)
                     {
-                        using (drawingContext.PushPostTransform(MapScaleTransform.Value))
-                        using (drawingContext.PushPostTransform(MapTranslateTransform.Value))
+                        using (drawingContext.PushPreTransform(MapScaleTransform.Value))
+                        using (drawingContext.PushPreTransform(MapTranslateTransform.Value))
                             DrawMap(drawingContext);
                     }
                     else
                     {
-                        using var _ = drawingContext.PushPostTransform(MapTranslateTransform.Value);
+                        using var _ = drawingContext.PushPreTransform(MapTranslateTransform.Value);
                         DrawMap(drawingContext);
                     }
                 }
@@ -1555,8 +1515,8 @@ namespace GMap.NET.Avalonia
             {
                 if (MapScaleTransform != null)
                 {
-                    using (drawingContext.PushPostTransform(MapScaleTransform.Value))
-                    using (drawingContext.PushPostTransform(MapTranslateTransform.Value))
+                    using (drawingContext.PushPreTransform(MapScaleTransform.Value))
+                    using (drawingContext.PushPreTransform(MapTranslateTransform.Value))
                     {
                         DrawMap(drawingContext);
 
@@ -1568,7 +1528,7 @@ namespace GMap.NET.Avalonia
                 }
                 else
                 {
-                    using var _ = drawingContext.PushPostTransform(MapTranslateTransform.Value);
+                    using var _ = drawingContext.PushPreTransform(MapTranslateTransform.Value);
                     DrawMap(drawingContext);
 #if DEBUG
                     drawingContext.DrawLine(_virtualCenterCrossPen, new Point(-20, 0), new Point(20, 0));
@@ -1614,26 +1574,26 @@ namespace GMap.NET.Avalonia
             if (ShowCenter)
             {
                 drawingContext.DrawLine(CenterCrossPen,
-                    new Point(Width / 2 - 5, Height / 2),
-                    new Point(Width / 2 + 5, Height / 2));
+                    new Point(Bounds.Width / 2 - 5, Bounds.Height / 2),
+                    new Point(Bounds.Width / 2 + 5, Bounds.Height / 2));
                 drawingContext.DrawLine(CenterCrossPen,
-                    new Point(Width / 2, Height / 2 - 5),
-                    new Point(Width / 2, Height / 2 + 5));
+                    new Point(Bounds.Width / 2, Bounds.Height / 2 - 5),
+                    new Point(Bounds.Width / 2, Bounds.Height / 2 + 5));
             }
 
             if (_renderHelperLine)
             {
                 var p = _mouse.GetPosition(this);
 
-                drawingContext.DrawLine(HelperLinePen, new Point(p.X, 0), new Point(p.X, Height));
-                drawingContext.DrawLine(HelperLinePen, new Point(0, p.Y), new Point(Width, p.Y));
+                drawingContext.DrawLine(HelperLinePen, new Point(p.X, 0), new Point(p.X, Bounds.Height));
+                drawingContext.DrawLine(HelperLinePen, new Point(0, p.Y), new Point(Bounds.Width, p.Y));
             }
 
             #region -- copyright --
 
             if (_copyright != null)
             {
-                drawingContext.DrawText(Brushes.Black, new Point(5, Height - _copyright.Constraint.Height - 5), _copyright);
+                drawingContext.DrawText(Brushes.Black, new Point(5, Bounds.Height - _copyright.Constraint.Height - 5), _copyright);
             }
 
             #endregion
@@ -1645,7 +1605,7 @@ namespace GMap.NET.Avalonia
         public bool ShowCenter = true;
 
 #if DEBUG
-        readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 1);
+        readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 2);
 #endif
 
         HelperLineOptions _helperLineOption = HelperLineOptions.DontShow;
@@ -1749,7 +1709,7 @@ namespace GMap.NET.Avalonia
                     }
                     else if (MouseWheelZoomType == MouseWheelZoomType.ViewCenter)
                     {
-                        Position = FromLocalToLatLng((int)Width / 2, (int)Height / 2);
+                        Position = FromLocalToLatLng((int)Bounds.Width / 2, (int)Bounds.Height / 2);
                     }
                     else if (MouseWheelZoomType == MouseWheelZoomType.MousePositionWithoutCenter)
                     {
@@ -1763,7 +1723,7 @@ namespace GMap.NET.Avalonia
                 // set mouse position to map center
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
-                    var ps = this.PointToScreen(new Point(Width / 2, Height / 2));
+                    var ps = this.PointToScreen(new Point(Bounds.Width / 2, Bounds.Height / 2));
                     Stuff.SetCursorPos((int)ps.X, (int)ps.Y);
                 }
 
@@ -2770,7 +2730,7 @@ namespace GMap.NET.Avalonia
                 else if (_core.Provider.Projection != null)
                 {
                     var p = FromLocalToLatLng(0, 0);
-                    var p2 = FromLocalToLatLng((int)Width, (int)Height);
+                    var p2 = FromLocalToLatLng((int)Bounds.Width, (int)Bounds.Height);
 
                     return RectLatLng.FromLTRB(p.Lng, p.Lat, p2.Lng, p2.Lat);
                 }

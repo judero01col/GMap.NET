@@ -23,6 +23,7 @@ namespace Demo.AvaloniaUi
             MainMap = this.Get<GMap.NET.Avalonia.GMapControl>("GMap");
             MainMap.MapProvider = GMapProviders.GoogleMap;
             MainMap.Position = new PointLatLng(44.4268, 26.1025);
+            MainMap.FillEmptyTiles = true;
         }
 
 
