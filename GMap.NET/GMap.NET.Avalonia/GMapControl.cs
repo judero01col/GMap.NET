@@ -4,13 +4,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Generators;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Shapes;
 using Avalonia.Data;
@@ -457,17 +454,17 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     pen for empty tile borders
         /// </summary>
-        public Pen EmptyTileBorders = new Pen(Brushes.White, 1.0);
+        public Pen EmptyTileBorders { get; } = new(Brushes.White, 1.0);
 
         /// <summary>
         ///     pen for Selection
         /// </summary>
-        public Pen SelectionPen = new Pen(Brushes.Blue, 2.0);
+        public Pen SelectionPen { get; } = new(Brushes.Blue, 2.0);
 
         /// <summary>
         ///     background of selected area
         /// </summary>
-        public Brush SelectedAreaFill =
+        public Brush SelectedAreaFill { get; } =
             new SolidColorBrush(Color.FromArgb(33, Colors.RoyalBlue.R, Colors.RoyalBlue.G, Colors.RoyalBlue.B));
 
         /// <summary>
@@ -478,7 +475,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     text on empty tiles
         /// </summary>
-        public FormattedText EmptyTileText =
+        public FormattedText EmptyTileText { get; } =
             GetFormattedText("We are sorry, but we don't\nhave imagery at this zoom\n     level for this region.", 16);
 
         /// <summary>
@@ -506,12 +503,13 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     map dragg button
         /// </summary>
-        [Category("GMap.NET")] public PointerUpdateKind DragButton = PointerUpdateKind.LeftButtonPressed;
+        [Category("GMap.NET")]
+        public PointerUpdateKind DragButton { get; } = PointerUpdateKind.LeftButtonPressed;
 
         /// <summary>
         ///     use circle for selection
         /// </summary>
-        public bool SelectionUseCircle = false;
+        public bool SelectionUseCircle { get; } = false;
 
         /// <summary>
         ///     shows tile gridlines
@@ -566,7 +564,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     map boundaries
         /// </summary>
-        public RectLatLng? BoundsOfMap = null;
+        public RectLatLng? BoundsOfMap { get; }
 
         /// <summary>
         ///     occurs when mouse selection is changed
@@ -898,6 +896,8 @@ namespace GMap.NET.Avalonia
         public virtual void RegenerateShape(IShapable s)
         {
             var marker = s as GMapMarker;
+            if (marker == null)
+                throw new NotSupportedException("shape not supported");
 
             if (s.Points != null && s.Points.Count > 1)
             {
@@ -979,7 +979,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        public ISolidColorBrush EmptyMapBackground = Brushes.WhiteSmoke;
+        public ISolidColorBrush EmptyMapBackground { get; } = Brushes.WhiteSmoke;
 
         /// <summary>
         ///     render map in WPF
@@ -1076,24 +1076,20 @@ namespace GMap.NET.Avalonia
                                     _core.TileRect.Height * ix + 0.6);
 
                                 // render tile 
+                                foreach (GMapImage img in parentTile.Overlays)
                                 {
-                                    foreach (GMapImage img in parentTile.Overlays)
+                                    if (img != null && img.Img != null && !img.IsParent)
                                     {
-                                        if (img != null && img.Img != null && !img.IsParent)
-                                        {
-                                            if (!found)
-                                                found = true;
+                                        if (!found)
+                                            found = true;
 
-                                            using (g.PushClip(geometry.Rect))
-                                            {
-                                                g.DrawImage(img.Img, parentImgRect);
-                                                g.DrawRectangle(SelectedAreaFill, null, geometry.Bounds);
-                                            }
+                                        using (g.PushClip(geometry.Rect))
+                                        {
+                                            g.DrawImage(img.Img, parentImgRect);
+                                            g.DrawRectangle(SelectedAreaFill, null, geometry.Bounds);
                                         }
                                     }
                                 }
-
-                                geometry = null;
                             }
 
                             #endregion
@@ -1601,8 +1597,8 @@ namespace GMap.NET.Avalonia
             base.Render(drawingContext);
         }
 
-        public Pen CenterCrossPen = new Pen(Brushes.Red, 1);
-        public bool ShowCenter = true;
+        public Pen CenterCrossPen { get; } = new Pen(Brushes.Red, 1);
+        public bool ShowCenter { get; } = true;
 
 #if DEBUG
         readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 2);
@@ -1628,7 +1624,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        public Pen HelperLinePen = new Pen(Brushes.Blue, 1);
+        public Pen HelperLinePen { get; } = new Pen(Brushes.Blue, 1);
         bool _renderHelperLine;
 
         protected override void OnKeyUp(KeyEventArgs e)
@@ -1689,8 +1685,8 @@ namespace GMap.NET.Avalonia
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
             base.OnPointerWheelChanged(e);
-
-            if (MouseWheelZoomEnabled && (/*IsMouseDirectlyOver ||*/ IgnoreMarkerOnMouseWheel) && !_core.IsDragging)
+            //TODO: && (IsMouseDirectlyOver || IgnoreMarkerOnMouseWheel)
+            if (MouseWheelZoomEnabled && !_core.IsDragging)
             {
                 var p = e.GetPosition(this);
 
@@ -1724,12 +1720,12 @@ namespace GMap.NET.Avalonia
                 if (MouseWheelZoomType != MouseWheelZoomType.MousePositionWithoutCenter)
                 {
                     var ps = this.PointToScreen(new Point(Bounds.Width / 2, Bounds.Height / 2));
-                    Stuff.SetCursorPos((int)ps.X, (int)ps.Y);
+                    Stuff.SetCursorPos(ps.X, ps.Y);
                 }
 
                 _core.MouseWheelZooming = true;
 
-                if (e.Delta.Length > 0)
+                if (e.Delta.Y > 0)
                 {
                     if (!InvertedMouseWheelZooming)
                     {
@@ -1792,7 +1788,6 @@ namespace GMap.NET.Avalonia
         }
 
         ulong _onMouseUpTimestamp;
-
 
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
@@ -1964,7 +1959,8 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     if true, selects area just by holding mouse and moving
         /// </summary>
-        public bool DisableAltForSelection = false;
+        public bool DisableAltForSelection { get; } = false;
+
 
         //protected override void OnStylusDown(StylusDownEventArgs e)
         //{
@@ -2688,7 +2684,7 @@ namespace GMap.NET.Avalonia
         [Browsable(false)]
         public PointLatLng Position
         {
-            get { return (PointLatLng)GetValue(PositionProperty); }
+            get { return GetValue(PositionProperty); }
             set { SetValue(PositionProperty, value); }
         }
 
