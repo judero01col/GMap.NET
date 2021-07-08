@@ -16,7 +16,6 @@ using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GMap.NET.Internals;
 using GMap.NET.MapProviders;
@@ -110,7 +109,6 @@ namespace GMap.NET.Avalonia
         public static readonly StyledProperty<bool> TouchEnabledProperty =
             AvaloniaProperty.Register<GMapControl, bool>(
                 nameof(TouchEnabled));
-
 
         /// <summary>
         ///     map zoom
@@ -215,7 +213,7 @@ namespace GMap.NET.Avalonia
 
             if (obj is not GMapControl gmapControl)
                 return;
-                
+
             gmapControl.Position = gmapControl.CenterPosition;
         }
 
@@ -357,6 +355,7 @@ namespace GMap.NET.Avalonia
                         change.OldValue.GetValueOrDefault<double>(),
                         ZoomMode.XY);
                     break;
+
                 case nameof(ZoomX):
                     ZoomPropertyChanged(
                        this,
@@ -364,6 +363,7 @@ namespace GMap.NET.Avalonia
                        change.OldValue.GetValueOrDefault<double>(),
                        ZoomMode.X);
                     break;
+
                 case nameof(ZoomY):
                     ZoomPropertyChanged(
                        this,
@@ -371,6 +371,7 @@ namespace GMap.NET.Avalonia
                        change.OldValue.GetValueOrDefault<double>(),
                        ZoomMode.Y);
                     break;
+
                 case nameof(Position):
                     PositionChanged();
                     break;
@@ -402,20 +403,20 @@ namespace GMap.NET.Avalonia
             set { SetValue(TouchEnabledProperty, value); }
         }
 
-        readonly ScaleTransform _lastScaleTransform = new ScaleTransform();
+        private readonly ScaleTransform _lastScaleTransform = new ScaleTransform();
 
         private ScaleModes _scaleMode = ScaleModes.Integer;
 
-        #endregion
+        #endregion DependencyProperties and related stuff
 
-        readonly MouseDevice _mouse = new MouseDevice();
+        private readonly MouseDevice _mouse = new MouseDevice();
 
-        readonly Core _core = new Core();
+        private readonly Core _core = new Core();
 
-        PointLatLng _selectionStart;
-        PointLatLng _selectionEnd;
-        readonly Typeface _tileTypeface = new Typeface("Arial");
-        bool _showTileGridLines;
+        private PointLatLng _selectionStart;
+        private PointLatLng _selectionEnd;
+        private readonly Typeface _tileTypeface = new Typeface("Arial");
+        private bool _showTileGridLines;
 
         private FormattedText _copyright;
 
@@ -599,7 +600,7 @@ namespace GMap.NET.Avalonia
             get { return Design.IsDesignMode; }
         }
 
-        Canvas _mapCanvas;
+        private Canvas _mapCanvas;
 
         /// <summary>
         ///     markers overlay
@@ -626,9 +627,9 @@ namespace GMap.NET.Avalonia
             get { return GMaps.Instance; }
         }
 
-        static DataTemplate _dataTemplateInstance;
-        static ItemsPanelTemplate _itemsPanelTemplateInstance;
-        static Style _styleInstance;
+        private static DataTemplate _dataTemplateInstance;
+        private static ItemsPanelTemplate _itemsPanelTemplateInstance;
+        private static Style _styleInstance;
 
         public GMapControl()
         {
@@ -655,9 +656,9 @@ namespace GMap.NET.Avalonia
                 //            <Setter Property="Canvas.Top" Value="{Binding Path=LocalPositionY}"/>
                 //        </Style>
                 //    </ItemsControl.ItemContainerStyle>
-                //</ItemsControl> 
+                //</ItemsControl>
 
-                #endregion
+                #endregion -- xaml --
 
                 _dataTemplateInstance ??= new DataTemplate()
                 {
@@ -691,7 +692,7 @@ namespace GMap.NET.Avalonia
                     Styles.Add(_styleInstance);
                 }
 
-                #endregion
+                #endregion -- templates --
 
                 Markers = new ObservableCollection<GMapMarker>();
 
@@ -730,7 +731,7 @@ namespace GMap.NET.Avalonia
             GMaps.Instance.SQLitePing();
         }
 
-        void InvalidatorEngage(object sender, ProgressChangedEventArgs e)
+        private void InvalidatorEngage(object sender, ProgressChangedEventArgs e)
         {
             base.InvalidateVisual();
         }
@@ -839,30 +840,7 @@ namespace GMap.NET.Avalonia
 
                 _core.OnMapOpen().ProgressChanged += InvalidatorEngage;
                 ForceUpdateOverlays();
-
-                //TODO: Application closing event
-                //if (Application.Current != null)
-                //{
-                //    Dispatcher.UIThread.InvokeAsync(
-                //        DispatcherPriority.ApplicationIdle,
-                //        new Action(delegate ()
-                //        {
-                //            _loadedApp.SessionEnding += Current_SessionEnding;
-                //        }));
-                //}
             }
-        }
-
-        Application _loadedApp;
-
-        //void Current_SessionEnding(object sender, SessionEndingCancelEventArgs e)
-        //{
-        //    GMaps.Instance.CancelTileCaching();
-        //}
-
-        void Dispatcher_ShutdownStarted(object sender, EventArgs e)
-        {
-            Dispose();
         }
 
         /// <summary>
@@ -885,7 +863,7 @@ namespace GMap.NET.Avalonia
             return base.MeasureOverride(availableSize);
         }
 
-        void ForceUpdateOverlays()
+        private void ForceUpdateOverlays()
         {
             ForceUpdateOverlays(Items);
         }
@@ -928,9 +906,9 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        void ForceUpdateOverlays(System.Collections.IEnumerable items)
+        private void ForceUpdateOverlays(System.Collections.IEnumerable items)
         {
-            //TODO: disable 
+            //TODO: disable
             //using (Dispatcher.DisableProcessing())
             //{
             UpdateMarkersOffset();
@@ -953,7 +931,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     updates markers overlay offset
         /// </summary>
-        void UpdateMarkersOffset()
+        private void UpdateMarkersOffset()
         {
             if (MapCanvas != null)
             {
@@ -985,7 +963,7 @@ namespace GMap.NET.Avalonia
         ///     render map in WPF
         /// </summary>
         /// <param name="g"></param>
-        void DrawMap(DrawingContext g)
+        private void DrawMap(DrawingContext g)
         {
             if (MapProvider == EmptyProvider.Instance || MapProvider == null)
             {
@@ -1075,7 +1053,7 @@ namespace GMap.NET.Avalonia
                                     _core.TileRect.Width * ix + 0.6,
                                     _core.TileRect.Height * ix + 0.6);
 
-                                // render tile 
+                                // render tile
                                 foreach (GMapImage img in parentTile.Overlays)
                                 {
                                     if (img != null && img.Img != null && !img.IsParent)
@@ -1092,7 +1070,7 @@ namespace GMap.NET.Avalonia
                                 }
                             }
 
-                            #endregion
+                            #endregion -- fill empty tiles --
                         }
 
                         // add text if tile is missing
@@ -1126,8 +1104,8 @@ namespace GMap.NET.Avalonia
                                     g.DrawText(
                                         Brushes.Black,
                                         new Point(
-                                            _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Constraint.Width / 2,
-                                            _core.TileRect.Y + _core.TileRect.Height / 2 - EmptyTileText.Constraint.Height / 2),
+                                            _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Bounds.Width / 2,
+                                            _core.TileRect.Y + _core.TileRect.Height / 2 - EmptyTileText.Bounds.Height / 2),
                                         EmptyTileText);
                                 }
                             }
@@ -1149,8 +1127,8 @@ namespace GMap.NET.Avalonia
                                 g.DrawText(
                                     Brushes.Black,
                                     new Point(
-                                        _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Constraint.Width / 2,
-                                        _core.TileRect.Y + _core.TileRect.Height / 2 - tileText.Constraint.Height / 2),
+                                        _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Bounds.Width / 2,
+                                        _core.TileRect.Y + _core.TileRect.Height / 2 - tileText.Bounds.Height / 2),
                                     tileText);
                             }
                             else
@@ -1160,8 +1138,8 @@ namespace GMap.NET.Avalonia
                                 g.DrawText(
                                     Brushes.Black,
                                     new Point(
-                                        _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Constraint.Width / 2,
-                                        _core.TileRect.Y + _core.TileRect.Height / 2 - tileText.Constraint.Height / 2),
+                                        _core.TileRect.X + _core.TileRect.Width / 2 - EmptyTileText.Bounds.Width / 2,
+                                        _core.TileRect.Y + _core.TileRect.Height / 2 - tileText.Bounds.Height / 2),
                                     tileText);
                             }
                         }
@@ -1218,7 +1196,6 @@ namespace GMap.NET.Avalonia
             //obj.LayoutTransform = transform;
             //obj.Margin = margin;
 
-
             return bmp;
         }
 
@@ -1259,8 +1236,8 @@ namespace GMap.NET.Avalonia
             return false;
         }
 
-        RectLatLng? _lazySetZoomToFitRect;
-        bool _lazyEvents = true;
+        private RectLatLng? _lazySetZoomToFitRect;
+        private bool _lazyEvents = true;
 
         /// <summary>
         ///     sets to max zoom to fit all markers and centers them in map
@@ -1369,13 +1346,13 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        readonly RotateTransform _rotationMatrix = new RotateTransform();
-        MatrixTransform _rotationMatrixInvert = new MatrixTransform();
+        private readonly RotateTransform _rotationMatrix = new RotateTransform();
+        private MatrixTransform _rotationMatrixInvert = new MatrixTransform();
 
         /// <summary>
         ///     updates rotation matrix
         /// </summary>
-        void UpdateRotationMatrix()
+        private void UpdateRotationMatrix()
         {
             var center = new Point(Bounds.Width / 2.0, Bounds.Height / 2.0);
 
@@ -1443,7 +1420,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     apply transformation if in rotation mode
         /// </summary>
-        Point ApplyRotation(double x, double y)
+        private Point ApplyRotation(double x, double y)
         {
             var ret = new Point(x, y);
 
@@ -1458,7 +1435,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     apply transformation if in rotation mode
         /// </summary>
-        Point ApplyRotationInversion(double x, double y)
+        private Point ApplyRotationInversion(double x, double y)
         {
             var ret = new Point(x, y);
 
@@ -1487,7 +1464,7 @@ namespace GMap.NET.Avalonia
         {
             if (!_core.IsStarted)
                 return;
-            
+
             drawingContext.DrawRectangle(EmptyMapBackground, null, Bounds);
 
             if (IsRotated)
@@ -1546,7 +1523,6 @@ namespace GMap.NET.Avalonia
 
                 if (SelectionUseCircle)
                 {
-
                     drawingContext.DrawGeometry(SelectedAreaFill,
                         SelectionPen,
                         new EllipseGeometry(
@@ -1589,10 +1565,10 @@ namespace GMap.NET.Avalonia
 
             if (_copyright != null)
             {
-                drawingContext.DrawText(Brushes.Black, new Point(5, Bounds.Height - _copyright.Constraint.Height - 5), _copyright);
+                drawingContext.DrawText(Brushes.Black, new Point(5, Bounds.Height - _copyright.Bounds.Height - 5), _copyright);
             }
 
-            #endregion
+            #endregion -- copyright --
 
             base.Render(drawingContext);
         }
@@ -1601,10 +1577,10 @@ namespace GMap.NET.Avalonia
         public bool ShowCenter { get; } = true;
 
 #if DEBUG
-        readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 2);
+        private readonly Pen _virtualCenterCrossPen = new Pen(Brushes.Blue, 2);
 #endif
 
-        HelperLineOptions _helperLineOption = HelperLineOptions.DontShow;
+        private HelperLineOptions _helperLineOption = HelperLineOptions.DontShow;
 
         /// <summary>
         ///     draw lines at the mouse pointer position
@@ -1625,7 +1601,7 @@ namespace GMap.NET.Avalonia
         }
 
         public Pen HelperLinePen { get; } = new Pen(Brushes.Blue, 1);
-        bool _renderHelperLine;
+        private bool _renderHelperLine;
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
@@ -1647,7 +1623,6 @@ namespace GMap.NET.Avalonia
 
             if (HelperLineOption == HelperLineOptions.ShowOnModifierKey)
             {
-                
                 _renderHelperLine = e.Key == Key.LeftShift || e.KeyModifiers == KeyModifiers.Alt;
                 if (_renderHelperLine)
                 {
@@ -1752,7 +1727,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        bool _isSelected;
+        private bool _isSelected;
 
         protected override void OnPointerPressed(PointerPressedEventArgs e)
         {
@@ -1787,7 +1762,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        ulong _onMouseUpTimestamp;
+        private ulong _onMouseUpTimestamp;
 
         protected override void OnPointerReleased(PointerReleasedEventArgs e)
         {
@@ -1830,7 +1805,6 @@ namespace GMap.NET.Avalonia
                 {
                     bool zoomtofit = false;
 
-
                     if (!SelectedArea.IsEmpty && e.KeyModifiers == KeyModifiers.Shift)
                     {
                         zoomtofit = SetZoomToFitRect(SelectedArea);
@@ -1845,7 +1819,7 @@ namespace GMap.NET.Avalonia
             }
         }
 
-        Cursor _cursorBefore = Cursor.Default;
+        private Cursor _cursorBefore = Cursor.Default;
 
         protected override void OnPointerMoved(PointerEventArgs e)
         {
@@ -1872,8 +1846,7 @@ namespace GMap.NET.Avalonia
                 p = ApplyRotationInversion(p.X, p.Y);
 
                 // cursor has moved beyond drag tolerance
-                var button = e.GetCurrentPoint(this).Properties.PointerUpdateKind;
-                if (button == PointerUpdateKind.LeftButtonPressed)
+                if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
                 {
                     if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= MinimumHorizontalDragDistance ||
                         Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= MinimumVerticalDragDistance)
@@ -1929,7 +1902,6 @@ namespace GMap.NET.Avalonia
             }
             else
             {
-                
                 if (_isSelected && !_selectionStart.IsEmpty &&
                     (e.KeyModifiers == KeyModifiers.Shift || e.KeyModifiers == KeyModifiers.Alt ||
                      DisableAltForSelection))
@@ -1962,522 +1934,7 @@ namespace GMap.NET.Avalonia
         public bool DisableAltForSelection { get; } = false;
 
 
-        //protected override void OnStylusDown(StylusDownEventArgs e)
-        //{
-        //    base.OnStylusDown(e);
-
-        //    if (TouchEnabled && CanDragMap && !e.InAir)
-        //    {
-        //        var p = e.GetPosition(this);
-
-        //        if (MapScaleTransform != null)
-        //        {
-        //            p = MapScaleTransform.Inverse.Transform(p);
-        //        }
-
-        //        p = ApplyRotationInversion(p.X, p.Y);
-
-        //        _core.MouseDown.X = (int)p.X;
-        //        _core.MouseDown.Y = (int)p.Y;
-
-        //        InvalidateVisual();
-        //    }
-        //}
-
-        //protected override void OnStylusUp(StylusEventArgs e)
-        //{
-        //    base.OnStylusUp(e);
-
-        //    if (TouchEnabled)
-        //    {
-        //        if (_isSelected)
-        //        {
-        //            _isSelected = false;
-        //        }
-
-        //        if (_core.IsDragging)
-        //        {
-        //            if (IsDragging)
-        //            {
-        //                _onMouseUpTimestamp = e.Timestamp & Int32.MaxValue;
-        //                IsDragging = false;
-        //                Debug.WriteLine("IsDragging = " + IsDragging);
-        //                Cursor = _cursorBefore;
-        //                Mouse.Capture(null);
-        //            }
-
-        //            _core.EndDrag();
-
-        //            if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //            {
-        //                if (_core.LastLocationInBounds.HasValue)
-        //                {
-        //                    Position = _core.LastLocationInBounds.Value;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            _core.MouseDown = GPoint.Empty;
-        //            InvalidateVisual();
-        //        }
-        //    }
-        //}
-
-        //protected override void OnStylusMove(StylusEventArgs e)
-        //{
-        //    base.OnStylusMove(e);
-
-        //    if (TouchEnabled)
-        //    {
-        //        // wpf generates to many events if mouse is over some visual
-        //        // and OnMouseUp is fired, wtf, anyway...
-        //        // http://greatmaps.codeplex.com/workitem/16013
-        //        if ((e.Timestamp & Int32.MaxValue) - _onMouseUpTimestamp < 55)
-        //        {
-        //            Debug.WriteLine("OnMouseMove skipped: " + ((e.Timestamp & Int32.MaxValue) - _onMouseUpTimestamp) +
-        //                            "ms");
-        //            return;
-        //        }
-
-        //        if (!_core.IsDragging && !_core.MouseDown.IsEmpty)
-        //        {
-        //            var p = e.GetPosition(this);
-
-        //            if (MapScaleTransform != null)
-        //            {
-        //                p = MapScaleTransform.Inverse.Transform(p);
-        //            }
-
-        //            p = ApplyRotationInversion(p.X, p.Y);
-
-        //            // cursor has moved beyond drag tolerance
-        //            if (Math.Abs(p.X - _core.MouseDown.X) * 2 >= SystemParameters.MinimumHorizontalDragDistance ||
-        //                Math.Abs(p.Y - _core.MouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
-        //            {
-        //                _core.BeginDrag(_core.MouseDown);
-        //            }
-        //        }
-
-        //        if (_core.IsDragging)
-        //        {
-        //            if (!IsDragging)
-        //            {
-        //                IsDragging = true;
-        //                Debug.WriteLine("IsDragging = " + IsDragging);
-        //                _cursorBefore = Cursor;
-        //                Cursor = Cursors.SizeAll;
-        //                Mouse.Capture(this);
-        //            }
-
-        //            if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //            {
-        //                // ...
-        //            }
-        //            else
-        //            {
-        //                var p = e.GetPosition(this);
-
-        //                if (MapScaleTransform != null)
-        //                {
-        //                    p = MapScaleTransform.Inverse.Transform(p);
-        //                }
-
-        //                p = ApplyRotationInversion(p.X, p.Y);
-
-        //                _core.MouseCurrent.X = (int)p.X;
-        //                _core.MouseCurrent.Y = (int)p.Y;
-        //                {
-        //                    _core.Drag(_core.MouseCurrent);
-        //                }
-
-        //                if (IsRotated)
-        //                {
-        //                    ForceUpdateOverlays();
-        //                }
-        //                else
-        //                {
-        //                    UpdateMarkersOffset();
-        //                }
-        //            }
-
-        //            InvalidateVisual();
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        ///     Called when the <see cref="E:System.Windows.UIElement.ManipulationDelta" /> event occurs.
-        /// </summary>
-        /// <param name="e">The data for the event.</param>
-        //protected override void OnManipulationDelta(ManipulationDeltaEventArgs e)
-        //{
-        //    base.OnManipulationDelta(e);
-
-        //    if (MultiTouchEnabled && !TouchEnabled)
-        //    {
-        //        var touchPoints = e.Manipulators.ToArray();
-        //        var element = e.Source as FrameworkElement;
-
-        //        if (element != null)
-        //        {
-        //            var delta = e.DeltaManipulation;
-
-        //            if (touchPoints.Length == 1)
-        //            {
-        //                SingleTouchPanMap(new Point(delta.Translation.X, delta.Translation.Y));
-        //            }
-        //            else if (touchPoints.Length >= 2)
-        //            {
-        //                var centerOfTouchPoints = e.ManipulationOrigin;
-        //                ZoomX *= delta.Scale.X;
-        //                ZoomY *= delta.Scale.Y;
-        //            }
-
-        //            e.Handled = true;
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        /////     Singles the touch pan map.
-        ///// </summary>
-        ///// <param name="deltaPoint">The delta point.</param>
-        //protected virtual void SingleTouchPanMap(Point deltaPoint)
-        //{
-        //    if (MultiTouchEnabled && !TouchEnabled
-        //    ) // redundent check in case this is invoked outside of the manipulation events
-        //    {
-        //        if (!_core.IsDragging)
-        //        {
-        //            deltaPoint = ApplyRotationInversion(deltaPoint.X, deltaPoint.Y);
-
-        //            // cursor has moved beyond drag tolerance
-        //            if (Math.Abs(deltaPoint.X - _core.MouseDown.X) * 2 >=
-        //                SystemParameters.MinimumHorizontalDragDistance ||
-        //                Math.Abs(deltaPoint.Y - _core.MouseDown.Y) * 2 >= SystemParameters.MinimumVerticalDragDistance)
-        //            {
-        //                _core.BeginDrag(_core.MouseDown);
-        //            }
-        //        }
-
-        //        if (_core.IsDragging)
-        //        {
-        //            if (!IsDragging)
-        //            {
-        //                IsDragging = true;
-        //                Debug.WriteLine("IsDragging = " + IsDragging);
-        //                _cursorBefore = Cursor;
-        //                Cursor = Cursors.SizeAll;
-        //                Mouse.Capture(this);
-        //            }
-
-        //            if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //            {
-        //                // ...
-        //            }
-        //            else
-        //            {
-        //                deltaPoint = ApplyRotationInversion(deltaPoint.X, deltaPoint.Y);
-
-        //                _core.MouseCurrent.X += (int)deltaPoint.X;
-        //                _core.MouseCurrent.Y += (int)deltaPoint.Y;
-        //                {
-        //                    _core.Drag(_core.MouseCurrent);
-        //                }
-
-        //                if (IsRotated)
-        //                {
-        //                    ForceUpdateOverlays();
-        //                }
-        //                else
-        //                {
-        //                    UpdateMarkersOffset();
-        //                }
-        //            }
-
-        //            InvalidateVisual();
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        ///     Called when the <see cref="E:System.Windows.UIElement.ManipulationCompleted" /> event occurs.
-        /// </summary>
-        /// <param name="e">The data for the event.</param>
-        //protected override void OnManipulationCompleted(ManipulationCompletedEventArgs e)
-        //{
-        //    base.OnManipulationCompleted(e);
-
-        //    if (MultiTouchEnabled && !TouchEnabled)
-        //    {
-        //        var touchPoints = e.Manipulators.ToArray();
-        //        if (true)
-        //        {
-        //            // add bool to starting for single touch vs multi touch
-        //            if (_isSelected)
-        //            {
-        //                _isSelected = false;
-        //            }
-
-        //            if (_core.IsDragging)
-        //            {
-        //                if (IsDragging)
-        //                {
-        //                    _onMouseUpTimestamp = e.Timestamp & Int32.MaxValue;
-        //                    IsDragging = false;
-        //                    Debug.WriteLine("IsDragging = " + IsDragging);
-        //                    Cursor = _cursorBefore;
-        //                    Mouse.Capture(null);
-        //                }
-
-        //                _core.EndDrag();
-
-        //                if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //                {
-        //                    if (_core.LastLocationInBounds.HasValue)
-        //                    {
-        //                        Position = _core.LastLocationInBounds.Value;
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                _core.MouseDown = GPoint.Empty;
-        //                InvalidateVisual();
-        //            }
-        //        }
-        //    }
-        //}
-
-        //int _change;
-        //private Dictionary<int, Point> movingPoints = new Dictionary<int, Point>();
-
-        //private double calcdist(double x1, double y1, double x2, double y2)
-        //{
-        //    return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
-        //}
-
-        //protected override void OnTouchDown(TouchEventArgs e)
-        //{
-        //    base.OnTouchDown(e);
-
-        //    if (MultiTouchEnabled)
-        //    {
-        //        var touchpoint = e.GetTouchPoint(this);
-        //        var point = new Point();
-        //        point.X = touchpoint.Position.X;
-        //        point.Y = touchpoint.Position.Y;
-        //        movingPoints[e.TouchDevice.Id] = point;
-
-        //        if (movingPoints.Count == 0)
-        //        {
-        //            if (MapScaleTransform != null)
-        //            {
-        //                point = MapScaleTransform.Inverse.Transform(point);
-        //            }
-
-        //            point = ApplyRotationInversion(point.X, point.Y);
-        //            _core.MouseDown.X = (int)point.X;
-        //            _core.MouseDown.Y = (int)point.Y;
-        //            InvalidateVisual();
-        //        }
-        //    }
-        //}
-
-        //protected override void OnTouchMove(TouchEventArgs e)
-        //{
-        //    base.OnTouchMove(e);
-
-        //    if (MultiTouchEnabled)
-        //    {
-        //        if (movingPoints.Count == 1)
-        //        {
-        //            if (movingPoints.Keys.Contains(e.TouchDevice.Id))
-        //            {
-        //                if ((e.Timestamp & Int32.MaxValue) - _onMouseUpTimestamp < 55)
-        //                {
-        //                    Debug.WriteLine("OnMouseMove skipped: " +
-        //                                    ((e.Timestamp & Int32.MaxValue) - _onMouseUpTimestamp) + "ms");
-        //                    return;
-        //                }
-
-        //                if (!_core.IsDragging)
-        //                {
-        //                    var touchpoint = e.GetTouchPoint(this);
-        //                    var p = new Point();
-        //                    p.X = touchpoint.Position.X;
-        //                    p.Y = touchpoint.Position.Y;
-
-        //                    if (MapScaleTransform != null)
-        //                    {
-        //                        p = MapScaleTransform.Inverse.Transform(p);
-        //                    }
-
-        //                    p = ApplyRotationInversion(p.X, p.Y);
-
-        //                    // cursor has moved beyond drag tolerance
-        //                    if (Math.Abs(p.X - movingPoints[e.TouchDevice.Id].X) * 2 >=
-        //                        SystemParameters.MinimumHorizontalDragDistance ||
-        //                        Math.Abs(p.Y - movingPoints[e.TouchDevice.Id].Y) * 2 >=
-        //                        SystemParameters.MinimumVerticalDragDistance)
-        //                    {
-        //                        var gp = new GPoint();
-        //                        gp.X = (int)movingPoints[e.TouchDevice.Id].X;
-        //                        gp.Y = (int)movingPoints[e.TouchDevice.Id].Y;
-        //                        _core.BeginDrag(gp);
-        //                    }
-        //                }
-
-        //                if (_core.IsDragging)
-        //                {
-        //                    if (!IsDragging)
-        //                    {
-        //                        IsDragging = true;
-        //                        Debug.WriteLine("IsDragging = " + IsDragging);
-        //                        _cursorBefore = Cursor;
-        //                        Cursor = Cursors.SizeAll;
-        //                        Mouse.Capture(this);
-        //                    }
-
-        //                    if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //                    {
-        //                        // ...
-        //                    }
-        //                    else
-        //                    {
-        //                        var touchpoint = e.GetTouchPoint(this);
-        //                        var p = new Point();
-        //                        p.X = touchpoint.Position.X;
-        //                        p.Y = touchpoint.Position.Y;
-
-        //                        if (MapScaleTransform != null)
-        //                        {
-        //                            p = MapScaleTransform.Inverse.Transform(p);
-        //                        }
-
-        //                        p = ApplyRotationInversion(p.X, p.Y);
-
-        //                        _core.MouseCurrent.X = (int)p.X;
-        //                        _core.MouseCurrent.Y = (int)p.Y;
-        //                        {
-        //                            _core.Drag(_core.MouseCurrent);
-        //                        }
-
-        //                        if (IsRotated)
-        //                        {
-        //                            ForceUpdateOverlays();
-        //                        }
-        //                        else
-        //                        {
-        //                            UpdateMarkersOffset();
-        //                        }
-        //                    }
-
-        //                    InvalidateVisual();
-        //                }
-        //            }
-        //        }
-        //        else if (movingPoints.Count == 2)
-        //        {
-        //            if (movingPoints.Keys.Contains(e.TouchDevice.Id))
-        //            {
-        //                var point1 = new Point();
-        //                var point2 = new Point();
-        //                double nowdistance = 0;
-        //                double predistance = 0;
-        //                int count = 0;
-
-        //                foreach (var item in movingPoints)
-        //                {
-        //                    if (count == 0)
-        //                        point1 = item.Value;
-        //                    else
-        //                        point2 = item.Value;
-        //                    count++;
-        //                }
-
-        //                predistance = calcdist(point1.X, point1.Y, point2.X, point2.Y);
-        //                var touchpoint = e.GetTouchPoint(this);
-        //                var npoint = new Point();
-        //                npoint.X = touchpoint.Position.X;
-        //                npoint.Y = touchpoint.Position.Y;
-
-        //                if (movingPoints[e.TouchDevice.Id] == point1)
-        //                {
-        //                    nowdistance = calcdist(npoint.X, npoint.Y, point2.X, point2.Y);
-        //                }
-        //                else
-        //                {
-        //                    nowdistance = calcdist(npoint.X, npoint.Y, point1.X, point1.Y);
-        //                }
-
-        //                //movingPoints[e.TouchDevice.Id] = npoint;
-        //                if (_change <= 2)
-        //                {
-        //                    if (nowdistance - predistance > 10)
-        //                    {
-        //                        Zoom += 0.5;
-        //                        _change++;
-        //                    }
-        //                    else if (nowdistance - predistance < -10)
-        //                    {
-        //                        Zoom -= 0.5;
-        //                        _change++;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        //protected override void OnTouchUp(TouchEventArgs e)
-        //{
-        //    base.OnTouchUp(e);
-
-        //    if (MultiTouchEnabled && !TouchEnabled)
-        //    {
-        //        _change = 0;
-        //        movingPoints.Remove(e.TouchDevice.Id);
-
-        //        if (true) // add bool to starting for single touch vs multi touch
-        //        {
-        //            if (_isSelected)
-        //            {
-        //                _isSelected = false;
-        //            }
-
-        //            if (_core.IsDragging)
-        //            {
-        //                if (IsDragging)
-        //                {
-        //                    _onMouseUpTimestamp = e.Timestamp & Int32.MaxValue;
-        //                    IsDragging = false;
-        //                    Debug.WriteLine("IsDragging = " + IsDragging);
-        //                    Cursor = _cursorBefore;
-        //                    Mouse.Capture(null);
-        //                }
-
-        //                _core.EndDrag();
-
-        //                if (BoundsOfMap.HasValue && !BoundsOfMap.Value.Contains(Position))
-        //                {
-        //                    if (_core.LastLocationInBounds.HasValue)
-        //                    {
-        //                        Position = _core.LastLocationInBounds.Value;
-        //                    }
-        //                }
-        //            }
-        //            else
-        //            {
-        //                _core.MouseDown = GPoint.Empty;
-        //                InvalidateVisual();
-        //            }
-        //        }
-        //    }
-        //}
-
-        #endregion
+        #endregion UserControl Events
 
         #region IGControl Members
 
@@ -2490,10 +1947,12 @@ namespace GMap.NET.Avalonia
         }
 
 #if !NET46
+
         public Task ReloadMapAsync()
         {
             return _core.ReloadMapAsync();
         }
+
 #endif
 
         /// <summary>
@@ -2593,86 +2052,87 @@ namespace GMap.NET.Avalonia
         }
 
         #region Save and Load offline database
+
         //TODO: Native dialog for avalonia
 
         public bool ShowExportDialog()
         {
             return false;
-        //    var dlg = new Microsoft.Win32.SaveFileDialog();
-        //    {
-        //        dlg.CheckPathExists = true;
-        //        dlg.CheckFileExists = false;
-        //        dlg.AddExtension = true;
-        //        dlg.DefaultExt = "gmdb";
-        //        dlg.ValidateNames = true;
-        //        dlg.Title = "GMap.NET: Export map to db, if file exsist only new data will be added";
-        //        dlg.FileName = "DataExp";
-        //        dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        //        dlg.Filter = "GMap.NET DB files (*.gmdb)|*.gmdb";
-        //        dlg.FilterIndex = 1;
-        //        dlg.RestoreDirectory = true;
+            //    var dlg = new Microsoft.Win32.SaveFileDialog();
+            //    {
+            //        dlg.CheckPathExists = true;
+            //        dlg.CheckFileExists = false;
+            //        dlg.AddExtension = true;
+            //        dlg.DefaultExt = "gmdb";
+            //        dlg.ValidateNames = true;
+            //        dlg.Title = "GMap.NET: Export map to db, if file exsist only new data will be added";
+            //        dlg.FileName = "DataExp";
+            //        dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //        dlg.Filter = "GMap.NET DB files (*.gmdb)|*.gmdb";
+            //        dlg.FilterIndex = 1;
+            //        dlg.RestoreDirectory = true;
 
-        //        if (dlg.ShowDialog() == true)
-        //        {
-        //            bool ok = GMaps.Instance.ExportToGMDB(dlg.FileName);
-        //            if (ok)
-        //            {
-        //                MessageBox.Show("Complete!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Information);
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("  Failed!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Warning);
-        //            }
+            //        if (dlg.ShowDialog() == true)
+            //        {
+            //            bool ok = GMaps.Instance.ExportToGMDB(dlg.FileName);
+            //            if (ok)
+            //            {
+            //                MessageBox.Show("Complete!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Information);
+            //            }
+            //            else
+            //            {
+            //                MessageBox.Show("  Failed!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //            }
 
-        //            return ok;
-        //        }
-        //    }
+            //            return ok;
+            //        }
+            //    }
 
-        //    return false;
+            //    return false;
         }
 
         public bool ShowImportDialog()
         {
             return false;
-        //    var dlg = new Microsoft.Win32.OpenFileDialog();
-        //    {
-        //        dlg.CheckPathExists = true;
-        //        dlg.CheckFileExists = false;
-        //        dlg.AddExtension = true;
-        //        dlg.DefaultExt = "gmdb";
-        //        dlg.ValidateNames = true;
-        //        dlg.Title = "GMap.NET: Import to db, only new data will be added";
-        //        dlg.FileName = "DataImport";
-        //        dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        //        dlg.Filter = "GMap.NET DB files (*.gmdb)|*.gmdb";
-        //        dlg.FilterIndex = 1;
-        //        dlg.RestoreDirectory = true;
+            //    var dlg = new Microsoft.Win32.OpenFileDialog();
+            //    {
+            //        dlg.CheckPathExists = true;
+            //        dlg.CheckFileExists = false;
+            //        dlg.AddExtension = true;
+            //        dlg.DefaultExt = "gmdb";
+            //        dlg.ValidateNames = true;
+            //        dlg.Title = "GMap.NET: Import to db, only new data will be added";
+            //        dlg.FileName = "DataImport";
+            //        dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            //        dlg.Filter = "GMap.NET DB files (*.gmdb)|*.gmdb";
+            //        dlg.FilterIndex = 1;
+            //        dlg.RestoreDirectory = true;
 
-        //        if (dlg.ShowDialog() == true)
-        //        {
-        //            Cursor = Cursors.Wait;
+            //        if (dlg.ShowDialog() == true)
+            //        {
+            //            Cursor = Cursors.Wait;
 
-        //            bool ok = GMaps.Instance.ImportFromGMDB(dlg.FileName);
-        //            if (ok)
-        //            {
-        //                MessageBox.Show("Complete!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Information);
-        //                ReloadMap();
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("  Failed!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Warning);
-        //            }
+            //            bool ok = GMaps.Instance.ImportFromGMDB(dlg.FileName);
+            //            if (ok)
+            //            {
+            //                MessageBox.Show("Complete!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Information);
+            //                ReloadMap();
+            //            }
+            //            else
+            //            {
+            //                MessageBox.Show("  Failed!", "GMap.NET", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //            }
 
-        //            Cursor = Cursors.Arrow;
+            //            Cursor = Cursors.Arrow;
 
-        //            return ok;
-        //        }
-        //    }
+            //            return ok;
+            //        }
+            //    }
 
-        //    return false;
+            //    return false;
         }
 
-        #endregion
+        #endregion Save and Load offline database
 
         public static readonly StyledProperty<PointLatLng> PositionProperty =
             AvaloniaProperty.Register<GMapControl, PointLatLng>(
@@ -2687,7 +2147,6 @@ namespace GMap.NET.Avalonia
             get { return GetValue(PositionProperty); }
             set { SetValue(PositionProperty, value); }
         }
-
 
         private void PositionChanged()
         {
@@ -2747,7 +2206,7 @@ namespace GMap.NET.Avalonia
             get { return RenderMode.WPF; }
         }
 
-        #endregion
+        #endregion IGControl Members
 
         #region IGControl event Members
 
@@ -2799,27 +2258,22 @@ namespace GMap.NET.Avalonia
             remove { _core.OnEmptyTileError -= value; }
         }
 
-        #endregion
+        #endregion IGControl event Members
 
         #region IDisposable Members
 
         public virtual void Dispose()
         {
+            GMaps.Instance.CancelTileCaching();
+
             if (_core.IsStarted)
             {
                 _core.OnMapZoomChanged -= ForceUpdateOverlays;
-                //Dispatcher.ShutdownStarted -= Dispatcher_ShutdownStarted;
-                //SizeChanged -= GMapControl_SizeChanged;
-                //if (_loadedApp != null)
-                //{
-                //    _loadedApp.SessionEnding -= Current_SessionEnding;
-                //}
-
                 _core.OnMapClose();
             }
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 
     public enum HelperLineOptions
