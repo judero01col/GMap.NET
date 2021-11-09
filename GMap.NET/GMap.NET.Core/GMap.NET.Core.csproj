@@ -10,11 +10,11 @@
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     
     <PackageReleaseNotes>
-- New Lantmateriet Map Provider (SwedenMapAlternative) : Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
-- Support sending X-Yours-Client header via OSMProvider (Contributed by @shrayasr)
+- Fixes, improvements and optimization
 
 History Release Notes
-https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>    
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+</PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>

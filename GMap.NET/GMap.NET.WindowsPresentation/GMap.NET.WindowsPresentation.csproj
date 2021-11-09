@@ -9,10 +9,11 @@
     <UseWPF>true</UseWPF>
     
     <PackageReleaseNotes>
-- Pocket PC support removed (Contributed by @zgabi)
+- Fixes, improvements and optimization
 
 History Release Notes
-https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes</PackageReleaseNotes>
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
