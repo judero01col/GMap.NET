@@ -7,7 +7,7 @@
     <AssemblyTitle>GMap.NET.Windows</AssemblyTitle>
 
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetFrameworks>net46</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
 
     <PackageReleaseNotes>
 Library migrated to .Net Core and published in new individual packages

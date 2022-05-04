@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;net5.0</TargetFrameworks>
+    <TargetFrameworks>net48;net5.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../sn.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotSpatial.Projections" Version="1.9.0" />
+    <PackageReference Include="DotSpatial.Projections" Version="4.0.656" />
   </ItemGroup>
 
   <ItemGroup>
