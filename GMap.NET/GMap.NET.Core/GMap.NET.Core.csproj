@@ -6,15 +6,16 @@
     <AssemblyTitle>GMap.NET.Core</AssemblyTitle>
     <RootNamespace>GMap.NET</RootNamespace>
 
-    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>    
+    <TargetFrameworks>net48;net5.0;net6.0;netstandard2.0</TargetFrameworks>    
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     
     <PackageReleaseNotes>
-- Fixes, improvements and optimization
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
-</PackageReleaseNotes>    
+    </PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>

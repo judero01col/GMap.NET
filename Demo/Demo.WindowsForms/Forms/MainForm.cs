@@ -64,7 +64,7 @@ namespace Demo.WindowsForms
                 //                          
 
                 // set cache mode only if no internet available
-                if (!Stuff.PingNetwork("pingtest.com"))
+                if (!Stuff.PingNetwork("google.com"))
                 {
                     MainMap.Manager.Mode = AccessMode.CacheOnly;
                     MessageBox.Show("No internet connection available, going to CacheOnly mode.", "GMap.NET - Demo.WindowsForms", MessageBoxButtons.OK, MessageBoxIcon.Warning);

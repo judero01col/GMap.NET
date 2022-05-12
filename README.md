@@ -25,6 +25,9 @@ PM> Install-Package GMap.NET.WinForms
 ```
 PM> Install-Package GMap.NET.WinPresentation
 ```
+```
+PM> Install-Package GMap.NET.Avalonia
+```
 
 If you wish to use the cutting-edge version of gmaps-api-net, then you can clone the repository (or download the zip) and build the class library yourself. This should require minimal set-up, and also allows you to develop extra features for your own use (or to push upstream using a pull request for everyone else to use!).
 
@@ -32,6 +35,76 @@ If you wish to use the cutting-edge version of gmaps-api-net, then you can clone
 https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
+
+## Version 2.0.4
+
+#### GMap.NET.Core
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
+
+#### GMap.NET.WinForms
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
+
+#### GMap.NET.WinPresentation
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
+
+## Version 2.0.3
+
+#### GMap.NET.Core
+- .Net 5.0 support added
+
+#### GMap.NET.WinForms
+- .Net 5.0 support added
+
+#### GMap.NET.WinPresentation
+- .Net 5.0 support added
+
+## Version 2.0.2
+
+#### GMap.NET.Core
+- .Net Core 3.0 support added
+
+#### GMap.NET.WinForms
+- Fixes, improvements and optimization
+
+#### GMap.NET.WinPresentation
+- Fixes, improvements and optimization
+
+## Version 2.0.2
+
+#### GMap.NET.Core
+- Fixes, improvements and optimization
+
+#### GMap.NET.WinForms
+- Fixes, improvements and optimization
+
+#### GMap.NET.WinPresentation
+- Fixes, improvements and optimization
+
+## Version 2.0.1
+
+#### GMap.NET.Core
+- New Lantmateriet Map Provider (SwedenMapAlternative) : Pseudo Mercator (EPSG:3857) instead of SWEREF99 (EPSG:3006) (Contributed by @jokubokla)
+- Support sending X-Yours-Client header via OSMProvider (Contributed by @shrayasr)
+
+#### GMap.NET.WinForms
+- None
+
+#### GMap.NET.WinPresentation
+- None
+
+## Version 2.0.0
+
+#### GMap.NET.Core
+-  Pocket PC support removed (Contributed by @zgabi)
+
+#### GMap.NET.WinForms
+-  Pocket PC support removed (Contributed by @zgabi)
+
+#### GMap.NET.WinPresentation
+-  Pocket PC support removed (Contributed by @zgabi)
 
 ## Version 1.9.9.5
 

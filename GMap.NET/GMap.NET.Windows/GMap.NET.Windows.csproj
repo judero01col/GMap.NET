@@ -7,7 +7,7 @@
     <AssemblyTitle>GMap.NET.Windows</AssemblyTitle>
 
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFrameworks>net48;net5.0-windows;net6.0-windows</TargetFrameworks>
 
     <PackageReleaseNotes>
 Library migrated to .Net Core and published in new individual packages
@@ -15,6 +15,7 @@ Library migrated to .Net Core and published in new individual packages
 - GMap.NET.Core
 - GMap.NET.WinForms
 - GMap.NET.WinPresentation
+- GMap.NET.Avalonia
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
