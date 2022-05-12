@@ -412,6 +412,26 @@ namespace GMap.NET.MapProviders
 
         #region RoutingProvider
 
+        public MapRoute GetRoute(List<PointLatLng> list, bool avoidHighways, bool walkingMode, int zoom)
+        {
+            string tooltip;
+            int numLevels;
+            int zoomFactor;
+            MapRoute ret = null;
+            var points = GetRoutePoints(MakeRouteUrl(list, LanguageStr, avoidHighways, walkingMode),
+                zoom,
+                out tooltip,
+                out numLevels,
+                out zoomFactor);
+            if (points != null)
+            {
+                ret = new MapRoute(points, tooltip);
+            }
+
+            return ret;
+        }
+
+        
         public MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int zoom)
         {
             string tooltip;
@@ -450,6 +470,25 @@ namespace GMap.NET.MapProviders
             return ret;
         }
 
+        private string MakeRouteUrl(List<PointLatLng> list, string languageStr, bool avoidHighways, bool walkingMode)
+        {
+            string addition = avoidHighways ? "&avoid=highways" : string.Empty;
+            string mode = walkingMode ? "Walking" : "Driving";
+
+            var wayPoints = new StringBuilder();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var point = list[i];
+                wayPoints.Append($"&wp.{i}={point.Lat},{point.Lng}");
+
+            }
+            return string.Format(CultureInfo.InvariantCulture,
+                RouteUrlFormatListPointLatLng,
+                mode,
+                wayPoints.ToString(),
+                addition,
+                ClientKey);
+        }
         string MakeRouteUrl(string start, string end, string language, bool avoidHighways, bool walkingMode)
         {
             string addition = avoidHighways ? "&avoid=highways" : string.Empty;
@@ -461,7 +500,7 @@ namespace GMap.NET.MapProviders
                 start,
                 end,
                 addition,
-                SessionId);
+                ClientKey);
         }
 
         string MakeRouteUrl(PointLatLng start, PointLatLng end, string language, bool avoidHighways, bool walkingMode)
@@ -477,7 +516,7 @@ namespace GMap.NET.MapProviders
                 end.Lat,
                 end.Lng,
                 addition,
-                SessionId);
+                ClientKey);
         }
 
         List<PointLatLng> GetRoutePoints(string url, int zoom, out string tooltipHtml, out int numLevel,
@@ -598,6 +637,9 @@ namespace GMap.NET.MapProviders
         static readonly string RouteUrlFormatPointQueries =
             "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml&wp.0={1}&wp.1={2}{3}&optmz=distance&rpo=Points&key={4}";
 
+        static readonly string RouteUrlFormatListPointLatLng =
+            "http://dev.virtualearth.net/REST/V1/Routes/{0}?o=xml{1}{2}&optmz=distance&rpo=Points&key={3}";
+
         #endregion RoutingProvider
 
         #region GeocodingProvider
@@ -677,7 +719,7 @@ namespace GMap.NET.MapProviders
 
         string MakeGeocoderUrl(string keywords)
         {
-            return string.Format(CultureInfo.InvariantCulture, GeocoderUrlFormat, keywords, SessionId);
+            return string.Format(CultureInfo.InvariantCulture, GeocoderUrlFormat, keywords, ClientKey);
         }
 
         GeoCoderStatusCode GetLatLngFromGeocoderUrl(string url, out List<PointLatLng> pointList)
