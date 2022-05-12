@@ -1,9 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <PackageId>GMap.NET.Avalonia</PackageId>
+        <Product>GMap.NET.Avalonia</Product>
+        <AssemblyTitle>GMap.NET.Avalonia</AssemblyTitle>
+        <RootNamespace>GMap.NET</RootNamespace>
+        <Nullable>enable</Nullable>
+        <TargetFrameworks>net5.0</TargetFrameworks>
+        <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
+
+        <PackageReleaseNotes>
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
+
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+        </PackageReleaseNotes>
+    </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.6" />

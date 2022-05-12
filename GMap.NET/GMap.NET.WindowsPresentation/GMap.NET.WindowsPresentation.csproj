@@ -9,11 +9,12 @@
     <UseWPF>true</UseWPF>
     
     <PackageReleaseNotes>
-- Fixes, improvements and optimization
+- .Net 6.0 support added
+- New GMap.NET.Avalonia library
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
-</PackageReleaseNotes>
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
