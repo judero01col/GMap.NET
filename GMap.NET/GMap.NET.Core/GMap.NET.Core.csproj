@@ -6,7 +6,7 @@
     <AssemblyTitle>GMap.NET.Core</AssemblyTitle>
     <RootNamespace>GMap.NET</RootNamespace>
 
-    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>    
+    <TargetFrameworks>net48;net5.0;net6.0;netstandard2.0</TargetFrameworks>    
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     
     <PackageReleaseNotes>

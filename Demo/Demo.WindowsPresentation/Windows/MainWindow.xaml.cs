@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -49,7 +49,7 @@ namespace Demo.WindowsPresentation
             //
 
             // set cache mode only if no internet avaible
-            if (!Stuff.PingNetwork("pingtest.com"))
+            if (!Stuff.PingNetwork("google.com"))
             {
                 MainMap.Manager.Mode = AccessMode.CacheOnly;
                 MessageBox.Show("No internet connection available, going to CacheOnly mode.",

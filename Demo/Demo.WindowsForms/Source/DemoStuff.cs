@@ -66,7 +66,7 @@ namespace Demo.WindowsForms
             using (var p = new Ping())
             {
                 var buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-                int timeout = 4444; // 4s
+                int timeout = 5000; // 5sg
 
                 try
                 {
