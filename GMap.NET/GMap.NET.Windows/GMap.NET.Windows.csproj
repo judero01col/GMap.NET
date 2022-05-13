@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-
     <PackageId>GMap.NET.Windows</PackageId>
     <Product>GMap.NET.Windows</Product>
     <AssemblyTitle>GMap.NET.Windows</AssemblyTitle>
-
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
 
