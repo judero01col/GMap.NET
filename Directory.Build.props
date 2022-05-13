@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Company>MainSoft Technology</Company>
-    <PackageVersion>2.1.0</PackageVersion>
+    <PackageVersion>2.1.1</PackageVersion>
     <ApplicationVersion>$(PackageVersion).0</ApplicationVersion>
     <Version>$(PackageVersion).0</Version>
     <FileVersion>$(PackageVersion).0</FileVersion>
@@ -22,7 +22,7 @@
     <PackageProjectUrl>https://github.com/judero01col/GMap.NET</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico</PackageIconUrl>
     <Description>GMap.NET Windows Forms &amp; Presentation is an excellent open source, powerful, free and cross-platform .NET control. Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.</Description>
-    <Copyright>Copyright (c) MainSoft Technology 2016-2020</Copyright>
+    <Copyright>Copyright (c) MainSoft Technology 2016-2022</Copyright>
     <PackageTags>GMap, Map, Maps, gmaps, tiling, Control, mapkit, Mapping, GIS, Geo, Places, Elevation, Geocode, Directions, Google, Here, Bing, OpenStreet</PackageTags>
     
   </PropertyGroup>

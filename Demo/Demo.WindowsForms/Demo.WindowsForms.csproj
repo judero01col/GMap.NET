@@ -4,7 +4,7 @@
         <AssemblyTitle>Demo.WindowsForms</AssemblyTitle>
         <Description>Demo for GMap.NET.WindowsForms</Description>
         <Product>Demo.WindowsForms</Product>
-        <TargetFrameworks>net48;net5.0-windows;net5.0-windows</TargetFrameworks>
+        <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
         <UseWindowsForms>true</UseWindowsForms>
         <OutputType>WinExe</OutputType>
         <SignAssembly>True</SignAssembly>

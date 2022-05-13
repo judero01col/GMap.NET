@@ -5,11 +5,12 @@
     <Product>GMap.NET.WindowsForms</Product>
     <AssemblyTitle>GMap.NET.WindowsForms</AssemblyTitle>
     
-    <TargetFrameworks>net48;net5.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
     
     <PackageReleaseNotes>
+- .Net Core 3.1 support added
 - .Net 6.0 support added
 - New GMap.NET.Avalonia library
 

@@ -5,10 +5,11 @@
     <Product>GMap.NET.WindowsPresentation</Product>
     <AssemblyTitle>GMap.NET.WindowsPresentation</AssemblyTitle>
     
-    <TargetFrameworks>net48;net5.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     
     <PackageReleaseNotes>
+- .Net Core 3.1 support added
 - .Net 6.0 support added
 - New GMap.NET.Avalonia library
 
