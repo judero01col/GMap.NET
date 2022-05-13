@@ -154,7 +154,7 @@ namespace Org.Mentalis.Network.ProxySocket
         ///     If you use this method with a SOCKS4 server, it will let the server resolve the hostname. Not all SOCKS4
         ///     servers support this 'remote DNS' though.
         /// </remarks>
-        public void Connect(string host, int port)
+        public new void Connect(string host, int port)
         {
             if (host == null)
                 throw new ArgumentNullException("<host> cannot be null.");

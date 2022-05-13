@@ -113,10 +113,12 @@ namespace GMap.NET.Internals
                                 // http://localhost:88/88888/5/15/11
                                 // GET /8888888888/5/15/11 HTTP/1.1
 
-                                var rq = request.Split(' ');
+                                string[] rq = request.Split(' ');
+
                                 if (rq.Length >= 2)
                                 {
-                                    var ids = rq[1].Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] ids = rq[1].Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+
                                     if (ids.Length == 4)
                                     {
                                         int dbId = int.Parse(ids[0]);
@@ -129,6 +131,7 @@ namespace GMap.NET.Internals
                                         {
                                             Exception ex;
                                             var img = GMaps.Instance.GetImageFrom(pr, new GPoint(x, y), zoom, out ex);
+
                                             if (img != null)
                                             {
                                                 using (img)

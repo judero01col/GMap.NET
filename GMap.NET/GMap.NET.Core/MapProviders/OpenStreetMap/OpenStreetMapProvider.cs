@@ -136,7 +136,7 @@ namespace GMap.NET.MapProviders
                         "/sm:kml/sm:Document/sm:Folder/sm:Placemark/sm:LineString/sm:coordinates",
                         xmlnsManager);
 
-                    var coordinates = coordNode.InnerText.Split('\n');
+                    string[] coordinates = coordNode.InnerText.Split('\n');
 
                     if (coordinates != null && coordinates.Length > 0)
                     {
@@ -152,7 +152,7 @@ namespace GMap.NET.MapProviders
                         {
                             if (coordinate != string.Empty)
                             {
-                                var xy = coordinate.Split(',');
+                                string[] xy = coordinate.Split(',');
 
                                 if (xy.Length == 2)
                                 {
@@ -175,7 +175,7 @@ namespace GMap.NET.MapProviders
 
                         if (instructionsNode != null && instructionsNode.InnerText.Length > 0)
                         {
-                            var instructions = instructionsNode.InnerText.Split(new string[1] {"<br>"},
+                            string[] instructions = instructionsNode.InnerText.Split(new string[1] {"<br>"},
                                 StringSplitOptions.RemoveEmptyEntries);
 
                             if (instructions != null && instructions.Length > 0)

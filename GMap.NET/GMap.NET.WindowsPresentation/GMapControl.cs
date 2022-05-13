@@ -2016,6 +2016,7 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
+        [Obsolete]
         protected override void OnStylusUp(StylusEventArgs e)
         {
             base.OnStylusUp(e);

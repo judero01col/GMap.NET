@@ -64,7 +64,7 @@ namespace GMap.NET.Projections
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            var lks = new[] {lng, lat};
+            double[] lks = new[] {lng, lat};
             lks = DTM10(lks);
             lks = MTD10(lks);
             lks = DTM00(lks);
@@ -84,7 +84,7 @@ namespace GMap.NET.Projections
 
             double res = GetTileMatrixResolution(zoom);
 
-            var lks = new[] {x * res + OrignX, OrignY - y * res};
+            double[] lks = new[] {x * res + OrignX, OrignY - y * res};
             lks = MTD11(lks);
             lks = DTM10(lks);
             lks = MTD10(lks);

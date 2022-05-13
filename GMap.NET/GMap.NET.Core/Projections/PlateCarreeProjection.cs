@@ -47,12 +47,12 @@ namespace GMap.NET.Projections
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
         {
-            GPoint ret = GPoint.Empty;
+            var ret = GPoint.Empty;
 
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
 
-            GSize s = GetTileMatrixSizePixel(zoom);
+            var s = GetTileMatrixSizePixel(zoom);
             double mapSizeX = s.Width;
             double mapSizeY = s.Height;
 
@@ -66,9 +66,9 @@ namespace GMap.NET.Projections
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)
         {
-            PointLatLng ret = PointLatLng.Empty;
+            var ret = PointLatLng.Empty;
 
-            GSize s = GetTileMatrixSizePixel(zoom);
+            var s = GetTileMatrixSizePixel(zoom);
             double mapSizeX = s.Width;
             double mapSizeY = s.Height;
 

@@ -76,12 +76,12 @@ namespace GMap.NET.MapProviders
 
         public MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode, int zoom)
         {
-            List<PointLatLng> points = GetRoutePoints(MakeRoutingUrl(start,
+            var points = GetRoutePoints(MakeRoutingUrl(start,
                 end,
                 walkingMode ? TravelTypeFoot : TravelTypeMotorCar,
                 LanguageStr,
                 "km"));
-            MapRoute route = points != null ? new MapRoute(points, walkingMode ? WalkingStr : DrivingStr) : null;
+            var route = points != null ? new MapRoute(points, walkingMode ? WalkingStr : DrivingStr) : null;
             return route;
         }
 
@@ -203,12 +203,12 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(route))
                 {
-                    XmlDocument xmldoc = new XmlDocument();
+                    var xmldoc = new XmlDocument();
                     xmldoc.LoadXml(route);
-                    XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
+                    var xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
                     xmlnsManager.AddNamespace("sm", "http://www.topografix.com/GPX/1/1");
 
-                    XmlNodeList wpts = xmldoc.SelectNodes("/sm:gpx/sm:wpt", xmlnsManager);
+                    var wpts = xmldoc.SelectNodes("/sm:gpx/sm:wpt", xmlnsManager);
                     if (wpts != null && wpts.Count > 0)
                     {
                         points = new List<PointLatLng>();
@@ -352,7 +352,7 @@ namespace GMap.NET.MapProviders
 
         DirectionsStatusCode GetDirectionsUrl(string url, out GDirections direction)
         {
-            DirectionsStatusCode ret = DirectionsStatusCode.UNKNOWN_ERROR;
+            var ret = DirectionsStatusCode.UNKNOWN_ERROR;
             direction = null;
 
             try
@@ -437,12 +437,12 @@ namespace GMap.NET.MapProviders
 
                 if (!string.IsNullOrEmpty(route))
                 {
-                    XmlDocument xmldoc = new XmlDocument();
+                    var xmldoc = new XmlDocument();
                     xmldoc.LoadXml(route);
-                    XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
+                    var xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
                     xmlnsManager.AddNamespace("sm", "http://www.topografix.com/GPX/1/1");
 
-                    XmlNodeList wpts = xmldoc.SelectNodes("/sm:gpx/sm:wpt", xmlnsManager);
+                    var wpts = xmldoc.SelectNodes("/sm:gpx/sm:wpt", xmlnsManager);
                     if (wpts != null && wpts.Count > 0)
                     {
                         ret = DirectionsStatusCode.OK;
@@ -463,7 +463,7 @@ namespace GMap.NET.MapProviders
                             direction.EndLocation = direction.Route[direction.Route.Count - 1];
                         }
 
-                        XmlNode n = xmldoc.SelectSingleNode("/sm:gpx/sm:metadata/sm:copyright/sm:license",
+                        var n = xmldoc.SelectSingleNode("/sm:gpx/sm:metadata/sm:copyright/sm:license",
                             xmlnsManager);
                         if (n != null)
                         {
@@ -501,14 +501,14 @@ namespace GMap.NET.MapProviders
 
                             foreach (XmlNode w in wpts)
                             {
-                                GDirectionStep step = new GDirectionStep();
+                                var step = new GDirectionStep();
 
                                 double lat = double.Parse(w.Attributes["lat"].InnerText, CultureInfo.InvariantCulture);
                                 double lng = double.Parse(w.Attributes["lon"].InnerText, CultureInfo.InvariantCulture);
 
                                 step.StartLocation = new PointLatLng(lat, lng);
 
-                                XmlNode nn = w.SelectSingleNode("sm:desc", xmlnsManager);
+                                var nn = w.SelectSingleNode("sm:desc", xmlnsManager);
                                 if (nn != null)
                                 {
                                     step.HtmlInstructions = nn.InnerText;

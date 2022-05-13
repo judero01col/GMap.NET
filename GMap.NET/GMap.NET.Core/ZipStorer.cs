@@ -405,7 +405,7 @@ namespace System.IO.Compression
                 throw new InvalidOperationException("Stream cannot be written");
 
             // check signature
-            var signature = new byte[4];
+            byte[] signature = new byte[4];
             _zipFileStream.Seek(zfe.HeaderOffset, SeekOrigin.Begin);
             _zipFileStream.Read(signature, 0, 4);
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
@@ -421,7 +421,7 @@ namespace System.IO.Compression
                 return false;
 
             // Buffered copy
-            var buffer = new byte[16384];
+            byte[] buffer = new byte[16384];
             _zipFileStream.Seek(zfe.FileOffset, SeekOrigin.Begin);
             uint bytesPending = zfe.FileSize;
             while (bytesPending > 0)
@@ -503,7 +503,7 @@ namespace System.IO.Compression
         // Calculate the file offset by reading the corresponding local header
         private uint GetFileOffset(uint headerOffset)
         {
-            var buffer = new byte[2];
+            byte[] buffer = new byte[2];
 
             _zipFileStream.Seek(headerOffset + 26, SeekOrigin.Begin);
             _zipFileStream.Read(buffer, 0, 2);
@@ -534,7 +534,7 @@ namespace System.IO.Compression
         {
             long pos = _zipFileStream.Position;
             var encoder = zfe.EncodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
-            var encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
+            byte[] encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
 
             _zipFileStream.Write(new byte[] {80, 75, 3, 4, 20, 0}, 0, 6); // No extra header
             _zipFileStream.Write(BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
@@ -580,8 +580,8 @@ namespace System.IO.Compression
         private void WriteCentralDirRecord(ZipFileEntry zfe)
         {
             var encoder = zfe.EncodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
-            var encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
-            var encodedComment = encoder.GetBytes(zfe.Comment);
+            byte[] encodedFilename = encoder.GetBytes(zfe.FilenameInZip);
+            byte[] encodedComment = encoder.GetBytes(zfe.Comment);
 
             _zipFileStream.Write(new byte[] {80, 75, 1, 2, 23, 0xB, 20, 0}, 0, 8);
             _zipFileStream.Write(BitConverter.GetBytes((ushort)(zfe.EncodeUTF8 ? 0x0800 : 0)),
@@ -629,7 +629,7 @@ namespace System.IO.Compression
         private void WriteEndRecord(uint size, uint offset)
         {
             var encoder = EncodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
-            var encodedComment = encoder.GetBytes(_comment);
+            byte[] encodedComment = encoder.GetBytes(_comment);
 
             _zipFileStream.Write(new byte[] {80, 75, 5, 6, 0, 0, 0, 0}, 0, 8);
             _zipFileStream.Write(BitConverter.GetBytes((ushort)Files.Count + _existingFiles), 0, 2);
@@ -643,7 +643,7 @@ namespace System.IO.Compression
         // Copies all source file into storage file
         private void Store(ref ZipFileEntry zfe, Stream source)
         {
-            var buffer = new byte[16384];
+            byte[] buffer = new byte[16384];
             int bytesRead;
             uint totalRead = 0;
             Stream outStream;

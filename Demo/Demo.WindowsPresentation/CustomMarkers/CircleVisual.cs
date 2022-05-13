@@ -339,7 +339,7 @@ namespace Demo.WindowsPresentation.CustomMarkers
                 FrameworkPropertyMetadataOptions.AffectsRender,
                 OnEffectChanged));
 
-        public Effect Effect
+        public new Effect Effect
         {
             get
             {

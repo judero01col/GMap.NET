@@ -710,7 +710,7 @@ namespace GMap.NET
                 // let't check memory first
                 if (UseMemoryCache)
                 {
-                    var m = MemoryCache.GetTileFromMemoryCache(rtile);
+                    byte[] m = MemoryCache.GetTileFromMemoryCache(rtile);
                     if (m != null)
                     {
                         if (GMapProvider.TileImageProxy != null)

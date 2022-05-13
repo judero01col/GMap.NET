@@ -101,7 +101,7 @@ namespace GMap.NET
                 return false;
             }
 
-            PointLatLng tf = (PointLatLng)obj;
+            var tf = (PointLatLng)obj;
             return tf.Lng == Lng && tf.Lat == Lat && tf.GetType().Equals(GetType());
         }
 

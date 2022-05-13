@@ -107,7 +107,7 @@ namespace GMap.NET.Internals
             if (!(obj is Tile))
                 return false;
 
-            Tile comp = (Tile)obj;
+            var comp = (Tile)obj;
             return comp.Zoom == Zoom && comp.Pos == Pos;
         }
 

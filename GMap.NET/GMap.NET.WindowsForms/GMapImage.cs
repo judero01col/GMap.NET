@@ -71,7 +71,7 @@ namespace GMap.NET.WindowsForms
 
         public override bool Save(Stream stream, PureImage image)
         {
-            GMapImage ret = image as GMapImage;
+            var ret = image as GMapImage;
             bool ok = true;
 
             if (ret.Img != null)

@@ -41,7 +41,7 @@ namespace GMap.NET.WindowsPresentation
             // Create a StreamGeometry to use to specify myPath.
             var geometry = new StreamGeometry();
 
-            using (StreamGeometryContext ctx = geometry.Open())
+            using (var ctx = geometry.Open())
             {
                 ctx.BeginFigure(localPath[0], false, false);
                 // Draw a line to the next specified point.
@@ -52,14 +52,14 @@ namespace GMap.NET.WindowsPresentation
             // for additional performance benefits.
             geometry.Freeze();
             // Create a path to draw a geometry with.
-            Path myPath = new Path();
+            var myPath = new Path();
             {
                 // Specify the shape of the Path using the StreamGeometry.
                 myPath.Data = geometry;
 
                 if (addBlurEffect)
                 {
-                    BlurEffect ef = new BlurEffect();
+                    var ef = new BlurEffect();
                     {
                         ef.KernelType = KernelType.Gaussian;
                         ef.Radius = 3.0;

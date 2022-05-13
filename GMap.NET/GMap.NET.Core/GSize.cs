@@ -81,7 +81,7 @@ namespace GMap.NET
             if (!(obj is GSize))
                 return false;
 
-            GSize comp = (GSize)obj;
+            var comp = (GSize)obj;
             // Note value types can't have derived classes, so we don't need to
             //
             return comp.Width == Width &&

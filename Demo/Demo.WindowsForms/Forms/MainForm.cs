@@ -543,7 +543,7 @@ namespace Demo.WindowsForms
             {
                 string launch = string.Empty;
 
-                var x = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+                string[] x = Assembly.GetExecutingAssembly().GetManifestResourceNames();
                 foreach (string f in x)
                 {
                     if (f.Contains("leafletjs"))
@@ -573,7 +573,7 @@ namespace Demo.WindowsForms
                             using (var fileStream = File.Create(fileFullPath, (int)stream.Length))
                             {
                                 // Fill the bytes[] array with the stream data
-                                var bytesInStream = new byte[stream.Length];
+                                byte[] bytesInStream = new byte[stream.Length];
                                 stream.Read(bytesInStream, 0, bytesInStream.Length);
 
                                 // Use FileStream object to write to the specified file
@@ -791,7 +791,7 @@ namespace Demo.WindowsForms
                 {
                     var pnew = MainMap.FromLocalToLatLng(e.X, e.Y);
 
-                    var pIndex = (int?)_curentRectMarker.Tag;
+                    int? pIndex = (int?)_curentRectMarker.Tag;
                     if (pIndex.HasValue)
                     {
                         if (pIndex < _polygon.Points.Count)

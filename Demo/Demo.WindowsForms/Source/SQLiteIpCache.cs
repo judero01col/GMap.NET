@@ -2,10 +2,10 @@
 namespace Demo.WindowsForms
 {
 #if SQLite
-   using System.Collections.Generic;
-   using System.Data.Common;
+    using System.Collections.Generic;
+    using System.Data.Common;
 #if !MONO
-   using System.Data.SQLite;
+    using System.Data.SQLite;
 #else
    using SQLiteConnection=Mono.Data.Sqlite.SqliteConnection;
    using SQLiteTransaction=Mono.Data.Sqlite.SqliteTransaction;
@@ -13,227 +13,228 @@ namespace Demo.WindowsForms
    using SQLiteDataReader=Mono.Data.Sqlite.SqliteDataReader;
    using SQLiteParameter=Mono.Data.Sqlite.SqliteParameter;
 #endif
-   using System.IO;
-   using System.Text;
-   using System;
-   using System.Diagnostics;
+    using System.IO;
+    using System.Text;
+    using System;
+    using System.Diagnostics;
 
-   /// <summary>
-   /// ultra fast cache system for tiles
-   /// </summary>
-   internal class SQLiteIpCache
-   {
-      string _cache;
-      string _ipCache;
-      string _db;
+    /// <summary>
+    /// ultra fast cache system for tiles
+    /// </summary>
+    internal class SQLiteIpCache
+    {
+        string _cache;
+        string _ipCache;
+        string _db;
 
-      public string IpCache
-      {
-         get
-         {
-            return _ipCache;
-         }
-      }
-
-      /// <summary>
-      /// local cache location
-      /// </summary>
-      public string CacheLocation
-      {
-         get
-         {
-            return _cache;
-         }
-         set
-         {
-            _cache = value;
-            _ipCache = Path.Combine(_cache, "IpGeoCacheDB") + Path.DirectorySeparatorChar;
-
-            // make empty db
+        public string IpCache
+        {
+            get
             {
-               _db = _ipCache + "Data.ipdb";
-
-               if(!File.Exists(_db))
-               {
-                  CreateEmptyDB(_db);
-               }
+                return _ipCache;
             }
-         }
-      }
+        }
 
-      public static bool CreateEmptyDB(string file)
-      {
-         bool ret = true;
-
-         try
-         {
-            string dir = Path.GetDirectoryName(file);
-            if(!Directory.Exists(dir))
+        /// <summary>
+        /// local cache location
+        /// </summary>
+        public string CacheLocation
+        {
+            get
             {
-               Directory.CreateDirectory(dir);
+                return _cache;
             }
-
-            using(SQLiteConnection cn = new SQLiteConnection())
+            set
             {
+                _cache = value;
+                _ipCache = Path.Combine(_cache, "IpGeoCacheDB") + Path.DirectorySeparatorChar;
+
+                // make empty db
+                {
+                    _db = _ipCache + "Data.ipdb";
+
+                    if (!File.Exists(_db))
+                    {
+                        CreateEmptyDB(_db);
+                    }
+                }
+            }
+        }
+
+        public static bool CreateEmptyDB(string file)
+        {
+            bool ret = true;
+
+            try
+            {
+                string dir = Path.GetDirectoryName(file);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                using (var cn = new SQLiteConnection())
+                {
 #if !MONO
-               cn.ConnectionString = string.Format("Data Source=\"{0}\";FailIfMissing=False;", file);
+                    cn.ConnectionString = string.Format("Data Source=\"{0}\";FailIfMissing=False;", file);
 #else
                cn.ConnectionString = string.Format("Version=3,URI=file://{0},FailIfMissing=False", file);
 #endif
-               cn.Open();
-               {
-                  using(DbTransaction tr = cn.BeginTransaction())
-                  {
-                     try
-                     {
-                        using(DbCommand cmd = cn.CreateCommand())
+                    cn.Open();
+                    {
+                        using (DbTransaction tr = cn.BeginTransaction())
                         {
-                           cmd.Transaction = tr;
-                           cmd.CommandText = Properties.Resources.IpCacheCreateDb;
-                           cmd.ExecuteNonQuery();
-                        }
-                        tr.Commit();
-                     }
-                     catch(Exception exx)
-                     {
-                        Console.WriteLine("CreateEmptyDB: " + exx.ToString());
-                        Debug.WriteLine("CreateEmptyDB: " + exx.ToString());
+                            try
+                            {
+                                using (DbCommand cmd = cn.CreateCommand())
+                                {
+                                    cmd.Transaction = tr;
+                                    cmd.CommandText = Properties.Resources.IpCacheCreateDb;
+                                    cmd.ExecuteNonQuery();
+                                }
+                                tr.Commit();
+                            }
+                            catch (Exception exx)
+                            {
+                                Console.WriteLine("CreateEmptyDB: " + exx.ToString());
+                                Debug.WriteLine("CreateEmptyDB: " + exx.ToString());
 
-                        tr.Rollback();
-                        ret = false;
-                     }
-                  }
-                  cn.Close();
-               }
+                                tr.Rollback();
+                                ret = false;
+                            }
+                        }
+                        cn.Close();
+                    }
+                }
             }
-         }
-         catch(Exception ex)
-         {
+            catch (Exception ex)
+            {
 #if MONO
             Console.WriteLine("CreateEmptyDB: " + ex.ToString());
 #endif
-            Debug.WriteLine("CreateEmptyDB: " + ex.ToString());
-            ret = false;
-         }
-         return ret;
-      }
+                Debug.WriteLine("CreateEmptyDB: " + ex.ToString());
+                ret = false;
+            }
+            return ret;
+        }
 
-      public bool PutDataToCache(string ip, IpInfo data)
-      {
-         bool ret = true;
-         try
-         {
-            using(SQLiteConnection cn = new SQLiteConnection())
+        public bool PutDataToCache(string ip, IpInfo data)
+        {
+            bool ret = true;
+            try
             {
+                using (var cn = new SQLiteConnection())
+                {
 #if !MONO
-               cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
+                    cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
 #else
                cn.ConnectionString = string.Format("Version=3,URI=file://{0},FailIfMissing=True,Default Timeout=33", db);
 #endif
 
-               cn.Open();
-               {
-                  {
-                     using(DbTransaction tr = cn.BeginTransaction())
-                     {
-                        try
+                    cn.Open();
+                    {
                         {
-                           using(DbCommand cmd = cn.CreateCommand())
-                           {
-                              cmd.Transaction = tr;
+                            using (DbTransaction tr = cn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    using (DbCommand cmd = cn.CreateCommand())
+                                    {
+                                        cmd.Transaction = tr;
 
-                              cmd.CommandText = "INSERT INTO Cache(Ip, CountryName, RegionName, City, Latitude, Longitude, Time) VALUES(@p1, @p2, @p3, @p4, @p5, @p6, @p7)";
+                                        cmd.CommandText = "INSERT INTO Cache(Ip, CountryName, RegionName, City, Latitude, Longitude, Time) VALUES(@p1, @p2, @p3, @p4, @p5, @p6, @p7)";
 
-                              cmd.Parameters.Add(new SQLiteParameter("@p1", ip));
-                              cmd.Parameters.Add(new SQLiteParameter("@p2", data.CountryName));
-                              cmd.Parameters.Add(new SQLiteParameter("@p3", data.RegionName));
-                              cmd.Parameters.Add(new SQLiteParameter("@p4", data.City));
-                              cmd.Parameters.Add(new SQLiteParameter("@p5", data.Latitude));
-                              cmd.Parameters.Add(new SQLiteParameter("@p6", data.Longitude));
-                              cmd.Parameters.Add(new SQLiteParameter("@p7", data.CacheTime));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p1", ip));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p2", data.CountryName));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p3", data.RegionName));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p4", data.City));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p5", data.Latitude));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p6", data.Longitude));
+                                        cmd.Parameters.Add(new SQLiteParameter("@p7", data.CacheTime));
 
-                              cmd.ExecuteNonQuery();
-                           }
-                           tr.Commit();
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    tr.Commit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("PutDataToCache: " + ex.ToString());
+
+                                    Debug.WriteLine("PutDataToCache: " + ex.ToString());
+
+                                    tr.Rollback();
+                                    ret = false;
+                                }
+                            }
                         }
-                        catch(Exception ex)
-                        {
-                           Console.WriteLine("PutDataToCache: " + ex.ToString());
-
-                           Debug.WriteLine("PutDataToCache: " + ex.ToString());
-
-                           tr.Rollback();
-                           ret = false;
-                        }
-                     }
-                  }
-               }
-               cn.Close();
+                    }
+                    cn.Close();
+                }
             }
-         }
-         catch(Exception ex)
-         {
+            catch (Exception ex)
+            {
 #if MONO
             Console.WriteLine("PutDataToCache: " + ex.ToString());
 #endif
-            Debug.WriteLine("PutDataToCache: " + ex.ToString());
-            ret = false;
-         }
-         return ret;
-      }
-
-      public IpInfo GetDataFromCache(string ip)
-      {
-         IpInfo ret = null;
-         try
-         {
-            using(SQLiteConnection cn = new SQLiteConnection())
-            {
-#if !MONO
-               cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
-#else
-               cn.ConnectionString = string.Format("Version=3,URI=file://{0},Default Timeout=33", db);
-#endif
-               cn.Open();
-               {
-                  using(DbCommand com = cn.CreateCommand())
-                  {
-                     com.CommandText = "SELECT * FROM Cache WHERE Ip = '" + ip + "'";
-
-                     using(DbDataReader rd = com.ExecuteReader())
-                     {
-                        if(rd.Read())
-                        {
-                           IpInfo val = new IpInfo();
-                           {
-                              val.Ip = ip;
-                              val.CountryName = rd["CountryName"] as string;
-                              val.RegionName = rd["RegionName"] as string;
-                              val.City = rd["City"] as string;
-                              val.Latitude = (double)rd["Latitude"];
-                              val.Longitude = (double)rd["Longitude"];
-                              val.CacheTime = (DateTime)rd["Time"];
-                           }
-                           ret = val;
-                        }
-                        rd.Close();
-                     }
-                  }
-               }
-               cn.Close();
+                Debug.WriteLine("PutDataToCache: " + ex.ToString());
+                ret = false;
             }
-         }
-         catch(Exception ex)
-         {
-#if MONO
-            Console.WriteLine("GetDataFromCache: " + ex.ToString());
-#endif
-            Debug.WriteLine("GetDataFromCache: " + ex.ToString());
-            ret = null;
-         }
+            return ret;
+        }
 
-         return ret;
-      }
-   }
+        public IpInfo GetDataFromCache(string ip)
+        {
+            IpInfo ret = null;
+            try
+            {
+                using (var cn = new SQLiteConnection())
+                {
+                    #if !MONO
+                        cn.ConnectionString = string.Format("Data Source=\"{0}\";", _db);
+                    #else
+                        cn.ConnectionString = string.Format("Version=3,URI=file://{0},Default Timeout=33", db);
+                    #endif
+
+                    cn.Open();
+                    {
+                        using (DbCommand com = cn.CreateCommand())
+                        {
+                            com.CommandText = "SELECT * FROM Cache WHERE Ip = '" + ip + "'";
+
+                            using (var rd = com.ExecuteReader())
+                            {
+                                if (rd.Read())
+                                {
+                                    var val = new IpInfo();
+                                    {
+                                        val.Ip = ip;
+                                        val.CountryName = rd["CountryName"] as string;
+                                        val.RegionName = rd["RegionName"] as string;
+                                        val.City = rd["City"] as string;
+                                        val.Latitude = (double)rd["Latitude"];
+                                        val.Longitude = (double)rd["Longitude"];
+                                        val.CacheTime = (DateTime)rd["Time"];
+                                    }
+                                    ret = val;
+                                }
+                                rd.Close();
+                            }
+                        }
+                    }
+                    cn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                #if MONO
+                    Console.WriteLine("GetDataFromCache: " + ex.ToString());
+                #endif
+                Debug.WriteLine("GetDataFromCache: " + ex.ToString());
+                ret = null;
+            }
+
+            return ret;
+        }
+    }
 #endif
 }

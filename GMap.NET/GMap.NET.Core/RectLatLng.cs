@@ -204,14 +204,14 @@ namespace GMap.NET
 
         public static RectLatLng Inflate(RectLatLng rect, double lat, double lng)
         {
-            RectLatLng ef = rect;
+            var ef = rect;
             ef.Inflate(lat, lng);
             return ef;
         }
 
         public void Intersect(RectLatLng rect)
         {
-            RectLatLng ef = Intersect(rect, this);
+            var ef = Intersect(rect, this);
             Lng = ef.Lng;
             Lat = ef.Lat;
             WidthLng = ef.WidthLng;

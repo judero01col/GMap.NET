@@ -48,8 +48,8 @@ namespace GMap.NET.Projections
 
         public long[] WGSToPP(double la, double lo)
         {
-            var utmEE = WGSToUTM(DegreesToRadians(la), DegreesToRadians(lo), 33);
-            var pp = UTMEEToPP(utmEE[0], utmEE[1]);
+            double[] utmEE = WGSToUTM(DegreesToRadians(la), DegreesToRadians(lo), 33);
+            long[] pp = UTMEEToPP(utmEE[0], utmEE[1]);
             return pp;
         }
 
@@ -120,8 +120,8 @@ namespace GMap.NET.Projections
 
         public double[] PPToWGS(double x, double y)
         {
-            var utmEE = PPToUTMEE(x, y);
-            var ret = UTMToWGS(utmEE[0], utmEE[1], 33);
+            double[] utmEE = PPToUTMEE(x, y);
+            double[] ret = UTMToWGS(utmEE[0], utmEE[1], 33);
             return ret;
         }
 
@@ -227,7 +227,7 @@ namespace GMap.NET.Projections
 
             var size = GetTileMatrixSizePixel(zoom);
             {
-                var l = WGSToPP(lat, lng);
+                long[] l = WGSToPP(lat, lng);
                 ret.X = l[0] >> (20 - zoom);
                 ret.Y = size.Height - (l[1] >> (20 - zoom));
             }
@@ -243,7 +243,7 @@ namespace GMap.NET.Projections
             long oX = x << (20 - zoom);
             long oY = (size.Height - y) << (20 - zoom);
             {
-                var l = PPToWGS(oX, oY);
+                double[] l = PPToWGS(oX, oY);
                 ret.Lat = Clip(l[0], MinLatitude, MaxLatitude);
                 ret.Lng = Clip(l[1], MinLongitude, MaxLongitude);
             }

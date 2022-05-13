@@ -80,7 +80,7 @@ namespace GMap.NET.CacheProviders
             _kiberCacheLock.AcquireReaderLock();
             try
             {
-                if (_tilesInMemory.TryGetValue(tile, out var ret))
+                if (_tilesInMemory.TryGetValue(tile, out byte[] ret))
                 {
                     return ret;
                 }

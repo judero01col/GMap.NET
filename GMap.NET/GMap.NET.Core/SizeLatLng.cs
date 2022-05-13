@@ -89,7 +89,7 @@ namespace GMap.NET
                 return false;
             }
 
-            SizeLatLng ef = (SizeLatLng)obj;
+            var ef = (SizeLatLng)obj;
             return ef.WidthLng == WidthLng && ef.HeightLat == HeightLat &&
                    ef.GetType().Equals(GetType());
         }

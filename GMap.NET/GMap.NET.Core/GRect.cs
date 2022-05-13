@@ -212,14 +212,14 @@ namespace GMap.NET
 
         public static GRect Inflate(GRect rect, long x, long y)
         {
-            GRect r = rect;
+            var r = rect;
             r.Inflate(x, y);
             return r;
         }
 
         public void Intersect(GRect rect)
         {
-            GRect result = Intersect(rect, this);
+            var result = Intersect(rect, this);
 
             X = result.X;
             Y = result.Y;

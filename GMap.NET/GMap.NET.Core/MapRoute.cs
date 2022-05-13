@@ -92,10 +92,10 @@ namespace GMap.NET
         {
             if (route != null)
             {
-                FieldInfo[] myObjectFields = route.GetType()
+                var myObjectFields = route.GetType()
                     .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 
-                foreach (FieldInfo fi in myObjectFields)
+                foreach (var fi in myObjectFields)
                 {
                     fi.SetValue(this, fi.GetValue(route));
                 }

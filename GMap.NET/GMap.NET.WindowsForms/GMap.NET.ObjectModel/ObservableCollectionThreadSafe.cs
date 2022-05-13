@@ -25,7 +25,7 @@ namespace GMap.NET.ObjectModel
             {
                 if (_collectionChanged != null)
                 {
-                    Delegate[] delegates = _collectionChanged.GetInvocationList();
+                    var delegates = _collectionChanged.GetInvocationList();
 
                     // Walk thru invocation list
                     foreach (NotifyCollectionChangedEventHandler handler in delegates)

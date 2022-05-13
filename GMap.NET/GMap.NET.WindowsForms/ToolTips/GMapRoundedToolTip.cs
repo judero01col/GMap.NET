@@ -19,7 +19,7 @@ namespace GMap.NET.WindowsForms.ToolTips
             TextPadding = new Size((int)Radius, (int)Radius);
         }
 
-        public void DrawRoundRectangle(Graphics g, Pen pen, float h, float v, float width, float height, float radius)
+        public new void DrawRoundRectangle(Graphics g, Pen pen, float h, float v, float width, float height, float radius)
         {
             using (var gp = new GraphicsPath())
             {
@@ -49,7 +49,7 @@ namespace GMap.NET.WindowsForms.ToolTips
                 st.Height + TextPadding.Height);
             rect.Offset(Offset.X, Offset.Y);
 
-            var lineOffset = 0;
+            int lineOffset = 0;
             if (!g.VisibleClipBounds.Contains(rect))
             {
                 var clippingOffset = new Point();

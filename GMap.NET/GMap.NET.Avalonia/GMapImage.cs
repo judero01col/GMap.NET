@@ -12,7 +12,7 @@ namespace GMap.NET.Avalonia
     /// </summary>
     public class GMapImage : PureImage
     {
-        public IImage Img;
+        public IImage? Img;
 
         public override void Dispose()
         {
@@ -45,7 +45,7 @@ namespace GMap.NET.Avalonia
 
         public static readonly GMapImageProxy Instance = new GMapImageProxy();
 
-        public override PureImage FromStream(Stream stream)
+        public override PureImage? FromStream(Stream stream)
         {
             if (stream != null)
             {

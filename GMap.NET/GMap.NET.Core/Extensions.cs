@@ -37,7 +37,7 @@ namespace GMap.NET
         /// <returns>The value if found, otherwise the default value.</returns>
         public static T GetValue<T>(SerializationInfo info, string key, T defaultValue) where T : class
         {
-            T deserializedValue = GetValue<T>(info, key);
+            var deserializedValue = GetValue<T>(info, key);
             if (deserializedValue != null)
             {
                 return deserializedValue;

@@ -59,7 +59,7 @@ namespace GMap.NET.Avalonia
             //geometry.Freeze();
             geometry.EndBatchUpdate();
             // Create a path to draw a geometry with.
-            Path myPath = new Path();
+            var myPath = new Path();
             {
                 // Specify the shape of the Path using the StreamGeometry.
                 myPath.Data = geometry;

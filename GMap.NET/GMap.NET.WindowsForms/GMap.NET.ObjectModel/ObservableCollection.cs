@@ -478,7 +478,7 @@ namespace GMap.NET.ObjectModel
             {
                 lock (_lock)
                 {
-                    using (IEnumerator<T> enumerator = collection.GetEnumerator())
+                    using (var enumerator = collection.GetEnumerator())
                     {
                         while (enumerator.MoveNext())
                         {
@@ -522,7 +522,7 @@ namespace GMap.NET.ObjectModel
             lock (_lock)
             {
                 CheckReentrancy();
-                T item = _inner[oldIndex];
+                var item = _inner[oldIndex];
                 _inner.RemoveAt(oldIndex);
                 _inner.Insert(newIndex, item);
                 OnPropertyChanged(IndexerName);
@@ -534,7 +534,7 @@ namespace GMap.NET.ObjectModel
             lock (_lock)
             {
                 CheckReentrancy();
-                T item = _inner[index];
+                var item = _inner[index];
                 _inner.RemoveAt(index);
                 OnPropertyChanged(CountString);
                 OnPropertyChanged(IndexerName);
@@ -547,7 +547,7 @@ namespace GMap.NET.ObjectModel
             lock (_lock)
             {
                 CheckReentrancy();
-                T oldItem = _inner[index];
+                var oldItem = _inner[index];
                 _inner[index] = item;
                 OnPropertyChanged(IndexerName);
                 OnCollectionChanged(NotifyCollectionChangedAction.Replace, oldItem, item, index);

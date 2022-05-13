@@ -62,7 +62,7 @@ namespace GMap.NET.Internals
                     var first = _queue.Dequeue();
                     try
                     {
-                        var m = base[first];
+                        byte[] m = base[first];
                         {
                             base.Remove(first);
                             _memoryCacheSize -= m.Length;

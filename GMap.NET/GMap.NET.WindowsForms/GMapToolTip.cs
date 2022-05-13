@@ -180,12 +180,12 @@ namespace GMap.NET.WindowsForms
 
         private void WriteString(Graphics g, string text, RectangleF rectText)
         {
-            var vec1 = text.Split('\n');
+            string[] vec1 = text.Split('\n');
             for (int i = 0; i < vec1.Length; i++)
             {
                 if (vec1[i] != "")
                 {
-                    var vec2 = vec1[i].Split('|');
+                    string[] vec2 = vec1[i].Split('|');
                     if (vec2.Length > 0)
                     {
                         var st = g.MeasureString(vec2[0], TitleFont).ToSize();

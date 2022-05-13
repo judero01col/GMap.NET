@@ -78,7 +78,7 @@ namespace Org.Mentalis.Network.ProxySocket
         private void Authenticate()
         {
             Server.Send(new byte[] {5, 2, 0, 2});
-            var buffer = ReadBytes(2);
+            byte[] buffer = ReadBytes(2);
             if (buffer[1] == 255)
                 throw new ProxyException("No authentication method accepted.");
             AuthMethod authenticate;
@@ -111,7 +111,7 @@ namespace Org.Mentalis.Network.ProxySocket
                 throw new ArgumentNullException();
             if (port <= 0 || port > 65535 || host.Length > 255)
                 throw new ArgumentException();
-            var connect = new byte[7 + host.Length];
+            byte[] connect = new byte[7 + host.Length];
             connect[0] = 5;
             connect[1] = 1;
             connect[2] = 0; //reserved
@@ -132,7 +132,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             if (remoteEP == null)
                 throw new ArgumentNullException();
-            var connect = new byte[10];
+            byte[] connect = new byte[10];
             connect[0] = 5;
             connect[1] = 1;
             connect[2] = 0; //reserved
@@ -187,7 +187,7 @@ namespace Org.Mentalis.Network.ProxySocket
         {
             Authenticate();
             Server.Send(connect);
-            var buffer = ReadBytes(4);
+            byte[] buffer = ReadBytes(4);
             if (buffer[1] != 0)
             {
                 Server.Close();

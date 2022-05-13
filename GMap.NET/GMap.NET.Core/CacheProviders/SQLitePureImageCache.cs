@@ -190,7 +190,7 @@ namespace GMap.NET.CacheProviders
                 RebuildFinnalSelect();
 
                 // attach all databases from main cache location
-                var dbs = Directory.GetFiles(_dir, "*.gmdb", SearchOption.AllDirectories);
+                string[] dbs = Directory.GetFiles(_dir, "*.gmdb", SearchOption.AllDirectories);
                 foreach (string d in dbs)
                 {
                     if (d != _db)
@@ -206,8 +206,8 @@ namespace GMap.NET.CacheProviders
         void CheckPreAllocation()
         {
             {
-                var pageSizeBytes = new byte[2];
-                var freePagesBytes = new byte[4];
+                byte[] pageSizeBytes = new byte[2];
+                byte[] freePagesBytes = new byte[4];
 
                 lock (this)
                 {
@@ -811,7 +811,7 @@ namespace GMap.NET.CacheProviders
                                 if (rd.Read())
                                 {
                                     long length = rd.GetBytes(0, 0, null, 0, 0);
-                                    var tile = new byte[length];
+                                    byte[] tile = new byte[length];
                                     rd.GetBytes(0, 0, tile, 0, tile.Length);
                                     {
                                         if (GMapProvider.TileImageProxy != null)

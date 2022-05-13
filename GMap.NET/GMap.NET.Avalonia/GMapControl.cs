@@ -106,7 +106,6 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     The touch enabled property
         /// </summary>
-        [Obsolete]
         public static readonly StyledProperty<bool> TouchEnabledProperty =
             AvaloniaProperty.Register<GMapControl, bool>(
                 nameof(TouchEnabled));
@@ -187,7 +186,7 @@ namespace GMap.NET.Avalonia
         {
             if (o is GMapControl map)
             {
-                var result = value;
+                double result = value;
 
                 if (result > map.MaxZoom)
                     result = map.MaxZoom;
@@ -419,7 +418,7 @@ namespace GMap.NET.Avalonia
         private readonly Typeface _tileTypeface = new Typeface("Arial");
         private bool _showTileGridLines;
 
-        private FormattedText _copyright;
+        private FormattedText? _copyright;
 
         /// <summary>
         ///     enables filling empty tiles using lower level images
@@ -593,7 +592,7 @@ namespace GMap.NET.Avalonia
 
         internal readonly TranslateTransform MapOverlayTranslateTransform = new TranslateTransform();
 
-        internal ScaleTransform MapScaleTransform = new ScaleTransform();
+        internal ScaleTransform? MapScaleTransform = new ScaleTransform();
         internal RotateTransform MapRotateTransform = new RotateTransform();
 
         protected bool DesignModeInConstruct
@@ -773,7 +772,7 @@ namespace GMap.NET.Avalonia
         {
             base.ItemsCollectionChanged(sender, e);
 
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 ForceUpdateOverlays(e.NewItems);
             }
@@ -914,7 +913,7 @@ namespace GMap.NET.Avalonia
             //{
             UpdateMarkersOffset();
 
-            foreach (GMapMarker i in items)
+            foreach (GMapMarker? i in items)
             {
                 if (i != null)
                 {

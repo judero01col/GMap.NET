@@ -85,7 +85,7 @@ namespace GMap.NET.CacheProviders
                         bool tableExists;
                         using (var cmd = new SqlCommand("select object_id('GMapNETcache')", _cnGet))
                         {
-                            var objid = cmd.ExecuteScalar();
+                            object objid = cmd.ExecuteScalar();
                             tableExists = objid != null && objid != DBNull.Value;
                         }
 
@@ -232,7 +232,7 @@ namespace GMap.NET.CacheProviders
 
                         if (odata != null && odata != DBNull.Value)
                         {
-                            var tile = (byte[])odata;
+                            byte[] tile = (byte[])odata;
                             if (tile != null && tile.Length > 0)
                             {
                                 if (GMapProvider.TileImageProxy != null)

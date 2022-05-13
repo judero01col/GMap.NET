@@ -761,7 +761,7 @@ namespace Demo.WindowsPresentation
                 dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
                 // Show save file dialog box
-                var result = dlg.ShowDialog();
+                bool? result = dlg.ShowDialog();
 
                 // Process save file dialog box results
                 if (result == true)

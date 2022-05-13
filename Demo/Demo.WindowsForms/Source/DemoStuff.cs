@@ -65,7 +65,7 @@ namespace Demo.WindowsForms
 
             using (var p = new Ping())
             {
-                var buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                byte[] buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 int timeout = 5000; // 5sg
 
                 try
@@ -265,11 +265,11 @@ namespace Demo.WindowsForms
 
             if (!string.IsNullOrEmpty(xml))
             {
-                var items = xml.Split('&');
+                string[] items = xml.Split('&');
 
                 foreach (string it in items)
                 {
-                    var sit = it.Split(';');
+                    string[] sit = it.Split(';');
                     if (sit.Length == 8)
                     {
                         var d = new VehicleData();
@@ -417,7 +417,7 @@ namespace Demo.WindowsForms
                     bounds.Left,
                     bounds.Right));
 
-                var items = response.Split(new[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
+                string[] items = response.Split(new[] {"\n,"}, StringSplitOptions.RemoveEmptyEntries);
 
                 //int i = 0;
                 foreach (string it in items)
@@ -429,7 +429,7 @@ namespace Demo.WindowsForms
                         //Debug.WriteLine(++i + " -> " + d);
 
                         // BAW576":["400803",48.9923,1.8083,"144","36950","462","0512","LFPO","A319","G-EUPC"
-                        var par = d.Split(',');
+                        string[] par = d.Split(',');
                         if (par.Length >= 9)
                         {
                             int id = Convert.ToInt32(par[0], 16);

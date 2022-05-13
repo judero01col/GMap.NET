@@ -45,7 +45,7 @@ namespace GMap.NET.Internals
         public static MemoryStream CopyStream(Stream inputStream, bool seekOriginBegin)
         {
             const int readSize = 32 * 1024;
-            var buffer = new byte[readSize];
+            byte[] buffer = new byte[readSize];
             var ms = new MemoryStream();
             {
                 int count;
@@ -100,7 +100,7 @@ namespace GMap.NET.Internals
 
         public static void RemoveInvalidPathSymbols(ref string url)
         {
-            var ilg = Path.GetInvalidFileNameChars();
+            char[] ilg = Path.GetInvalidFileNameChars();
             foreach (char c in ilg)
             {
                 url = url.Replace(c, '_');
@@ -115,7 +115,7 @@ namespace GMap.NET.Internals
 
             using (var hashProvider = new SHA1CryptoServiceProvider())
             {
-                var tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
+                byte[] tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
                 Array.Resize(ref tdesKey, 16);
 
                 using (var tdesAlgorithm = new TripleDESCryptoServiceProvider())
@@ -124,7 +124,7 @@ namespace GMap.NET.Internals
                     tdesAlgorithm.Mode = CipherMode.ECB;
                     tdesAlgorithm.Padding = PaddingMode.PKCS7;
 
-                    var dataToEncrypt = Encoding.UTF8.GetBytes(message);
+                    byte[] dataToEncrypt = Encoding.UTF8.GetBytes(message);
 
                     // Step 5. Attempt to encrypt the string
                     try
@@ -153,7 +153,7 @@ namespace GMap.NET.Internals
 
             using (var hashProvider = new SHA1CryptoServiceProvider())
             {
-                var tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
+                byte[] tdesKey = hashProvider.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
                 Array.Resize(ref tdesKey, 16);
 
                 // Step 2. Create a new TripleDESCryptoServiceProvider object
@@ -165,7 +165,7 @@ namespace GMap.NET.Internals
                     tdesAlgorithm.Padding = PaddingMode.PKCS7;
 
                     // Step 4. Convert the input string to a byte[]
-                    var dataToDecrypt = Convert.FromBase64String(message);
+                    byte[] dataToDecrypt = Convert.FromBase64String(message);
 
                     // Step 5. Attempt to decrypt the string
                     try

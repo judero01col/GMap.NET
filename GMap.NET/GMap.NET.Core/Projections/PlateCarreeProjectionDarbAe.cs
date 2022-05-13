@@ -74,22 +74,10 @@ namespace GMap.NET.Projections
 
         public override GPoint FromLatLngToPixel(double lat, double lng, int zoom)
         {
-            GPoint ret = GPoint.Empty;
+            var ret = GPoint.Empty;
 
             lat = Clip(lat, MinLatitude, MaxLatitude);
             lng = Clip(lng, MinLongitude, MaxLongitude);
-
-            /*
-              getContainingTileCoords:function(ti,_1dd,lod)
-              {
-                var to=ti.origin,
-                res=lod.resolution,
-                tmw=ti.width*res,
-                tmh=ti.height*res,
-                tc=Math.floor((_1dd.x-to.x)/tmw),
-                tr=Math.floor((to.y-_1dd.y)/tmh);
-              }
-            */
 
             double res = GetTileMatrixResolution(zoom);
 
@@ -101,7 +89,7 @@ namespace GMap.NET.Projections
 
         public override PointLatLng FromPixelToLatLng(long x, long y, int zoom)
         {
-            PointLatLng ret = PointLatLng.Empty;
+            var ret = PointLatLng.Empty;
 
             double res = GetTileMatrixResolution(zoom);
 
