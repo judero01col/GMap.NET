@@ -2,7 +2,7 @@
 
 ![GMap.Net](https://raw.githubusercontent.com/judero01col/GMap.NET/master/GMap.ico "this is the result")
 
-GMap.NET Windows Forms & Presentation is an excellent open source, powerful, free and cross-platform .NET control.
+GMap.NET Windows Forms, Presentation & Avalonia is an excellent open source, powerful, free and cross-platform .NET control.
 Allows the use of routing, geocoding, directions and maps from Google, Yahoo!, Bing, OpenStreetMap, ArcGIS, Pergo, SigPac, Yendux, Mapy.cz, Maps.lt, iKarte.lv, NearMap, HereMap, CloudMade, WikiMapia, MapQuest and many more.
 
 # Installing
@@ -38,7 +38,22 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
-## Version 2.0.4
+## Version 2.1.2
+
+#### GMap.NET.Core
+- .Net 6.0 support added
+- New GMap.NET.WinAvalonia library
+
+#### GMap.NET.WinForms
+- .Net 6.0 support added
+- New GMap.NET.WinAvalonia library
+
+#### GMap.NET.WinPresentation
+- .Net 6.0 support added
+- New GMap.NET.WinAvalonia library
+
+
+## Version 2.1.1
 
 #### GMap.NET.Core
 - .Net 6.0 support added
