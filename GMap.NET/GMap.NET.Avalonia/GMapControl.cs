@@ -106,6 +106,7 @@ namespace GMap.NET.Avalonia
         /// <summary>
         ///     The touch enabled property
         /// </summary>
+        [Obsolete]
         public static readonly StyledProperty<bool> TouchEnabledProperty =
             AvaloniaProperty.Register<GMapControl, bool>(
                 nameof(TouchEnabled));
