@@ -471,7 +471,7 @@ namespace GMap.NET.WindowsPresentation
 
         /// <summary>
         ///     text on empty tiles
-        /// </summary>
+        /// </summary>        
         public FormattedText EmptyTileText =
             new FormattedText("We are sorry, but we don't\nhave imagery at this zoom\n     level for this region.",
                 CultureInfo.CurrentUICulture,
@@ -2016,7 +2016,6 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
-        [Obsolete]
         protected override void OnStylusUp(StylusEventArgs e)
         {
             base.OnStylusUp(e);
@@ -2172,19 +2171,34 @@ namespace GMap.NET.WindowsPresentation
             }
         }
 
+        protected override void OnManipulationStarted(ManipulationStartedEventArgs e)
+        {
+            base.OnManipulationStarted(e);
+
+            if (MultiTouchEnabled && !TouchEnabled)
+            {
+                _core.MouseDown.X = 0;
+                _core.MouseDown.Y = 0;
+                _core.touchCurrent.X = 0;
+                _core.touchCurrent.Y = 0;
+            }
+        }
+
         /// <summary>
         ///     Singles the touch pan map.
         /// </summary>
         /// <param name="deltaPoint">The delta point.</param>
         protected virtual void SingleTouchPanMap(Point deltaPoint)
         {
-            if (MultiTouchEnabled && !TouchEnabled
-            ) // redundent check in case this is invoked outside of the manipulation events
+            if (MultiTouchEnabled && !TouchEnabled) // redundent check in case this is invoked outside of the manipulation events
             {
+                deltaPoint = ApplyRotationInversion(deltaPoint.X, deltaPoint.Y);
+
+                _core.touchCurrent.X += (int)deltaPoint.X;
+                _core.touchCurrent.Y += (int)deltaPoint.Y;
+
                 if (!_core.IsDragging)
                 {
-                    deltaPoint = ApplyRotationInversion(deltaPoint.X, deltaPoint.Y);
-
                     // cursor has moved beyond drag tolerance
                     if (Math.Abs(deltaPoint.X - _core.MouseDown.X) * 2 >=
                         SystemParameters.MinimumHorizontalDragDistance ||
@@ -2193,8 +2207,7 @@ namespace GMap.NET.WindowsPresentation
                         _core.BeginDrag(_core.MouseDown);
                     }
                 }
-
-                if (_core.IsDragging)
+                else if (_core.IsDragging)
                 {
                     if (!IsDragging)
                     {
@@ -2211,13 +2224,7 @@ namespace GMap.NET.WindowsPresentation
                     }
                     else
                     {
-                        deltaPoint = ApplyRotationInversion(deltaPoint.X, deltaPoint.Y);
-
-                        _core.MouseCurrent.X += (int)deltaPoint.X;
-                        _core.MouseCurrent.Y += (int)deltaPoint.Y;
-                        {
-                            _core.Drag(_core.MouseCurrent);
-                        }
+                        _core.Drag(_core.touchCurrent);
 
                         if (IsRotated)
                         {

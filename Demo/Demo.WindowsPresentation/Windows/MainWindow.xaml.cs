@@ -64,6 +64,9 @@ namespace Demo.WindowsPresentation
             MainMap.MapProvider = GMapProviders.OpenStreetMap;
             MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
 
+            MainMap.TouchEnabled = false;
+            MainMap.MultiTouchEnabled = true;
+            
             //// 20200313 (jokubokla): Demo of the new Sweden Map with Mercator instead of SWEREF99
             //MainMap.MapProvider = GMapProviders.SwedenMapAlternative;
             //MainMap.Position = new PointLatLng(58.406298501604, 15.5825614929199); // Linköping

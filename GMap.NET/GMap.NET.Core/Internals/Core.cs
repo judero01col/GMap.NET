@@ -30,6 +30,7 @@ namespace GMap.NET.Internals
         internal GPoint MouseDown;
         internal GPoint MouseCurrent;
         internal GPoint MouseLastZoom;
+        internal GPoint touchCurrent;
 
         public MouseWheelZoomType MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
         public bool MouseWheelZoomEnabled = true;
