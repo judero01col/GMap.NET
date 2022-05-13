@@ -13,7 +13,7 @@ Library migrated to .Net Core and published in new individual packages
 - GMap.NET.Core
 - GMap.NET.WinForms
 - GMap.NET.WinPresentation
-- GMap.NET.Avalonia
+- GMap.NET.WinAvalonia
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes

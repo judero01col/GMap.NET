@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <PackageId>GMap.NET.Avalonia</PackageId>
-        <Product>GMap.NET.Avalonia</Product>
-        <AssemblyTitle>GMap.NET.Avalonia</AssemblyTitle>
+        <PackageId>GMap.NET.WinAvalonia</PackageId>
+        <Product>GMap.NET.WinAvalonia</Product>
+        <AssemblyTitle>GMap.NET.WinAvalonia</AssemblyTitle>
         <RootNamespace>GMap.NET</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
@@ -10,7 +10,7 @@
         <PackageReleaseNotes>
 - .Net Core 3.1 support added
 - .Net 6.0 support added
-- New GMap.NET.Avalonia library
+- New GMap.NET.WinAvalonia library
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes

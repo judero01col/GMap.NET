@@ -14,6 +14,8 @@ https://www.nuget.org/packages/GMap.NET.WinForms
 
 https://www.nuget.org/packages/GMap.NET.WinPresentation 
 
+https://www.nuget.org/packages/GMap.NET.WinAvalonia 
+
 Are installable using the following command in the Package Manager Console:
 
 ```
@@ -26,7 +28,7 @@ PM> Install-Package GMap.NET.WinForms
 PM> Install-Package GMap.NET.WinPresentation
 ```
 ```
-PM> Install-Package GMap.NET.Avalonia
+PM> Install-Package GMap.NET.WinAvalonia
 ```
 
 If you wish to use the cutting-edge version of gmaps-api-net, then you can clone the repository (or download the zip) and build the class library yourself. This should require minimal set-up, and also allows you to develop extra features for your own use (or to push upstream using a pull request for everyone else to use!).

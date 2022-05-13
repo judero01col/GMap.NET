@@ -11,7 +11,7 @@
     <PackageReleaseNotes>
 - .Net Core 3.1 support added
 - .Net 6.0 support added
-- New GMap.NET.Avalonia library
+- New GMap.NET.WinAvalonia library
 
 History Release Notes
 https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
