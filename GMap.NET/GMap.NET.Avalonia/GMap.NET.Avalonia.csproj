@@ -5,9 +5,7 @@
         <AssemblyTitle>GMap.NET.Avalonia</AssemblyTitle>
         <RootNamespace>GMap.NET</RootNamespace>
         <Nullable>enable</Nullable>
-        <TargetFrameworks>net5.0</TargetFrameworks>
-        <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
-
+        <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
         <PackageReleaseNotes>
 - .Net 6.0 support added
 - New GMap.NET.Avalonia library
