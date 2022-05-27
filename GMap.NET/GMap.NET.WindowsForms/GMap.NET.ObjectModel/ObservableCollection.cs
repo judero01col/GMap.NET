@@ -639,8 +639,8 @@ namespace GMap.NET.ObjectModel
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
+        {                         
+            return GetEnumerator();
         }
 
         // Nested Types
