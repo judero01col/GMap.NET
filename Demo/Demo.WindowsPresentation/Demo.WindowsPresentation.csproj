@@ -4,7 +4,7 @@
     <AssemblyTitle>Demo.WindowsPresentation</AssemblyTitle>
     <Description>Demo for GMap.NET.WindowsPresentation</Description>
     <Product>Demo.WindowsPresentation</Product>
-    <TargetFrameworks>net48;net5.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net46;net47;net48;net5.0-windows;net6.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
     <SignAssembly>True</SignAssembly>

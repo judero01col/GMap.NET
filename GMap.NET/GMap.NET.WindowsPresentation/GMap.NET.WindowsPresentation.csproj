@@ -5,7 +5,7 @@
     <Product>GMap.NET.WindowsPresentation</Product>
     <AssemblyTitle>GMap.NET.WindowsPresentation</AssemblyTitle>
     
-    <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net46;net47;net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     
     <PackageReleaseNotes>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29503.13
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMap.NET.Core", "GMap.NET\GMap.NET.Core\GMap.NET.Core.csproj", "{D0C39D9D-BED0-418B-9A5E-713176CAF40C}"
 EndProject
@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMap.NET.Windows", "GMap.NE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMap.NET.Avalonia", "GMap.NET\GMap.NET.Avalonia\GMap.NET.Avalonia.csproj", "{67392694-BD76-4526-B3AA-3B3431989A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.AvaloniaUi", "Demo\Demo.AvaloniaUi\Demo.AvaloniaUi.csproj", "{67C2C78F-8831-42AE-990E-DADE2C88AE82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AvaloniaUi", "Demo\Demo.AvaloniaUi\Demo.AvaloniaUi.csproj", "{67C2C78F-8831-42AE-990E-DADE2C88AE82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
