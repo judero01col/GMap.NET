@@ -29,11 +29,12 @@
 
         public string CountryNameCode;
         public string HouseNo;
+        public long PlacemarkId;
 
         internal Placemark(string address)
         {
             Address = address;
-
+            PlacemarkId = 0;
             Accuracy = 0;
             HouseNo = string.Empty;
             ThoroughfareName = string.Empty;

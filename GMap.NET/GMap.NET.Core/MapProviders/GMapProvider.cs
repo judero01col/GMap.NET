@@ -56,6 +56,7 @@ namespace GMap.NET.MapProviders
         public static readonly OpenCycleTransportMapProvider OpenCycleTransportMap = OpenCycleTransportMapProvider.Instance;
 
         public static readonly OpenStreetMapProvider OpenStreetMap = OpenStreetMapProvider.Instance;
+        public static readonly OpenStreetMapGraphHopperProvider OpenStreetMapGraphHopper = OpenStreetMapGraphHopperProvider.Instance;
         public static readonly OpenStreet4UMapProvider OpenStreet4UMap = OpenStreet4UMapProvider.Instance;
         public static readonly OpenStreetMapQuestProvider OpenStreetMapQuest = OpenStreetMapQuestProvider.Instance;
         public static readonly OpenStreetMapQuestSatelliteProvider OpenStreetMapQuestSatellite = OpenStreetMapQuestSatelliteProvider.Instance;
@@ -170,6 +171,8 @@ namespace GMap.NET.MapProviders
         {
             get;
         }
+
+        //public static OpenStreetMapGraphHopperProvider OpenStreetMapGraphHopperProvider => openStreetMapGraphHopperProvider;
 
         static Dictionary<Guid, GMapProvider> Hash;
 

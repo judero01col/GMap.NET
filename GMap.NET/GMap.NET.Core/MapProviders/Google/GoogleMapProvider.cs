@@ -28,9 +28,7 @@ namespace GMap.NET.MapProviders
         public readonly string Server /* ;}~~~~ */ = Stuff.GString( /*{^_^}*/"gosr2U13BoS+bXaIxt6XWg==" /*d{'_'}b*/);
         public readonly string ServerChina /* ;}~ */ = Stuff.GString( /*{^_^}*/"gosr2U13BoTEJoJJuO25gQ==" /*d{'_'}b*/);
         public readonly string ServerKorea /* ;}~~ */ = Stuff.GString( /*{^_^}*/"8ZVBOEsBinzi+zmP7y7pPA==" /*d{'_'}b*/);
-
-        public readonly string ServerKoreaKr /* ;}~ */ =
-            Stuff.GString( /*{^_^}*/"gosr2U13BoQyz1gkC4QLfg==" /*d{'_'}b*/);
+        public readonly string ServerKoreaKr /* ;}~ */ = Stuff.GString( /*{^_^}*/"gosr2U13BoQyz1gkC4QLfg==" /*d{'_'}b*/);
 
         public string SecureWord = "Galileo";
 

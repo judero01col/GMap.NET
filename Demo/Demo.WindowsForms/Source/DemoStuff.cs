@@ -57,7 +57,8 @@ namespace Demo.WindowsForms
     public class Stuff
     {
         //public const string GoogleMapsApiKey = "AIzaSyCoz0fVRmn6L-zZuLXnIXtRcGLKf2PHI5Q"; // this key is not working
-        public const string GoogleMapsApiKey = "AIzaSyAmO6pIPTz0Lt8lmYZEIAaixitKjq-4WlB"; // from Demo.Geocoding project
+        public const string GoogleMapsApiKey = "AIzaSyDn8qjiDcnGHOriIrmCnbHs8RK4h_WoGpg"; // from Demo.Geocoding project
+        public const string OpenStreetMapsGraphHopperApiKey = "c2aa79b0-4ee1-4ca3-86e6-f6a013de26d2"; // from Demo.Geocoding project
 
         public static bool PingNetwork(string hostNameOrAddress)
         {

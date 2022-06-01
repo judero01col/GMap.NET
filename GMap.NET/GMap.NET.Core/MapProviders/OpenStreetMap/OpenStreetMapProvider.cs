@@ -6,6 +6,7 @@ using System.Net;
 using System.Xml;
 using GMap.NET.Internals;
 using GMap.NET.Projections;
+using Newtonsoft.Json;
 
 namespace GMap.NET.MapProviders
 {
@@ -104,98 +105,7 @@ namespace GMap.NET.MapProviders
 
         MapRoute GetRoute(string url)
         {
-            MapRoute ret = null;
-
-            try
-            {
-                string route = GMaps.Instance.UseRouteCache
-                    ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache))
-                    : string.Empty;
-                bool cache = false;
-
-                if (string.IsNullOrEmpty(route))
-                {
-                    route = GetContentUsingHttp(url);
-
-                    if (!string.IsNullOrEmpty(route))
-                    {
-                        cache = true;
-                    }
-                }
-
-                // parse values
-                if (!string.IsNullOrEmpty(route))
-                {
-                    var xmldoc = new XmlDocument();
-                    xmldoc.LoadXml(route);
-                    var xmlnsManager = new XmlNamespaceManager(xmldoc.NameTable);
-                    xmlnsManager.AddNamespace("sm", "http://earth.google.com/kml/2.0");
-
-                    // /Folder/Placemark/LineString/coordinates
-                    var coordNode = xmldoc.SelectSingleNode(
-                        "/sm:kml/sm:Document/sm:Folder/sm:Placemark/sm:LineString/sm:coordinates",
-                        xmlnsManager);
-
-                    string[] coordinates = coordNode.InnerText.Split('\n');
-
-                    if (coordinates != null && coordinates.Length > 0)
-                    {
-                        ret = new MapRoute("Route");
-                        ret.Status = RouteStatusCode.OK;
-
-                        if (GMaps.Instance.UseRouteCache && cache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
-                        }
-
-                        foreach (string coordinate in coordinates)
-                        {
-                            if (coordinate != string.Empty)
-                            {
-                                string[] xy = coordinate.Split(',');
-
-                                if (xy.Length == 2)
-                                {
-                                    double lat = double.Parse(xy[1], CultureInfo.InvariantCulture);
-                                    double lng = double.Parse(xy[0], CultureInfo.InvariantCulture);
-                                    ret.Points.Add(new PointLatLng(lat, lng));
-                                }
-                            }
-                        }
-
-                        var travelTimeNode = xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:traveltime", xmlnsManager);
-
-                        if (travelTimeNode != null && travelTimeNode.InnerText.Length > 0)
-                        {
-                            ret.Duration = Math.Round(Convert.ToDecimal(travelTimeNode.InnerText) / 60) + " mins";
-                        }
-
-                        var instructionsNode =
-                            xmldoc.SelectSingleNode("/sm:kml/sm:Document/sm:description", xmlnsManager);
-
-                        if (instructionsNode != null && instructionsNode.InnerText.Length > 0)
-                        {
-                            string[] instructions = instructionsNode.InnerText.Split(new string[1] {"<br>"},
-                                StringSplitOptions.RemoveEmptyEntries);
-
-                            if (instructions != null && instructions.Length > 0)
-                            {
-                                foreach (string item in instructions)
-                                {
-                                    ret.Instructions.Add(item.Trim());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ret = null;
-                Debug.WriteLine("GetRoute: " + ex);
-            }
-
-            return ret;
+            throw new NotImplementedException("use GetRoute(PointLatLng start, PointLatLng end...");
         }
 
         static readonly string RoutingUrlFormat =
@@ -216,18 +126,6 @@ namespace GMap.NET.MapProviders
         public GeoCoderStatusCode GetPoints(string keywords, out List<PointLatLng> pointList)
         {
             // http://nominatim.openstreetmap.org/search?q=lithuania,vilnius&format=xml
-
-            #region -- response --
-
-            //<searchresults timestamp="Wed, 01 Feb 12 09:46:00 -0500" attribution="Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0." querystring="lithuania,vilnius" polygon="false" exclude_place_ids="29446018,53849547,8831058,29614806" more_url="http://open.mapquestapi.com/nominatim/v1/search?format=xml&exclude_place_ids=29446018,53849547,8831058,29614806&accept-language=en&q=lithuania%2Cvilnius">
-            //<place place_id="29446018" osm_type="way" osm_id="24598347" place_rank="30" boundingbox="54.6868133544922,54.6879043579102,25.2885360717773,25.2898139953613" lat="54.6873633486028" lon="25.289199818878" display_name="National Museum of Lithuania, 1, Arsenalo g., Senamiesčio seniūnija, YAHOO-HIRES-20080313, Vilnius County, Šalčininkų rajonas, Vilniaus apskritis, 01513, Lithuania" class="tourism" type="museum" icon="http://open.mapquestapi.com/nominatim/v1/images/mapicons/tourist_museum.p.20.png"/>
-            //<place place_id="53849547" osm_type="way" osm_id="55469274" place_rank="30" boundingbox="54.6896553039551,54.690486907959,25.2675743103027,25.2692089080811" lat="54.6900227236882" lon="25.2683589759401" display_name="Ministry of Foreign Affairs of the Republic of Lithuania, 2, J. Tumo Vaižganto g., Naujamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, LT-01104, Lithuania" class="amenity" type="public_building"/>
-            //<place place_id="8831058" osm_type="node" osm_id="836234960" place_rank="30" boundingbox="54.6670935059,54.6870973206,25.2638857269,25.2838876343" lat="54.677095" lon="25.2738876" display_name="Railway Museum of Lithuania, 15, Mindaugo g., Senamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, 03215, Lithuania" class="tourism" type="museum" icon="http://open.mapquestapi.com/nominatim/v1/images/mapicons/tourist_museum.p.20.png"/>
-            //<place place_id="29614806" osm_type="way" osm_id="24845629" place_rank="30" boundingbox="54.6904983520508,54.6920852661133,25.2606296539307,25.2628803253174" lat="54.6913385159005" lon="25.2617684209873" display_name="Seimas (Parliament) of the Republic of Lithuania, 53, Gedimino pr., Naujamiesčio seniūnija, Vilnius, Vilnius County, Vilniaus m. savivaldybė, Vilniaus apskritis, LT-01111, Lithuania" class="amenity" type="public_building"/>
-            //</searchresults> 
-
-            #endregion
-
             return GetLatLngFromGeocoderUrl(MakeGeocoderUrl(keywords), out pointList);
         }
 
@@ -241,15 +139,6 @@ namespace GMap.NET.MapProviders
         public GeoCoderStatusCode GetPoints(Placemark placemark, out List<PointLatLng> pointList)
         {
             // http://nominatim.openstreetmap.org/search?street=&city=vilnius&county=&state=&country=lithuania&postalcode=&format=xml
-
-            #region -- response --
-
-            //<searchresults timestamp="Thu, 29 Nov 12 08:38:23 +0000" attribution="Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright" querystring="vilnius, lithuania" polygon="false" exclude_place_ids="98093941" more_url="http://nominatim.openstreetmap.org/search?format=xml&exclude_place_ids=98093941&accept-language=de-de,de;q=0.8,en-us;q=0.5,en;q=0.3&q=vilnius%2C+lithuania">
-            //<place place_id="98093941" osm_type="relation" osm_id="1529146" place_rank="16" boundingbox="54.5693359375,54.8323097229004,25.0250644683838,25.4815216064453" lat="54.6843135" lon="25.2853984" display_name="Vilnius, Vilniaus m. savivaldybė, Distrikt Vilnius, Litauen" class="boundary" type="administrative" icon="http://nominatim.openstreetmap.org/images/mapicons/poi_boundary_administrative.p.20.png"/>
-            //</searchresults> 
-
-            #endregion
-
             return GetLatLngFromGeocoderUrl(MakeDetailedGeocoderUrl(placemark), out pointList);
         }
 
@@ -262,58 +151,16 @@ namespace GMap.NET.MapProviders
 
         public GeoCoderStatusCode GetPlacemarks(PointLatLng location, out List<Placemark> placemarkList)
         {
-            throw new NotImplementedException("use GetPlacemark");
+            GeoCoderStatusCode status;
+            placemarkList = GetPlacemarkFromReverseGeocoderUrl(MakeReverseGeocoderUrl(location), out status);
+            return status;
         }
 
         public Placemark? GetPlacemark(PointLatLng location, out GeoCoderStatusCode status)
         {
-            //http://nominatim.openstreetmap.org/reverse?format=xml&lat=52.5487429714954&lon=-1.81602098644987&zoom=18&addressdetails=1
-
-            #region -- response --
-
-            /*
-            <reversegeocode timestamp="Wed, 01 Feb 12 09:51:11 -0500" attribution="Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0." querystring="format=xml&lat=52.5487429714954&lon=-1.81602098644987&zoom=18&addressdetails=1">
-            <result place_id="2061235282" osm_type="way" osm_id="90394420" lat="52.5487800131654" lon="-1.81626922291265">
-            137, Pilkington Avenue, Castle Vale, City of Birmingham, West Midlands, England, B72 1LH, United Kingdom
-            </result>
-            <addressparts>
-            <house_number>
-            137
-            </house_number>
-            <road>
-            Pilkington Avenue
-            </road>
-            <suburb>
-            Castle Vale
-            </suburb>
-            <city>
-            City of Birmingham
-            </city>
-            <county>
-            West Midlands
-            </county>
-            <state_district>
-            West Midlands
-            </state_district>
-            <state>
-            England
-            </state>
-            <postcode>
-            B72 1LH
-            </postcode>
-            <country>
-            United Kingdom
-            </country>
-            <country_code>
-            gb
-            </country_code>
-            </addressparts>
-            </reversegeocode>
-            */
-
-            #endregion
-
-            return GetPlacemarkFromReverseGeocoderUrl(MakeReverseGeocoderUrl(location), out status);
+            List<Placemark> pointList;
+            pointList = GetPlacemarkFromReverseGeocoderUrl(MakeReverseGeocoderUrl(location), out status);
+            return pointList != null && pointList.Count > 0 ? pointList[0] : (Placemark?)null;
         }
 
         #region -- internals --
@@ -345,6 +192,7 @@ namespace GMap.NET.MapProviders
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             pointList = null;
+            List<OpenStreetMapGeocodeStruct> routeResult = null;
 
             try
             {
@@ -352,64 +200,35 @@ namespace GMap.NET.MapProviders
                     ? Cache.Instance.GetContent(url, CacheType.GeocoderCache, TimeSpan.FromHours(TTLCache))
                     : string.Empty;
 
-                bool cache = false;
-
                 if (string.IsNullOrEmpty(geo))
                 {
                     geo = GetContentUsingHttp(url);
 
                     if (!string.IsNullOrEmpty(geo))
                     {
-                        cache = true;
+                        routeResult = JsonConvert.DeserializeObject<List<OpenStreetMapGeocodeStruct>>(geo);
+
+                        if (GMaps.Instance.UseGeocoderCache && routeResult != null && routeResult.Count > 0)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
+                        }
                     }
+                }
+                else
+                {
+                    routeResult = JsonConvert.DeserializeObject<List<OpenStreetMapGeocodeStruct>>(geo);
                 }
 
                 if (!string.IsNullOrEmpty(geo))
                 {
-                    if (geo.StartsWith("<?xml") && geo.Contains("<place"))
+                    pointList = new List<PointLatLng>();
+
+                    foreach (var item in routeResult)
                     {
-                        if (cache && GMaps.Instance.UseGeocoderCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
-                        }
-
-                        var doc = new XmlDocument();
-                        doc.LoadXml(geo);
-                        {
-                            var l = doc.SelectNodes("/searchresults/place");
-                            if (l != null)
-                            {
-                                pointList = new List<PointLatLng>();
-
-                                foreach (XmlNode n in l)
-                                {
-                                    var nn = n.Attributes["place_rank"];
-
-                                    int rank;
-                                    if (nn != null && int.TryParse(nn.Value, out rank))
-                                    {
-                                        if (rank < MinExpectedRank)
-                                            continue;
-                                    }
-
-                                    nn = n.Attributes["lat"];
-                                    if (nn != null)
-                                    {
-                                        double lat = double.Parse(nn.Value, CultureInfo.InvariantCulture);
-
-                                        nn = n.Attributes["lon"];
-                                        if (nn != null)
-                                        {
-                                            double lng = double.Parse(nn.Value, CultureInfo.InvariantCulture);
-                                            pointList.Add(new PointLatLng(lat, lng));
-                                        }
-                                    }
-                                }
-
-                                status = GeoCoderStatusCode.OK;
-                            }
-                        }
+                        pointList.Add(new PointLatLng { Lat = item.lat, Lng = item.lon });
                     }
+
+                    status = GeoCoderStatusCode.OK;
                 }
             }
             catch (Exception ex)
@@ -420,11 +239,13 @@ namespace GMap.NET.MapProviders
 
             return status;
         }
+                
 
-        Placemark? GetPlacemarkFromReverseGeocoderUrl(string url, out GeoCoderStatusCode status)
+        List<Placemark> GetPlacemarkFromReverseGeocoderUrl(string url, out GeoCoderStatusCode status)
         {
             status = GeoCoderStatusCode.UNKNOWN_ERROR;
-            Placemark? ret = null;
+            List<Placemark> ret = null;
+            OpenStreetMapGeocodeStruct routeResult = null;
 
             try
             {
@@ -432,82 +253,47 @@ namespace GMap.NET.MapProviders
                     ? Cache.Instance.GetContent(url, CacheType.PlacemarkCache, TimeSpan.FromHours(TTLCache))
                     : string.Empty;
 
-                bool cache = false;
-
                 if (string.IsNullOrEmpty(geo))
                 {
                     geo = GetContentUsingHttp(url);
 
                     if (!string.IsNullOrEmpty(geo))
                     {
-                        cache = true;
+                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapGeocodeStruct>(geo);
+
+                        if (GMaps.Instance.UsePlacemarkCache && routeResult != null)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.PlacemarkCache, geo);
+                        }
                     }
+                }
+                else
+                {
+                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapGeocodeStruct>(geo);
                 }
 
                 if (!string.IsNullOrEmpty(geo))
                 {
-                    if (geo.StartsWith("<?xml") && geo.Contains("<result"))
+                    ret = new List<Placemark>();
+
+                    var p = new Placemark(routeResult.display_name);
+
+                    p = new Placemark
                     {
-                        if (cache && GMaps.Instance.UsePlacemarkCache)
-                        {
-                            Cache.Instance.SaveContent(url, CacheType.PlacemarkCache, geo);
-                        }
+                        PlacemarkId = routeResult.place_id,
+                        Address = routeResult.address.ToString(),
+                        CountryName = routeResult.address.country,
+                        CountryNameCode = routeResult.address.country_code,
+                        PostalCodeNumber = routeResult.address.postcode,
+                        AdministrativeAreaName = routeResult.address.state,
+                        SubAdministrativeAreaName = routeResult.address.city,
+                        LocalityName = routeResult.address.suburb,
+                        ThoroughfareName = routeResult.address.road
+                    };
 
-                        var doc = new XmlDocument();
-                        doc.LoadXml(geo);
-                        {
-                            var r = doc.SelectSingleNode("/reversegeocode/result");
+                    ret.Add(p);
 
-                            if (r != null)
-                            {
-                                var p = new Placemark(r.InnerText);
-
-                                var ad = doc.SelectSingleNode("/reversegeocode/addressparts");
-
-                                if (ad != null)
-                                {
-                                    var vl = ad.SelectSingleNode("country");
-
-                                    if (vl != null)
-                                        p.CountryName = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("country_code");
-
-                                    if (vl != null)
-                                        p.CountryNameCode = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("postcode");
-
-                                    if (vl != null)
-                                        p.PostalCodeNumber = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("state");
-
-                                    if (vl != null)
-                                        p.AdministrativeAreaName = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("region");
-
-                                    if (vl != null)
-                                        p.SubAdministrativeAreaName = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("suburb");
-
-                                    if (vl != null)
-                                        p.LocalityName = vl.InnerText;
-
-                                    vl = ad.SelectSingleNode("road");
-
-                                    if (vl != null)
-                                        p.ThoroughfareName = vl.InnerText;
-                                }
-
-                                ret = p;
-
-                                status = GeoCoderStatusCode.OK;
-                            }
-                        }
-                    }
+                    status = GeoCoderStatusCode.OK;                    
                 }
             }
             catch (Exception ex)
@@ -521,12 +307,12 @@ namespace GMap.NET.MapProviders
         }
 
         static readonly string ReverseGeocoderUrlFormat =
-            "https://nominatim.openstreetmap.org/reverse?format=xml&lat={0}&lon={1}&zoom=18&addressdetails=1";
+            "https://nominatim.openstreetmap.org/reverse?format=json&lat={0}&lon={1}&zoom=18&addressdetails=1";
 
-        static readonly string GeocoderUrlFormat = "https://nominatim.openstreetmap.org/search?q={0}&format=xml";
+        static readonly string GeocoderUrlFormat = "https://nominatim.openstreetmap.org/search?q={0}&format=json";
 
         static readonly string GeocoderDetailedUrlFormat =
-            "https://nominatim.openstreetmap.org/search?street={0}&city={1}&county={2}&state={3}&country={4}&postalcode={5}&format=xml";
+            "https://nominatim.openstreetmap.org/search?street={0}&city={1}&county={2}&state={3}&country={4}&postalcode={5}&format=json";
 
         #endregion
 

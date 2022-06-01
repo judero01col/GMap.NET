@@ -75,6 +75,9 @@ namespace Demo.WindowsForms
                 //----------------------------------------
                 MainMap.MapProvider = GMapProviders.GoogleMap;
 
+                OpenStreetMapGraphHopperProvider.Instance.ApiKey = Stuff.OpenStreetMapsGraphHopperApiKey;
+                GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
+
                 // Custom Map Provider
                 //MainMap.MapProvider = GMapProviders.CustomMap;
                 //GMapProviders.CustomMap.CustomServerUrl = "https://{l}.tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -91,8 +94,7 @@ namespace Demo.WindowsForms
                 textBoxLat.Text = MainMap.Position.Lat.ToString(CultureInfo.InvariantCulture);
                 textBoxLng.Text = MainMap.Position.Lng.ToString(CultureInfo.InvariantCulture);
                 textBoxGeo.Text = "Lithuania, Vilnius";
-
-                GoogleMapProvider.Instance.ApiKey = Stuff.GoogleMapsApiKey;
+              
 
                 MainMap.ScaleMode = ScaleModes.Fractional;
 
@@ -1015,11 +1017,7 @@ namespace Demo.WindowsForms
         // add test route
         private void btnAddRoute_Click(object sender, EventArgs e)
         {
-            var rp = MainMap.MapProvider as RoutingProvider;
-            if (rp == null)
-            {
-                rp = GMapProviders.OpenStreetMap; // use OpenStreetMap if provider does not implement routing
-            }
+            var rp = MainMap.RoutingProvider;
 
             var route = rp.GetRoute(_start, _end, false, false, (int)MainMap.Zoom);
             if (route != null)
