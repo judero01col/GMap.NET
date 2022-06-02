@@ -69,10 +69,7 @@ namespace GMap.NET.MapProviders
 
         public virtual MapRoute GetRoute(PointLatLng start, PointLatLng end, bool avoidHighways, bool walkingMode,
             int zoom)
-        {
-            //List<PointLatLng> points = GetRoutePoints(MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar));
-            //MapRoute route = points != null ? new MapRoute(points, walkingMode ? WalkingStr : DrivingStr) : null;
-            //return route;
+        {            
             return GetRoute(MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar));
         }
 
@@ -87,7 +84,7 @@ namespace GMap.NET.MapProviders
         /// <returns></returns>
         public virtual MapRoute GetRoute(string start, string end, bool avoidHighways, bool walkingMode, int zoom)
         {
-            throw new NotImplementedException("use GetRoute(PointLatLng start, PointLatLng end...");
+            return GetRoute(MakeRoutingUrl(start, end, walkingMode ? TravelTypeFoot : TravelTypeMotorCar));
         }
 
         #region -- internals --
@@ -103,13 +100,75 @@ namespace GMap.NET.MapProviders
                 travelType);
         }
 
-        MapRoute GetRoute(string url)
+        string MakeRoutingUrl(string start, string end, string travelType)
         {
-            throw new NotImplementedException("use GetRoute(PointLatLng start, PointLatLng end...");
+            return string.Format(CultureInfo.InvariantCulture,
+                RoutingUrlFormat,
+                start,               
+                end,
+                travelType);
         }
 
-        static readonly string RoutingUrlFormat =
-            "http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat={0}&flon={1}&tlat={2}&tlon={3}&v={4}&fast=1&layer=mapnik";
+        MapRoute GetRoute(string url)
+        {
+            MapRoute ret = null;
+            OpenStreetMapRouteStruct routeResult = null;
+
+            try
+            {
+                string route = GMaps.Instance.UseRouteCache
+                    ? Cache.Instance.GetContent(url, CacheType.RouteCache, TimeSpan.FromHours(TTLCache))
+                    : string.Empty;
+
+                if (string.IsNullOrEmpty(route))
+                {
+                    route = GetContentUsingHttp(url);
+
+                    if (!string.IsNullOrEmpty(route))
+                    {
+                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapRouteStruct>(route);
+
+                        if (GMaps.Instance.UseRouteCache && routeResult != null &&
+                            routeResult.routes != null && routeResult.routes.Count > 0)
+                        {
+                            Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
+                        }
+                    }
+                }
+                else
+                {
+                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapRouteStruct>(route);
+                }
+
+                if (!string.IsNullOrEmpty(route))
+                {
+                    ret = new MapRoute("Route");
+
+                    if (routeResult != null)
+                    {
+                        if (routeResult.routes != null && routeResult.routes.Count > 0)
+                        {
+                            ret.Status = RouteStatusCode.OK;
+
+                            ret.Duration = routeResult.routes[0].duration.ToString();
+
+                            var points = new List<PointLatLng>();
+                            PureProjection.PolylineDecode(points, routeResult.routes[0].geometry);
+                            ret.Points.AddRange(points);                           
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = null;
+                Debug.WriteLine("GetRoute: " + ex);
+            }
+
+            return ret;
+        }
+
+        static readonly string RoutingUrlFormat = "http://router.project-osrm.org/route/v1/driving/{1},{0};{3},{2}";
 
         static readonly string TravelTypeFoot = "foot";
         static readonly string TravelTypeMotorCar = "motorcar";
