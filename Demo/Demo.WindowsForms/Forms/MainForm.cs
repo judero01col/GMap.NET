@@ -197,7 +197,7 @@ namespace Demo.WindowsForms
                 // add my city location for demo
                 // [jokubokla]: The stuff down below doesn't work anymore either, but I leave it in case someone wants to fix it
                 GeoCoderStatusCode status;
-                var pos = GMapProviders.GoogleMap.GetPoint("Lithuania, Vilnius", out status);
+                var pos = MainMap.GeocodingProvider.GetPoint("Lithuania, Vilnius", out status);
 
                 if (pos != null && status == GeoCoderStatusCode.OK)
                 {
@@ -521,7 +521,7 @@ namespace Demo.WindowsForms
         void AddLocationLithuania(string place)
         {
             GeoCoderStatusCode status;
-            var pos = GMapProviders.GoogleMap.GetPoint("Lithuania, " + place, out status);
+            var pos = MainMap.GeocodingProvider.GetPoint("Lithuania, " + place, out status);
             if (pos != null && status == GeoCoderStatusCode.OK)
             {
                 var m = new GMarkerGoogle(pos.Value, GMarkerGoogleType.green);
@@ -834,7 +834,7 @@ namespace Demo.WindowsForms
                 if (item is GMapMarkerRect)
                 {
                     GeoCoderStatusCode status;
-                    var pos = GMapProviders.GoogleMap.GetPlacemark(item.Position, out status);
+                    var pos = MainMap.GeocodingProvider.GetPlacemark(item.Position, out status);
                     if (status == GeoCoderStatusCode.OK && pos != null)
                     {
                         var v = item as GMapMarkerRect;
@@ -1040,6 +1040,8 @@ namespace Demo.WindowsForms
                 Objects.Markers.Add(m2);
 
                 MainMap.ZoomAndCenterRoute(r);
+
+                //MainMap.Position = _start;
             }
         }
 
@@ -1061,7 +1063,7 @@ namespace Demo.WindowsForms
             if (checkBoxPlacemarkInfo.Checked)
             {
                 GeoCoderStatusCode status;
-                var ret = GMapProviders.GoogleMap.GetPlacemark(_currentMarker.Position, out status);
+                var ret = MainMap.GeocodingProvider.GetPlacemark(_currentMarker.Position, out status);
                 if (status == GeoCoderStatusCode.OK && ret != null)
                 {
                     p = ret;

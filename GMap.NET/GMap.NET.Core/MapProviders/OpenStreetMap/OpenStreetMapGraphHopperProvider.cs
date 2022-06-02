@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
+using GMap.NET.Entity;
 using GMap.NET.Internals;
 using Newtonsoft.Json;
 
@@ -84,7 +85,7 @@ namespace GMap.NET.MapProviders
         MapRoute GetRoute(string url)
         {
             MapRoute ret = null;
-            OpenStreetMapGraphHopperStruct routeResult = null;
+            OpenStreetMapGraphHopperRouteEntity result = null;
 
             try
             {
@@ -98,10 +99,10 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(route))
                     {
-                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperStruct>(route);
+                        result = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperRouteEntity>(route);
 
-                        if (GMaps.Instance.UseRouteCache && routeResult != null &&
-                            routeResult.paths != null && routeResult.paths.Count > 0)
+                        if (GMaps.Instance.UseRouteCache && result != null &&
+                            result.paths != null && result.paths.Count > 0)
                         {
                             Cache.Instance.SaveContent(url, CacheType.RouteCache, route);
                         }
@@ -109,26 +110,26 @@ namespace GMap.NET.MapProviders
                 }
                 else
                 {
-                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperStruct>(route);
+                    result = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperRouteEntity>(route);
                 }
 
                 if (!string.IsNullOrEmpty(route))
                 {
                     ret = new MapRoute("Route");
 
-                    if (routeResult != null)
+                    if (result != null)
                     {
-                        if (routeResult.paths != null && routeResult.paths.Count > 0)
+                        if (result.paths != null && result.paths.Count > 0)
                         {
                             ret.Status = RouteStatusCode.OK;
 
-                            ret.Duration = routeResult.paths[0].time.ToString();
+                            ret.Duration = result.paths[0].time.ToString();
 
                             var points = new List<PointLatLng>();
-                            PureProjection.PolylineDecode(points, routeResult.paths[0].points);
+                            PureProjection.PolylineDecode(points, result.paths[0].points);
                             ret.Points.AddRange(points);
 
-                            foreach (var item in routeResult.paths[0].instructions)
+                            foreach (var item in result.paths[0].instructions)
                             {
                                 ret.Instructions.Add(item.text);
                             }
@@ -212,7 +213,7 @@ namespace GMap.NET.MapProviders
         {
             var status = GeoCoderStatusCode.UNKNOWN_ERROR;
             pointList = null;
-            OpenStreetMapGraphHopperGeocodeStruct routeResult = null;
+            OpenStreetMapGraphHopperGeocodeEntity result = null;
 
             try
             {
@@ -226,10 +227,10 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(geo))
                     {
-                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeStruct>(geo);
+                        result = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeEntity>(geo);
 
-                        if (GMaps.Instance.UseRouteCache && routeResult != null &&
-                            routeResult.hits != null && routeResult.hits.Count > 0)
+                        if (GMaps.Instance.UseRouteCache && result != null &&
+                            result.hits != null && result.hits.Count > 0)
                         {
                             Cache.Instance.SaveContent(url, CacheType.GeocoderCache, geo);
                         }
@@ -237,14 +238,14 @@ namespace GMap.NET.MapProviders
                 }
                 else
                 {
-                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeStruct>(geo);
+                    result = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeEntity>(geo);
                 }
 
                 if (!string.IsNullOrEmpty(geo))
                 {
                     pointList = new List<PointLatLng>();
 
-                    foreach (var item in routeResult.hits)
+                    foreach (var item in result.hits)
                     {
                         pointList.Add(new PointLatLng(item.point.lat, item.point.lng));
                     }
@@ -265,7 +266,7 @@ namespace GMap.NET.MapProviders
         {
             status = GeoCoderStatusCode.UNKNOWN_ERROR;
             List<Placemark> ret = null;
-            OpenStreetMapGraphHopperGeocodeStruct routeResult = null;
+            OpenStreetMapGraphHopperGeocodeEntity routeResult = null;
 
             try
             {
@@ -279,7 +280,7 @@ namespace GMap.NET.MapProviders
 
                     if (!string.IsNullOrEmpty(geo))
                     {
-                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeStruct>(geo);
+                        routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeEntity>(geo);
 
                         if (GMaps.Instance.UsePlacemarkCache && routeResult != null &&
                             routeResult.hits != null && routeResult.hits.Count > 0)
@@ -290,7 +291,7 @@ namespace GMap.NET.MapProviders
                 }
                 else
                 {
-                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeStruct>(geo);
+                    routeResult = JsonConvert.DeserializeObject<OpenStreetMapGraphHopperGeocodeEntity>(geo);
                 }
 
                 if (!string.IsNullOrEmpty(geo))

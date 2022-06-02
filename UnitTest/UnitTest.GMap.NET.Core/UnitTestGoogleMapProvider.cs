@@ -23,6 +23,19 @@ namespace UnitTest.GMap.NET.Core
         }
 
         [TestMethod]
+        public void TestGetPoints()
+        {
+            var mapProvider = GMapProviders.GoogleMap;
+            mapProvider.ApiKey = ApiKey;
+            
+            List<PointLatLng> pointList;
+            var status = mapProvider.GetPoints("Barranquilla", out pointList);
+
+            Assert.AreEqual(status, GeoCoderStatusCode.OK);
+            Assert.AreNotEqual(pointList, null);
+        }
+
+        [TestMethod]
         public void TestGetRoute()
         {
             var mapProvider = GMapProviders.GoogleMap;
