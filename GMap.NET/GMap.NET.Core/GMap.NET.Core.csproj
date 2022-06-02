@@ -9,6 +9,8 @@
     <DefineConstants>MONO_disabled;SQLite;MySQL_disabled;PostgreSQL_disabled;$(DefineConstants)</DefineConstants>
     
     <PackageReleaseNotes>
+- New Provider OpenStreetMapGraphHopper
+- Fix OpenStreetMap GetRoute
 - .Net Framework 4.6, 4.7, 4.8 support added
 - .Net Core 3.1, 5.0, 6.0 support added
 
