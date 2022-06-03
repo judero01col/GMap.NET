@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>GMap.NET.WindowsForms.MapUtils</PackageId>
+    <Product>GMap.NET.WindowsForms.MapUtils</Product>
+    <AssemblyTitle>GMap.NET.WindowsForms.MapUtils</AssemblyTitle>
+    <RootNamespace>GMap.NET</RootNamespace>
+    <TargetFrameworks>net46;net47;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+      
+    <PackageReleaseNotes>
+        - ObjectExtensions LINQPad
+        Use .DumpMarkers() or .DumpRoute() to add markers or route lines to a map in a new result pane
+    </PackageReleaseNotes>    
+  </PropertyGroup>
+    
+  <ItemGroup>    
+    <PackageReference Include="LINQPad" Version="5.40.0" />    
+    <PackageReference Include="Polylines" Version="1.0.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
+    <ProjectReference Include="..\GMap.NET.WindowsForms\GMap.NET.WindowsForms.csproj" />
+  </ItemGroup>
+
+</Project>
