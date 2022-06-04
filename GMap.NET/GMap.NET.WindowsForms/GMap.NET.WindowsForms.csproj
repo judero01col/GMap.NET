@@ -6,9 +6,7 @@
     <AssemblyTitle>GMap.NET.WindowsForms</AssemblyTitle>
     
     <TargetFrameworks>net46;net47;net48;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
-    <UseWindowsForms>true</UseWindowsForms>
-    <DefineConstants>ContinuesMapNo;$(DefineConstants)</DefineConstants>
-    
+    <UseWindowsForms>true</UseWindowsForms>    
     <PackageReleaseNotes>
 - Insert and IndexOf are implemented in ObservableCollection
 - .Net Framework 4.6, 4.7, 4.8 support added
@@ -19,6 +17,16 @@ https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
     </PackageReleaseNotes>
   </PropertyGroup>
 
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^net\d'))">
+        <DefineConstants>NETFRAMEWORK;ContinuesMapNo;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^netstandard\d'))">
+        <DefineConstants>NETSTANDARD;ContinuesMapNo;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^netcoreapp\d'))">
+        <DefineConstants>NETCORE;ContinuesMapNo;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>    
+    
   <ItemGroup>
     <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
   </ItemGroup>

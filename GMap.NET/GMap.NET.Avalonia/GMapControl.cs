@@ -1946,7 +1946,7 @@ namespace GMap.NET.Avalonia
             _core.ReloadMap();
         }
 
-#if !NET46
+#if !NETFRAMEWORK
 
         public Task ReloadMapAsync()
         {

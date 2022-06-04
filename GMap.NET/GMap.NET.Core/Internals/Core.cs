@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GMap.NET.MapProviders;
 using GMap.NET.Projections;
-#if NET46
+#if NETFRAMEWORK
 using System.Collections.Concurrent;
 #endif
 
@@ -57,7 +57,7 @@ namespace GMap.NET.Internals
         internal List<DrawTile> TileDrawingList = new List<DrawTile>();
         internal FastReaderWriterLock TileDrawingListLock = new FastReaderWriterLock();
 
-#if !NET46
+#if !NETFRAMEWORK
         public readonly Stack<LoadTask> TileLoadQueue = new Stack<LoadTask>();
 #endif
 
@@ -615,7 +615,7 @@ namespace GMap.NET.Internals
             }
         }
 
-#if !NET46
+#if !NETFRAMEWORK
         public Task ReloadMapAsync()
         {
             ReloadMap();
@@ -768,7 +768,7 @@ namespace GMap.NET.Internals
         {
             if (IsStarted)
             {
-#if NET46
+#if NETFRAMEWORK
                 //TODO: clear loading
 #else
                 Monitor.Enter(TileLoadQueue);
@@ -794,7 +794,7 @@ namespace GMap.NET.Internals
         volatile int _okZoom;
         volatile int _skipOverZoom;
 
-#if NET46
+#if NETFRAMEWORK
         internal static readonly BlockingCollection<LoadTask> TileLoadQueue4 =
             new BlockingCollection<LoadTask>(new ConcurrentStack<LoadTask>());
 
@@ -1213,7 +1213,7 @@ namespace GMap.NET.Internals
                 TileDrawingListLock.ReleaseWriterLock();
             }
 
-#if NET46
+#if NETFRAMEWORK
             Interlocked.Exchange(ref _loadWaitCount, 0);
 #else
             Monitor.Enter(TileLoadQueue);
@@ -1226,7 +1226,7 @@ namespace GMap.NET.Internals
                 foreach (var p in TileDrawingList)
                 {
                     var task = new LoadTask(p.PosXY, Zoom, this);
-#if NET46
+#if NETFRAMEWORK
                     AddLoadTask(task);
 #else
                         {
@@ -1243,7 +1243,7 @@ namespace GMap.NET.Internals
                 TileDrawingListLock.ReleaseReaderLock();
             }
 
-#if !NET46
+#if !NETFRAMEWORK
             #region -- starts loader threads if needed --
 
                 lock (_gThreadPool)
@@ -1270,7 +1270,7 @@ namespace GMap.NET.Internals
                 _lastTileLoadStart = DateTime.Now;
                 Debug.WriteLine("OnTileLoadStart - at zoom " + Zoom + ", time: " + _lastTileLoadStart.TimeOfDay);
             }
-#if !NET46
+#if !NETFRAMEWORK
                 _loadWaitCount = 0;
                 Monitor.PulseAll(TileLoadQueue);
             }
@@ -1360,7 +1360,7 @@ namespace GMap.NET.Internals
                     TileDrawingListLock.ReleaseWriterLock();
                 }
 
-#if NET46
+#if NETFRAMEWORK
                 //TODO: maybe
 #else
                 // cancel waiting loaders

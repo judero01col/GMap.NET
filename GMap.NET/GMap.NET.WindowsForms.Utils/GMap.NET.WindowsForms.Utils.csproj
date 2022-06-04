@@ -13,8 +13,18 @@
         Use .DumpMarkers() or .DumpRoute() to add markers or route lines to a map in a new result pane
     </PackageReleaseNotes>    
   </PropertyGroup>
-    
-  <ItemGroup>    
+
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^net\d'))">
+        <DefineConstants>NETFRAMEWORK</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^netstandard\d'))">
+        <DefineConstants>NETSTANDARD</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '^netcoreapp\d'))">
+        <DefineConstants>NETCORE</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>    
     <PackageReference Include="LINQPad" Version="5.40.0" />    
     <PackageReference Include="Polylines" Version="1.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />

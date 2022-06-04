@@ -995,7 +995,7 @@ namespace GMap.NET.GtkSharp
 				{
 					Console.WriteLine($"waiting {Core._loadWaitCount}");
 
-                #if NET46
+                #if NETFRAMEWORK
                     if (lastCount != Core.TileLoadQueue4.Count)
                         waitTilesCount?.Invoke(Core.TileLoadQueue4.Count);
                 #endif				
