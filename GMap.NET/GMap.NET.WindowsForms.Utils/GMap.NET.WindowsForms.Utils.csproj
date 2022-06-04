@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>GMap.NET.WindowsForms.MapUtils</PackageId>
-    <Product>GMap.NET.WindowsForms.MapUtils</Product>
-    <AssemblyTitle>GMap.NET.WindowsForms.MapUtils</AssemblyTitle>
+    <PackageId>GMap.NET.WinForms.Utils</PackageId>
+    <Product>GMap.NET.WinForms.Utils</Product>
+    <AssemblyTitle>GMap.NET.WinForms.Utils</AssemblyTitle>
     <RootNamespace>GMap.NET</RootNamespace>
     <TargetFrameworks>net46;net47;net48</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
