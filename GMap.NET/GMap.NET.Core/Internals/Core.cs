@@ -795,11 +795,11 @@ namespace GMap.NET.Internals
         volatile int _skipOverZoom;
 
 #if NET46
-        static readonly BlockingCollection<LoadTask> TileLoadQueue4 =
+        internal static readonly BlockingCollection<LoadTask> TileLoadQueue4 =
             new BlockingCollection<LoadTask>(new ConcurrentStack<LoadTask>());
 
         static List<Task> _tileLoadQueue4Tasks;
-        static int _loadWaitCount;
+        internal static int _loadWaitCount;
         void AddLoadTask(LoadTask t)
         {
             if (_tileLoadQueue4Tasks == null)
@@ -846,8 +846,13 @@ namespace GMap.NET.Internals
 
             TileLoadQueue4.Add(t);
         }
+
+        public bool IsWaitTileLoad
+        {
+            get { return TileLoadQueue4.Count > 0 || _loadWaitCount < GThreadPoolSize; }
+        }
 #else
-        byte _loadWaitCount = 0;
+        internal byte _loadWaitCount = 0;
 
         void TileLoadThread()
         {

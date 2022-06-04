@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>        
+    <PackageId>GMap.NET.GtkSharp</PackageId>
+    <Product>GMap.NET.GtkSharp</Product>
+    <AssemblyTitle>GMap.NET.GtkSharp</AssemblyTitle>
+    <RootNamespace>GMap.NET</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TargetFrameworks>net46;net47;net48;</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PackageReleaseNotes>
+- GtkSharp       
+History Release Notes
+https://github.com/judero01col/GMap.NET/blob/master/README.md#release-notes
+    </PackageReleaseNotes>      
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.GtkSharp" Version="2.12.0.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GMap.NET.Core\GMap.NET.Core.csproj" />
+  </ItemGroup>
+
+</Project>
