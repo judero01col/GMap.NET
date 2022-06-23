@@ -64,7 +64,7 @@ Use .DumpMarkers() or .DumpRoute() to add markers or route lines to a map in a n
 - .Net Framework 4.6, 4.7, 4.8 support added
 - .Net Core 3.1, 5.0, 6.0 support added
 
-### GMap.NET.Avalonia
+#### GMap.NET.Avalonia
 - .Net Framework 4.7, 4.8 support added
 - .Net Core 3.1, 5.0, 6.0 support added
 - New GMap.NET.WinAvalonia library
@@ -80,7 +80,7 @@ Use .DumpMarkers() or .DumpRoute() to add markers or route lines to a map in a n
 #### GMap.NET.WinPresentation
 - .Net 6.0 support added
 
-### GMap.NET.Avalonia
+#### GMap.NET.Avalonia
 - .Net 6.0 support added
 - New GMap.NET.WinAvalonia library
 
