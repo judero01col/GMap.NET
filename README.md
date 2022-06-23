@@ -12,6 +12,8 @@ https://www.nuget.org/packages/GMap.NET.Core
 
 https://www.nuget.org/packages/GMap.NET.WinForms
 
+https://www.nuget.org/packages/GMap.NET.WinForms.Utils
+
 https://www.nuget.org/packages/GMap.NET.WinPresentation 
 
 https://www.nuget.org/packages/GMap.NET.WinAvalonia 
@@ -23,6 +25,9 @@ PM> Install-Package GMap.NET.Core
 ```
 ```
 PM> Install-Package GMap.NET.WinForms
+```
+```
+PM> Install-Package GMap.NET.WinForms.Utils
 ```
 ```
 PM> Install-Package GMap.NET.WinPresentation
@@ -38,18 +43,30 @@ https://github.com/judero01col/GMap.NET/wiki
 
 # Release Notes
 
-## Version 2.1.2
+## Version 2.1.6
 
 #### GMap.NET.Core
-- .Net 6.0 support added
-- New GMap.NET.WinAvalonia library
+- New Provider OpenStreetMapGraphHopper
+- Fix OpenStreetMap GetRoute
+- .Net Framework 4.6, 4.7, 4.8 support added
+- .Net Core 3.1, 5.0, 6.0 support added
 
 #### GMap.NET.WinForms
-- .Net 6.0 support added
-- New GMap.NET.WinAvalonia library
+- Insert and IndexOf are implemented in ObservableCollection
+- .Net Framework 4.6, 4.7, 4.8 support added
+- .Net Core 3.1, 5.0, 6.0 support added
+
+### GMap.NET.Windows Forms Utils 
+- ObjectExtensions LINQPad 
+Use .DumpMarkers() or .DumpRoute() to add markers or route lines to a map in a new result pane
 
 #### GMap.NET.WinPresentation
-- .Net 6.0 support added
+- .Net Framework 4.6, 4.7, 4.8 support added
+- .Net Core 3.1, 5.0, 6.0 support added
+
+### GMap.NET.Avalonia
+- .Net Framework 4.7, 4.8 support added
+- .Net Core 3.1, 5.0, 6.0 support added
 - New GMap.NET.WinAvalonia library
 
 
@@ -57,15 +74,16 @@ https://github.com/judero01col/GMap.NET/wiki
 
 #### GMap.NET.Core
 - .Net 6.0 support added
-- New GMap.NET.Avalonia library
 
 #### GMap.NET.WinForms
 - .Net 6.0 support added
-- New GMap.NET.Avalonia library
 
 #### GMap.NET.WinPresentation
 - .Net 6.0 support added
-- New GMap.NET.Avalonia library
+
+### GMap.NET.Avalonia
+- .Net 6.0 support added
+- New GMap.NET.WinAvalonia library
 
 ## Version 2.0.3
 
