@@ -164,6 +164,10 @@ namespace GMap.NET.MapProviders
 
         public static readonly CustomMapProvider CustomMap = CustomMapProvider.Instance;
 
+#if SQLite && !MONO
+        public static readonly MBTilesMapProvider MBTilesMap = MBTilesMapProvider.Instance;
+#endif
+
         /// <summary>
         ///     get all instances of the supported providers
         /// </summary>
