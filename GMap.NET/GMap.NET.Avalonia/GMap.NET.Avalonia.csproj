@@ -6,7 +6,7 @@
         <RootNamespace>GMap.NET</RootNamespace>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
-        <TargetFrameworks>net461;net462;net47;net471;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>        
+        <TargetFrameworks>net461;net462;net47;net471;net472;net48;net481;netcoreapp3.0;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>        
         <PackageReleaseNotes>
 - .Net Framework 4.7, 4.8 support added
 - .Net Core 3.1, 5.0, 6.0 support added

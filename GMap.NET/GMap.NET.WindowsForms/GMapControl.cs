@@ -3294,44 +3294,44 @@ namespace GMap.NET.WindowsForms
         ///     Serializes the overlays.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public void SerializeOverlays(Stream stream)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
+        //public void SerializeOverlays(Stream stream)
+        //{
+        //    if (stream == null)
+        //    {
+        //        throw new ArgumentNullException("stream");
+        //    }
 
-            // Create an array from the overlays
-            var overlayArray = new GMapOverlay[Overlays.Count];
-            Overlays.CopyTo(overlayArray, 0);
+        //    // Create an array from the overlays
+        //    var overlayArray = new GMapOverlay[Overlays.Count];
+        //    Overlays.CopyTo(overlayArray, 0);
 
-            // Serialize the overlays
-            BinaryFormatter.Serialize(stream, overlayArray);
-        }
+        //    // Serialize the overlays
+        //    BinaryFormatter.Serialize(stream, overlayArray);
+        //}
 
         /// <summary>
         ///     De-serializes the overlays.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public void DeserializeOverlays(Stream stream)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
+        //public void DeserializeOverlays(Stream stream)
+        //{
+        //    if (stream == null)
+        //    {
+        //        throw new ArgumentNullException("stream");
+        //    }
 
-            // De-serialize the overlays
-            var overlayArray = BinaryFormatter.Deserialize(stream) as GMapOverlay[];
+        //    // De-serialize the overlays
+        //    var overlayArray = BinaryFormatter.Deserialize(stream) as GMapOverlay[];
 
-            // Populate the collection of overlays.
-            foreach (var overlay in overlayArray)
-            {
-                overlay.Control = this;
-                Overlays.Add(overlay);
-            }
+        //    // Populate the collection of overlays.
+        //    foreach (var overlay in overlayArray)
+        //    {
+        //        overlay.Control = this;
+        //        Overlays.Add(overlay);
+        //    }
 
-            ForceUpdateOverlays();
-        }
+        //    ForceUpdateOverlays();
+        //}
 
         #endregion
     }
