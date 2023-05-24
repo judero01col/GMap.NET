@@ -3288,7 +3288,7 @@ namespace GMap.NET.WindowsForms
 
         #region Serialization
 
-        static readonly BinaryFormatter BinaryFormatter = new BinaryFormatter();
+        //static readonly BinaryFormatter BinaryFormatter = new BinaryFormatter();
 
         /// <summary>
         ///     Serializes the overlays.
