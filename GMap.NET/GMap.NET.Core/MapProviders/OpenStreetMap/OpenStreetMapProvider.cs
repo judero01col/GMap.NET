@@ -443,10 +443,9 @@ namespace GMap.NET.MapProviders
 
         string MakeTileImageUrl(GPoint pos, int zoom, string language)
         {
-            char letter = ServerLetters[GetServerNum(pos, 3)];
-            return string.Format(UrlFormat, letter, zoom, pos.X, pos.Y);
+            return string.Format(UrlFormat, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "https://{0}.tile.openstreetmap.org/{1}/{2}/{3}.png";
+        static readonly string UrlFormat = "https://tile.openstreetmap.org/{0}/{1}/{2}.png";
     }
 }
