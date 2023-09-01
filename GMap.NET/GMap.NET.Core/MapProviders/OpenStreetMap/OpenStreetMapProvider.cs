@@ -446,6 +446,6 @@ namespace GMap.NET.MapProviders
             return string.Format(UrlFormat, zoom, pos.X, pos.Y);
         }
 
-        static readonly string UrlFormat = "https://tile.openstreetmap.org/{1}/{2}/{3}.png";
+        static readonly string UrlFormat = "https://tile.openstreetmap.org/{0}/{1}/{2}.png";
     }
 }
