@@ -16,11 +16,22 @@ namespace GMap.NET
         bool _notEmpty;
 
         public PointLatLng(double lat, double lng)
+         : this(Guid.Empty, lat, lng)
         {
             _lat = lat;
             _lng = lng;
             _notEmpty = true;
         }
+
+        public PointLatLng(Guid id, double lat, double lng)
+        {
+            Id = id;
+            _lat = lat;
+            _lng = lng;
+            _notEmpty = true;
+        }
+
+        public Guid Id { get; }
 
         /// <summary>
         ///     returns true if coordinates wasn't assigned
@@ -76,7 +87,7 @@ namespace GMap.NET
 
         public static bool operator ==(PointLatLng left, PointLatLng right)
         {
-            return left.Lng == right.Lng && left.Lat == right.Lat;
+            return left.Id == right.Id && left.Lng == right.Lng && left.Lat == right.Lat;
         }
 
         public static bool operator !=(PointLatLng left, PointLatLng right)
@@ -102,7 +113,7 @@ namespace GMap.NET
             }
 
             var tf = (PointLatLng)obj;
-            return tf.Lng == Lng && tf.Lat == Lat && tf.GetType().Equals(GetType());
+            return tf.Id == Id && tf.Lng == Lng && tf.Lat == Lat && tf.GetType().Equals(GetType());
         }
 
         public void Offset(PointLatLng pos)
@@ -118,12 +129,12 @@ namespace GMap.NET
 
         public override int GetHashCode()
         {
-            return Lng.GetHashCode() ^ Lat.GetHashCode();
+            return Id.GetHashCode() ^ Lng.GetHashCode() ^ Lat.GetHashCode();
         }
 
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "{{Lat={0}, Lng={1}}}", Lat, Lng);
+            return string.Format(CultureInfo.CurrentCulture, "{{Id={0}, Lat={1}, Lng={2}}}", Id, Lat, Lng);
         }
     }
 }
