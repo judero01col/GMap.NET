@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+using System.Drawing.Imaging;
+#endif
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -406,6 +409,64 @@ namespace GMap.NET.WindowsPresentation
         private ScaleModes _scaleMode = ScaleModes.Integer;
 
         #endregion
+
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+        private bool _grayScale;
+
+        [Category("GMap.NET")]
+        public bool GrayScaleMode
+        {
+            get
+            {
+                return _grayScale;
+            }
+            set
+            {
+                _grayScale = value;
+                ColorMatrix = value ? ColorMatrixs.GrayScale : null;
+            }
+        }
+
+        private bool _negative;
+
+        [Category("GMap.NET")]
+        public bool NegativeMode
+        {
+            get
+            {
+                return _negative;
+            }
+            set
+            {
+                _negative = value;
+                ColorMatrix = value ? ColorMatrixs.Negative : null;
+            }
+        }
+
+        ColorMatrix _colorMatrix;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public ColorMatrix ColorMatrix
+        {
+            get
+            {
+                return _colorMatrix;
+            }
+            set
+            {
+                _colorMatrix = value;
+                if (GMapProvider.TileImageProxy != null && GMapProvider.TileImageProxy is GMapImageProxy)
+                {
+                    (GMapProvider.TileImageProxy as GMapImageProxy).ColorMatrix = value;
+                    if (_core != null && _core.IsStarted)
+                    {
+                        ReloadMap();
+                    }
+                }
+            }
+        }
+#endif
 
         readonly Core _core = new Core();
 

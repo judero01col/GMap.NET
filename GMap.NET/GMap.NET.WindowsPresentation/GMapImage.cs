@@ -1,4 +1,9 @@
 ﻿using System.Diagnostics;
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+using System.Drawing;
+using System.Drawing.Imaging;
+using GMap.NET.Internals;
+#endif
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -44,22 +49,51 @@ namespace GMap.NET.WindowsPresentation
 
         public static readonly GMapImageProxy Instance = new GMapImageProxy();
 
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+        internal ColorMatrix ColorMatrix;
+
+        static readonly bool Win7OrLater = Stuff.IsRunningOnWin7OrLater();
+#endif
+
         public override PureImage FromStream(Stream stream)
         {
             if (stream != null)
             {
                 try
                 {
+                    GMapImage ret = null;
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+                    if (ColorMatrix == null)
+                    {
+#endif
                     var m = BitmapFrame.Create(stream,
                         BitmapCreateOptions.IgnoreColorProfile,
                         BitmapCacheOption.OnLoad);
+                    ret = new GMapImage { Img = m };
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+                    }
+                    else
+                    {
+                        var m = Image.FromStream(stream, true, !Win7OrLater);
+                        var bitmap = ApplyColorMatrix(m, ColorMatrix);
+                        using (var memory = new MemoryStream())
+                        {
+                            bitmap.Save(memory, ImageFormat.Png);
+                            memory.Position = 0;
 
-                    var ret = new GMapImage {Img = m};
+                            var bitmapImage = new BitmapImage();
+                            bitmapImage.BeginInit();
+                            bitmapImage.StreamSource = memory;
+                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapImage.EndInit();
+                            ret = new GMapImage { Img = bitmapImage };
+                        }
+                    }
+#endif
                     if (ret.Img.CanFreeze)
                     {
                         ret.Img.Freeze();
                     }
-
                     return ret;
                 }
                 catch
@@ -95,6 +129,36 @@ namespace GMap.NET.WindowsPresentation
 
             return false;
         }
+
+#if NETFRAMEWORK && !NET5_0_OR_GREATER
+        Bitmap ApplyColorMatrix(Image original, ColorMatrix matrix)
+        {
+            // create a blank bitmap the same size as original
+            var newBitmap = new Bitmap(original.Width, original.Height);
+
+            using (original) // destroy original
+            {
+                // get a graphics object from the new image
+                using (var g = Graphics.FromImage(newBitmap))
+                {
+                    // set the color matrix attribute
+                    using (var attributes = new ImageAttributes())
+                    {
+                        attributes.SetColorMatrix(matrix);
+                        g.DrawImage(original,
+                            new Rectangle(0, 0, original.Width, original.Height),
+                            0,
+                            0,
+                            original.Width,
+                            original.Height,
+                            GraphicsUnit.Pixel,
+                            attributes);
+                    }
+                }
+            }
+            return newBitmap;
+        }
+#endif
     }
 
     //internal class TileVisual : FrameworkElement
